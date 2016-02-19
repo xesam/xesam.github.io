@@ -6,9 +6,9 @@
 # 'jekyll serve'. If you change this file, please restart the server process.
 
 # Site settings
-title: Xesam
+title: Xesam/程序员说
 email: xesam@outlook.com
-description: Xesam
+description: 靠谱的娱乐型程序员
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "http://xesam.github.io/" # the base hostname & protocol for your site
 github_username:  xesam
