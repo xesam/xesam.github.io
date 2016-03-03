@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "ECMAScript"
+title:  "【ECMAScript】ECMAScript"
 date:   2016-02-26 13:46:04 +0800
 categories: ECMAScript
 ---

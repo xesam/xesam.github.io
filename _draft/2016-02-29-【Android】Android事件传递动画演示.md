@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Android事件传递动画演示"
+title:  "【Android】Android事件传递动画演示"
 date:   2016-02-29 13:46:04 +0800
 categories: Android
 ---
