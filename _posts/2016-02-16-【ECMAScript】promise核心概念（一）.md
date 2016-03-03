@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "promise核心概念（一）"
+title:  "【ECMAScript】promise核心概念（一）"
 date:   2016-02-16 14:52:04 +0800
-categories: promise
+categories: ECMAScript
 ---
 # 核心问题
 
