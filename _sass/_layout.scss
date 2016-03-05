@@ -180,7 +180,7 @@
   list-style: none;
 
   > li {
-    height: 30px;
+    //height: 30px;
     //margin-bottom: $list-spacing-unit;
   }
 }
@@ -192,7 +192,6 @@
 
 .post-link {
   display: block;
-  height: 30px;
   line-height: 30px;
   font-size: 16px;
 }
