@@ -10,7 +10,7 @@ title: Xesam
 email: xesam@outlook.com
 description: 靠谱的娱乐型程序员
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://xesam.github.io/" # the base hostname & protocol for your site
+url: "http://xesam.github.io" # the base hostname & protocol for your site
 github_username:  xesam
 
 # Build settings
