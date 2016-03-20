@@ -11,7 +11,7 @@ Service 经历的生命周期较少，可以分三种情况记录。
 
 ## 第一种，startService / stopService
 
-![1]({{ site.baseurl }}/image/service_lifecycle.png)
+![1]({{ site.baseurl }}/image/service_lifecycle_1_and_2.png)
 
 注意点：
 
@@ -29,7 +29,7 @@ Service 经历的生命周期较少，可以分三种情况记录。
 
 ## 第三种，前面两种交错
 
-![1]({{ site.baseurl }}/image/service_lifecycle_2.png)
+![1]({{ site.baseurl }}/image/service_lifecycle_3.png)
 
 注意点：
 
