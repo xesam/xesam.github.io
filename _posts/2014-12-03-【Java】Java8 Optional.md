@@ -7,7 +7,7 @@ categories: Java
 
 # Java8 Optional
 
-##Optional简述
+## Optional简述
 
 按照字面意思的理解，应该可选的意思。一开始我还以为是类似python里面的默认参数用法呢，结果语义是指某个值可能有也可能没有（null）。
 感觉名字取得不是很直观。。我觉得叫Nullable不是更好？
@@ -20,7 +20,7 @@ python：
         pass
 ```
 
-##Optional方法
+## Optional方法
 
 Optional没有公开的构造方法，只有静态工厂方法：
 
@@ -51,7 +51,7 @@ Optional没有公开的构造方法，只有静态工厂方法：
     });
 ```    
 
-###map 与 flatMap 的区别
+### map 与 flatMap 的区别
 
 map(mapper) 与 flatMap(mapper) 功能上基本是一样的，只是最后的返回值不一样。map(mapper)方法里面的mapper可以返回任意类型，但是flatMap(mapper)方法里面的只能返回Optional类型。
 
@@ -63,7 +63,7 @@ map(mapper) 与 flatMap(mapper) 功能上基本是一样的，只是最后的返
     os.flatMap((value)->Optional.of(value)) //返回的类型是Optional<String>
 ```
 
-##Optional的好处
+## Optional的好处
 
 1. 显式的提醒你需要关注null的情况，对程序员是一种字面上的约束
 
@@ -71,12 +71,12 @@ map(mapper) 与 flatMap(mapper) 功能上基本是一样的，只是最后的返
 
 3. 解决一下null会导致疑惑的概念，比如Map里面的key==null的情况，以及value==null的情况
 
-##小节
+## 小节
 不过Optional一下子有这么多方法，Optional的初衷是什么？而且Optional也是一个对象，所以它本身也有可能是null，这可如何是好。
 
 所以，有个观点认为，Optional比较适用的地方是作为返回值，这样可以给使用者一个善意的提醒。
 
-##参考
+## 参考
 
 1. [http://www.javacodegeeks.com/2013/09/deep-dive-into-optional-class-api-in-java-8.html](http://www.javacodegeeks.com/2013/09/deep-dive-into-optional-class-api-in-java-8.html)
 2. [What's the point of Guava's Optional class](http://stackoverflow.com/questions/9561295/whats-the-point-of-guavas-optional-class)
