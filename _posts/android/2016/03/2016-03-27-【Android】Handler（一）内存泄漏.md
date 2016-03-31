@@ -1,11 +1,11 @@
 ---
 layout: post
-title:  "【Android】Handler（一）——内存泄漏"
+title:  "【Android】Handler（一）内存泄漏"
 date:   2016-03-27 13:46:04 +0800
 categories: Android
 ---
 
-# Handler（一）——内存泄漏
+# Handler（一）内存泄漏
 
 内存泄漏的最终原因无非就是逻辑上应该被回收的资源实际上无法被回收。
 
