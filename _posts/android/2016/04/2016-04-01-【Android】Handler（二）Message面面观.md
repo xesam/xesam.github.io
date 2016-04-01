@@ -24,21 +24,23 @@ Task Message 是指发送一个 Runnable 的 Message。比如：
 其中 callback 就是消息携带的任务。
 
 注意，一个 Message 不可能同时为 Data Message 和 Task Message，而只能是其中之一。
+当然，你可以强制给一个 Message 设置所有的属性，但是只会有一种类型起作用。
 
-## Message 的特征属性是什么？
+## Message 的特征属性是什么？即，如何区分 Message？
 
 一个 Message 包含四个方面：
 
-1. Handler # 消息的接收者，同时也是消息的管理者。
-2. Object # 消息 token，消息共有
-3. Integer # 数据消息独有
-4. Runnable # 任务消息独有
+1. Handler # 必须——消息的接收者，同时也是消息的管理者。
+2. Object # 非必须——消息的 token
+
+3. Integer # 非必须——数据消息独有
+4. Runnable # 非必须——任务消息独有
 
 因此，对于所有的 Message 来说，只要其中任意一个属性不相同，就是不同的 Message。因此，像下面的情况，是不会发生冲突的 。
 
 ```java
-    Message.obtain(handler1).sendToTarget();
-    Message.obtain(handler2).sendToTarget();
+    Message.obtain(handler1, 1).sendToTarget();
+    Message.obtain(handler2, 1).sendToTarget();
 ```
 
 ## 如何创建 Message
@@ -85,13 +87,14 @@ Task Message 是指发送一个 Runnable 的 Message。比如：
 ## 如何发送 Message
 
 消息最终的接受者肯定是一个 Handler，因此，Message 的四特征里面，Handler必不可少。
-发送消息有两种方式：
+发送消息有两种方式，从 Message 发送：
 
 ```java
     Message.obtain(handler1, 1).sendToTarget();
 ```    
 
-或者：
+从 Handler 发送：
+
 ```java
     new Handler().post(new Runnable() {
         @Override
@@ -100,12 +103,16 @@ Task Message 是指发送一个 Runnable 的 Message。比如：
         }
     });
 
+    //或者
+
     new Handler().sendEmptyMessage()
 ```
 
-send 为前缀的方法用来发送 Data Message
+有一个简单的区分：
 
-post 为前缀的方法用来发送 Task Message
+send 前缀的方法用来发送 Data Message
+
+post 前缀的方法用来发送 Task Message
 
 本质上，以上两种方式是一样的，因为 Message.sendToTarget() 方法最终还是委托给内部的 Handler 来处理，这么做只是使用起来更方便而已。
 
@@ -115,7 +122,7 @@ post 为前缀的方法用来发送 Task Message
 
 Task Message 会在指定的时间直接在 Handler 线程被执行，Handler 本身无法接收到任何回调。
 
-对于 Data Message 来说，Handler 通过 
+而对于 Data Message 来说，处理方法就比较丰富一些了。Handler 通过 
 
 ```java
     Handler.handleMessage(Message msg)
@@ -179,7 +186,7 @@ Handler 处理的方式也有两种：
 
 ![1]({{ site.baseurl }}/image/message_lifecycle.png)
 
-注意，在正式的程序开发中，是没有手段来检测 Message 的生命周期状态的。而且，也不应该持续持有一个 Message，更不应该在一个 Message 发送之后，在对其进行修改。
+注意，在正式的程序开发中，是没有手段来检测 Message 的生命周期状态的。而且，也不应该持续持有一个 Message，更不应该在一个 Message 发送之后，再对其进行修改。
 因为，既无法确认 Message 的状态，而且 Message 有可能被重用，会直接影响到下一个处理逻辑。
 
 ## 观察 Message Queue
@@ -211,4 +218,6 @@ Handler 处理的方式也有两种：
 
 这是主要的调试手段，而且比较实用。
 
+### 推荐书籍
 
+[《Efficient Android Threading》](https://book.douban.com/subject/25900200/)
