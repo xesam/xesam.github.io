@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Android】Handler（二）——Message面面观"
+title:  "【Android】Handler（二）Message面面观"
 date:   2016-04-01 00:00:00 +0800
 categories: Android
 ---
