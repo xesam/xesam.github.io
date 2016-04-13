@@ -28,13 +28,13 @@ Javascript 运行在 WebView 中，而 WebView 只是 Javascript 执行引擎与
 
 首先回顾一一下基于 Binder 的经典 RPC 调用：
 
-![Javascript-bridge-rpc](https://github.com/xesam/JsBridge/blob/master/doc/js-bridge-rpc.png)
+![1]({{ site.baseurl }}/image/js-bridge-rpc.png)
 
 当然，client 与 server 只是用来区分通信双方责任的叫法而已，并不是一成不变的。
 对于 java 与 javascript 互调的情况，当 java 主动调用 javascript 的时候，java 充当 client 角色，javascript 则扮演 server 的角色，
 javascript 中的函数执行完毕后回调 java 方法，这个时候，javascript 充当 client 角色，而 javascript 则承担 server 的责任。
 
-![Javascript-bridge-circle](https://github.com/xesam/JsBridge/blob/master/doc/js-bridge-circle.png)
+![1]({{ site.baseurl }}/image/js-bridge-circle.png)
 
 剩下的问题就是怎么来实现这个机制了，大致有这么几个需要解决的问题：
 
@@ -120,7 +120,7 @@ Android 的默认 Sdk 中， Java 与 Javascript 的一切交互都是依托于 
 
 如图：
 
-![Javascript-bridge-register](https://github.com/xesam/JsBridge/blob/master/doc/js-bridge-register.png)
+![1]({{ site.baseurl }}/image/js-bridge-register.png)
 
 ## 3. 方法参数以及回调如何处理
 
