@@ -57,12 +57,12 @@ javascript 中的函数执行完毕后回调 java 方法，这个时候，javasc
 
 Android 的默认 Sdk 中， Java 与 Javascript 的一切交互都是依托于 WebView 的，大致有以下几个可用方法：
 
-##### 第一， Java 调用 Javascript 方法
+第一：
 
 ```java
     webView.loadUrl("javascript:scriptString"); //其中 scriptString 为 Javascript 代码
 ```
-在 KITKAT 之后，又新增了一个方法：
+第二，在 KITKAT 之后，又新增了一个方法：
 
 ```java
     webView.evaluateJavascript(scriptString, new ValueCallback<String>() {
