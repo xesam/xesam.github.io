@@ -93,6 +93,15 @@ ActionBarActivity + Toolbar
 
 [http://www.cnblogs.com/kissazi2/p/4181093.html](http://www.cnblogs.com/kissazi2/p/4181093.html)
 
+## 3. 同样 Can not perform this action after onSaveInstanceState
+
+注意 ： onBackPressed() 与 finish() 的区别
+
+finish() 这个方法比较纯粹，触发 Activity 生命周期中的 onDestroy 方法。
+
+onBackPressed() 是在 Fragment 引入之后才新增加的方法，所以，onBackPressed() 相比 finish() 会先处理各种 Fragment 的状态。
+这样问题就来了，假如按下 Home 键将当前 Activity 放到后台，这个时候某个调用触发 onBackPressed()，会进行状态清理，但是由于此时已经调用了 onSaveInstanceState，
+所有涉及到 Fragment 的操作都会导致崩溃。由于 onBackPressed() 是默认方法，除非重写，不然也办法使用 commitAllowingStateLoss() 方法。
 
 
 ####Android分享 Q群：315658668
