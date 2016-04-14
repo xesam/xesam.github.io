@@ -68,6 +68,7 @@ ActionBarActivity + Toolbar
 
 如果是 Activity，需要自己来实现当前状态检测，比如：
 
+```java
     class BaseActivity extends Activity{
         boolean isResumed = false;
         @Override
@@ -85,9 +86,7 @@ ActionBarActivity + Toolbar
             return isResumed;
         }
     }
-    
-
-
+```
 
 这里有个详细的说明：
 
@@ -103,5 +102,22 @@ onBackPressed() 是在 Fragment 引入之后才新增加的方法，所以，onB
 这样问题就来了，假如按下 Home 键将当前 Activity 放到后台，这个时候某个调用触发 onBackPressed()，会进行状态清理，但是由于此时已经调用了 onSaveInstanceState，
 所有涉及到 Fragment 的操作都会导致崩溃。由于 onBackPressed() 是默认方法，除非重写，不然也办法使用 commitAllowingStateLoss() 方法。
 
+## 4. Java IOException  App:transformClassesWithDexForApp_wandoujiaStage
+
+这个错误出现在用 gradle 命令行打包的时候。
+
+我遇到的一个原因就是在 Mac 上修改了类的位置之后，各个模块下的 build 文件没有 clean。
+
+当用命令行来编译的时候，就会报 IOException 的错误。
+
+解决方案：
+
+先在工程根目录调用一下 
+
+```shell
+    gradle clean
+```
+
+然后再正常编译就行。
 
 ####Android分享 Q群：315658668
