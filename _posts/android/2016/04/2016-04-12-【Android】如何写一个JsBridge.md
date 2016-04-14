@@ -4,7 +4,6 @@ title:  "【Android】如何写一个JsBridge"
 date:   2016-04-12 00:00:00 +0800
 categories: Android
 ---
-
 # JsBridge
 
 ## 简介
@@ -17,7 +16,7 @@ Android JsBridge 就是用来在 Android app的原生 java 代码与 javascript 
 
 [使用方式戳这里](#anchor_usage)
 
-整个工程还在完善过程中，有问题请联系 [xesam](http://xesam.github.io/about/)
+有问题请联系 [xesam](http://xesam.github.io/about/)
 
 ## 原理概述
 
@@ -28,13 +27,13 @@ Javascript 运行在 WebView 中，而 WebView 只是 Javascript 执行引擎与
 
 首先回顾一一下基于 Binder 的经典 RPC 调用：
 
-![1]({{ site.baseurl }}/image/js-bridge-rpc.png)
+![Javascript-bridge-rpc](https://github.com/xesam/JsBridge/blob/master/doc/js-bridge-rpc.png)
 
 当然，client 与 server 只是用来区分通信双方责任的叫法而已，并不是一成不变的。
 对于 java 与 javascript 互调的情况，当 java 主动调用 javascript 的时候，java 充当 client 角色，javascript 则扮演 server 的角色，
 javascript 中的函数执行完毕后回调 java 方法，这个时候，javascript 充当 client 角色，而 javascript 则承担 server 的责任。
 
-![1]({{ site.baseurl }}/image/js-bridge-circle.png)
+![Javascript-bridge-circle](https://github.com/xesam/JsBridge/blob/master/doc/js-bridge-circle.png)
 
 剩下的问题就是怎么来实现这个机制了，大致有这么几个需要解决的问题：
 
@@ -120,7 +119,7 @@ Android 的默认 Sdk 中， Java 与 Javascript 的一切交互都是依托于 
 
 如图：
 
-![1]({{ site.baseurl }}/image/js-bridge-register.png)
+![Javascript-bridge-register](https://github.com/xesam/JsBridge/blob/master/doc/js-bridge-register.png)
 
 ## 3. 方法参数以及回调如何处理
 
@@ -203,9 +202,7 @@ Java 调用 Javascript 没有返回值（这里指 loadUrl 形式的调用），
 问题都处理了，只需要设计对应的协议即可。
 按照上面的讨论,
 
-在 client 端：
-
-我们使用 
+在 client 端，我们使用：
 
 ```java
     Proxy.transact(invoke, callback);
@@ -213,10 +210,7 @@ Java 调用 Javascript 没有返回值（这里指 loadUrl 形式的调用），
 
 来调用 server 端注册的方法。
 
-
-在 server 端
-
-我们使用 
+在 server 端，我们使用： 
 
 ```java
     Stub.register(name, handler);
@@ -248,7 +242,21 @@ Java 调用 Javascript 没有返回值（这里指 loadUrl 形式的调用），
 
 ## 需要注意的问题
 
-1. 回调函数需要及时删除，不然会引起内存泄漏。
+#### 1. 回调函数需要及时删除，不然会引起内存泄漏。
+
+由于我们使用一 Hash 来保存各自环境中的回调函数。如果某个回调由于某种原因没有被触发，那么，这个引用的对象就永远不会被回收。
+针对这种问题，处理方案如下：
+
+在 Java 环境中：
+
+如果 WebView 被销毁了，应该手动移除所有的回调，然后禁用 javascript 。
+另外，一个 WebView 可能加载多个 Html 页面，如果页面的 URL 发生了改变，这个时候也应该清理所有的回调，因为 Html 页面是无状态的，也不会传递相互数据。
+这里有一点需要注意的是，如果 javascript 端是一个单页面应用，应该忽略 url 中 fragment （也就是 # 后面的部分） 的变化，因为并没有发生传统意义上的页面跳转，
+所有单应用的 Page 之间是可能有交互的。
+ 
+在 javascript 环境中：
+
+javascript 端情况好很多，因为 WebView 会自己管理每个页面的资源回收问题。
 
 ## 使用
 <a name="anchor_usage"></a>
@@ -267,6 +275,20 @@ Java 调用 Javascript 没有返回值（这里指 loadUrl 形式的调用），
 
 ```java
     jsBridge = new JsBridge(vWebView);
+```
+
+加入 url 监控：
+
+```java
+    vWebView.setWebViewClient(new WebViewClient() {
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            Log.e("onPageFinished", url);
+            jsBridge.monitor(url);
+        }
+    });
 ```
 
 Java 注册处理方法：
@@ -336,6 +358,16 @@ Java 执行 Js 函数：
             return param;
         }
     });
+```
+
+销毁 JsBridge
+
+```java
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        jsBridge.destroy();
+    }
 ```
 
 ### Javascript 环境
