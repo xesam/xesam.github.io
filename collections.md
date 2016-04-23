@@ -7,3 +7,4 @@ permalink: /collections/
 
 1. [我是一个线程](http://mp.weixin.qq.com/s?__biz=MzAxOTc0NzExNg==&mid=416915373&idx=1&sn=f80a13b099237534a3ef777d511d831a&scene=0#wechat_redirect)
 2. [RUBY WEB服务器：这十五年](http://insights.thoughtworkers.org/ruby-web-server/?utm_source=tuicool&utm_medium=referral)
+2. [通过「刻意练习」，你才能成为顶尖的程序员](https://ruby-china.org/topics/28553)
