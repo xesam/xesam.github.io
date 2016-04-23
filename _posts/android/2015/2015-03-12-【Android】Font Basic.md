@@ -52,7 +52,7 @@ categories: android
 ```
 
 ## 整体图示如下
-![在此输入图片描述][1]
+![1]({{ site.baseurl }}/image/android_font.png)
 
 ## 应用场景
 
