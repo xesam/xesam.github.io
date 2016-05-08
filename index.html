@@ -6,7 +6,7 @@ layout: default
 
   <h1 class="page-heading">文章列表</h1>
 
-  <ul class="post-list">
+  <ol class="post-list" reversed>
     {% for post in site.posts %}
       <li>
           <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">
@@ -15,7 +15,7 @@ layout: default
           </a>
       </li>
     {% endfor %}
-  </ul>
+  </ol>
 <!--
   <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
 -->
