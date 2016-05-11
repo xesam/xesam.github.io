@@ -9,3 +9,4 @@ permalink: /collections/
 1. [详细分析Java中断机制](http://www.infoq.com/cn/articles/java-interrupt-mechanism)
 1. [RUBY WEB服务器：这十五年](http://insights.thoughtworkers.org/ruby-web-server/?utm_source=tuicool&utm_medium=referral)
 1. [通过「刻意练习」，你才能成为顶尖的程序员](https://ruby-china.org/topics/28553)
+1. [MIT 为何停掉 SICP？](https://segmentfault.com/a/1190000005064958)
