@@ -58,7 +58,7 @@ MockResponse response = new MockResponse()
 response.throttleBody(1024, 1, TimeUnit.SECONDS);  //每秒传递 1024 字节
 ```
 
-按照最开始的描述，可以用 enqueue 来添加预置响应，其实可以做得更像服务器一些，几根据 url 来进行响应分发：
+按照最开始的描述，可以用 enqueue 来添加预置响应，其实可以做得更像服务器一些，即根据 url 来进行响应分发：
 
 ```java
 final Dispatcher dispatcher = new Dispatcher() {
