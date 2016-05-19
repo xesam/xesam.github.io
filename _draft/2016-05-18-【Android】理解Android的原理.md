@@ -43,8 +43,38 @@ Application processes that are in the background have all of their threads force
 这里面最重要的就是 background 优先级 与 默认优先级。
 用户界面线程通常以默认优先级运行，后台线程以后台优先级运行。应用将在后台运行的线程都置为 background 优先级。
 
+Android’s background priority is actually pretty interesting. 
+It uses a Linux facility called cgroups to put all background threads into a special scheduling group which, all together, 
+can’t use more than 10% of the CPU. 
+That is, if you have 10 processes in the background all trying to run at the same time, 
+when combined they can't take away more than 10% of the time needed by foreground threads. 
+
+This is enough to allow background threads to make some forward progress, 
+without having enough of an impact on the foreground threads to be generally visible to the user.
+
+Android 的后台优先级实际上相当有趣，它使用了 Linux 上的 cgroup 机制，将所有的后台线程都集中到一个特定的后台调度组中，
+这个调度组里面的所有线程加在一起都不会超过 CPU 资源的 10% 。也就是说，如果你有 10 个后台进程同时在运行，他们加在一起的运行时间都不会超过前台线程的 10% 。
+这种实现既可以让后台任务得到执行，有可以保证不对前台线程造成太大的干扰。
 
 
+（你会发现有一个 foreground 的优先级定义，这个定义现在已经没有用了，
+只在最初的版本得到实现。后来我们发现 Linux 调度器，
+因此，我们在 Android 1.6 切换为 cgroup 机制。）
+
+我也听到过许多抱怨认为 Android 的基础架构设计过时而且有缺陷，
+因为 Android 没有像 iOS 一样的渲染线程。
+iOS 的这种工作方式当然有一定的好处，但是这种观点台关注于某些特定的细节，
+容易一叶障目不见泰山。
+
+Android 与 iOS 的设计目标有非常大的不同。Android 的一个关键目标是提供一个开放应用平台，
+让应用运行在各自的应用沙盒里面，不需要某个机构去认证应用的行为是否合乎应用自身的行为准则，
+从而实现一个去中心化的运行平台。
+为了实现这个目标，Android 使用了 Linux 的进程隔离以及用户 ID 来限制应用对系统或者
+其他应用的不受控或者有风险的操作。
+
+这与 iOS 的最初设计完全不同，因为你知道，iOS 刚出来的时候，是不允许安装任何第三方应用的 。
+
+实现这个目标的一个重要方面是
 
 
 
