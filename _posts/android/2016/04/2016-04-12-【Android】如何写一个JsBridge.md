@@ -31,7 +31,7 @@ Javascript 运行在 WebView 中，而 WebView 只是 Javascript 执行引擎与
 
 当然，client 与 server 只是用来区分通信双方责任的叫法而已，并不是一成不变的。
 对于 java 与 javascript 互调的情况，当 java 主动调用 javascript 的时候，java 充当 client 角色，javascript 则扮演 server 的角色，
-javascript 中的函数执行完毕后回调 java 方法，这个时候，javascript 充当 client 角色，而 javascript 则承担 server 的责任。
+javascript 中的函数执行完毕后回调 java 方法，这个时候，javascript 充当 client 角色，而 java 则承担 server 的责任。
 
 ![Javascript-bridge-circle](http://xesam.github.io/image/js-bridge-circle.png)
 
