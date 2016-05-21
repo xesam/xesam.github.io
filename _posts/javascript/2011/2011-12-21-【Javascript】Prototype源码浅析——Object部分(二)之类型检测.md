@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "2011-12-21-【Javascript】Prototype源码浅析——Object部分(二)之类型检测"
+title:  "【Javascript】Prototype源码浅析——Object部分(二)之类型检测"
 date:   2011-12-21 08:36:04 +0800
 categories: Javascript
 ---
