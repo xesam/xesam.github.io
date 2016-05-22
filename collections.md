@@ -11,3 +11,4 @@ permalink: /collections/
 1. [通过「刻意练习」，你才能成为顶尖的程序员](https://ruby-china.org/topics/28553)
 1. [MIT 为何停掉 SICP？](https://segmentfault.com/a/1190000005064958)
 1. [跟我一起写Makefile](http://wiki.ubuntu.org.cn/%E8%B7%9F%E6%88%91%E4%B8%80%E8%B5%B7%E5%86%99Makefile:%E6%A6%82%E8%BF%B0)
+1. [总线是什么](http://www.jdon.com/46908)
