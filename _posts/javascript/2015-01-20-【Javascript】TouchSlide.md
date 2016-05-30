@@ -4,7 +4,7 @@ title:  "【Javascript】TouchSlide"
 date:   2015-01-20 12:46:04 +0800
 categories: Javascript
 ---
-#TouchSlide
+# TouchSlide
 
 一个简单的手机网页滑屏效果库
 
@@ -13,11 +13,11 @@ categories: Javascript
 github地址：[TouchSlide](https://github.com/xesam/TouchSlide)
 git.oschina.net地址:[TouchSlide](http://git.oschina.net/xesam/TouchSlide)
 
-##原理
+## 原理
 
 检测上滑或者左右滑动事件，然后使用CSS3动画进行页面转换。
 
-##使用
+## 使用
 
 ```html
 
