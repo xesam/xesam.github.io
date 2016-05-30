@@ -34,4 +34,6 @@ save() & restore() 不会影响路径，影响的是什么？影响各种设置�
 3. 区域（clip）设置
 
 
+[Immediate Mode](https://en.wikipedia.org/wiki/Immediate_mode_(computer_graphics))
+[Retained Mode](https://en.wikipedia.org/wiki/Retained_mode)
 
