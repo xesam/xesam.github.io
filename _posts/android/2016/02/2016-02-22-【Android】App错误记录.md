@@ -120,4 +120,27 @@ onBackPressed() 是在 Fragment 引入之后才新增加的方法，所以，onB
 
 然后再正常编译就行。
 
+## 5. values 语言不完整
+
+一个真实的错误，错误原因：
+
+    res
+    |
+    |----values :
+    |    | 
+    |    |----<null> //这里丢失了 cll_update_strings.xml 
+    |    |    
+    |----values-zh : 
+    |    |    
+    |    |----cll_update_strings.xml
+    
+    
+如果将系统调成英文，那么会直接报错。
+
+如何预防：
+
+1. 保证 values 的完备！
+2. 启动更严厉的 IDE 和 打包时检查
+
+
 ####Android分享 Q群：315658668
