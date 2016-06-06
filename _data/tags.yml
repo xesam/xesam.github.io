@@ -32,12 +32,12 @@ javascript:
   description: >
     Javascript Posts
 
-计算机:
-  name: 计算机
+computer:
+  name: computer
 #  image: /public/img/jekyll.jpg
   color: '#949667'
   description: >
-    计算机 Posts
+    computer Posts
 
 杂谈:
   name: 杂谈
