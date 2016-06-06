@@ -16,32 +16,32 @@ java:
 #  image: /public/img/hyde.jpg
   color: '#949667'
   description: >
-    Java Posts
+    Java 大法好
 
 android:
   name: android
 #  image: /public/img/hyde.jpg
   color: '#949667'
   description: >
-    Android Posts
+    Android 开发记录点点滴滴
 
 javascript:
   name: javascript
 #  image: /public/img/jekyll.jpg
   color: '#949667'
   description: >
-    Javascript Posts
+    业余 Javascript 渣
 
 computer:
   name: computer
 #  image: /public/img/jekyll.jpg
   color: '#949667'
   description: >
-    computer Posts
+    计算机相关，或者不相关
 
-杂谈:
-  name: 杂谈
+talk:
+  name: talk
 #  image: /public/img/jekyll.jpg
   color: '#949667'
   description: >
-    杂谈 Posts
+    扯淡乱七八九糟
