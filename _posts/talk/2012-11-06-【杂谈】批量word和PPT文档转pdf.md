@@ -2,7 +2,7 @@
 layout: post
 title:  "【杂谈】批量word和PPT文档转pdf"
 date:   2012-11-06 13:46:04 +0800
-categories: 杂谈
+categories: talk
 ---
 
 由于linux上处理word和ppt比较麻烦，而且有文件格式专利的问题，所以以下操作全部在Windows下面进行。

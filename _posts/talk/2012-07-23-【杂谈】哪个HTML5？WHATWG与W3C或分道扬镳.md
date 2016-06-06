@@ -2,7 +2,7 @@
 layout: post
 title:  "【杂谈】哪个HTML5？WHATWG与W3C或分道扬镳"
 date:   2012-07-23 13:46:04 +0800
-categories: Android
+categories: talk
 ---
 # 哪个HTML5？WHATWG与W3C或分道扬镳
 
