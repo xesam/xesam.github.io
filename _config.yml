@@ -17,7 +17,7 @@ description:      >
 sidebar_tags:     [java, android, javascript, computer, talk]
 
 # Fallback image and color if not overwritten for tag or post
-image:            /public/img/nap.jpg
+image:            /public/img/jekyll.jpg
 color:            '#A85641'
 
 author:
