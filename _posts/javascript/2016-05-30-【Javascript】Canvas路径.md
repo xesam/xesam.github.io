@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "2016-05-30-【Javascript】Canvas路径"
+title:  "【Javascript】Canvas路径"
 date:   2016-05-30 12:46:04 +0800
 categories: Javascript
 ---
