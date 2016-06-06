@@ -2,7 +2,8 @@
 layout: post
 title:  "【Android】如何快速构建Android Demo"
 date:   2016-03-27 13:46:04 +0800
-categories: Android
+categories: android
+tag: [android]
 ---
 
 # 【Android】如何快速构建Android Demo

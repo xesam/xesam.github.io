@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】轻量级Web Database存储库html5sql.js"
 date:   2012-03-10 10:46:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 
 阅读之前，先看W3C关于WEB Database的一段话：

@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】从URL中提取参数与将对象转换为URL查询参数"
 date:   2012-01-12 10:36:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 这两种主要是对《Prototype浅析》先前略过的String部分中toQueryParams和Object部分的toQueryString方法的补充
 

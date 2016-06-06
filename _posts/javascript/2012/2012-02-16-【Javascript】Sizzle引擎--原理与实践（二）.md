@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】Sizzle引擎--原理与实践（二）"
 date:   2012-02-16 11:46:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 
 ## 主要流程与正则

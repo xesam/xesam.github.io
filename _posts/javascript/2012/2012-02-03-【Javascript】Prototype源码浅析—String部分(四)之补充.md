@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】Prototype源码浅析—String部分(四)之补充"
 date:   2012-01-13 11:36:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 
     interpolate ： 将字符串看作一个模板，并使用 object 的属性填充它。

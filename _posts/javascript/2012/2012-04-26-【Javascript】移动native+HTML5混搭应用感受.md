@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】移动Native+HTML5混搭应用感受"
 date:   2012-04-26 13:46:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 
 说到HTML5在移动领域的开发，最推崇的估计就是跨平台与低门槛。同时又为了有native APP一样的效果，必须兼具原生特性，Titainium与Phonegap是两个比较典型的例子。

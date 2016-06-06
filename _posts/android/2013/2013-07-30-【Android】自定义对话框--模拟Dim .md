@@ -3,6 +3,7 @@ layout: post
 title:  "【Android】自定义对话框--模拟Dim"
 date:   2013-07-30 12:46:04 +0800
 categories: android
+tag: [android]
 ---
 ##背景
 

@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】Prototype源码浅析——Class部分(二)之继承"
 date:   2011-12-28 08:36:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 前面分析了Class的构造部分，现在，需求变动啦（又变动啦！），现在需要一个Teacher类，同样有say方法，但是除此之外还有teach方法。我们再重复定义say就不划算了，因为Person有现成的，于是就牵扯到继承的问题，我要让Teacher类继承Person的方法。
 

@@ -2,7 +2,8 @@
 layout: post
 title:  "【Android】导致notifyDataSetChanged无效的一个错误"
 date:   2012-05-31 13:46:04 +0800
-categories: Android
+categories: android
+tag: [android]
 ---
 
 初学Android，发现有时候notifyDataSetChanged不起作用。后来发现是我理解错了。

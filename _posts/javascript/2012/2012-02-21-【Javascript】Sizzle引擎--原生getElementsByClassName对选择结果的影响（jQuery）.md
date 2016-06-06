@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】Sizzle引擎--原生getElementsByClassName对选择结果的影响（jQuery）"
 date:   2012-02-21 10:46:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 
 个人觉得这个例子虽然可能不具有实际意义，但是可以很好的理解Sizzle选择的过程

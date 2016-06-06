@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】Prototype源码浅析—Enumerable部分(二)"
 date:   2012-01-17 11:46:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 
 剩下的方法太多，于是分作两部分。

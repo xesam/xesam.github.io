@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】Prototype源码浅析—Hash部分(一)"
 date:   2012-01-31 11:46:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 ## Hash
 

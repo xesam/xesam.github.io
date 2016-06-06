@@ -3,6 +3,7 @@ layout: post
 title:  "【Android】如何实现ButterKnife"
 date:   2015-06-08 12:46:04 +0800
 categories: android
+tag: [android]
 ---
 # 【Android】如何实现ButterKnife
 

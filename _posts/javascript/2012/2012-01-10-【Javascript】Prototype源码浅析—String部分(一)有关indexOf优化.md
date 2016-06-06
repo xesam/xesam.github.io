@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】Prototype源码浅析—String部分(一)有关indexOf优化"
 date:   2012-01-10 11:36:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 
 添加到String.prototype中的方法比较多，不过归结起来，大致分为下面几类：

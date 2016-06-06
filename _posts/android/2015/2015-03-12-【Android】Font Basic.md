@@ -3,6 +3,7 @@ layout: post
 title:  "【Android】Font Basic"
 date:   2015-03-12 12:46:04 +0800
 categories: android
+tag: [android]
 ---
 # 【Android】SlidingTabs
 

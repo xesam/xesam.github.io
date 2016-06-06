@@ -2,7 +2,8 @@
 layout: post
 title:  "【Android】如何写一个JsBridge"
 date:   2016-04-12 00:00:00 +0800
-categories: Android
+categories: android
+tag: [android]
 ---
 # JsBridge
 

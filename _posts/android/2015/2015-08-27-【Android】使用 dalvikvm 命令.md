@@ -3,6 +3,7 @@ layout: post
 title:  "【Android】使用 dalvikvm 命令"
 date:   2015-08-27 12:46:04 +0800
 categories: android
+tag: [android]
 ---
 # 【Android】使用 dalvikvm 命令
 

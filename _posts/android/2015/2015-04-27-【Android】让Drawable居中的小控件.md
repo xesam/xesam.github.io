@@ -3,6 +3,7 @@ layout: post
 title:  "【Android】让Drawable居中的小控件"
 date:   2015-04-27 12:46:04 +0800
 categories: android
+tag: [android]
 ---
 # 【Android】让Drawable居中的小控件
 

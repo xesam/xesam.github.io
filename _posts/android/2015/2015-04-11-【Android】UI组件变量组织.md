@@ -3,6 +3,7 @@ layout: post
 title:  "【Android】UI组件变量组织"
 date:   2015-04-11 12:46:04 +0800
 categories: android
+tag: [android]
 ---
 # 【Android】UI组件变量组织
 

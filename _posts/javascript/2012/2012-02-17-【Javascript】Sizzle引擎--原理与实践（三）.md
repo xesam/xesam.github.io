@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】Sizzle引擎--原理与实践（三）"
 date:   2012-02-17 11:46:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 
 查找的入口对应的是Sizzle.find方法:

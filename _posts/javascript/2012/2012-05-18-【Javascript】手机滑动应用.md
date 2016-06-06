@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】手机滑动应用"
 date:   2012-05-18 13:46:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 
 ## 完善版本参见Github

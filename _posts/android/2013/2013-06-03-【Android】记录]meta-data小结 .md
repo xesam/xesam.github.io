@@ -3,6 +3,7 @@ layout: post
 title:  "【Android】meta-data小结"
 date:   2013-06-03 12:46:04 +0800
 categories: android
+tag: [android]
 ---
 # 【Android】meta-data小结
 

@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】Fixie.js——自动填充内容的插件"
 date:   2012-06-28 13:46:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 ## Fixie.js说明
 

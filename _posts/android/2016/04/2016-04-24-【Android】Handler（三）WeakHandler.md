@@ -2,7 +2,8 @@
 layout: post
 title:  "【Android】Handler（三）WeakHandler"
 date:   2016-04-24 00:00:00 +0800
-categories: Android
+categories: android
+tag: [android]
 ---
 # 【Android】Handler（三）WeakHandler
 

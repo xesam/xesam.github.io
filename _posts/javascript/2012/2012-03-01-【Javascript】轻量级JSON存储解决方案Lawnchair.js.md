@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】轻量级JSON存储解决方案Lawnchair.js"
 date:   2012-03-01 10:46:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 
 ## Lawnchair

@@ -2,7 +2,8 @@
 layout: post
 title:  "【Java】ThreadLocal设计意图"
 date:   2016-05-08 13:46:04 +0800
-categories: Java
+categories: java
+tag: [java]
 ---
 ## 核心原理
 

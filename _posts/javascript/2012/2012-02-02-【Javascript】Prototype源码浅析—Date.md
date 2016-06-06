@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】Prototype源码浅析—Date"
 date:   2012-02-02 11:46:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 
 ## Date

@@ -3,6 +3,7 @@ layout: post
 title:  "【Android】OnCheckedChangeListener的bug"
 date:   2014-01-15 12:46:04 +0800
 categories: android
+tag: [android]
 ---
 
 ## 问题描述

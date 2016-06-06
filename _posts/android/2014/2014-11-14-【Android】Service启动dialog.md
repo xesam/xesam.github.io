@@ -3,6 +3,7 @@ layout: post
 title:  "【Android】从service调用dialog"
 date:   2014-11-14 12:46:04 +0800
 categories: android
+tag: [android]
 ---
 # 从service调用dialog
 

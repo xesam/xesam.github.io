@@ -2,7 +2,8 @@
 layout: post
 title:  "【Java】Java8 Optional"
 date:   2014-12-03 12:46:04 +0800
-categories: Java
+categories: java
+tag: [java]
 ---
 
 # Java8 Optional

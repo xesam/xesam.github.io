@@ -3,6 +3,7 @@ layout: post
 title:  "【AndroidSupport】RoundedBitmapDrawable 创建圆角图片"
 date:   2015-11-12 13:46:04 +0800
 categories: android
+tag: [android]
 ---
 
 #【AndroidSupport】RoundedBitmapDrawable 创建圆角图片

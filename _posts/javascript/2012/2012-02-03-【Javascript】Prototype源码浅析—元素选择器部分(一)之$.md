@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】Prototype源码浅析—元素选择器部分(一)之$"
 date:   2012-02-03 11:46:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 
 ## 简述　　

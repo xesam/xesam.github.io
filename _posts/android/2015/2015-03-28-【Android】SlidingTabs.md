@@ -3,6 +3,7 @@ layout: post
 title:  "【Android】SlidingTabs"
 date:   2015-03-28 12:46:04 +0800
 categories: android
+tag: [android]
 ---
 # 【Android】SlidingTabs
 

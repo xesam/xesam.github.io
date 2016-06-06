@@ -3,6 +3,7 @@ layout: post
 title:  "【Android】quick-demo-creator"
 date:   2015-08-12 12:46:04 +0800
 categories: android
+tag: [android]
 ---
 # 【Android】quick-demo-creator
 

@@ -3,6 +3,7 @@ layout: post
 title:  "【Android】AndroidStduio错误记录"
 date:   2016-02-23 13:46:04 +0800
 categories: android
+tag: [android]
 ---
 
 系统：Ubuntu

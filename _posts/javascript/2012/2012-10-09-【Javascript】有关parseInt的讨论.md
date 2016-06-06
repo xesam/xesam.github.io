@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】有关parseInt的讨论"
 date:   2012-10-09 13:46:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 
 问题由来，某群的一个讨论：

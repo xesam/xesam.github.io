@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】Prototype源码浅析—String部分(二)"
 date:   2012-01-11 11:36:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 本文接着上面的String部分，继续下面表格的部分
 

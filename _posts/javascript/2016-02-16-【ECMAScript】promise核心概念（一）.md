@@ -2,7 +2,8 @@
 layout: post
 title:  "【ECMAScript】promise核心概念（一）"
 date:   2016-02-16 14:52:04 +0800
-categories: ECMAScript
+categories: ecmascript
+tag: [ecmascript]
 ---
 # 核心问题
 

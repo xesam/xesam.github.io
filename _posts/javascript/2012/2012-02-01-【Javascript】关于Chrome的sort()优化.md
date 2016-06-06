@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】关于Chrome的sort()优化"
 date:   2012-02-01 11:46:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 
 今天看Sizzle代码的时候，里面有这么一段：

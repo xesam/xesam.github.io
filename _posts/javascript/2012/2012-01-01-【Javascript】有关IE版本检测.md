@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】有关IE版本检测"
 date:   2012-01-01 08:36:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 PS：检测浏览器虽然不是一个什么好的做法，但是有时候还是很必要的。
 

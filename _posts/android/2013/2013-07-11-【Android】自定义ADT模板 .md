@@ -3,6 +3,7 @@ layout: post
 title:  "【Android】自定义ADT模板"
 date:   2013-07-11 12:46:04 +0800
 categories: android
+tag: [android]
 ---
 ## 简介
 

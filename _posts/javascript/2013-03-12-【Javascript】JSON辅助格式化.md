@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】JSON辅助格式化"
 date:   2013-03-12 13:46:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 
 平时服务器端开发人员写好后台之后一般写一份简单的接口说明页面，类似：

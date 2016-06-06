@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】Prototype源码浅析——Object部分(二)之类型检测"
 date:   2011-12-21 08:36:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 这里我不关心javascript里面各种类型是怎么定义的，唯一要指出的是
 

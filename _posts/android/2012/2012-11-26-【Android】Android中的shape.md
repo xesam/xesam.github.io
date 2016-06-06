@@ -2,7 +2,8 @@
 layout: post
 title:  "【Android】Android中的shape"
 date:   2012-11-26 13:46:04 +0800
-categories: Android
+categories: android
+tag: [android]
 ---
 # Android中的shape
 shape类似CSS，用于背景，边框，便于兼容各种屏幕和分辨率

@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】Canvas路径"
 date:   2016-05-30 12:46:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 ## 理解路径
 Javascript 中的 Canvas 是基于路径的，同一时刻时能有一条路径而且肯定会有一条路径。

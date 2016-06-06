@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】TouchSlide"
 date:   2015-01-20 12:46:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 # TouchSlide
 

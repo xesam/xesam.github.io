@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】Prototype源码浅析—Enumerable部分(一)"
 date:   2012-01-16 11:46:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 
 在javascript中，根本找不到 Enumerable 的影子，因为这一块是Prototype作者从Ruby中借鉴过来的。

@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】向后兼容的DOM事件绑定"
 date:   2012-03-26 13:46:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 
 ## 主要内容

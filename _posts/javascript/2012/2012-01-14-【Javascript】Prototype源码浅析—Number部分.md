@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】Prototype源码浅析—Number部分"
 date:   2012-01-14 11:46:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 Prototype在原生对象的基础上扩展，分别是 Object，Function，String，Number，Array，Date，前面分析了 Object，Function，String，还剩下Number，Array，Date。
   

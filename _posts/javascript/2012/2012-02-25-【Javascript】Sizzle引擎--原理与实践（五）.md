@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】Sizzle引擎--原理与实践（五）"
 date:   2012-02-25 10:46:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 
 这篇是关于Sizzle.filter部分的详细分解，前提是先看懂Sizzle.filter的分发过程。

@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】Prototype源码浅析——Class部分(一)之类"
 date:   2011-12-27 08:36:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 
 说明：

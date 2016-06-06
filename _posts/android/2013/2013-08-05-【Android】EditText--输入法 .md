@@ -3,6 +3,7 @@ layout: post
 title:  "【Android】EditText--输入法"
 date:   2013-08-05 12:46:04 +0800
 categories: android
+tag: [android]
 ---
 
 ## 1. 默认显示输入法的数字键盘,但是同时允许输入文本.

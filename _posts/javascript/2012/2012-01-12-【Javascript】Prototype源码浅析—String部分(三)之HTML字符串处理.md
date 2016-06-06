@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】Prototype源码浅析—String部分(三)之HTML字符串处理"
 date:   2012-01-13 11:36:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 
     HTML处理	stripTags    |  escapeHTML      |  unescapeHTML 	 

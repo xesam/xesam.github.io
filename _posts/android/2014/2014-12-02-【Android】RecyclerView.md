@@ -3,6 +3,7 @@ layout: post
 title:  "【Android】RecyclerView"
 date:   2014-12-02 12:46:04 +0800
 categories: android
+tag: [android]
 ---
 
 # RecyclerView

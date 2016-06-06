@@ -3,6 +3,7 @@ layout: post
 title:  "【AndroidSupport】Support Annotations"
 date:   2015-04-30 12:46:04 +0800
 categories: android
+tag: [android]
 ---
 # 【AndroidSupport】Support Annotations
 

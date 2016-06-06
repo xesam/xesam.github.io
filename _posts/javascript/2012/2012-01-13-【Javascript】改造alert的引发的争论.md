@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】改造alert的引发的争论"
 date:   2012-01-13 11:46:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 今天在群里讨论alert的问题，说到了alert的改造，虽然说改造原生方法不是好做法，但是既然提到了就可以讨论下，所以我按照他们的讨论给出了下面的一段代码：
 

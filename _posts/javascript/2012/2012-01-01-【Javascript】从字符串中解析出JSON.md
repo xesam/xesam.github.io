@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】从字符串中解析出JSON"
 date:   2012-01-01 10:36:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 
 JSON介绍[http://json.org/](http://json.org/)

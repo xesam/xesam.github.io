@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】Prototype源码浅析——Object部分(三)之有关JSON"
 date:   2011-12-22 08:36:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 对JSON的操作主要是解析JSON字符串为一个对象和将一个对象转换成JSON字符串。
 

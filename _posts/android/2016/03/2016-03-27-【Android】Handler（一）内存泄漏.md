@@ -2,7 +2,8 @@
 layout: post
 title:  "【Android】Handler（一）内存泄漏"
 date:   2016-03-27 13:46:04 +0800
-categories: Android
+categories: android
+tag: [android]
 ---
 
 # Handler（一）内存泄漏

@@ -2,7 +2,8 @@
 layout: post
 title:  "【Android】使用MockWebServer来进行单元测试"
 date:   2016-05-10 08:00:00 +0800
-categories: Android
+categories: android
+tag: [android]
 ---
 [MockWebServer](https://github.com/square/okhttp) 是 square 出品的跟随 okhttp 一起发布，用来 Mock 服务器行为的库，用来做单元测试挺好。
 

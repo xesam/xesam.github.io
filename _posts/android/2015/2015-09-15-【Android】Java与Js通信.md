@@ -3,6 +3,7 @@ layout: post
 title:  "【Android】Java与Js通信"
 date:   2015-09-15 12:46:04 +0800
 categories: android
+tag: [android]
 ---
 
 # 【Android】Java与Js通信

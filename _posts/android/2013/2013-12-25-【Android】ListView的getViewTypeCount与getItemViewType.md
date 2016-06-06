@@ -3,6 +3,7 @@ layout: post
 title:  "【Android】ListView的getViewTypeCount与getItemViewType"
 date:   2013-12-25 12:46:04 +0800
 categories: android
+tag: [android]
 ---
 # 【Android】ListView的getViewTypeCount与getItemViewType
 

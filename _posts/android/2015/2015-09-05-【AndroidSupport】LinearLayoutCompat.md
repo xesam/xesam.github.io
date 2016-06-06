@@ -3,6 +3,7 @@ layout: post
 title:  "【AndroidSupport】LinearLayoutCompat"
 date:   2015-09-05 12:46:04 +0800
 categories: android
+tag: [android]
 ---
 # 【AndroidSupport】LinearLayoutCompat
 

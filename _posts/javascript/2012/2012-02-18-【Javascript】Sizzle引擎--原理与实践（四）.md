@@ -2,7 +2,8 @@
 layout: post
 title:  "【Javascript】Sizzle引擎--原理与实践（四）"
 date:   2012-02-18 11:46:04 +0800
-categories: Javascript
+categories: javascript
+tag: [javascript]
 ---
 
 元素过滤是Sizzle中最复杂的一部分
