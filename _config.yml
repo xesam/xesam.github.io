@@ -1,6 +1,8 @@
 # Permalinks
 #permalink:        pretty
 
+timezone:    '+8'
+
 # Setup
 url:              http://xesam.github.io/
 
