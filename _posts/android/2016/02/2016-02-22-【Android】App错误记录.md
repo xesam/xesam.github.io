@@ -143,5 +143,10 @@ onBackPressed() 是在 Fragment 引入之后才新增加的方法，所以，onB
 1. 保证 values 的完备！
 2. 启动更严厉的 IDE 和 打包时检查
 
+## 6. drawable 资源不完整
+
+当前手机屏幕分辨率为 hdpi, 如果只在 drawable-xhdpi 放有 xxx.png 资源文件，那么会崩溃。
+因为 Android 如果找不到最佳分辨率匹配的资源图片，只会向更低级的进行查找，而不会向更高级的进行查找。
+
 
 ####Android分享 Q群：315658668
