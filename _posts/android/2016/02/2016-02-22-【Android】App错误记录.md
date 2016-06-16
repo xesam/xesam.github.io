@@ -148,5 +148,9 @@ onBackPressed() 是在 Fragment 引入之后才新增加的方法，所以，onB
 当前手机屏幕分辨率为 normal, 如果只在 drawable-normal 放有 xxx.png 资源文件，那么会崩溃。
 因为 Android 如果找不到最佳匹配的资源图片，只会向更低级的进行查找，而不会向更高级的进行查找。
 
+## 7. Execution failed for task ':xxx:transformClassesAndResourcesWithProguardForRelease'.
+
+一般是因为 Proguard 配置错误或者不全
+
 
 ####Android分享 Q群：315658668
