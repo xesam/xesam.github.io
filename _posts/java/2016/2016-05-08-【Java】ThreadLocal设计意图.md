@@ -180,6 +180,11 @@ class Buyer {
 
 **当然，不用 ThreadLocal，直接用 Map 也可以，ThreadLocal 也是用 Map 实现的**
 
+## 一个实际的应用
+
+SimpleDateFormat 是线程不安全的，如果每次调用都 new 一个新的 SimpleDateFormat 对象，实在浪费。所以这个时候就可以用 ThreadLocal
+来让每个线程都持有一个 SimpleDateFormat 的实例，避免创建无用的对象。
+
 ## ThreadLocal 与 clone
 
 到这里，似乎不需要 ThreadLocal，直接用 clone() 也可以达到相同的效果。
