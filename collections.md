@@ -13,3 +13,4 @@ permalink: /collections/
 1. [跟我一起写Makefile](http://wiki.ubuntu.org.cn/%E8%B7%9F%E6%88%91%E4%B8%80%E8%B5%B7%E5%86%99Makefile:%E6%A6%82%E8%BF%B0)
 1. [总线是什么](http://www.jdon.com/46908)
 1. [为什么要使用SLF4J而不是Log4J](http://www.importnew.com/7450.html)
+1. [Java注解处理器](http://www.race604.com/annotation-processing/)
