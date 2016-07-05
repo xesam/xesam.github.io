@@ -2,7 +2,8 @@
 layout: post
 title:  "【Android】SoundPool"
 date:   2016-06-30 08:00:00 +0800
-categories: Android
+categories: android
+tag: [android]
 ---
 
 ## 特性

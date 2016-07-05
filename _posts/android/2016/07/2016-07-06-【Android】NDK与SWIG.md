@@ -2,7 +2,8 @@
 layout: post
 title:  "【Android】NDK与SWIG"
 date:   2016-07-06 01:00:00 +0800
-categories: Android
+categories: android
+tag: [android]
 ---
 
 本文主要是《Android C++ 高级编程——使用 NDK》的笔记。
