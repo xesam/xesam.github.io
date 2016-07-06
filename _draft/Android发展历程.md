@@ -1,0 +1,2 @@
+[https://medium.com/@cabot_solutions/the-complete-list-of-android-versions-446b398ccc1e#.j9bld0kim](https://medium.com/@cabot_solutions/the-complete-list-of-android-versions-446b398ccc1e#.j9bld0kim)
+[android各个版本的名称和更新](http://blog.csdn.net/ethan_xue/article/details/50624968)
