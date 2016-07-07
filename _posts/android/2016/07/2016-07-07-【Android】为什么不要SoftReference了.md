@@ -17,7 +17,8 @@ Android 的官方关于 [SoftReference](https://developer.android.com/reference/
     
 即：
     
-    Runtime 没有足够的信息来判别应该清除哪个 SoftReference(持有的对象)，更无法判定当 App 要求更多内存的时候，是应该清除 SoftReference，还是增大 App 的Heap。
+    Runtime 没有足够的信息来判别应该清除哪个 SoftReference(持有的对象)，
+    更无法判定当 App 要求更多内存的时候，是应该清除 SoftReference，还是增大 App 的Heap。
      
 听着是不是很合理，但是这个根本说不过去啊。
 
