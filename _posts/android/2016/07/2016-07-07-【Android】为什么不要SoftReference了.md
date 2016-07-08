@@ -45,7 +45,7 @@ Android Runtime与 JVM 不一样的是：用户 App 通常没有权限来设定�
 因此，Android 对 SoftReference 这个“墙头草”采取了比较激进的措施，即尽可能的多的找机会来清除它们，结果就是还不如使用 WeakReference 呢，起码效果和语义都是可预期的。
 同时，Android Runtime 也将内存控制的一部分措施让渡给开发者，这里面就包括 SoftReference。
 开发者可以采取各自的策略来处理类似的内存问题，换句话说，就是用“开发者智能”替换“运行时策略”。如果开发者置之不理，那么结果就是要么是没有缓存，要么是内存暴涨。
-Android 官方推荐的是 [LruCache](https://developer.android.com/reference/android/util/LruCache.html)来进行缓存，LruCache 的
+Android 官方推荐的是 [LruCache](https://developer.android.com/reference/android/util/LruCache.html)来进行缓存。
 
 # SoftReference 与 LruCache
 
