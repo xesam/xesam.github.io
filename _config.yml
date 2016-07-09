@@ -4,7 +4,7 @@
 timezone:    '+8'
 
 # Setup
-url:              http://xesam.github.io/
+url:              /
 
 # Set to '' in case of hosting on `http://<your-github-name>.github.io`
 baseurl:          ''
