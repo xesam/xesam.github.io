@@ -94,7 +94,12 @@ javah 命令的路径，前提是 javah 已经加入到 $PATH 中，不然需要
         
     所有参数配置与 “javah生成头文件的配置”一样即可，
 
-
-
 一切完成之后，每次 Run 的时候，都会将最新的 so 文件打包编译打包进去。
+
+## 调试
+
+Google 官方的 ADT 只更新到 23.0.7，如果你的 ndk 比较新，那么，调试的时候会出现各种乱七八糟的 bug ，比如，找不到 gdb 之类。
+所以，先把 ADT 更新到最新，野生版本参见[https://github.com/khaledev/ADT](https://github.com/khaledev/ADT)。
+
+然后直接 Debug AS “Android Native Application” 就行了，也不需要像书中那般配置，因为书的配置已经过时了。
 
