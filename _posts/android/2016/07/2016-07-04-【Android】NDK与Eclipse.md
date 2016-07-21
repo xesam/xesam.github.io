@@ -98,6 +98,10 @@ javah 命令的路径，前提是 javah 已经加入到 $PATH 中，不然需要
 
 ## 调试
 
+上面的的  ndk-build 命令需要添加参数 
+
+    ndk-build NDK_DEBUG=1
+
 Google 官方的 ADT 只更新到 23.0.7，如果你的 ndk 比较新，那么，调试的时候会出现各种乱七八糟的 bug ，比如，找不到 gdb 之类。
 所以，先把 ADT 更新到最新，野生版本参见[https://github.com/khaledev/ADT](https://github.com/khaledev/ADT)。
 
