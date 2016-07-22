@@ -5,8 +5,7 @@ date:   2016-07-07 18:20:04 +0800
 categories: android
 tag: [android]
 ---
-
-Android 的官方关于 [SoftReference](https://developer.android.com/reference/java/lang/ref/SoftReference.html) 的文档中，明确指出 
+关于 SoftReference 在缓存中的使用问题，Android 在官方文档 [SoftReference](https://developer.android.com/reference/java/lang/ref/SoftReference.html)，明确指出 
 
     Avoid Soft References for Caching
     
