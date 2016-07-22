@@ -24,7 +24,7 @@ Android JsBridge 就是用来在 Android app的原生 java 代码与 javascript 
 Javascript 运行在 WebView 中，而 WebView 只是 Javascript 执行引擎与页面渲染引擎的一个包装而已。
 
 由于这种天然的隔离效应，我们可以将这种情况与 IPC 进行类比，将 Java 与 Javascript 的每次互调都看做一次 IPC 调用。
-如此一来，我们可以模仿各种已有的 IPC 方式来进行设计，比如 RPC。本文模仿 Android 的 Binder 机制来实现一个 JsBridge。
+如此一来，我们可以模仿各种已有的 IPC 方式来进行设计，比如 RPC。本文模仿 RPC 机制来实现一个 JsBridge。
 
 首先回顾一一下基于 Binder 的经典 RPC 调用：
 
