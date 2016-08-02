@@ -13,22 +13,18 @@ tag: [android]
 比如发送消息
 
 ```java
-
     public static final int MSG_START = 0;
     public static final int MSG_STOP = 1;
 
     // start
     Message.obtain(handler, MSG_START).sendToTarget();
-    
     // stop
     Message.obtain(handler, MSG_STOP).sendToTarget();
-    
 ```
    
 更容易维护的代码：
 
 ```
-
     private static final int MSG_START = 0;
     private static final int MSG_STOP = 1;
 
@@ -36,7 +32,6 @@ tag: [android]
     public void start(){
         Message.obtain(handler, MSG_START).sendToTarget();
     }
-    
     // stop
     public void stop(){
         Message.obtain(handler, MSG_STOP).sendToTarget();
