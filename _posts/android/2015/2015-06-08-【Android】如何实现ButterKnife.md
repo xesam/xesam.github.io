@@ -5,11 +5,9 @@ date:   2015-06-08 12:46:04 +0800
 categories: android
 tag: [android]
 ---
-# 【Android】如何实现ButterKnife
+## ButterKnife 的原理简述
 
-## ButterKnife的原理简述
-
-示例代码在github上： [ButterKnifeProcedure](https://github.com/xesam/ButterKnifeProcedure)
+本文的目标是用最简代码实现 ButterKnife 的核心功能。示例代码在github上： [ButterKnifeProcedure](https://github.com/xesam/ButterKnifeProcedure)
 
 ## Pluggable Annotation Processing
 
