@@ -6,4 +6,6 @@ categories: android
 tag: [android]
 ---
 
+taskAffinity 的问题
+
 
