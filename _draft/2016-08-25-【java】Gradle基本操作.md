@@ -31,6 +31,6 @@ System.getenv()['ANDROID_HOME']
 或者 
 
 ```
-System.getenv('ANDROID_HOME)
+System.getenv('ANDROID_HOME')
 ```
 
