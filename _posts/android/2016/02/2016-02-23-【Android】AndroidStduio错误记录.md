@@ -31,3 +31,9 @@ java本版：1.7
     Activity class {package/xxxxx} does not exist
     
 这个应该是 As 自身的问题，没有刷新缓存，把 .idea *.iml 什么都删除一下，重新打开基本就可以了。
+
+## 4. 无法关联源码
+
+    File -> Settings (ctrl+alt+s) -> Appearance & Behavior -> System Settings -> Android SDK.
+    
+点击 edit，无论有没有下载过对应的源码，都执行一遍，主要是让 Android studio 刷新自身的信息。
