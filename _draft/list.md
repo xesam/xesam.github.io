@@ -2,6 +2,8 @@
 
 Service 创建 与 销毁
 
+Drawable / Shader / Canvas / Matrix
+
 
 
 # c 数组，指针的各种声明
