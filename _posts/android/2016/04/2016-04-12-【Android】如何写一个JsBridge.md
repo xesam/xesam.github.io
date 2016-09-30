@@ -19,6 +19,8 @@ Android JsBridge 就是用来在 Android app的原生 java 代码与 javascript 
 
 有问题请联系 [xesam](http://xesam.github.io/about/)
 
+或者 QQ 群 315658668
+
 ## 原理概述
 
 Javascript 运行在 WebView 中，而 WebView 只是 Javascript 执行引擎与页面渲染引擎的一个包装而已。
