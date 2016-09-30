@@ -122,3 +122,7 @@ values-v21/styles.xml
 结果就导致其他 View 的点击事件失效，需要两次点击才能触发 App 的事件操作。所以，如果 Splash 不是单纯的展示品牌，还是尽量避免这种处理方式。
 
 示例 Demo 参见 [GitHub AndroidSplash](https://github.com/xesam/AndroidSplash)
+
+有问题请联系 [xesam](http://xesam.github.io/about/)
+
+或者 QQ 群 315658668
