@@ -6,16 +6,17 @@ categories: android
 tag: [android]
 ---
 
-Splash 就是通常说的启动页，启动页既不是必须的，也不是一定要用单独的 Activity 实现。现在使用 Splash 的大致出于以下看考虑：
+Splash 就是通常说的启动页，启动页不是必须的，也不一定要用单独的 Activity 实现。使用 Splash 的大致出于以下看考虑：
 
 1. 为了加入开屏广告，在 App 广告中，这种开屏广告价格是比较高的。
 2. App 从启动到到进入第一个功能界面需要一定的时间，App 会持续一段时间的白屏。特别是冷启动，以及第一次安装启动的时候，这种白屏会特别明显。
 
-本文主要是为了避免启动过程中的白屏问题，系统在启动 App 的第一个 Activity 时，会先显示 Activity 对应 Window 的 Background，
+系统在启动 App 的第一个 Activity 时，会先显示 Activity 对应 Window 的 Background，
 所以可以将第一个 Activity 的 WindowBackground 设置为特定的颜色或者图片，那么在启动阶段，会显示我们设置的 WindowBackground，而不是持续的白屏。
 
 values/styles.xml
-```
+
+```xml
     <style name="SplashBase" parent="AppTheme">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
@@ -28,7 +29,6 @@ values/styles.xml
 一个典型的 Splash 界面如下：
 
 即底部有一个产品的 Logo，界面中间或者上部是产品的 Slogan 或者图标。
-如果 Splash 还有广告的话，大致会类似下面：
 
 <img src="{{ site.baseurl }}/image/android_splash_3.png" style="border:1px solid black;" />
 
@@ -94,15 +94,17 @@ values/styles.xml
 </RelativeLayout>
 
 ```
+
+如果 Splash 还有广告的话，大致会类似下面：
 即底部的产品 Logo 保持不变，界面上部换成对应的广告。
 
 <img src="{{ site.baseurl }}/image/android_splash_4.png" style="border:1px solid black;" />
 
 ## 问题
 
-如果要求在 Splash 的时候 Fullscreen，也就是隐藏 StatusBar，不过 Fullscreen 主题并不会隐藏底部的 Navigation Bar。
-在 5.0 以上带有 Navigation Bar 的手机上，windowBackground 会显示在 Navigation Bar 下面，也就是图片被遮挡了一部分。
-因此，在 5.0 以上系统中，可以设置：
+如果要求在 Splash 的时候 Fullscreen，也就是隐藏 StatusBar，可以使用 Fullscreen 主题。 不过 Fullscreen 主题并不会隐藏底部的 Navigation Bar。
+在 5.0+ 带有 Navigation Bar 的手机上，windowBackground 会显示在 Navigation Bar 下面，也就是背景图会被遮挡了一部分。
+因此，在 5.0+ 系统中，可以设置：
 
 values-v21/styles.xml
 
@@ -118,8 +120,8 @@ values-v21/styles.xml
     getWindow().getDecorView().setSystemUiVisibility()
 ```
 
-来隐藏 Navigation Bar，不过这种操作会导致其他的问题，当 Navigation Bar 这种系统 UI 被隐藏之后，用户的第一次触屏操作会导致系统 UI 的显示，
-结果就导致其他 View 的点击事件失效，需要两次点击才能触发 App 的事件操作。所以，如果 Splash 不是单纯的展示品牌，还是尽量避免这种处理方式。
+来隐藏 Navigation Bar，不过这种操作会导致其他的问题：当 Navigation Bar 这种系统 UI 被隐藏之后，用户的第一次触屏操作会导致系统 UI 的显示，
+结果就导致其他 View 的点击事件失效，需要两次点击才能触发 App 的事件操作。所以，如果 Splash 不是单纯的品牌展示作用，还是尽量避免这种处理方式。
 
 示例 Demo 参见 [GitHub AndroidSplash](https://github.com/xesam/AndroidSplash)
 
