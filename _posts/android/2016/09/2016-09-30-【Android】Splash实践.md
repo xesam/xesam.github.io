@@ -48,6 +48,25 @@ values/styles.xml
         android:gravity="bottom|center_horizontal" /><!-- logo 居底部，并有 16dp 的边距 -->
 </layer-list>
 ```
+
+在 6.0 以下的系统中，对 item 的解析可能会有问题，所以，为了兼容老系统，建议这么写：
+
+```xml
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@android:color/white" />
+    <item>
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/as_slogan" />
+    </item>
+    <item android:bottom="16dp">
+        <bitmap
+            android:gravity="bottom"
+            android:src="@drawable/as_logo" />
+    </item>
+</layer-list>
+```
+
 这样可以避免变形，也方便计算各种边距。要显示广告的时候，则可以将广告区域填满 Logo 上部区域（前景区域），从而遮住 Slogan 区域（背景区域）。如下：
 
 ```xml
