@@ -138,7 +138,7 @@ a:focus::before {
   bottom: 0;
   top: 0;
   left: -17.5rem;
-  width: 18rem;
+  width: 14rem;
   will-change: transform;
   /*box-shadow: 0.25rem 0 0.5rem rgba(0, 0, 0, 0.15)*/
 }
@@ -211,7 +211,7 @@ a:focus::before {
     top: 0;
     left: 0;
     bottom: 0;
-    width: 18rem;
+    width: 14rem;
     /* Disable drawer positiioning on larger screens (already done via JS, but just to be sure) */
     -webkit-transform: translate3d(0,0,0)!important;
     -ms-transform: translate3d(0,0,0)!important;
