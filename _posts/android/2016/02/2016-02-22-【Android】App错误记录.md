@@ -152,5 +152,11 @@ onBackPressed() 是在 Fragment 引入之后才新增加的方法，所以，onB
 
 一般是因为 Proguard 配置错误或者不全
 
+## android.view.GLES20Canvas.clipPath
+
+低版本开启硬件加速导致的 2D 绘图问题，参见官网文档：[https://developer.android.com/guide/topics/graphics/hardware-accel.html#unsupported](https://developer.android.com/guide/topics/graphics/hardware-accel.html#unsupported)
+
+不过虽然官网说从 API 18 开始就恢复支持了，但是我在 4.4 以及 5.0 版本上都看到过此类崩溃，待调查。。
+
 
 ####Android分享 Q群：315658668
