@@ -144,6 +144,3 @@ values-v21/styles.xml
 
 示例 Demo 参见 [GitHub AndroidSplash](https://github.com/xesam/AndroidSplash)
 
-有问题请联系 [xesam](http://xesam.github.io/about/)
-
-或者 QQ 群 315658668
