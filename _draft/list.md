@@ -24,3 +24,5 @@ a 首先是一个数组，数组长度为10，数组元素是指向整型的指�
 
 [buntu为什么没有/etc/inittab文件? 深究ubuntu的启动流程分析](http://ginchenorlee.com/blog/2012/10/17/ubuntn-why-not-have-initab-file)
 [报错storage size of ‘act’ isn’t known当使用std=c99编译struct sigaction](http://blog.csdn.net/gatieme/article/details/50991903)
+
+## Volley 没有 Cancel 事件
