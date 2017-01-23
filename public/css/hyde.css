@@ -61,6 +61,7 @@ a:hover,
 a:focus {
   text-decoration: none;
   border-bottom: 0.15em solid;
+  cursor:pointer;
 }
 
 /* Styles for "Cesar" link hover effect. */
@@ -109,7 +110,7 @@ a:focus::before {
   position: relative;
   z-index: 4;
   text-align: center;
-  padding: 2rem 1rem;
+  padding: 1rem 0rem;
   color: rgba(255,255,255,.75);
   background-color: #202020!important;
   text-align: left;
@@ -151,9 +152,9 @@ a:focus::before {
 
 .drawer > .sidebar > .sidebar-sticky {
   position: absolute;
-  right:  1rem;
+  right:  0rem;
   bottom: 1rem;
-  left:   1rem;
+  left:   0rem;
 }
 
 .backdrop {
@@ -211,7 +212,7 @@ a:focus::before {
     top: 0;
     left: 0;
     bottom: 0;
-    width: 14rem;
+    width: 10rem;
     /* Disable drawer positiioning on larger screens (already done via JS, but just to be sure) */
     -webkit-transform: translate3d(0,0,0)!important;
     -ms-transform: translate3d(0,0,0)!important;
@@ -288,9 +289,9 @@ a:focus::before {
 @media (min-width: 48em) {
   .sidebar-sticky {
     position: absolute;
-    right:  1rem;
+    /*right:  1rem;*/
     /*bottom: 1rem;*/
-    left:   1rem;
+    /*left:   1rem;*/
     overflow-y: auto;
   }
 }
@@ -309,7 +310,7 @@ a:focus::before {
 @media (min-width: 48em) {
   .content {
     /*max-width: 38rem;*/
-    margin-left: 20rem;
+    margin-left: 14rem;
     margin-right: 2rem;
     border-left: none;
   }
@@ -317,7 +318,7 @@ a:focus::before {
 
 @media (min-width: 64em) {
   .content {
-    margin-left: 22rem;
+    margin-left: 14rem;
     margin-right: 4rem;
   }
 }
