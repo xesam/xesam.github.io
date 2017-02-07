@@ -22,7 +22,7 @@ Cupboard 是一个适用于 Android 的持久化存储方案，简单而且容�
 
 ## 官方文档的非官方翻译
 
-参见 [官方文档的非官方翻译 https://xesam.github.io/cupboard-cn/](http://xesam.github.io/cupboard-cn/)
+参见 [官方文档的非官方翻译 https://xesam.github.io/cupboard-cn/](https://xesam.github.io/cupboard-cn/)
 
 ### 使用
 
