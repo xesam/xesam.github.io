@@ -22,7 +22,7 @@ Cupboard 是一个适用于 Android 的持久化存储方案，简单而且容�
 
 ## 官方文档的非官方翻译
 
-参见 [官方文档的非官方翻译 http://xesam.github.io/cupboard-cn/](http://xesam.github.io/cupboard-cn/)
+参见 [官方文档的非官方翻译 https://xesam.github.io/cupboard-cn/](http://xesam.github.io/cupboard-cn/)
 
 ### 使用
 
@@ -51,4 +51,4 @@ java 类:
 
 上面的代码将一个 Book entity 存入数据库中，然后返回记录的 id， 就这么简单！
 
-更多参见 [Cupboard 非官方翻译](http://xesam.github.io/cupboard-cn/)
+更多参见 [Cupboard 非官方翻译](https://xesam.github.io/cupboard-cn/)
