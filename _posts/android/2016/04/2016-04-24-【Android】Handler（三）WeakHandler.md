@@ -5,11 +5,9 @@ date:   2016-04-24 00:00:00 +0800
 categories: android
 tag: [android]
 ---
-# 【Android】Handler（三）WeakHandler
-
 本文是对 [https://github.com/badoo/android-weak-handler](https://github.com/badoo/android-weak-handler) 的原理讲解。
 
-在 [Handler（一）内存泄漏](http://xesam.github.io/android/2016/03/27/Android-Handler-%E4%B8%80-%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F.html) 中已经清除，
+在 [Handler（一）内存泄漏](http://xesam.github.io/android/2016/03/27/Android-Handler-%E4%B8%80-%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F.html) 中已经清楚，
 匿名内部类隐式持有外层对象的强引用是导致内存泄漏的一个主因。比如下面的例子：
 
 ```java
@@ -93,9 +91,7 @@ class WeakHandler {
 }
 ```
 
-这样行不行呢，显然是不行的。
-
-因为在这种情况下，引用情况如下：
+这样行不行呢，显然是不行的。因为在这种情况下，引用情况如下：
 
 ![1]({{ site.baseurl }}/image/android-handler-3-2.png)
 
@@ -164,11 +160,11 @@ public class WeakHandler {
 }
 ```
 
-上面有一步需要重视：
+上面有一点需要特别强调：
 
-Activity 直接持有 WeakHandler，如果 WeakHandler 也直接持有 Runnable。
+    Activity 直接持有 WeakHandler，同时 WeakHandler 也直接持有 Runnable
 
-这句话的意思就是要求 WeakHandler 是 Activity 的一个实例变量。不然类似下面的写法
+这句话的意思就是要求 WeakHandler 是 Activity 的一个实例变量。类似下面的写法是一个反例：
 
 ```java
     new WeakHandler().postDelayed(new Runnable() {
@@ -180,7 +176,7 @@ Activity 直接持有 WeakHandler，如果 WeakHandler 也直接持有 Runnable�
     }, 50_000);
 ```
 
-WeakHandler 是一个局部变量，等方法执行完毕，WeakHandler 就被回收了。等待执行的 Runnable 又成了一个孤儿。
+WeakHandler 对象是一个局部变量，等方法执行完毕，WeakHandler 就被回收了，等待执行的 Runnable 又成了一个孤儿，一样逃脱不了被回收的命运。
 
 ## 总结
 
