@@ -404,7 +404,7 @@ public class AuthorDeserializer implements JsonDeserializer<Author> {
 
 我们来逐一看看：
 
-author 集合缓存在下面的对象中：
+（1） author 集合缓存在下面的对象中：
 
 ```java
 private final ThreadLocal<Map<Integer, Author>> cache = new ThreadLocal<Map<Integer, Author>>() {
@@ -416,3 +416,65 @@ private final ThreadLocal<Map<Integer, Author>> cache = new ThreadLocal<Map<Inte
 ```
 
 本实现使用 Map<String, Object> 作为缓存机制，并保存在 ThreadLocal 中，从而进行线程隔离。当然，可是使用其他更好的缓存方案，这个不关键。
+
+（2） 通过下面的方法获取 author ：
+```java
+private Author getOrCreate(final int id) {
+  Author author = cache.get().get(id);
+  if (author == null) {
+    author = new Author();
+    cache.get().put(id, author);
+  }
+  return author;
+}
+```
+即先通过 id 在缓存中查找 author，如果找到了，就直接为返回对应的 author，否则就根据 id 创建一个空的 author，并加入缓存中，然后返回这个新建的 author。
+
+通过这种方式，我们得以先创建一个吻合 id 的空 author 对象，等到 author 正真可用的时候，在填充缺失的信息，这就是为什么在本例实现中，解析顺序并没有影响的原因，因为缓存对象是共享的。我们可以先解析 book 再解析 author，如果是这种顺序，那么当 book 被解析的时候，其内部的 author 属性只是空有一个 id 的占位对象而已，等到后续解析到 author 的时候，才会真正填充其他信息。
+
+（3） 为了适应新需求，我们修改了 deserialize() 方法。在这个 deserialize() 实现中，其接收的 JsonElement 可能是一个 JsonPrimitive 或者是一个 JsonObject。在 BookDeserialiser 中，碰到解析 authors 的时候，传递给 AuthorDeserializer#deserialize() 的就是一个 JsonPrimitive，
+
+```java
+  // BookDeserialiser 中解析 authors
+  Author[] authors = context.deserialize(jsonObject.get("authors"), Author[].class);
+```
+
+BookDeserialiser 将解析任务委托给 context，context 找到 AuthorDeserializer 来解析这个 Author 数组，此时，AuthorDeserializer#deserialize() 接收到的就是 BookDeserialiser 传递过来的 JsonPrimitive。
+
+另一方面，当解析到 authors 的时候，AuthorDeserializer#deserialize() 接收到的就是 JsonObject。因此，在处理的时候，先做一个类型检测，然互进行恰当的转换：
+
+```java
+// 处理 Id 的情况
+   if (json.isJsonPrimitive()) {
+     final JsonPrimitive primitive = json.getAsJsonPrimitive();
+     final Author author = getOrCreate(primitive.getAsInt());
+     return author;
+   }
+
+```
+
+如果传递进来的是 id， 就先将 JsonElement 转换为 JsonPrimitive 再获取到 int。这个 int 就是用来获取 Author 缓存的 id 值。
+
+如果是 JsonObject，就如下转换：
+
+```java
+// The whole object is available
+if (json.isJsonObject()) {
+  final JsonObject jsonObject = json.getAsJsonObject();
+
+  final Author author = getOrCreate(jsonObject.get("id").getAsInt());
+  author.setName(jsonObject.get("name").getAsString());
+  return author;
+}
+```
+这一步在返回 author 之前，就完成了 author 的填充工作。
+
+如果传递进来的 JsonElement 既不是 JsonPrimitive 也不是 JsonObject，那就说明出错了，中断处理过程。
+
+```java
+ throw new JsonParseException("Unexpected JSON type: " + json.getClass().getSimpleName());
+```
+
+至此， BookDeserialiser 与 main() 都不需要修改，也能满足我们的需求。
+
+Gson 的 desieralizer 是一个强大而灵活的设计，合理运用也可以使我们的设计灵活而容易扩展。
