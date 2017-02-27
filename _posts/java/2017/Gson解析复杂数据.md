@@ -45,13 +45,13 @@ public class Book {
 
 ```java
     public class BookDeserializer implements JsonDeserializer<Book> {
-            
+
       @Override
       public Book deserialize(final JsonElement jsonElement, final Type typeOfT, final JsonDeserializationContext context)
           throws JsonParseException {
-      
+
         //todo 解析字段
-    
+
         final Book book = new Book();
         book.setTitle(title);
         book.setIsbn10(isbn10);
@@ -96,22 +96,22 @@ Gson 将 Json 对象解析为 JsonElement 的表示，一个 JsonElement 可以�
     public class BookDeserializer implements JsonDeserializer<Book> {
         @Override
         public Book deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-    
+
             final JsonObject jsonObject = jsonElement.getAsJsonObject();
-    
+
             final JsonElement jsonTitle = jsonObject.get("title");
             final String title = jsonTitle.getAsString();
-    
+
             final String isbn10 = jsonObject.get("isbn-10").getAsString();
             final String isbn13 = jsonObject.get("isbn-13").getAsString();
-    
+
             final JsonArray jsonAuthorsArray = jsonObject.get("authors").getAsJsonArray();
             final String[] authors = new String[jsonAuthorsArray.size()];
             for (int i = 0; i < authors.length; i++) {
                 final JsonElement jsonAuthor = jsonAuthorsArray.get(i);
                 authors[i] = jsonAuthor.getAsString();
             }
-    
+
             final Book book = new Book();
             book.setTitle(title);
             book.setIsbn10(isbn10);
@@ -152,7 +152,7 @@ Book{authors=[Joshua Bloch, Neal Gafter], isbn10='032133678X', isbn13='978-03213
 3. 执行 deserialize() 并传入必要的参数，本例中就是在 deserialize() 将一个 JsonElement 转换为 Book 对象。
 4. 将 deserialize() 的解析结果返回给 fromJson() 的调用者。
 
-## 嵌套的对象
+## 对象嵌套
 在上面的例子中，一本书的作者都只用了一个名字来表示，但是实际情况中，一个作者可能有很多本书，每个作者实际上还有个唯一的 id 来进行区分。结构如下：
 
 ```javascript
@@ -183,8 +183,134 @@ public class Author{
 那么问题来了，谁来负责解析这个 author？有几个选择：
 
 1. 我们可以更新 BookDeserializer，同时在其中解析 author 字段。这种方案耦合了 Book 与 Author 的解析，并不推荐。
-2. 
+2. 我们可以使用默认的 Gson 实现，在本例中，Author 类与 Author 的 json 字符串是一一对应的，因此，这种实现完全没问题。
+3. 我们还可以实现一个 AuthorDeserializer 来处理 author 字符串的解析问题。
 
+这里我们使用第二种方式，这种方式的改动最小：
 
+JsonDeserializer 的 deserialize() 方法提供了一个 JsonDeserializationContext 对象，这个对象是基于 Gson 的默认机制，我们可以选择性的将某些对象的反序列化委托给这个对象。JsonDeserializationContext 会解析 JsonElement 并返回对应的对象实例:
 
+```java
+  Author author = jsonDeserializationContext.deserialize(jsonElement, Author.class);
+```
 
+如上例所示，当遇到有 Author 类的解析需求时，jsonDeserializationContext 会去查找用来解析 Author 的 JsonDeserializer，如果有自定义的 JsonDeserializer 被注册过，那么就用自定义的 JsonDeserializer 来解析 Author，如果没有找到自定义的 JsonDeserializer，那就按照 Gson 的默认机制来解析 Author。下面的代码中，我们没有自定义 Author 的 JsonDeserializer，所以 Gson 会自己来处理 Author：
+
+```java
+import java.lang.reflect.Type;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+
+public class BookDeserializer implements JsonDeserializer<Book> {
+
+  @Override
+  public Book deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context)
+      throws JsonParseException {
+   final JsonObject jsonObject = json.getAsJsonObject();
+
+    final String title = jsonObject.get("title").getAsString();
+    final String isbn10 = jsonObject.get("isbn-10").getAsString();
+    final String isbn13 = jsonObject.get("isbn-13").getAsString();
+
+    // 委托给 Gson 的 context 来处理
+    Author[] authors = context.deserialize(jsonObject.get("authors"), Author[].class);
+
+    final Book book = new Book();
+    book.setTitle(title);
+    book.setIsbn10(isbn10);
+    book.setIsbn13(isbn13);
+    book.setAuthors(authors);
+    return book;
+  }
+}
+```
+
+除了上面的方式，我们同样可以自定义一个 ArthurDeserialiser 来解析 Author：
+```java
+import java.lang.reflect.Type;
+
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+
+public class AuthorDeserializer implements JsonDeserializer {
+
+  @Override
+  public Author deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context)
+      throws JsonParseException {
+    final JsonObject jsonObject = json.getAsJsonObject();
+
+    final Author author = new Author();
+    author.setId(jsonObject.get("id").getAsInt());
+    author.setName(jsonObject.get("name").getAsString());
+    return author;
+  }
+}
+```
+
+为了使用 ArthurDeserialiser，同样要用到 GsonBuilder：
+
+```java
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+public class Main {
+
+  public static void main(final String[] args) throws IOException {
+    // Configure GSON
+    final GsonBuilder gsonBuilder = new GsonBuilder();
+    gsonBuilder.registerTypeAdapter(Book.class, new BookDeserializer());
+    gsonBuilder.registerTypeAdapter(Author.class, new AuthorDeserializer());
+    final Gson gson = gsonBuilder.create();
+
+    // Read the JSON data
+    try (Reader reader = new InputStreamReader(Main.class.getResourceAsStream("/part2/sample.json"), "UTF-8")) {
+
+      // Parse JSON to Java
+      final Book book = gson.fromJson(reader, Book.class);
+      System.out.println(book);
+    }
+  }
+}
+```
+相比委托的方式，自定义 AuthorDeserializer 就根本不需要修改 BookDeserializer 任何代码，Gson 帮你处理了所有的问题。
+
+## 对象引用
+考虑下面的 json 文本：
+```javascript
+{
+  'authors': [
+    {
+      'id': 1,
+      'name': 'Joshua Bloch'
+    },
+    {
+      'id': 2,
+      'name': 'Neal Gafter'
+    }
+  ],
+  'books': [
+    {
+      'title': 'Java Puzzlers: Traps, Pitfalls, and Corner Cases',
+      'isbn': '032133678X',
+      'authors':[1, 2]
+    },
+    {
+      'title': 'Effective Java (2nd Edition)',
+      'isbn': '0321356683',
+      'authors':[1]
+    }
+  ]
+}
+```
