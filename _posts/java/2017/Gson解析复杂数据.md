@@ -314,3 +314,105 @@ public class Main {
   ]
 }
 ```
+
+这个 json 对象包含两个 book，两个 author，每本书都通过 author 的id 关联到 author，因此，每个 book 的 author 值都只是一个 id 而已。这种结果在网络接口里面非常常见，通过共用对象减少重复定义来减小响应的大小。
+
+这又给解析 json 带来新的挑战，我们需要将 book 和 author 对象组合在一起，但是在解析 json
+文本的时候，是以类似树的路径解析的，在解析到 book 的时候，我们只能看到 author 的 id，此时具体的 author 信息却在另一个分支上，在当前的 context 中无法找到所需要的 author。
+
+有几种方法可以处理这个问题：
+
+1. 第一个方案，分两段解析。第一段：按照 json 的结构将 json 文本解析成对应的 java 对象，此时，每个 book 对象都包含一个 id 的数组。第二段：直接在得到的 java 对象中，将 author 对象关联到 book 对象。这种方式的有点就是提供了最大的扩展性，不过缺点也是非常明显的，这种方式需要额外的一组辅助 java 类来表示对应的 json 文本结构，最后在转换为满足应用需求的 java 对象（即我们定义的 model）。在本例中，我们的 model 只有两个类： Book 与 Author。但是使用分段解析的方式，我们还需要额外定义一个 Book 和 Author，结果总共就有 4 个类了。在本例中还说得过去，对于那些也有几十上百的 model 来说，那就相当复杂了。
+2. 另一个方案是给 BookDeserialiser 传递所有的 author 对象集合，当 BookDeserialiser 在解析到 Author 属性的时候，直接通过 id 从 author 集合中取得对应的 Author 对象。这样就省略了中间步骤以及额外的对象定义。
+这种方式看起来听好，不过这要求 BookDeserialiser 和 AuthorDeserialiser 共享同一个对象集合。当获取 author 的是偶，BookDeserialiser 需要去访问这个共享对象，而不是像我们先前那样直接从 JsonDeserializationContext 中得到。这样就导致了好几处的改动，包括 BookDeserialiser，AuthorDeserialiser 以及 main 方法。
+3. 第三种方案是 AuthorDeserialiser 缓存解析得到的 author 集合，当后面需要通过 id 得到具体 Author 对象的时候，直接返回缓存值。这个方案的好处是通过 JsonDeserializationContext 来实现对象的获取，并且对其他部分都是透明的。缺点就是增加了 AuthorDeserialiser 的复杂度，需要修改 AuthorDeserialiser 来处理缓存。
+
+上述方案都有利有弊，可以针对不同的情况，权衡使用。后文以第三种方案来实现，以避免过多的改动。
+
+## Observation
+
+原理上讲，相较于后两种方案，第一种方案提供了更好的关注点分离，我们可以在外层的 Data 类中实现装配。不过第一种方案的改动太大，这一点前面也说过。做到影响面最小，是我们的目标，也是选用第三种方案的主要原因。
+
+json 对象包含两个数组，因此我们需要一个新的类来反映这种结。
+
+```java
+public class Data {
+
+  private Author[] authors;
+  private Book[] books;
+}
+```
+
+这两个属性的顺序决定了两者的解析顺序，不过在我们的实现中，解析顺序无关紧要，随便哪个属性先解析都可以，具体见后文。
+
+AuthorDeserialiser 需要先修改来缓存 author 集合：
+
+```java
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+
+public class AuthorDeserializer implements JsonDeserializer<Author> {
+
+  private final ThreadLocal<Map<Integer, Author>> cache = new ThreadLocal<Map<Integer, Author>>() {
+    @Override
+    protected Map<Integer, Author> initialValue() {
+      return new HashMap<>();
+    }
+  };
+
+  @Override
+  public Author deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context)
+      throws JsonParseException {
+
+    // Only the ID is available
+    if (json.isJsonPrimitive()) {
+      final JsonPrimitive primitive = json.getAsJsonPrimitive();
+      return getOrCreate(primitive.getAsInt());
+    }
+
+    // The whole object is available
+    if (json.isJsonObject()) {
+      final JsonObject jsonObject = json.getAsJsonObject();
+
+      final Author author = getOrCreate(jsonObject.get("id").getAsInt());
+      author.setName(jsonObject.get("name").getAsString());
+      return author;
+    }
+
+    throw new JsonParseException("Unexpected JSON type: " + json.getClass().getSimpleName());
+  }
+
+  private Author getOrCreate(final int id) {
+    Author author = cache.get().get(id);
+    if (author == null) {
+      author = new Author();
+      author.setId(id);
+      cache.get().put(id, author);
+    }
+    return author;
+  }
+}
+```
+
+我们来逐一看看：
+
+author 集合缓存在下面的对象中：
+
+```java
+private final ThreadLocal<Map<Integer, Author>> cache = new ThreadLocal<Map<Integer, Author>>() {
+  @Override
+  protected Map<Integer, Author> initialValue() {
+    return new HashMap<>();
+  }
+};
+```
+
+本实现使用 Map<String, Object> 作为缓存机制，并保存在 ThreadLocal 中，从而进行线程隔离。当然，可是使用其他更好的缓存方案，这个不关键。
