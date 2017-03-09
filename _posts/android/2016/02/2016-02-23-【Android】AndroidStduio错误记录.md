@@ -37,3 +37,27 @@ java本版：1.7
     File -> Settings (ctrl+alt+s) -> Appearance & Behavior -> System Settings -> Android SDK.
     
 点击 edit，无论有没有下载过对应的源码，都执行一遍，主要是让 Android studio 刷新自身的信息。
+
+## 支持 java8
+
+最新有的库是使用 java8 编译的，有可能报字节码解析错误，所以可以都改成 java8 编译。
+
+要求 as 2.1 以上， jack 支持：
+
+```gradle
+android {
+  ...
+  defaultConfig {
+    ...
+    jackOptions {
+      enabled true
+    }
+  }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+}
+
+
+```
