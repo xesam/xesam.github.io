@@ -1,9 +1,9 @@
 ---
 layout: post
-title:  "【Android】Volley（一）线程池的问题"
+title:  "【Volley】线程池的问题"
 date:   2016-03-24 13:46:04 +0800
-categories: android
-tag: [android]
+categories: volley
+tag: [volley]
 ---
 # Volley（一）线程池的问题
 

@@ -39,6 +39,13 @@ computer:
   description: >
     计算机相关，或者不相关
 
+volley:
+  name: volley
+#  image: /public/img/jekyll.jpg
+  color: '#949667'
+  description: >
+    Volley 瞎侃
+
 talk:
   name: talk
 #  image: /public/img/jekyll.jpg

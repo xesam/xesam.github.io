@@ -2,8 +2,8 @@
 layout: post
 title:  "【Volley】Pool"
 date:   2017-03-20 13:46:04 +0800
-categories: android
-tag: [android]
+categories: volley
+tag: [volley]
 ---
 
 就像 Volley 的口号一样：“a burst or emission of many things or a large amount at once”，volley 只适合“数据量小，并发量大”的请求场景。造成这种原因的包含了很多原因，其中就有 Pool 的因素。

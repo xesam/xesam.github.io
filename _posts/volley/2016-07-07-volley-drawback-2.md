@@ -1,9 +1,9 @@
 ---
 layout: post
-title:  "【Android】Volley（二）缺陷"
+title:  "【Volley】缺陷"
 date:   2016-07-07 13:46:04 +0800
-categories: android
-tag: [android]
+categories: volley
+tag: [volley]
 ---
 
 ## 1. 解析 内部直接使用 Memory buffers 来缓存响应
