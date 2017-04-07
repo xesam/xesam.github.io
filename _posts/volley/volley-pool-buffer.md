@@ -139,9 +139,31 @@ private void expand(int i) {
 private List<byte[]> mBuffersBySize = new ArrayList<byte[]>(64);//用来实际保存可复用的缓存数组，
 private List<byte[]> mBuffersByLastUse = new LinkedList<byte[]>();//充当时间线的角色，用来实现 Least Recently Used 策略。即在需要缩减池对象的时候，优先移除最久未使用的 byte[] 对象。
 ```
+
+所以在说道一个问题的时候，总会设计到更多的背景知识。
+
 2. 查找目标的时候用了遍历和 binarySearch 两种实现
 
-
+public synchronized byte[] getBuf(final int len) {
+    int pos = Collections.binarySearch(mBuffersBySize, null, new Comparator<byte[]>() {
+        @Override
+        public int compare(byte[] o1, byte[] o2) {
+            return o1.length - len;
+        }
+    });
+    if (pos < 0) {
+        pos = -pos - 1;
+    }
+    if (pos >= mBuffersBySize.size()) {
+        return new byte[len];
+    } else {
+        byte[] buf = mBuffersBySize.get(pos);
+        mCurrentSize -= buf.length;
+        mBuffersBySize.remove(buf);
+        mBuffersByLastUse.remove(buf);
+        return buf;
+    }
+}
 
 
 http://www.voidcn.com/blog/yuan514168845/article/p-4950324.html
