@@ -86,6 +86,78 @@ rfc5861 定义了两个 Cache-Control 的扩展：
     failure
 ```
 
+## 实验
+
+为了验证 stale-while-revalidate 的效果，我们可以构建一个新鲜时间 10s，stale 时间 30s 的响应，然后在第 15s 发送一个请求。
+如果 stale-while-revalidate 没有生效，那么我们会看到服务器的最新响应，反之，我们还是会看到缓存中的响应。
+
+服务器 node：
+
+```javascript
+var http = require('http');
+var util = require('util');
+var fs = require("fs");
+
+var server = http.createServer(function(req, res){   
+    console.log(req.url);
+    if(req.url == '/favicon.ico'){
+        res.end();
+    }if(req.url == '/getData'){
+         res.writeHead(200, {
+            'Cache-Control' : 'max-age=10,stale-while-revalidate=30'
+        });
+        var data = new Date().toGMTString();
+        res.end(data);
+    }else{
+        console.log(req.headers); 
+        fs.readFile('cache.html', function(err, data){
+            res.end(data);
+        });
+    }
+
+}).listen(3000, function(){
+    console.log('start');
+});
+```
+
+前段界面 cache.html：
+
+```html
+<html>
+    <head>
+        <title>stale-while-revalidate</title>
+    </head>
+    <body>
+        <button id="getData">getDate</button>
+        <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+        <script type="text/javascript">
+            function getData(){
+                $.ajax({
+                    url : 'getData',
+                    cache :true,
+                    success :function(data){
+                        console.log(data);
+                    }
+                });
+            }
+            $('#getData').on('click', function(){
+                getData();
+                setTimeout(function(){
+                   getData();
+                }, 15000);
+            });
+        </script>
+    </body>
+</html>
+```
+
+响应结果：
+    
+    Thu, 22 Jun 2017 08:23:44 GMT # Thu, 22 Jun 2017 08:23:44 GMT
+    Thu, 22 Jun 2017 08:23:59 GMT # Thu, 22 Jun 2017 08:23:44 GMT
+
+相隔 15s 的两个请求响应结果是一样的，虽然响应缓存的新鲜时间只有 10s，但是依旧可用。
+
 ## 参考资料
 
 1. [https://tools.ietf.org/html/rfc5861](https://tools.ietf.org/html/rfc5861)
