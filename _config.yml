@@ -1,44 +1,37 @@
-# Permalinks
-#permalink:        pretty
-
-timezone:    '+8'
+# Dependencies
+markdown:         kramdown
+highlighter:      rouge
 
 # Setup
-url:              /
-
-# Set to '' in case of hosting on `http://<your-github-name>.github.io`
-baseurl:          ''
-
 title:            Xesam
-
-# Markdown enabled, however don't use more than one paragraph (enforced by `>`)
-description:      >
-  靠谱的娱乐型程序员
-
-# The tags listed as entries in the sidebar
-sidebar_tags:     [java, android, javascript, computer, volley, talk]
-
-# Fallback image and color if not overwritten for tag or post
-image:            /public/img/jekyll.jpg
-color:            '#A85641'
+tagline:          'xesam blog'
+description:      'Funny Coder'
+url:              https://xesam.github.io/
+baseurl:          # the optional subpath of your site, e.g. "/blog"
+                  # NB: This applies to all pages in your Jekyll site.
+                  # If you want to move just the blog index pages but keep
+                  # other pages at root, see the paginate_path and
+                  # sidebar_blog_link below.
 
 author:
-  name:           'xesam'
+  name:           'Xesam'
+  url:            https://xesam.github.io/
 
-  # Setting social media usernames will add icons at the bottom of the sidebar
-  github:         xesam
+paginate:         10
+# paginate_path:    '/page:num'
+                    # Or '/blog/page:num' if you want to move your index pages
 
-  # Setting a disqus username will enable the comment section
-  # disqus:         qwtel
+plugins:
+  - jekyll-feed
+  - jekyll-gist
+  - jekyll-paginate
 
-  # This photo will be used in the about section
-  photo:          https://avatars0.githubusercontent.com/u/1892804?v=3&s=460
-
-  # Markdown enabled, can use multiple paragraphs (enabled by `|`)
-  about:          |
-    Hi, I'm [xesam](https://github.com/xesam)
-
-kramdown:
-  math_engine: mathjax
-  math_engine_opts:
-    preview: true
+# Custom vars
+version:            3.4.1
+sidebar_home_link:  true
+# sidebar_blog_link:  '/blog'   # By default, your home page is your blog
+                                # page. If you change your paginate_path,
+                                # set this to the root of the paginate_path
+                                # to enable a separate blog link.
+github:
+  repo:             https://github.com/xesam

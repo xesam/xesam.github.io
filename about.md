@@ -1,10 +1,8 @@
 ---
 layout: page
-title: 关于我
-permalink: /about/
+title: About
+sidebar_link: true
 ---
-<h2>{% include icon-github.html username=site.github_username %}</h2>
-
 个人特征：靠谱的娱乐型程序员
 
 QQ : 416249980
