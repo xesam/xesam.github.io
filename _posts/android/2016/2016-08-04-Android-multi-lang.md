@@ -86,15 +86,12 @@ Resources.getSystem().getConfiguration().locale;
 
 ```java
     Locale targetLocale = getTargetLocale();
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        Locale.setDefault(targetLocale);
-    } else {
-      Resources resources = context.getResources();
-      Configuration config = resources.getConfiguration();
-      DisplayMetrics dm = resources.getDisplayMetrics();
-      config.locale = targetLocale;
-      resources.updateConfiguration(config, dm);
-    }
+    Locale.setDefault(targetLocale);
+    Resources resources = context.getResources();
+    Configuration config = resources.getConfiguration();
+    DisplayMetrics dm = resources.getDisplayMetrics();
+    config.locale = targetLocale;
+    resources.updateConfiguration(config, dm);
 
 ```
 
