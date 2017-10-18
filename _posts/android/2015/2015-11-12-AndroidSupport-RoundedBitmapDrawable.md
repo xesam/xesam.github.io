@@ -6,8 +6,6 @@ categories: android
 tag: [android]
 ---
 
-#【AndroidSupport】RoundedBitmapDrawable 创建圆角图片
-
 ## 简介
 RoundedBitmapDrawable 是 android.support.v4.graphics.drawable 里面的一个类，用来创建简单的圆角图片。
 如果只是简单的圆角展示,比如展示一个圆角头像，这个类完全可以胜任。

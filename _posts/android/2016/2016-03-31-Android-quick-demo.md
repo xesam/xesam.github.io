@@ -6,8 +6,6 @@ categories: android
 tag: [android]
 ---
 
-# 【Android】如何快速构建Android Demo
-
 ## 简介
 
 在 Android 学习的过程中，经常需要针对某些项目来写一些测试的例子，或者在做一些 demo 的时候，都需要先写 Activity 然后注册。

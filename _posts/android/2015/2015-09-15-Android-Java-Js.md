@@ -6,8 +6,6 @@ categories: android
 tag: [android]
 ---
 
-# 【Android】Java与Js通信
-
 Java 与 Js 互调封装 [AndroidJavascriptBridge](https://github.com/xesam/AndroidJavascriptBridge)
 
 # JS 调用 Java

@@ -6,8 +6,6 @@ categories: android
 tag: [android]
 ---
 
-# 【Android】Service生命周期回顾
-
 Service 经历的生命周期较少，可以分三种情况记录。
 
 ## 第一种，startService / stopService

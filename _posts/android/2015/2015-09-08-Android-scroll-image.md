@@ -5,7 +5,6 @@ date:   2015-09-08 12:46:04 +0800
 categories: android
 tag: [android]
 ---
-## 【Android】无限滚动的图片
 
 github 地址[InfiniteImageView](https://github.com/xesam/InfiniteImageView)
 

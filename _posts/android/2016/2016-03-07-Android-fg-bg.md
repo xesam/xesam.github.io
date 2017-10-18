@@ -6,8 +6,6 @@ categories: android
 tag: [android]
 ---
 
-# 【Android】前后台切换监听
-
 Android 本身并有提供这样的监听，所以就只能走偏门了。
 
 首先，需要定义一下，什么叫“前台”，什么叫“后台”。本文定义如下：
