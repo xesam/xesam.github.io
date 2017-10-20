@@ -5,7 +5,6 @@ date:   2015-09-05 12:46:04 +0800
 categories: android
 tag: [android]
 ---
-# 【AndroidSupport】LinearLayoutCompat
 
 LinearLayoutCompat 所在位置 android.support.v7.widget.LinearLayoutCompat
 

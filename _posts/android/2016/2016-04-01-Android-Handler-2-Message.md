@@ -5,8 +5,6 @@ date:   2016-04-01 00:00:00 +0800
 categories: android
 tag: [android]
 ---
-# 【Android】Handler（二）——Message面面观
-
 ## Message 有几种？
 Message 有两种：Data Message（数据消息） 与 Task Message（任务消息）
 

@@ -5,7 +5,6 @@ date:   2015-12-09 13:46:04 +0800
 categories: android
 tag: [android]
 ---
-# Cupboard Tips
 
 [Cupboard 官方托管](https://bitbucket.org/littlerobots/cupboard)
 

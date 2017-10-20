@@ -5,7 +5,6 @@ date:   2015-10-20 13:46:04 +0800
 categories: android
 tag: [android]
 ---
-# Android Log
 
 地址 ： [https://github.com/xesam/AndroidLogTools](https://github.com/xesam/AndroidLogTools)
 
