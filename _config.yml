@@ -5,7 +5,7 @@ highlighter:      rouge
 # Setup
 title:            Xesam
 tagline:          'xesam blog'
-description:      'Funny Coder'
+description:      '靠谱的娱乐型程序员'
 url:              https://xesam.github.io/
 baseurl:          # the optional subpath of your site, e.g. "/blog"
                   # NB: This applies to all pages in your Jekyll site.
