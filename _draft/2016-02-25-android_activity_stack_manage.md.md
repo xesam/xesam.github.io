@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Android】Android的Activity栈管理"
+title:  "Android的Activity栈管理"
 date:   2016-02-19 13:46:04 +0800
 categories: Android
 ---

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Android】Android Application与Linux Process"
+title:  "Android Application与Linux Process"
 date:   2016-02-25 13:46:04 +0800
 categories: Android
 ---
