@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Java】打印线程状态"
+title:  "打印线程状态"
 date:   2016-03-03 14:46:04 +0800
 categories: java
 tag: [java]

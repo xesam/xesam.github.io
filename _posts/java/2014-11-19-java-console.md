@@ -1,12 +1,10 @@
 ---
 layout: post
-title:  "【Java】控制台输入小节"
+title:  "控制台输入小节"
 date:   2014-11-19 12:46:04 +0800
 categories: java
 tag: [java]
 ---
-# 【java】控制台输入小节
-
 ## BufferedReader
 
 最基础的方法，从System.in输入流中获取数据

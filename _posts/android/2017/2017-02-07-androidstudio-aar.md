@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Android】aar依赖"
+title:  "aar依赖"
 date:   2017-05-07 13:46:04 +0800
 categories: android
 tag: [android]

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【computer】BIOS与0x7C00"
+title:  "BIOS与0x7C00"
 date:   2016-12-17 08:00:00 +0800
 categories: computer
 tag: [computer]

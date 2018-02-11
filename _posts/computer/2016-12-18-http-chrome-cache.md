@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【computer】chrome缓存设置"
+title:  "chrome缓存设置"
 date:   2016-12-18 08:00:00 +0800
 categories: computer
 tag: [computer]

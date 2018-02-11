@@ -1,12 +1,10 @@
 ---
 layout: post
-title:  "【Java】如何实现一个简单的事件总线"
+title:  "如何实现一个简单的事件总线"
 date:   2015-04-26 12:46:04 +0800
 categories: java
 tag: [java]
 ---
-
-# 【Java】如何实现一个简单的事件总线
 
 [MicroBus](https://github.com/konmik/MicroBus)
 

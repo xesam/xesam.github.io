@@ -1,12 +1,10 @@
 ---
 layout: post
-title:  "【Java】变长参数的坑"
+title:  "变长参数的坑"
 date:   2014-12-19 12:46:04 +0800
 categories: java
 tag: [java]
 ---
-# 【Java】变长参数的坑
-
 # VarArgs
 
 ## VarArgs简述

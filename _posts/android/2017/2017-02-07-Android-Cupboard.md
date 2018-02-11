@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Android】Cupboard非官方翻译"
+title:  "Cupboard非官方翻译"
 date:   2017-02-07 13:46:04 +0800
 categories: android
 tag: [android]

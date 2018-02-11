@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【http】Cache-Control扩展"
+title:  "Cache-Control扩展"
 date:   2017-05-08 08:00:00 +0800
 categories: computer
 tag: [computer]

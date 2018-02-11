@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Java】ThreadLocal设计意图"
+title:  "ThreadLocal设计意图"
 date:   2016-05-08 13:46:04 +0800
 categories: java
 tag: [java]

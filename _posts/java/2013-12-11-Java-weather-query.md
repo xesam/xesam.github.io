@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Android】国内天气预报查询测试"
+title:  "国内天气预报查询测试"
 date:   2013-12-11 13:46:04 +0800
 categories: android
 tag: [android]

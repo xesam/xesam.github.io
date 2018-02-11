@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【computer】传值调用与传引用调用"
+title:  "传值调用与传引用调用"
 date:   2016-10-21 16:51:38 +0800
 categories: computer
 tag: [computer]
