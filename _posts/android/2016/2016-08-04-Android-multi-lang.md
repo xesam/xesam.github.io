@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Android】多语言切换"
+title:  "Android 多语言切换"
 date:   2016-08-04 08:00:00 +0800
 categories: android
 tag: [android]

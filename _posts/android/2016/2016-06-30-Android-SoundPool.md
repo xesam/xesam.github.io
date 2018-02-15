@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Android】SoundPool"
+title:  "Android 的SoundPool"
 date:   2016-06-30 08:00:00 +0800
 categories: android
 tag: [android]

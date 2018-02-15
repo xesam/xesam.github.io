@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Android】NDK与Eclipse"
+title:  "Android NDK与Eclipse"
 date:   2016-07-04 14:46:04 +0800
 categories: android
 tag: [android]

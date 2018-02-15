@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Android】第三方推送SDK集成简述"
+title:  "Android 第三方推送SDK集成简述"
 date:   2016-07-09 18:20:04 +0800
 categories: android
 tag: [android]

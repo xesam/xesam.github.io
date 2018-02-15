@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Android】生命周期监听"
+title:  "Android 生命周期监听"
 date:   2016-05-20 08:00:00 +0800
 categories: android
 tag: [android]

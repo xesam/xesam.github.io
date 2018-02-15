@@ -1,12 +1,10 @@
 ---
 layout: post
-title:  "【Android】如何快速构建Android Demo"
+title:  "Android 如何快速构建Android Demo"
 date:   2016-03-27 13:46:04 +0800
 categories: android
 tag: [android]
 ---
-
-## 简介
 
 在 Android 学习的过程中，经常需要针对某些项目来写一些测试的例子，或者在做一些 demo 的时候，都需要先写 Activity 然后注册。
 如果里面有太多的跳转的话，还需要每个跳转都增加一个事件。这些都是非常繁琐的步骤。那么如何省略这些步骤呢？

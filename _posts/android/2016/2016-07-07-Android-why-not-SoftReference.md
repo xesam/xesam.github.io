@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Android】为什么不要SoftReference了"
+title:  "Android 为什么不要SoftReference了"
 date:   2016-07-07 18:20:04 +0800
 categories: android
 tag: [android]

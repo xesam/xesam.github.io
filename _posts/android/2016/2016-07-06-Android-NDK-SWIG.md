@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Android】NDK与SWIG"
+title:  "Android NDK与SWIG"
 date:   2016-07-06 01:00:00 +0800
 categories: android
 tag: [android]

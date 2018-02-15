@@ -1,12 +1,10 @@
 ---
 layout: post
-title:  "【Android】如何写一个JsBridge"
+title:  "如何写一个JsBridge"
 date:   2016-04-12 00:00:00 +0800
 categories: android
 tag: [android]
 ---
-
-## 简介
 
 Android JsBridge 就是用来在 Android app的原生 java 代码与 javascript 代码中架设通信（调用）桥梁的辅助工具。 
 

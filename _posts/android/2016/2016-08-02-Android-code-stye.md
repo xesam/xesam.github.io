@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Android】编写可维护的Android代码"
+title:  "Android 编写可维护的Android代码"
 date:   2016-08-02 08:00:00 +0800
 categories: android
 tag: [android]

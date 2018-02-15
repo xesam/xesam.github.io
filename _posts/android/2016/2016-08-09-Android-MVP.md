@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Android】MVP专题"
+title:  "Android MVP专题"
 date:   2016-08-09 13:46:04 +0800
 categories: android
 tag: [android]
