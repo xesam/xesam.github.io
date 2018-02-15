@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Android】Splash实践"
+title:  "Android Splash实践"
 date:   2016-09-30 13:46:04 +0800
 categories: android
 tag: [android]

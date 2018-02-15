@@ -5,8 +5,6 @@ date:   2016-12-17 08:00:00 +0800
 categories: computer
 tag: [computer]
 ---
-## 神秘的 0x7C00
-
 你知道 0x7C00，这个在 x86 汇编中的一个神秘数字吗？
 0x7C00 是一个内存地址，BIOS 就是将 MBR (Master Boot Record, hdd/fdd 的第一个 sector) 读入 0x7C00 这个地址，
 然后进行后续引导的。
