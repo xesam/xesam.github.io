@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Android】Service生命周期回顾"
+title:  "Android Service生命周期回顾"
 date:   2016-03-20 13:46:04 +0800
 categories: android
 tag: [android]

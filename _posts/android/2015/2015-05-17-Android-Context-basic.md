@@ -1,12 +1,10 @@
 ---
 layout: post
-title:  "【Android】Context基础！"
+title:  "Android Context基础！"
 date:   2015-05-17 12:46:04 +0800
 categories: android
 tag: [android]
 ---
-# 【Android】Context基础！
-
 英文原文：[Context, What Context?](http://possiblemobile.com/2013/06/context/)
 
 译文Github地址:[Context, What Context?](https://github.com/xesam/tech-translate/blob/master/android/Context-What_Context.md)

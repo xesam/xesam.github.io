@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Android】简单的日志工具"
+title:  "Android 简单的日志工具"
 date:   2015-10-20 13:46:04 +0800
 categories: android
 tag: [android]

@@ -5,7 +5,6 @@ date:   2016-05-30 12:46:04 +0800
 categories: javascript
 tag: [javascript]
 ---
-## 理解路径
 Javascript 中的 Canvas 是基于路径的，同一时刻时能有一条路径而且肯定会有一条路径。
 路径中可以包含很多条子路径，即 N 条子路径构成了一条路径。与路径相关的操作：
 

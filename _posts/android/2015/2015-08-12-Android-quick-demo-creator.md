@@ -1,14 +1,10 @@
 ---
 layout: post
-title:  "【Android】quick-demo-creator"
+title:  "uick-demo-creator"
 date:   2015-08-12 12:46:04 +0800
 categories: android
 tag: [android]
 ---
-# 【Android】quick-demo-creator
-
-# 设计目的
-
 在我们写一些 demo 的时候，经常需要针对每种情况写一个用户示例，新建 Activity 的过程太麻烦，所以这个库的作用就是自动帮你创建索引式的导航列表，一行代码搞定所有的示例。
 
 # 使用方式

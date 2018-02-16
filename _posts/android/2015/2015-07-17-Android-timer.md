@@ -1,12 +1,10 @@
 ---
 layout: post
-title:  "【Android】定时任务"
+title:  "Android 定时任务"
 date:   2015-07-17 12:46:04 +0800
 categories: android
 tag: [android]
 ---
-# 【Android】定时任务
-
 基于Handler的Android定时器与倒计时器
 
 源码地址：[Github AndroidTimer]( https://github.com/xesam/AndroidTimer)

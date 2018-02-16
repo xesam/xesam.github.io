@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Android】App错误记录"
+title:  "App错误记录"
 date:   2016-02-22 13:46:04 +0800
 categories: android
 tag: [android]

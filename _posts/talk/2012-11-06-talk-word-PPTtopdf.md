@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【杂谈】批量word和PPT文档转pdf"
+title:  "批量word和PPT文档转pdf"
 date:   2012-11-06 13:46:04 +0800
 categories: talk
 tag: [talk]

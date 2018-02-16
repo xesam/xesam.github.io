@@ -1,14 +1,10 @@
 ---
 layout: post
-title:  "【Android】UI组件变量组织"
+title:  "Android UI组件变量组织"
 date:   2015-04-11 12:46:04 +0800
 categories: android
 tag: [android]
 ---
-# 【Android】UI组件变量组织
-
-# 说明
-
 ***这不是一篇技术文章，而是因为最近项目新来了几个android新人，所以我琢磨在代码风格上进行一下统一，所以有了以下以及后面的几篇文章。***
 
 ## java文件内部UI组件变量组织

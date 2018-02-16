@@ -5,8 +5,6 @@ date:   2014-12-19 12:46:04 +0800
 categories: java
 tag: [java]
 ---
-# VarArgs
-
 ## VarArgs简述
 只需要明确一点即可，java方法的变长参数只是语法糖，其本质上还是将变长的实际参数 varargs 包装为一个数组。
 

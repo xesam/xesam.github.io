@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【杂谈】数字货币与现金战争"
+title:  "数字货币与现金战争"
 date:   2016-03-04 13:46:04 +0800
 categories: talk
 tag: [talk]

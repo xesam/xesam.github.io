@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【computer】fork与printf"
+title:  "fork与printf"
 date:   2016-06-06 16:51:38 +0800
 categories: computer
 tag: [computer]

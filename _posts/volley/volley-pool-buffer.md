@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Volley】Pool"
+title:  "Volley Pool"
 date:   2017-03-20 13:46:04 +0800
 categories: volley
 tag: [volley]

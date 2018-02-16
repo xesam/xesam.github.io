@@ -1,13 +1,12 @@
 ---
 layout: post
-title:  "【Android】无限滚动的图片"
+title:  "Android 无限滚动的图片"
 date:   2015-09-08 12:46:04 +0800
 categories: android
 tag: [android]
 ---
 
 github 地址[InfiniteImageView](https://github.com/xesam/InfiniteImageView)
-
 
 参考 [AndroidScrollingImageView](https://github.com/Q42/AndroidScrollingImageView) 
 

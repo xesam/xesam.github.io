@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Android】Android签名相关"
+title:  "Android Android签名相关"
 date:   2016-02-29 12:46:04 +0800
 categories: android
 tag: [android]

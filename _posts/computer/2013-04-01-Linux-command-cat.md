@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【linux】命令记录-cat"
+title:  "命令记录-cat"
 date:   2013-04-01 12:46:04 +0800
 categories: computer
 tag: [computer]

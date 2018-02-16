@@ -1,13 +1,10 @@
 ---
 layout: post
-title:  "【Android】Font Basic"
+title:  "Android Font Basic"
 date:   2015-03-12 12:46:04 +0800
 categories: android
 tag: [android]
 ---
-# 【Android】SlidingTabs
-
-# Font
 文字最终的大小是和绘制文字的字体的类型和字体的大小是相关的.
 
 设置字体类型 Paint.setTypeface(Typeface typeface)

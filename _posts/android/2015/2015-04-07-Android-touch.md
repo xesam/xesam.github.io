@@ -1,14 +1,10 @@
 ---
 layout: post
-title:  "【Android】触屏事件传递简述"
+title:  "Android 触屏事件传递简述"
 date:   2015-04-07 12:46:04 +0800
 categories: android
 tag: [android]
 ---
-# 【Android】触屏事件传递简述
-
-## 一个典型的结构模型
-
 ActivityA包含ViewGroupB，ViewGroupB包含ViewC，这里选取ViewGroupB（中间节点）作为当前节点视角
 
 ![在此输入图片描述][1]

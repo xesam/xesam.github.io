@@ -1,14 +1,10 @@
 ---
 layout: post
-title:  "【Android】修改菜单"
+title:  "Android 修改菜单"
 date:   2015-04-06 12:46:04 +0800
 categories: android
 tag: [android]
 ---
-# 【Android】修改菜单
-
-## 菜单的回调时机
-
 常用的与菜单相关的主要有三个回调：
 
 ```java

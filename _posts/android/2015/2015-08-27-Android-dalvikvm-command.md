@@ -1,12 +1,10 @@
 ---
 layout: post
-title:  "【Android】使用 dalvikvm 命令"
+title:  "使用 dalvikvm 命令"
 date:   2015-08-27 12:46:04 +0800
 categories: android
 tag: [android]
 ---
-# 【Android】使用 dalvikvm 命令
-
 整理版本.原文地址: [http://bbs.pediy.com/showthread.php?t=184592](http://bbs.pediy.com/showthread.php?t=184592)
 
 # 步骤

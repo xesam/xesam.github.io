@@ -1,12 +1,12 @@
 ---
 layout: post
-title:  "【linux】汇编错误记录"
+title:  "linux 汇编错误记录"
 date:   2016-03-01 16:46:04 +0800
 categories: computer
 tag: [computer]
 ---
 
-## insight 安装
+#### insight 安装
 
 ```shell
 variable 'errcount' set but not used
@@ -20,7 +20,7 @@ variable 'errcount' set but not used
 
 参考阅读： [http://www.tuicool.com/articles/VRJf6v](http://www.tuicool.com/articles/VRJf6v)
 
-## 32/64 位问题
+#### 32/64 位问题
 
 编译一个简单的汇编文件，然后链接出现的时候这个问题。
 

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Android】数据库工具 Cupboard"
+title:  "数据库工具 Cupboard"
 date:   2015-12-09 13:46:04 +0800
 categories: android
 tag: [android]

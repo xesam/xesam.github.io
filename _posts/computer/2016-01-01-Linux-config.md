@@ -5,8 +5,6 @@ date:   2016-01-01 13:46:04 +0800
 categories: computer
 tag: [computer]
 ---
-# 【Linux】各种配置记录
-
 # Python
 
 ### pip

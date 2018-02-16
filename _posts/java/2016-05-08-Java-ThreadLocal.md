@@ -5,7 +5,7 @@ date:   2016-05-08 13:46:04 +0800
 categories: java
 tag: [java]
 ---
-## 核心原理
+核心原理
 
 1. ThreadLocal 处理的是线程的专属对象，各个线程的对象都是独立的。
 2. ThreadLocal 用来辅助平衡效率与资源分配。

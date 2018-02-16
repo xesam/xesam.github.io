@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Android】前后台切换监听"
+title:  "Android 前后台切换监听"
 date:   2016-03-07 12:46:04 +0800
 categories: android
 tag: [android]

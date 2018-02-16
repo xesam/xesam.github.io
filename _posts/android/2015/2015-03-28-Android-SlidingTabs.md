@@ -1,14 +1,10 @@
 ---
 layout: post
-title:  "【Android】SlidingTabs"
+title:  "Android SlidingTabs"
 date:   2015-03-28 12:46:04 +0800
 categories: android
 tag: [android]
 ---
-# 【Android】SlidingTabs
-
-# SlidingTabs
-
 一个google sample里面的轻量级滑动Tab修改版本：
 
 地址：[https://github.com/xesam/SlidingTabs](https://github.com/xesam/SlidingTabs)

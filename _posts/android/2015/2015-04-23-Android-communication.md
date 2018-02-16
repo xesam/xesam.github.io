@@ -1,13 +1,10 @@
 ---
 layout: post
-title:  "【Android】组件通信模式"
+title:  "Android 组件通信模式"
 date:   2015-04-23 12:46:04 +0800
 categories: android
 tag: [android]
 ---
-# 【Android】组件通信模式
-## 目标:避免紧耦合
-
 本文对原文进行了精简
 
 原文链接:[Communication patterns for application components](http://vinsol.com/blog/2014/11/04/communication-patterns-for-application-components/)

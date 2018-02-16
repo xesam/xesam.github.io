@@ -1,12 +1,10 @@
 ---
 layout: post
-title:  "【杂谈】哪个HTML5？WHATWG与W3C或分道扬镳"
+title:  "哪个HTML5？WHATWG与W3C或分道扬镳"
 date:   2012-07-23 13:46:04 +0800
 categories: talk
 tag: [talk]
 ---
-# 哪个HTML5？WHATWG与W3C或分道扬镳
-
 W3C和WHATWG这两个当前负责HTML开发的组织对于标准分裂在一定程度上达成了初步共识，意味着未来将有两个版本的HTM5——“snapshot”版本和“living standard”版本。
 
 WHATWG当初是为了回应W3C在HTML标准上的缓慢进展而成立的。实际上，W3C原本已经或多或少的放弃了HTML，转而集中到XML和XHTML上面来，问题是，大部分用户只是单纯想继续 使用HTML并持续改进。

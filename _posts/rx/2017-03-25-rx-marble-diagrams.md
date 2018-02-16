@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Rx】宝石图图解"
+title:  "Rx 宝石图图解"
 date:   2017-03-05 13:46:04 +0800
 categories: rx
 tag: [rx]

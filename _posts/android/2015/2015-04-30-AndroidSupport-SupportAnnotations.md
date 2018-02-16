@@ -1,12 +1,10 @@
 ---
 layout: post
-title:  "【AndroidSupport】Support Annotations"
+title:  "Support Annotations"
 date:   2015-04-30 12:46:04 +0800
 categories: android
 tag: [android]
 ---
-# 【AndroidSupport】Support Annotations
-
 [查看原文](http://anupcowkur.com/posts/a-look-at-android-support-annotations/)
 
 在Support Library 19.1以及以后的版本中，Android工具小组引入了几个很酷的注解类型，方便开发者在工程中使用，同时Support Library自身也使用了这些注解。

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【computer】C++与Java简单对比"
+title:  "C++与Java简单对比"
 date:   2016-01-02 08:00:00 +0800
 categories: computer
 tag: [computer]
