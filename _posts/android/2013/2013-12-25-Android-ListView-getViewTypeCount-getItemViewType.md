@@ -1,12 +1,10 @@
 ---
 layout: post
-title:  "【Android】ListView的getViewTypeCount与getItemViewType"
+title:  "ListView的getViewTypeCount与getItemViewType"
 date:   2013-12-25 12:46:04 +0800
 categories: android
 tag: [android]
 ---
-# 【Android】ListView的getViewTypeCount与getItemViewType
-
 对于Listiew来说，getViewTypeCount 和getItemViewType主要用于为不同的列表项目提供不同的视图view，
 主要用法在有人已经在[《ListView 和 Adapter 的基础》](http://www.cnblogs.com/xiaowenji/archive/2010/12/08/1900579.html)中描述得比较清楚了，
 但是文章有一点没说，就是下面这三行：

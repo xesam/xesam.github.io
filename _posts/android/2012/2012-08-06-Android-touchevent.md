@@ -1,13 +1,12 @@
 ---
 layout: post
-title:  "【Android】触屏事件流"
+title:  "Android 触屏事件流"
 date:   2012-08-06 13:46:04 +0800
 categories: android
 tag: [android]
 ---
-# 【Android】触屏事件流
 
-# 本文请忽略，初学 Android 时的幼稚记录而已。
+本文请忽略，初学 Android 时的幼稚记录而已。
 
 一次触屏事件分为三个动作
 

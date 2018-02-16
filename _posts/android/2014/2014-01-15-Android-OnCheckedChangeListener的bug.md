@@ -1,12 +1,10 @@
 ---
 layout: post
-title:  "【Android】OnCheckedChangeListener的bug"
+title:  "Android OnCheckedChangeListener的bug"
 date:   2014-01-15 12:46:04 +0800
 categories: android
 tag: [android]
 ---
-
-## 问题描述
 RadioGroup.OnCheckedChangeListener 被回调两次
 
 今天又碰到了，貌似还没有被修复，顺便贴出来。

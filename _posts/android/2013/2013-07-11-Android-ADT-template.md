@@ -1,12 +1,10 @@
 ---
 layout: post
-title:  "【Android】自定义ADT模板"
+title:  "Android 自定义ADT模板"
 date:   2013-07-11 12:46:04 +0800
 categories: android
 tag: [android]
 ---
-## 简介
-
 ADT模板就是在Eclipse中使用向导新建Android工程或者Android组件的时候使用的模板。ADT模板的特点：
 
 1. 可以通过简单的可视化配置[后面称之为UI parameters]来生成Android代码和资源样本

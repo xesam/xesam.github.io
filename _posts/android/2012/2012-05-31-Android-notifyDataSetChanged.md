@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Android】导致notifyDataSetChanged无效的一个错误"
+title:  "Android 导致notifyDataSetChanged无效的一个错误"
 date:   2012-05-31 13:46:04 +0800
 categories: android
 tag: [android]

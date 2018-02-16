@@ -1,14 +1,10 @@
 ---
 layout: post
-title:  "【Android】meta-data小结"
+title:  "Android meta-data小结"
 date:   2013-06-03 12:46:04 +0800
 categories: android
 tag: [android]
 ---
-# 【Android】meta-data小结
-
-## 概念
-
 meta-data就像其名一样，主要用来定义一些组件相关的配置值。
 
 按照官方定义，metadata是一组供父组件使用的名值对（name-value pair），因此相应的meta-data元素应该定义在相应的组件中。

@@ -1,12 +1,10 @@
 ---
 layout: post
-title:  "【Android】LIstView的HeaderView"
+title:  "LIstView的HeaderView"
 date:   2013-08-20 13:46:04 +0800
 categories: android
 tag: [android]
 ---
-# 【Android】LIstView的HeaderView
-
 ## 一，添加HeaderView之后尺寸布局被忽略。
 
 通常添加头部的方法是 

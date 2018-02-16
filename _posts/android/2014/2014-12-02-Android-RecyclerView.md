@@ -1,15 +1,10 @@
 ---
 layout: post
-title:  "【Android】RecyclerView"
+title:  "Android RecyclerView"
 date:   2014-12-02 12:46:04 +0800
 categories: android
 tag: [android]
 ---
-
-# RecyclerView
-
-##R ecyclerView简明
-
 RecyclerView 在v7.21+包中，是一个用来展示大量数据的组件，或者说，就是ListView的改善版本（注：现阶段的功能没有ListView完善，因此想完全取代ListView的话并不明智）。
 相比ListView，RecyclerView的扩展性更好，因此也更适合与android新曾的组件配合使用，这样使用起来更得心应手。
 

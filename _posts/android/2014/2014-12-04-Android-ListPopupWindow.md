@@ -1,15 +1,10 @@
 ---
 layout: post
-title:  "【Android】ListPopupWindow"
+title:  "ListPopupWindow"
 date:   2014-12-04 12:46:04 +0800
 categories: android
 tag: [android]
 ---
-
-# ListPopupWindow
-
-## 简述
-
 ListPopupWindow最低要求为api11，为了兼容到2.1, 可以使用包含在support V7包中实现。
 从效果上来讲，ListPopupWindow就是一个弹出层的ListView，比较适合用来实现自定义的下拉菜单以及自定义的下拉选择列表。
 

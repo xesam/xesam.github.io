@@ -1,12 +1,10 @@
 ---
 layout: post
-title:  "【Android】自定义对话框--模拟Dim"
+title:  "Android 自定义对话框--模拟Dim"
 date:   2013-07-30 12:46:04 +0800
 categories: android
 tag: [android]
 ---
-##背景
-
 Android 在弹出 Dialog 的时候,默认在 dialog 背后会产生办透明的模糊效果(backgroundDim).这个dim层可以调整模糊值:
 
 ```xml

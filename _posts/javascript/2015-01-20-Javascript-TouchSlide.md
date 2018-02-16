@@ -1,12 +1,10 @@
 ---
 layout: post
-title:  "【Javascript】TouchSlide"
+title:  "Javascript TouchSlide"
 date:   2015-01-20 12:46:04 +0800
 categories: javascript
 tag: [javascript]
 ---
-# TouchSlide
-
 一个简单的手机网页滑屏效果库
 
 进行适当的CSS设置之后可以实现常见的全屏滑动

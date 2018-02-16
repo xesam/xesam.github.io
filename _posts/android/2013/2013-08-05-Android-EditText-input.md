@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Android】EditText--输入法"
+title:  "EditText--输入法"
 date:   2013-08-05 12:46:04 +0800
 categories: android
 tag: [android]

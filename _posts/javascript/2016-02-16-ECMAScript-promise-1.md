@@ -1,12 +1,10 @@
 ---
 layout: post
-title:  "【ECMAScript】promise核心概念（一）"
+title:  "promise核心概念（一）"
 date:   2016-02-16 14:52:04 +0800
 categories: ecmascript
 tag: [ecmascript]
 ---
-# 核心问题
-
 首先，要明确一点，Promise 是用来处理回调嵌套的问题，而不是用来处理回调本身的问题。
 
 ## 程序要素

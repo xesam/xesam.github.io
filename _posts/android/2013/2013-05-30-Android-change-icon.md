@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "【Android】能否动态修改App的桌面名称或者图标"
+title:  "Android 能否动态修改App的桌面名称或者图标"
 date:   2013-05-30 12:46:04 +0800
 categories: android
 tag: [android]
