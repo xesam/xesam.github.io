@@ -22,9 +22,14 @@ a 首先是一个数组，数组长度为10，数组元素是指向整型的指�
 
 # 指针与数组的区别
 
-[buntu为什么没有/etc/inittab文件? 深究ubuntu的启动流程分析](http://ginchenorlee.com/blog/2012/10/17/ubuntn-why-not-have-initab-file)
+[ubuntu为什么没有/etc/inittab文件? 深究ubuntu的启动流程分析](http://ginchenorlee.com/blog/2012/10/17/ubuntn-why-not-have-initab-file)
 [报错storage size of ‘act’ isn’t known当使用std=c99编译struct sigaction](http://blog.csdn.net/gatieme/article/details/50991903)
 
 ## Volley 没有 Cancel 事件
 
 ## 代码即数据
+
+
+https://blog.csdn.net/wangmuming/article/details/72785354
+
+https://medium.com/@cezarluiz/3-ways-to-transform-array-like-to-array-8be49c15f60
