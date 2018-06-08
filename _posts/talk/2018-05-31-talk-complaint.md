@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "吐槽-碎碎念"
+title:  "不吐不快-碎碎念"
 date:   2018-05-31 08:00:00 +0800
 categories: talk
 tag: [talk]
