@@ -22,6 +22,8 @@ rfc5861 定义了两个 Cache-Control 的扩展：
 
 ![1]({{ site.baseurl }}/image/http_cache_stale_1.png)
 
+<!-- more -->
+
 如上图所示，请求 #1 发出的时候，缓存内容还是新鲜的，所以直接从缓存中获取响应。
 不过当请求 #2 发起的时候，本地缓存刚刚过期，此时 stale-while-revalidate 就开始发挥作用了，请求 #2 先直接从缓存中获取响应返回给调用者，然后在静默的在后台向原始服务器发起一次异步请求。
 请求 #3 也一样，因为它们都在 ”stale-while-revalidate“ 时间窗口内。

@@ -50,6 +50,8 @@ sub ppt2pdf{
 }
 {% endhighlight %}  
 
+<!-- more -->
+
 注意事项：
 
 1. PPT转换中如果设置powerpoint不显示，即$word->{'Visible'} = 0，会导致转换失败。

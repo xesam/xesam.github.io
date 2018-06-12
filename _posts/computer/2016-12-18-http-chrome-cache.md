@@ -16,6 +16,8 @@ tag: [computer]
 如果需要在浏览器里面去掉这个强制设定的“Cache-Control:max-age=0”，可以使用 ajax 来发起请求，或者使用页面内链接的方式访问。
 比如直接设置 a 标签的 href，这个时候浏览器就不会设定 max-age=0 了。
 
+<!-- more -->
+
 ### 参考
 
 1. [https://www.fedepot.com/she-zhi-flask-xiang-ying-qing-qiu-tou-shi-xian-jing-tai-zi-yuan-chang-shi-huan-cun/](https://www.fedepot.com/she-zhi-flask-xiang-ying-qing-qiu-tou-shi-xian-jing-tai-zi-yuan-chang-shi-huan-cun/)

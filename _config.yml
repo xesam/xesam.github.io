@@ -18,7 +18,10 @@ author:
   name:           'Xesam'
   url:            https://xesam.github.io/
 
-paginate:         10
+
+excerpt_separator:  '<!-- more -->'
+
+paginate:         5
 # paginate_path:    '/page:num'
                     # Or '/blog/page:num' if you want to move your index pages
 

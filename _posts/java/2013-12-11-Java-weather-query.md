@@ -6,7 +6,7 @@ categories: android
 tag: [android]
 ---
 
-## 一，天气综合查询
+一，天气综合查询
 
 1.直接使用中国天气网官方APP接口，不过需要申请key：
 
@@ -16,7 +16,7 @@ tag: [android]
 
 测试项目 [https://github.com/xesam/weather](https://github.com/xesam/weather)
 
-## 二，空气质量查询
+二，空气质量查询
 
 1.PM2.5开放查询接口，也需要申请key：
 

@@ -16,6 +16,8 @@ python：
         pass
 ```
 
+<!-- more -->
+
 ## Optional方法
 
 Optional没有公开的构造方法，只有静态工厂方法：

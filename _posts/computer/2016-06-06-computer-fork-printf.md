@@ -38,7 +38,9 @@ int main(int argc, char const *argv[]){
     host,parent:15111,current:19431, fpid:19432
 	start,parent:15111,current:19431
     child,parent:19431,current:19432, fpid:0
-    
+
+<!-- more -->
+
 其中 start 语句“貌似”被执行了两次，这显然是不可能的，问题就发生在 printf 上，以下几个原因集合到一起，就触发了这个看似怪异的结果：
 
 1. fork 会 copy 父进程的 data space, heap 以及 stack，包括缓冲区。

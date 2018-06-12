@@ -8,7 +8,7 @@ tag: [java]
 
 [MicroBus](https://github.com/konmik/MicroBus)
 
-##使用
+## 使用
 
 注册
 
@@ -38,6 +38,8 @@ tag: [java]
 运行结果
 
     Hello, World!
+
+<!-- more -->
 
 ## 大致原理
 

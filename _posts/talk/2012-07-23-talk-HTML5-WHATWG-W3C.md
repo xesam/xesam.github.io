@@ -15,6 +15,8 @@ WHATWG当初是为了回应W3C在HTML标准上的缓慢进展而成立的。实�
 
 过去的几年中，这两个组织在方法制定上就分歧不断，趋向分裂，现在这种分裂形式化了而已。
 
+<!-- more -->
+
 在一份WHATWG的邮件列表中，一名WHATWG标准的作者解释道：
 
     More recently, the goals of the W3C and the WHATWG on the HTML front have diverged a bit as well. 
