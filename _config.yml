@@ -7,6 +7,7 @@ title:            Xesam
 tagline:          'xesam blog'
 description:      '靠谱的娱乐型程序员'
 url:              https://xesam.github.io/
+avatar:           https://avatars1.githubusercontent.com/u/1892804?s=460&v=4
 baseurl:          # the optional subpath of your site, e.g. "/blog"
                   # NB: This applies to all pages in your Jekyll site.
                   # If you want to move just the blog index pages but keep

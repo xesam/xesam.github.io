@@ -90,6 +90,11 @@ body {
     p.lead {
         display: none;
     }
+    .avatar {
+        border-radius: 50%;
+        max-width: 10em;
+        margin: 0 auto;
+    }
 }
 
 // Make header elements blend into sidebar / background
@@ -187,6 +192,9 @@ body {
         header ~ nav {
             display: flex;
         }
+        .avatar {
+            margin: 0;
+        }
     }
 
     .index #sidebar {
@@ -214,7 +222,7 @@ body {
         }
 
         > * {
-            max-width: 38rem;
+            // max-width: 38rem;
             padding: 0;
         }
     }

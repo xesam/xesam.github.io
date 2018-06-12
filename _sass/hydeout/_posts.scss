@@ -5,18 +5,14 @@
 
 article + *,
 .post-body ~ section {
-    padding-top: $section-spacing;
+    padding-top: 2 * $section-spacing;
     border-top: 1px solid $border-color;
-    margin-top: $section-spacing;
+    margin-top: 2 * $section-spacing;
 
     > h2:first-child,
     > h3:first-child {
         margin-top: 0;
     }
-}
-
-.post-body{
-    font-size:0.75em;
 }
 
 .post,
@@ -42,7 +38,7 @@ article + *,
 // h1-size h2
 h2.post-title,
 h2.page-title {
-    font-size: 1rem;
+    font-size: 1.25rem;
 }
 
 // Meta data line below post title
