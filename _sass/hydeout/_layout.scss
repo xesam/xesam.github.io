@@ -152,10 +152,10 @@ body {
 @media (min-width: $large-breakpoint) {
     #container-wrap {
         flex-direction: row;
-        height: 100vh;
+        min-height: 100vh;
         overflow: auto;
         > * {
-            max-height: 100vh;
+            min-height: 100vh;
             overflow: auto;
         }
         max-width: 1100px;
@@ -206,7 +206,7 @@ body {
         background: $body-bg;
         color: $body-color;
         padding: $section-spacing * 2;
-        height: 100vh;
+        min-height: 100vh;
 
         > header {
             color: inherit;
