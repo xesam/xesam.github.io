@@ -8,7 +8,7 @@ tag: [android]
 
 Android JsBridge 就是用来在 Android app的原生 java 代码与 javascript 代码中架设通信（调用）桥梁的辅助工具。 
 
-[原文地址点这里](http://xesam.github.io/android/2016/04/11/Android-%E5%A6%82%E4%BD%95%E5%86%99%E4%B8%80%E4%B8%AAJsBridge.html)
+[原文地址点这里](http://xesam.github.io/android/2016/04/11/Android-how-to-JsBridge.html)
 
 [github点这里](https://github.com/xesam/JsBridge)
 
