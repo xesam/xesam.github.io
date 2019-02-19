@@ -14,3 +14,4 @@ permalink: /collections/
 1. [总线是什么](http://www.jdon.com/46908)
 1. [为什么要使用SLF4J而不是Log4J](http://www.importnew.com/7450.html)
 1. [Java注解处理器](http://www.race604.com/annotation-processing/)
+2. [语义化版本 2.0.0](https://semver.org)
