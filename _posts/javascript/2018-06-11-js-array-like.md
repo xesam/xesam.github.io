@@ -6,7 +6,11 @@ categories: javascript
 tag: [javascript]
 ---
 
-“array like”（类数组） 这类数据对象见得挺多的，典型的如“NodeList”、argument对象以及字符串，它们的共同点是（非官方定义）：
+“array like”（类数组） 这类数据对象见得挺多的，典型的如“NodeList”、argument对象以及字符串.
+
+<!-- more -->
+
+它们的共同点是（非官方定义）：
 
 1. 拥有一个值为自然数的 length 属性 
 2. 可以按索引顺序访问
