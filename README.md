@@ -1,5 +1,9 @@
 # XiaoPingYuan's Blog
 
+```bash
+    bundle install
+    bundle exex jekyll serve
+```
 
 ## 致谢
 
