@@ -1,9 +1,6 @@
-# xesam's blog
-
-theme from [https://github.com/fongandrew/hydeout](https://github.com/fongandrew/hydeout)
+# XiaoPingYuan's Blog
 
 
-## jekyll
+## 致谢
 
-    bundle install 
-    bundle exec jekyll serve
+* [LOFFER](https://github.com/FromEndWorld/LOFFER) - fork这个主题

@@ -1,7 +1,7 @@
 ---
 layout: page
-title: About
-sidebar_link: true
+title: 关于
+permalink: /about/
 ---
 个人特征：靠谱的娱乐型程序员
 
