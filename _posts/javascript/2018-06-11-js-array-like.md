@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "javascript array like"
+title:  "Javascript Array Like"
 date:   2018-06-11 08:00:00 +0800
 categories: javascript
 tag: [javascript]
