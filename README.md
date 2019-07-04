@@ -2,7 +2,7 @@
 
 ```bash
     bundle install
-    bundle exex jekyll serve
+    bundle exec jekyll serve
 ```
 
 ## 致谢
