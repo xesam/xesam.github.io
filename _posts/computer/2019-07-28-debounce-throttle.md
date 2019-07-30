@@ -8,18 +8,21 @@ tag: [computer]
 
 *防抖*
 
-用坐公交车来类比，通常在最后一名乘客刷卡完毕之后，司机会等待几分钟，确定乘客坐稳之后再开车。如果在这段司机等待的时间内又有新的乘客上车，那么在新乘客刷卡完毕之后，司机又要重新再等待一会，当确认最后上来的乘客坐稳之后再开车。
+用自动门来类比，我们在通过自动门的时候，当门检测到人通过之后，会先保持开启状态约 15 秒钟，如果在这 15 秒之内，再没有人通过，那么门会自动关上。
+但是，如果在这 15 秒之内不断有人通过，自动门在确认最后一个人通过 15 秒之后，才会关门。
+
+对于自动门来说，不断通过的人就是抖动，所以有 15 秒的时间来进行防抖。
 
 我们用 lodash 来实现这个机制就是：
 
 ```javascript
-const WAIT_TIME = 120 * 1000;
+const WAIT_TIME = 15 * 1000;
 
-function move(){
-    console.log('公交开始形行驶);
+function closed(){
+    console.log('门关了);
 }
 
-function  drive = _.debounce(move, COLD_TIME); 
+function  close = _.debounce(closed, COLD_TIME); 
 ```
 
 *节流*
