@@ -2,8 +2,8 @@
 layout: post
 title:  "var & let & const"
 date:   2019-07-02 08:00:00 +0800
-categories: js
-tag: [js]
+categories: javascript
+tag: [javascript]
 ---
 关于这个话题，我想要讨论的问题只有一个：什么时候应该用var，什么时候应该用 let，什么时候应该用const？
 
