@@ -1,12 +1,14 @@
 ---
 layout: post
-title:  "numpy 基础操作（一）"
+title:  "numpy 基础（一）"
 date:   2020-01-04 08:00:00 +0800
 categories: computer
 tag: [computer]
 ---
 
-numpy 一维数组与 python 列表类似，略。主要是多维数组的处理。
+numpy 一维数组与 python 列表类似，略。本文主要讨论多维数组的处理。
+
+<!-- more -->
 
 ### 索引
 
@@ -36,8 +38,6 @@ array([[[ 0,  1],
 ```
 
 这两种语法是等价的，但是 python list 是不支持后一种的。
-
-<!-- more -->
 
 ### 切片
 
