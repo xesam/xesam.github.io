@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "numpy 基础（一）"
+title:  "Numpy Array"
 date:   2020-01-04 08:00:00 +0800
 categories: computer
 tag: [computer]
