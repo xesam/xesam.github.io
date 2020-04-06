@@ -6,7 +6,11 @@ categories: computer
 tag: [computer]
 ---
 
-首先需要明确的是，ndarray 在执行 element-wise （比如四则运算）的时候才会进行广播（Broadcasting），而 numpy 中 element-wise 的要求是 shape (形状)匹配，即
+首先需要明确的是，ndarray 在执行 element-wise （比如四则运算）的时候才会进行广播（Broadcasting），而 numpy 中 element-wise 的要求是 shape (形状)匹配。
+
+<!-- more -->
+
+即
 
     narrayA.shape == narrayB.shape 为 True
 
