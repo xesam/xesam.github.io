@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "design pattern"
+title:  "design pattern 图示"
 date:   2018-03-04 08:00:00 +0800
 categories: computer
 tag: [computer]
@@ -9,6 +9,8 @@ tag: [computer]
 ### Iterator
 
 ![Iterator]({{ site.baseurl }}/assets/design-pattern/iterator.png)
+
+<!-- more -->
 
 ### Adapter
 
