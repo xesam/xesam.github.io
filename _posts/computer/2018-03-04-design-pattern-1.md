@@ -65,3 +65,15 @@ tag: [computer]
 ### Decorator
 
 ![Decorator]({{ site.baseurl }}/assets/design-pattern/decorator.png)
+
+### Visitor
+
+![Visitor]({{ site.baseurl }}/assets/design-pattern/visitor.png)
+
+### Chain of responsibility
+
+![Chain of responsibility]({{ site.baseurl }}/assets/design-pattern/ChainOfResponsibility.png)
+
+
+
+
