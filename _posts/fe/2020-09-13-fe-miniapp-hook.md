@@ -61,7 +61,7 @@ Page({
 如此一来，我们就可以在 Page.js 中进行各种操作，比如拦截 Page 的生命周期方法、添加一些全局数据等等之类的操作。
 
 
-为了方便操作，我只做了一个 hook 辅助函数 [[https://github.com/xesam/miniapp-hook](https://github.com/xesam/miniapp-hook)]([https://github.com/xesam/miniapp-hook](https://github.com/xesam/miniapp-hook))，用来方便的定义自己的中间层：
+为了方便操作，我只做了一个 hook 辅助函数 [https://github.com/xesam/miniapp-hook](https://github.com/xesam/miniapp-hook)，用来方便的定义自己的中间层：
 
 
 package.json
