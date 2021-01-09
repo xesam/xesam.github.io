@@ -7,7 +7,7 @@ permalink: /about/
 
 QQ : 416249980
 
-Email : xesamguo@gmail.com
+Email : xesam@outlook.com
 
 微信：
 
