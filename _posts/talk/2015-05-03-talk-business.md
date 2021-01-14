@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "如何判断是某个领域是否值得进入"
-date:   2020-05-03 13:46:04 +0800
+date:   2015-05-03 13:46:04 +0800
 categories: talk
 tag: [talk]
 ---
