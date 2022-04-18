@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "conda 常用"
-date:   2020-01-04 08:00:00 +0800
+date:   2016-01-04 08:00:00 +0800
 categories: computer
 tag: [computer]
 ---
