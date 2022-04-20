@@ -95,6 +95,14 @@ tag: [computer]
     python3 -m pip -r /a/b/c/d/requirements.txt
 ```
 
+#### 
+
+要实现哈希检查模式，只需在需求文件中写入带有包名的摘要:
+
+```plain
+    json5==0.9.6 --hash=sha256:{hash digest}
+```
+支持的哈希算法包括md5、sha1、sha224、sha224、sha384、sha256和sha512。
 
 ### 需要注意的问题
 
