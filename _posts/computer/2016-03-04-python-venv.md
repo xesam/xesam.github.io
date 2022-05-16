@@ -11,12 +11,7 @@ tag: [computer]
 ### 创建虚拟环境
 
 ```shell
-    pip venv {project name}
-```
-或者
-
-```shell
-    python -m pip venv {project name}
+    python -m venv {project name}
 ```
 
 此时在 {project name} 文件夹下创建：
@@ -93,6 +88,11 @@ tag: [computer]
 
 ```shell
     python3 -m pip -r /a/b/c/d/requirements.txt
+```
+或者：
+
+```shell
+    pip -r requirements.txt
 ```
 
 #### 
