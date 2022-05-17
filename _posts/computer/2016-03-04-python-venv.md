@@ -87,12 +87,12 @@ tag: [computer]
 我们可以执行python3 -m pip install命令，把刚才用 python3 -m pip freeze 所保存的 requirements.txt 文件通过-r选项传给它，这样就能够将那份文件所记录的软件包安装到这套环境里面了。
 
 ```shell
-    python3 -m pip -r /a/b/c/d/requirements.txt
+    python3 -m pip install -r /a/b/c/d/requirements.txt
 ```
 或者：
 
 ```shell
-    pip -r requirements.txt
+    pip install -r requirements.txt
 ```
 
 #### 
