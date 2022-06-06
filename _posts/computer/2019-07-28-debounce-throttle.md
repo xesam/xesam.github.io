@@ -38,13 +38,13 @@ function  close = _.debounce(closed, COLD_TIME);
 我们用 lodash 来实现这个机制就是：
 
 ```javascript
-const COLD_TIME = 120 * 1000;
+const COOL_DOWN = 120 * 1000;
 
 function buff (){
     console.log('获得30%伤害与40%免伤加成');
 }
 
-function  passive = _.throttle(buff, COLD_TIME); //被动技能
+function  passive = _.throttle(buff, COOL_DOWN); //被动技能
 ```
 
 *总结*
