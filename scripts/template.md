@@ -1,10 +1,10 @@
 ---
 layout: post
 title:  {title}
-date:   {date}
+date:   {date} 08:00:00 +0800
 categories:
-  - {categories}
+  - {category}
 tag: 
-  - {tag}
+  - [{tags}]
 ---
 
