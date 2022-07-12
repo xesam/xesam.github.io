@@ -17,6 +17,8 @@ tag: [product]
 2. 支持左右滑动。
 3. 支持点击选中。
 
+![1]({{ site.baseurl }}/assets/product/axure/axure-tabs.png)
+
 ## 中继器的使用
 
 “中继器”的英文名叫“Repeater”，相当于 Axure 提供的一个简单的数据库，更准确叫一个二维表。
@@ -32,7 +34,11 @@ tag: [product]
 
 1. 如何实现滑动？
 
-答：使用动态面板，然后使用“移动”交互来移动面板内的内容，同时设置移动边界，避免内容移出界。
+答：使用动态面板，然后使用“移动”交互来移动面板内的内容，布局结构：
+
+![1]({{ site.baseurl }}/assets/product/axure/axure-tab-2.png)
+
+同时设置移动边界，避免内容移出界：
 
 ![1]({{ site.baseurl }}/assets/product/axure/axure-tab-2-0.png)
 
@@ -40,10 +46,6 @@ tag: [product]
 
 答：a.将中继器打包成一个“组”；b.把中继器放入一个新的动态面板中，自然就称为一个整体了。
 相较之下，打包成“组”比较方便，毕竟不用手动处理尺寸问题。
-
-局部结构：
-
-![1]({{ site.baseurl }}/assets/product/axure/axure-tab-2.png)
 
 ## 添加交互
 
