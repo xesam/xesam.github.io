@@ -26,8 +26,7 @@ Page({
 })
 ```
 
-其中 Page() 是小程序提供的框架方法，而 onLoad、onShow 则是框架的生命周期方法。这是官方给出的使用方法，但是对于一个会长时间维护的项目来说，比较好的实践是尽量使用自定义的中间层来隔离原生框架的调用。所以可以这么做：
-
+其中 Page() 是小程序提供的框架方法，而 onLoad、onShow 则是框架的生命周期方法。这是官方给出的使用方法，但是对于一个需要经常维护的项目来说，比较好的实践是尽量使用自定义的中间层来隔离原生框架的调用。所以可以这么做：
 
 ```javascript
 const old = Page;
@@ -35,7 +34,8 @@ Page = function(options){
 	old(options);
 }
 ```
-但是这么做会面临一个问题，有的平台是禁止重新赋值内置函数的。比如微信小程序，如果重新赋值了 Page 函数，在使用插件了之后，就会报错。所以，尽量不要去重新赋值框架函数，所我们可以自定义一个框架包装函数 Page.js：
+但是这么做会面临一个问题，有的平台是禁止覆盖内置框架函数的。比如微信小程序，如果重新赋值了 Page 函数，在使用插件了之后，就会报错。所以，尽量不要去重新赋值框架函数，所我们可以自定义一个框架包装函数 Page.js：
+
 ```javascript
 function _Page(options){
 	Page(options);
@@ -61,23 +61,17 @@ Page({
 如此一来，我们就可以在 Page.js 中进行各种操作，比如拦截 Page 的生命周期方法、添加一些全局数据等等之类的操作。
 
 
-为了方便操作，我做了一个 hook 辅助函数 [https://github.com/xesam/miniapp-hook](https://github.com/xesam/miniapp-hook)，用来方便的定义自己的中间层：
+为了方便操作，我做了一个 hook 辅助函数 [https://github.com/miniapp-develop/hook](https://github.com/miniapp-develop/hook)，用来方便的定义自己的中间层：
 
-package.json
-```json
-{
-  "dependencies": {
-    "miniapp-hook": "0.1.1"
-  }
-}
+```shell
+npm install @mini-dev/hook
 ```
 
 在入口函数 app.js 处：
 
 ```javascript
-const {_Page, pageLogger} = require('miniapp-hook');
+const {_Page} = require('@mini-dev/hook');
 
-_Page.use(pageLogger);
 _Page.use(...) //这里可以定义自己的拦截函数
 
 App({
@@ -108,7 +102,7 @@ _Page({
 可以对自定义的 Page 再次包装，只要签名与框架原始的 Page() 保持一致就行：
 
 ```javascript
-const {_Page, pageLogger} = require('miniapp-hook');
+const {_Page} = require('miniapp-hook');
 
 const NewApp = _Page.create(OldPage); // OldPage 是已经自定义的的包装函数
 NewApp.use(...) //这里可以定义自己的拦截函数
