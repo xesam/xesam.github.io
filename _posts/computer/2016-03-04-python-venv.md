@@ -11,35 +11,39 @@ tag: [computer]
 ### 创建虚拟环境
 
 ```shell
-    python -m venv {project name}
+python -m venv {project name}
 ```
+如果是当前目录，直接使用 
 
-此时在 {project name} 文件夹下创建：
+```shell
+python -m venv .
+```
+就行了。此时在 {project name} 文件夹下创建下述文件夹：
 
     Include
     Lib
     Scripts（也有可能是 bin 之类的名称）
     pyvenv.cfg
 
-等文件夹。用venv工具创建出的虚拟环境，初始只装有pip与setuptools模块，除此之外，没有预装其他的软件包。
+用 venv 工具创建出的虚拟环境，初始只装有pip与setuptools模块，除此之外，没有预装其他的软件包。
 
 ### 激活虚拟环境
 
 ```shell
-    ./Scripts/activate
+./Scripts/activate
 ```
 不同的操作系统脚本文件可能不一致，比如 windows 下面是 activate.bat 。
 如果在linux 环境下，可以使用：
 
 ```shell
-    source ./Scripts/activate
+source ./Scripts/activate
 ```
 
 执行脚本之后，就会激活虚拟环境，此时执行：
 
 
 ```shell
-    which python 
+which python 
 ```
 可以查看相关的 python 或者 pip 信息。
 
@@ -49,12 +53,12 @@ tag: [computer]
 在激活的终端里面，可以使用 pip 安装对应的模块。比如：
 
 ```shell
-    pip install json5
+pip install json5
 ```
 通过
 
 ```shell
-    pip show json5
+pip show json5
 ```
 可以验证 json5 的安装路径以及其他信息。
 
@@ -68,17 +72,17 @@ tag: [computer]
 用 python3 -m pip freeze 命令把当前环境所依赖的包明确地保存到一份文件之中（按照惯例，这个文件命名为 requirements.txt）。
 
 ```shell
-    python3 -m pip freeze > requirements.txt
+python3 -m pip freeze > requirements.txt
 ```
 或者：
 
 ```shell
-    pip freeze > requirements.txt
+pip freeze > requirements.txt
 ```
 就会在执行目录生成一份 requirements.txt 文件，内容如下：
 
 ```plain
-    json5==0.9.6
+json5==0.9.6
 ```
 如果对版本规则比较熟悉，也可以手写这份文件。
 
@@ -87,22 +91,22 @@ tag: [computer]
 我们可以执行python3 -m pip install命令，把刚才用 python3 -m pip freeze 所保存的 requirements.txt 文件通过-r选项传给它，这样就能够将那份文件所记录的软件包安装到这套环境里面了。
 
 ```shell
-    python3 -m pip install -r /a/b/c/d/requirements.txt
+python3 -m pip install -r /a/b/c/d/requirements.txt
 ```
 或者：
 
 ```shell
-    pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
-#### 
+#### 哈希值检查
 
 要实现哈希检查模式，只需在需求文件中写入带有包名的摘要:
 
 ```plain
-    json5==0.9.6 --hash=sha256:{hash digest}
+json5==0.9.6 --hash=sha256:{hash digest}
 ```
-支持的哈希算法包括md5、sha1、sha224、sha224、sha384、sha256和sha512。
+支持的哈希算法包括 md5、sha1、sha224、sha224、sha384、sha256 和 sha512。
 
 ### 需要注意的问题
 
