@@ -83,7 +83,7 @@ Behavior 的有效属性根据用途可以分三类：
     BehaviorB1 < BehaviorB2 < BehaviorB
 ```   
 
-具体说来，就是“引用者”的优先级最高，于是把“引用者”件放在“被引用者”的最右边，**从左到右** 优先级依次升高。去掉嵌套之后，优先级从低到高排列顺序如下：
+具体说来，就是“引用者”的优先级最高，于是把“引用者”放在“被引用者”的最右边，**从左到右** 优先级依次升高。去掉嵌套之后，优先级从低到高排列顺序如下：
 
  ```javascript
     BehaviorA < BehaviorB1 < BehaviorB2 < BehaviorB < BehaviorC < ComponentA
@@ -104,16 +104,16 @@ Behavior 的有效属性根据用途可以分三类：
 
 补充说明 ：
 
-1. 这里的“对象类型”不够清晰，毕竟在 js 中，Array 也是一个对象，准确一点的表述应该是“映射/散列类型”。
+1. 这里的“对象类型”不够清晰，毕竟在 js 中，Array 也是一个对象，准确一点的表述应该是“映射/散列类型”，文档中叫“ObjectMap”。
 2. 属性拷贝不是“深拷贝”。
 
 ### 合并数据属性
 
-根据属性的不同，会有不同的合并方式，合并原则：**优先级高的数据属性覆盖优先级低的数据属性**。（相当于继承体系里面子类屏蔽了用父类属性）
+根据属性的不同，会有不同的合并方式，合并原则：**优先级高的数据属性覆盖优先级低的数据属性**。（相当于继承体系里面子类屏蔽了父类属性）
 
 #### data 属性
 
-官方框架对 data 进行了一个特别的对待，并不是简单合并 Behavior 的 data，而是合并每一个 data 的属性。
+官方框架对 data 进行了一个特别的处理，并不是简单合并 Behavior 的 data，而是合并每一个 “data 的属性”。
 比如：
 
 ```javascript
@@ -135,7 +135,9 @@ const behavior1 = Behavior({
     behaviors:[behavior2]
 });
 ```
+
 这两个合并之后，data 为：
+
 ```javascript
 data = {
     items:{
@@ -166,8 +168,7 @@ const items = [BehaviorA , BehaviorB1 , BehaviorB2 , BehaviorB , BehaviorC , Com
 let finalValue = {};
 for(const i = 0; i < items.length; i++){
     if (items[i].data.hasOwnProperty(key)){
-        if(typeof(finalValue[key]) === 'object map' && typeof(items[i].data[key]) === 'object map'){ // 并不存在 typeof 这个方法，也不存在 'object map' 这个类型，仅用作说明。
-            
+        if(typeof(finalValue[key]) === 'object map' && typeof(items[i].data[key]) === 'ObjectMap'){ // 并不存在 typeof 这个方法，也不存在 'object map' 这个类型，仅用作说明。
             finalValue[key] = Object.assign({}, finalValue[key], items[i].data[key]);
         }else{
             finalValue[key] = items[i].data[key];
@@ -251,7 +252,7 @@ for(const i = 0; i < items.length; i++){
 至于 relations，根据验证，规则与 properties 一致。
 
 
-### 另一种看法
+### 另一视角
 
 对于数据属性，可以理解为执行一个查找操作；对于生命周期方法，可以理解为执行一个遍历操作。
 
@@ -276,7 +277,7 @@ for(const i = 0; i < items.length; i++){
 遍历“引用者”生命周期方法的规则：
 
 1. 遍历“被引用者”自身的生命周期方法；
-2. 操作“引用者”的生命周期方法。
+2. 执行“引用者”的生命周期方法。
 
 遍历“被引用者”生命周期方法的规则是：
 
