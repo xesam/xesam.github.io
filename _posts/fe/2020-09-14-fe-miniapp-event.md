@@ -16,7 +16,7 @@ tag: [fe]
 
 在小程序中，构建组件页面的方式有两个途径：
 
-1. 在组件自身的布局文件中直接定义，页面种的节点称为“直接子节点”；
+1. 在组件自身的布局文件中直接定义，这种在页面中直接定义的节点称为“直接子节点”；
 2. 在使用组件时，通过 slot 标签引入子节点，被引入的节点称为“slot子节点”。
 
 一个示例：
@@ -42,10 +42,10 @@ tag: [fe]
 
 在上面的示例中，view-1 是 component 的“直接子节点”，view-2 是 component 的“slot子节点”。
 
-这两种引入子节点的方式，会影响组件的通信方式，所以特地做个区分。
+这两种引入子节点的方式，会影响组件的通信方式，因此特意做个区分。
 
 按照概念来讲，“父组件&子组件” 与 “父节点&子节点” 是两类不同的抽象。“组件”更侧重说明功能，“节点”更侧重表现结构。
-还是一上面的例子来讲：
+还是以上面的例子来讲：
 
 1. 对于组件来讲，component.wxml 代表一个“组件”，view-1 是这个“组件”的一个子节点。
 2. 对于页面来讲，component 本身也是一个子节点。
@@ -61,16 +61,16 @@ tag: [fe]
 
 这里的“子组件”，指的其实是“直接子节点”，“slot子节点”是获取不到的。也就是说：**this.selectComponent 只能在“直接子节点”里面查找，不能在“slot子节点”里面查找**
 
-如果要获取“slot子节点”应该怎么处理呢？
+如果要获取“slot子节点”应该怎么办呢？
 
-官方文档内没有找到直接的方法，但是小程序可以定义“组件间关系”。“组件间关系”有两类：
+官方文档内没有找到直接的方法，不过小程序可以定义“组件间关系”。“组件间关系”有两类：
 
 1. parent 和 child
 2. ancestor 和 descendant
 
-可见，也只能定义上下级关系。如果组件配置了“组件间关系”，还可以通过 this.getRelationNodes 方法来获取关系组件的节点实例，也可以直接访问关系组件的数据，或者调用关系组件的方法。由于关系本身的局限，这个方法也就只能用于事实上的父子组件，而不能用于兄弟组件。*注意，这里特意指出是“组件”*。
+可见，“组件间关系”只能定义上下级关系。如果组件配置了“组件间关系”，还可以通过 this.getRelationNodes 方法来获取关系组件的节点实例，也可以直接访问关系组件的数据，或者调用关系组件的方法。由于“组件间关系”本身的局限，这个方法也就只能用于事实上的父子组件，而不能用于兄弟组件。*注意，这里特意指出是“组件”*。
 
-事实上，个人觉得 this.getRelationNodes 正是用来在“slot子节点”内进行查找的，因为确实有效。与 this.selectComponent 类似，这个方式也有局限，但与 this.selectComponent 正好相反，**this.getRelationNodes 只能在“slot子节点”里面查找，不能在“直接子节点”里面查找**
+事实上，个人觉得 this.getRelationNodes 正是用来在“slot子节点”内进行查找的，而且确实有效。与 this.selectComponent 类似，这个方式也有局限，与 this.selectComponent 正好相反，**this.getRelationNodes 只能在“slot子节点”里面查找，不能在“直接子节点”里面查找**
 
 示例说明：parent-view 与 child-view 是关系组件。
  
@@ -107,7 +107,6 @@ tag: [fe]
 
 官方文档只给了这一种方式，其实也可以算是 “WXML 数据绑定” 的一种特别形式。
 
-
 同理，如果组件配置了“组件间关系”，也可以通过 this.getRelationNodes 方法来获取父组件的节点实例，直接访问父组件的数据，或者调用父组件的方法。
 
 同样，只有“slot子节点”能够通过 this.getRelationNodes 来获取父组件的节点。所以，对于上文的 inner-a，inner-b 这两个“直接子组件”，其实没有获取父节点的官方推荐方法。如果一定要获取，就只能想一些“骚方法”了。
@@ -136,7 +135,7 @@ Component({
 
 ```
 
-虽然写法比较丑，但是能用，因此，在实际使用的时候，不在需求要先把数据都格式化好在传递给子组件，还可以直接把格式化函数传递给组件，毕竟，格式化多数时候都是子组件自身的责任。
+虽然写法比较丑，但是能用，因此，在实际使用的时候，不仅可以把数据都格式化好之后再传递给子组件，还可以直接把格式化函数传递给组件，毕竟，格式化的定制需求比较多。
 
 父组件的调用形式：
 
@@ -238,7 +237,9 @@ Component({
 });
 
 ```
+
 事件绑定
+
 ```xml
   <child-view name="inner-a" class="selectComponent-class" bindemit="{{onEmit}}"/>
 ```
@@ -260,6 +261,8 @@ stepper.wxml
 </view>
 ```
 
+stepper.js
+
 ```javascript
 Component({
     methods: {
@@ -276,6 +279,7 @@ Component({
     }
 });
 ```
+
 如果希望使用者可以自定义 count 的展现样式，我们通常会这么写：
 
 stepper.wxml
@@ -331,7 +335,7 @@ stepper.wxml
 
 宿主页面结构：
 ```xml
-<stepper-view bindincrease="onIncreased" slot-data="slotData">
+<stepper-view bindincrease="onIncreased">
   <view><text>{{slotData.count}}</text></view>
 </stepper-view>
 ```
