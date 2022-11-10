@@ -6,7 +6,9 @@ categories: computer
 tag: [computer]
 ---
 
-从Python 3.4开始，pip与venv模块会在安装Python时一起默认安装。
+venv 主要用来管理 Python 的执行环境，简单说来就是管理包的版本，是无法控制 Phthon 的版本的。比如想在 Python3.6 与 Python3.8之间切换，靠现阶段的 venv 是做不到的，可能需要借助 conda、pyenv 之类的工具。
+
+从 Python 3.4 开始，pip 与 venv 模块会在安装 Python 时一起默认安装。
 
 ### 创建虚拟环境
 
@@ -25,7 +27,7 @@ python -m venv .
     Scripts（也有可能是 bin 之类的名称）
     pyvenv.cfg
 
-用 venv 工具创建出的虚拟环境，初始只装有pip与setuptools模块，除此之外，没有预装其他的软件包。
+用 venv 工具创建出的虚拟环境，初始只装有 pip 与 setuptools 模块，除此之外，没有预装其他的软件包。
 
 ### 激活虚拟环境
 
@@ -33,7 +35,7 @@ python -m venv .
 ./Scripts/activate
 ```
 不同的操作系统脚本文件可能不一致，比如 windows 下面是 activate.bat 。
-如果在linux 环境下，可以使用：
+如果在 linux 环境下，可以使用：
 
 ```shell
 source ./Scripts/activate
@@ -69,7 +71,7 @@ pip show json5
 
 ### 重建依赖
 
-用 python3 -m pip freeze 命令把当前环境所依赖的包明确地保存到一份文件之中（按照惯例，这个文件命名为 requirements.txt）。
+使用 pip freeze 命令把当前环境所依赖的包明确地保存到一份外部文件中（按照惯例，这个文件命名为 requirements.txt）。
 
 ```shell
 python3 -m pip freeze > requirements.txt
@@ -88,7 +90,7 @@ json5==0.9.6
 
 假设要用 {project name} 环境之中的配置来构建另外一套相似虚拟环境。我们先用venv工具把那套环境创建出来，然后用activate激活它。具体命令可以参见 上文。
 
-我们可以执行python3 -m pip install命令，把刚才用 python3 -m pip freeze 所保存的 requirements.txt 文件通过-r选项传给它，这样就能够将那份文件所记录的软件包安装到这套环境里面了。
+我们可以执行python3 -m pip install命令，把刚才用 python3 -m pip freeze 所保存的 requirements.txt 文件通过 -r 选项传给它，这样就能够将那份文件所记录的软件包安装到这套环境里面了。
 
 ```shell
 python3 -m pip install -r /a/b/c/d/requirements.txt
