@@ -35,7 +35,7 @@ conda是一款软件管理软件，相当于应用商店，在使用 Python 的�
 
 
 ```bash
-    conda create -n your_env_name python=x.x
+    conda create -n your_env_name python==x.x
 ```
 
 create 命令创建 python 版本为 x.x，名字为 your_env_name 的虚拟环境。your_env_name 文件可以在 conda 安装目录的 envs 文件下找到。
