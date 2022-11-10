@@ -75,7 +75,38 @@ create 命令创建 python 版本为 x.x，名字为 your_env_name 的虚拟环�
     conda remove --name $your_env_name  $package_name
 ```
 
-### 10. jupyter
+## 镜像配置
+
+## 查看 conda 的配置：
+
+```shell
+conda config --show
+```
+
+查看或者直接查看 channels：
+
+```shell
+conda config --show channels
+```
+
+### 添加镜像
+
+比如添加中科大的源：
+
+```shell
+conda config --add channels https://mirrors.ustc.edu.cn/anaconda/pkgs/free/
+conda config --set show_channel_urls yes
+```
+
+*conda config --set show_channel_urls yes的意思是从channel中安装包时显示channel的 url，这样在搜索或者安装的时候可知来源*
+
+### 移除镜像
+```shell
+conda config --remove channels defaults
+conda config --remove channels https://mirrors.ustc.edu.cn/anaconda/pkgs/free/
+```
+
+## Jupyter
 
 如果 conda 环境不出现在 jupyter 选项中，可以按照如下方法处理：
 
