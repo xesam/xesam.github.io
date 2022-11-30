@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "用户故事与敏捷方法"
-date:   20222-01-01 13:46:04 +0800
+date:   2021-12-01 13:46:04 +0800
 categories: talk
 tag: [talk]
 ---
