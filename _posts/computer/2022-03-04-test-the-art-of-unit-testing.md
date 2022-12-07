@@ -11,7 +11,7 @@ tag: [computer]
 
 作者对 Unit of Work 的定义：
 
-    A unit of work is the sum of actions that take place between the invocation of an entry point up until a noticeable end result through one or more exit points. The entry point is the thing we trigger. 
+*A unit of work is the sum of actions that take place between the invocation of an entry point up until a noticeable end result through one or more exit points. The entry point is the thing we trigger. *
 
 A unit of work can be a single function, multiple functions, multiple functions or even multiple modules or components. But it always has an entry point which we can trigger from the outside, and it always ends up doing something useful.
 
@@ -165,7 +165,8 @@ Break outgoing dependencies (outputs, exit points). Mocks are fake modules, obje
     Seams are where two pieces of software meet and something else can be injected. They are a place where you can alter behavior in your program without editing in that place. 
 
 
-Interaction testing
+### Interaction testing
+
 Interaction testing is checking how a unit of work interacts and sends messages to a dependency beyond its control. Mock functions or objects are used to assert that a call was made correctly to an external dependency.
 
 常用技巧：
@@ -367,7 +368,6 @@ Refactoring to increase maintainability
 
 if you see a private method, find the public use case in the system that will exercise it.Sometimes if a private method is worth testing, it might be worth making it public, static, or at least internal and defining a public contract against any code that uses it. In some cases, the design may be cleaner if you put the method in a different class altogether.
 
-
 Here are ways unit tests are often over specified:
 
 1. A test asserts purely internal state in an object under test. 
@@ -401,7 +401,7 @@ Variable names and values are just as much about explaining to the reader what t
 
 readability! readability! readability!
 
-作者在书中不止一个地方提到了测试框架的 setup 特定，并表示这个特性也导致了太多的滥用：
+作者在书中不止一个地方提到了测试框架的 setup 特性，并表示这个特性也导致了太多的滥用：
 
 I like that each test is self- encapsulating its own state. The nested describe structure acts as a good way to know where we are, but the state is all triggered from inside the ‘it’ blocks. Not outside of them.
 
