@@ -31,11 +31,12 @@ conda是一款软件管理软件，相当于应用商店，在使用 Python 的�
     conda update conda
 ```
 
-### 4. Python创建虚拟环境
+### 4. 创建虚拟环境
 
 
 ```bash
-    conda create -n your_env_name python==x.x
+    conda create -n your_env_name
+    conda create -n your_env_name python==x.x #指定 python 版本
 ```
 
 create 命令创建 python 版本为 x.x，名字为 your_env_name 的虚拟环境。your_env_name 文件可以在 conda 安装目录的 envs 文件下找到。
@@ -53,6 +54,7 @@ create 命令创建 python 版本为 x.x，名字为 your_env_name 的虚拟环�
 
 ```bash
     conda install -n your_env_name [package]
+    conda install -n your_env_name [package=x.y.z] # 指定 package 版本
 ```
 
 ### 7. 关闭虚拟环境(即从当前环境退出返回使用PATH环境中的默认python版本)
