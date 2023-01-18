@@ -124,6 +124,6 @@ ChildComponent({
 
 ### 相关链接
 
-[小程序复用](./2020-09-16-fe-miniapp-reuse.md)
-[小程序复用-Behavior](./2020-09-16-fe-miniapp-reuse-2.md)
-[小程序复用-函数构造器](./2020-09-16-fe-miniapp-reuse-3.md)
+1. [小程序复用]({{ site.baseurl }}/fe-miniapp-reuse/)
+2. [小程序复用-Behavior]({{ site.baseurl }}/fe-miniapp-reuse-2/)
+3. [小程序复用-函数构造器]({{ site.baseurl }}/fe-miniapp-reuse-3/)
