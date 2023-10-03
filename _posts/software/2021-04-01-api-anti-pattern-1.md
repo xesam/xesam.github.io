@@ -1,12 +1,12 @@
 ---
 layout: post
-title:  "不好用的API"
+title:  "反模式的API设计（一）"
 date:   2021-04-01 13:46:04 +0800
 categories: software
 tag: [software]
 ---
 
-一个不好用的 API...
+一个真实的反模式 API 设计案例...
 
 <!-- more -->
 
