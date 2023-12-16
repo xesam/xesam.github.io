@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "关于一个配置问题的讨论记录"
+title:  "可维护的配置 1"
 date:   2021-09-05 09:00:00 +0800
 categories: product
 tag: [product]
