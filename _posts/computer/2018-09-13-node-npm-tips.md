@@ -2,8 +2,8 @@
 layout: post
 title: "npm 记录"
 date: 2018-09-13 08:00:00 +0800
-categories: fe
-tag: [fe]
+categories: computer
+tag: [computer]
 ---
 
 `npm link` 特性支持开发者将本地还未发布的 npm 包链接到项目中进行调试。

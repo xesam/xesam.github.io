@@ -2,7 +2,7 @@
 layout: post
 title:  "Volley缺陷"
 date:   2016-07-07 13:46:04 +0800
-categories: volley
+categories: android
 tag: [volley]
 ---
 

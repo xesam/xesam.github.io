@@ -2,7 +2,7 @@
 layout: post
 title:  "Volley线程池的问题"
 date:   2016-03-24 13:46:04 +0800
-categories: volley
+categories: android
 tag: [volley]
 ---
 
