@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "venv 常用"
-date:   2016-01-04 09:00:00 +0800
+date:   2016-03-03 09:00:00 +0800
 categories: computer
 tag: [computer]
 ---
