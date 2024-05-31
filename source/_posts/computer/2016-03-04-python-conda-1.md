@@ -68,7 +68,7 @@ create 命令创建 python 版本为 x.x，名字为 your_env_name 的虚拟环�
 ### 8. 删除虚拟环境
 
 ```bash
-    conda remove -n your_env_name --all
+    conda env remove -n your_env_name
 ```
 
 ### 9. 删除环境中的某个包
