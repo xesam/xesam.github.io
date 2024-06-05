@@ -48,6 +48,7 @@ create 命令创建 python 版本为 x.x，名字为 your_env_name 的虚拟环�
 ```bash
     Linux:  source activate your_env_nam
     Windows: activate your_env_name
+    Mac:  conda activate your_env_name
 ```
 
 ### 6. 在虚拟环境中安装额外的包
@@ -76,6 +77,16 @@ create 命令创建 python 版本为 x.x，名字为 your_env_name 的虚拟环�
 ```bash
     conda remove --name $your_env_name  $package_name
 ```
+
+### 10. 重命名环境名称
+
+在 Conda 4.14 版本之前，是没有直接内置命令的，只能删除原环境然后重新创建。从 Conda 4.14 版本开始，你可以使用以下命令来改变环境名称：
+
+```shell
+    conda rename -n old_env_name new_env_name
+```
+
+*虽然这个命令在内部的实现方式有点尴尬，但是起码算是直接支持了。*
 
 ## 镜像配置
 
