@@ -10,4 +10,4 @@
 
 命令：
 
-    npm run deploy
+    hexo deploy
