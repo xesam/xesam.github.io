@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>传值调用与传引用调用 | XiaoPingYuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="这个问题的关键是明确“传值调用（Call by value）”与“传引用调用（Call by reference）”的定义。 简单来说： “传值调用”是将值（values）作为函数参数传入； “传引用调用”是将变量（variables）本身作为函数参数传入；  一个隐喻： “传值调用”是我在纸片上写下一些内容并把纸片交给你， 内容可以是一个URL，也可能是一份完整的《战争与和平》副本。 不管是什么">
+<meta property="og:type" content="article">
+<meta property="og:title" content="传值调用与传引用调用">
+<meta property="og:url" content="https://xesam.github.io/2016/10/21/computer/2016-10-21-computer-ref-value/index.html">
+<meta property="og:site_name" content="XiaoPingYuan">
+<meta property="og:description" content="这个问题的关键是明确“传值调用（Call by value）”与“传引用调用（Call by reference）”的定义。 简单来说： “传值调用”是将值（values）作为函数参数传入； “传引用调用”是将变量（variables）本身作为函数参数传入；  一个隐喻： “传值调用”是我在纸片上写下一些内容并把纸片交给你， 内容可以是一个URL，也可能是一份完整的《战争与和平》副本。 不管是什么">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-10-21T08:51:38.000Z">
+<meta property="article:modified_time" content="2024-04-01T13:40:43.989Z">
+<meta property="article:author" content="xesam">
+<meta property="article:tag" content="computer">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="XiaoPingYuan" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">XiaoPingYuan</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Just Do IT</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://xesam.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-computer/2016-10-21-computer-ref-value" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2016/10/21/computer/2016-10-21-computer-ref-value/" class="article-date">
+  <time class="dt-published" datetime="2016-10-21T08:51:38.000Z" itemprop="datePublished">2016-10-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/computer/">computer</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      传值调用与传引用调用
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>这个问题的关键是明确“传值调用（Call by value）”与“传引用调用（Call by reference）”的定义。</p>
+<p>简单来说：</p>
+<pre><code>“传值调用”是将值（values）作为函数参数传入；
+“传引用调用”是将变量（variables）本身作为函数参数传入；
+</code></pre>
+<p>一个隐喻：</p>
+<pre><code>“传值调用”是我在纸片上写下一些内容并把纸片交给你， 内容可以是一个URL，也可能是一份完整的《战争与和平》副本。
+不管是什么，现在都在我给你的那张纸上，所以它实际上是你的纸。你可以在那张纸上随便涂鸦，也可以通过那张纸找到别的什么东西。
+
+“传引用调用”是当我在我的笔记本上写了一些内容然后把笔记本递给你。
+你可以在我的笔记本上涂鸦（也许我想要你这么做，也许我没料到你会这么做），然后我保留我的笔记本，你的任何涂鸦也一并保留在笔记本里。
+此外，如果你或我写的是有关如何找到其他内容的信息，无论你或我可以去那里，更改这些信息。
+</code></pre>
+<span id="more"></span>
+
+<h2 id="常见误解"><a href="#常见误解" class="headerlink" title="常见误解"></a>常见误解</h2><p>注意，这两个概念与“引用类型（reference types）”或者“指针类型（pointer types）”的概念是完全独立和正交的，所谓“引用类型”，就是 Java 中 Object 的子类型，C＃ 中的所有 class 类型；所谓“指针类型”类似 C 语言中指针的概念，在语义上等同于 Java 的“引用类型”。</p>
+<p>“引用类型”的概念对应于一个 URL ：它本身是一条信息，一个到其他信息的引用（或者一个指针）。你可以在不同的地方拥有多个网址副本，而且他们不会更改他们所有链接到的网站; 如果网站被更新，则每个 URL 副本将指向更新后的信息。 相反的，在任何一个 URL副本的更改不会影响到任何其他的 URL 副本。</p>
+<p>注意 C++ 有一个概念叫“引用（references）”（例如 &amp;int），它不像 Java 和 C＃ 的“引用类型”，而是像“传引用调用”。 Java 和 C＃ 中的“引用类型”以及 Python 中的所有类型都更像是 C 和 C ++ 中的“指针类型（pointer types）”（例如int *）。</p>
+<h2 id="术语定义"><a href="#术语定义" class="headerlink" title="术语定义"></a>术语定义</h2><p>首先，需要强调一些重要的术语，并确保我们对所用词汇的理解都达成一致。在实践中，词不达意的词汇，是导致绝大多数概念混淆的一个重要原因。</p>
+<p>首先，定义一个函数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">foo</span><span class="params">(<span class="type">int</span> param)</span> &#123;  <span class="comment">// line 1</span></span><br><span class="line">    param += <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后调用此函数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">bar</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">int</span> arg = <span class="number">1</span>; <span class="comment">// line 2</span></span><br><span class="line">    foo(arg);    <span class="comment">// line 3</span></span><br><span class="line">&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过这个例子，我想定义一些重要的术语：</p>
+<ol>
+<li>foo 是在第1行声明的函数（ C 和 C ++ 区分声明和定义，在 Java 中，函数声明和定义是合二为一的，但是概念是相同的，这里不作深入讨论）</li>
+<li>param 是 foo 的形式参数（formal parameter，后文简称“形参”），也在第1行声明</li>
+<li>arg 是一个变量（variable），在第2行上声明和初始化，是函数 bar 的局部变量（ local variable）</li>
+<li>arg 也是第3行上 foo 调用（invocation）的参数（argument）</li>
+</ol>
+<p>这里有两组非常重要的概念要区分。</p>
+<h4 id="第一组概念是“值（value）”与“变量（variable）”："><a href="#第一组概念是“值（value）”与“变量（variable）”：" class="headerlink" title="第一组概念是“值（value）”与“变量（variable）”："></a>第一组概念是“值（value）”与“变量（variable）”：</h4><p>值（value）是对语言中表达式进行求值的结果。例如，在上面的 bar 函数中， int arg &#x3D; 1 ; 执行之后，表达式 arg 的值（value）为 1。</p>
+<p>变量（variable）是“值（value）”的容器。变量可以是“可变的（mutable）”，这是大多数类似C语言的默认值，或者“只读的（read-only）”，例如使用 Java 的 final 或 C＃ 的 readonly 声明，又或者完全不可变的，例如使用 C++ 的 const。</p>
+<h4 id="另一组概念是“形参（parameter）”与“实参（argument）”："><a href="#另一组概念是“形参（parameter）”与“实参（argument）”：" class="headerlink" title="另一组概念是“形参（parameter）”与“实参（argument）”："></a>另一组概念是“形参（parameter）”与“实参（argument）”：</h4><p>形参（formal parameter）是调用函数时必须由调用者（caller）提供的“变量（variable）”。</p>
+<p>实参（argument）是由函数的调用者提供以满足该函数形参的特定形式参数的“值（value）”。</p>
+<h2 id="传值调用"><a href="#传值调用" class="headerlink" title="传值调用"></a>传值调用</h2><p>在“传值调用”中，函数的形参是为了调用函数所新创建，并使用实参值初始化的变量。<br>这与用值来初始化任何其他类型变量的方式完全相同。例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> arg = <span class="number">1</span>;</span><br><span class="line"><span class="type">int</span> another_variable = arg;</span><br></pre></td></tr></table></figure>
+
+<p>这里 arg 和 another_variable 是完全独立的变量 - 它们的值可以彼此独立地变化。因为，在声明 another_variable 的时候，它就被初始化为保持与arg所保持的相同的值：也就是数值 1。</p>
+<p>由于它们是独立变量，对 another_variable 的更改不会影响 arg：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> arg = <span class="number">1</span>;</span><br><span class="line"><span class="type">int</span> another_variable = arg;</span><br><span class="line">another_variable = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">assert arg == <span class="number">1</span>; <span class="comment">// true</span></span><br><span class="line">assert another_variable == <span class="number">2</span>; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>这与上例中 arg 和 param 之间的关系完全相同，对比一下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">foo</span><span class="params">(<span class="type">int</span> param)</span> &#123;</span><br><span class="line">  param += <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">bar</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="type">int</span> arg = <span class="number">1</span>;</span><br><span class="line">  foo(arg);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>它就好像我们这样编写代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在这里进入函数“bar”</span></span><br><span class="line"><span class="type">int</span> arg = <span class="number">1</span>;</span><br><span class="line">  <span class="comment">//这里进入函数“foo”</span></span><br><span class="line">  <span class="type">int</span> param = arg;</span><br><span class="line">  param += <span class="number">1</span>;</span><br><span class="line">  <span class="comment">//在这里退出函数“foo”</span></span><br><span class="line"><span class="comment">//在这里退出函数“bar”</span></span><br></pre></td></tr></table></figure>
+
+<p>也就是说，“传值调用”的定义特征是“被调用者（callee）”（即foo）接收值（values）作为参数（ arguments），对于这些传入的值，相对于“调用者（caller）”（即bar）的变量，“被调用者”具有其自己的独立变量（variables）。</p>
+<p>回到上面的隐喻，如果我是 bar，你是foo，当我调用你的时候，我给你一张纸上写着一个值（value）。你称这张纸为 param，该值是我写在笔记本（本地变量）上，被称为 arg 的变量的副本。</p>
+<p>（另外：一个函数调用一个函数的各种调用约定（ calling conventions），取决于所用的硬件和操作系统。所谓“调用约定”，就像我们共同来约定是我将值写在一张纸上，然后交给你，还是你本身就有一张纸，我直接把值写在上面，又还是我把值写在我们都能看到的墙上。这是一个有趣的话题，但与本话题无关）</p>
+<h2 id="传引用调用"><a href="#传引用调用" class="headerlink" title="传引用调用"></a>传引用调用</h2><p>在“传引用调用”中，函数的形参仅仅是调用者提供的实参的新名称（new names）。</p>
+<p>回到上面的例子，它等同于：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在这里进入函数 “bar”</span></span><br><span class="line"><span class="type">int</span> arg = <span class="number">1</span>;</span><br><span class="line">  <span class="comment">//这里进入函数 “foo”</span></span><br><span class="line">  <span class="comment">//啊哈！我注意到 “param” 只是另一个名字 “arg”</span></span><br><span class="line">  arg <span class="comment">/* param */</span> += <span class="number">1</span>;</span><br><span class="line">  <span class="comment">//在这里退出函数 “foo”</span></span><br><span class="line"><span class="comment">//在这里退出函数 “bar”</span></span><br></pre></td></tr></table></figure>
+
+<p>由于 param 只是 arg 的另一个名称，也就是说，它们是同一个变量（the same variable），param 的更改反映到 arg 上。这是“传引用调用”不同于“传值调用”的根本之处。</p>
+<p>很少有语言支持传引用调用，但 C++ 可以这样做：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">foo</span><span class="params">(<span class="type">int</span>&amp; param)</span> &#123;</span><br><span class="line">  param += <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">bar</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="type">int</span> arg = <span class="number">1</span>;</span><br><span class="line">  foo(arg);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这种情况下，param 不仅具有与 arg 相同的值（value），它实际上就是 arg（只是名称不同而已），因此 bar 可以观察到 arg 已经增加。</p>
+<p>注意，这不是 Java，JavaScript，C，Objective-C，Python 或任何其他流行语言的执行方式，也就意味着这些语言不是“传引用调用”的，它们是“传值调用”的。</p>
+<h2 id="附录：对象共享调用（call-by-object-sharing）"><a href="#附录：对象共享调用（call-by-object-sharing）" class="headerlink" title="附录：对象共享调用（call by object sharing）"></a>附录：对象共享调用（call by object sharing）</h2><p>如果在“传值调用”中，实际的值是一个引用类型（reference type）或指针类型（pointer type），那么“值”本身不是什么特别的（例如在 C 语言里面，它只是一个平台特定大小的整数），特别的是”值”所指向的内容。</p>
+<p>如果引用类型（或者说指针）指向的是可变值（mutable）的，那么一个可能的效果是：你可以修改被指向的值，并且调用者可以观察到被指向值的变化，即使调用者不能观察到这个引用类型本身的更改。</p>
+<p>再次借用URL的隐喻：</p>
+<pre><code>我给你一个网站 URL的副本，我们关心的是网站，而不是URL。
+无论你如何更改你的 URL 副本，都不影响我的 URL 内容
+（实际上，在 Java 或者 Python 这样的语言中，“URL”或引用类型值，他们本身的值根本就不能被修改，只有它指向的东西可以被修改）。
+</code></pre>
+<p>当 Barbara Liskov 发明 CLU 编程语言时，她意识到现有的术语“传值调用”和“传引用调用”对描述这种新语言的语义并不是特别有用。所以她发明了一个新的术语：共享对象调用（call by object sharing）。</p>
+<p>对于通过“传值调用”，但实际使用中的常用类型是引用或指针类型（即：几乎每一种现代命令式，面向对象或多范式编程语言）的语言，只需要避免谈论“传值调用”或“传引用调用”，而坚持通过“共享对象调用”（或简单地“传对象调用”），就没有人会困惑了。</p>
+<p>参考 <a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/373419/whats-the-difference-between-passing-by-reference-vs-passing-by-value/34971934#34971934">http://stackoverflow.com/questions/373419/whats-the-difference-between-passing-by-reference-vs-passing-by-value/34971934#34971934</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2016/10/21/computer/2016-10-21-computer-ref-value/" data-id="cluh013zg000u38wb3rz29rmh" data-title="传值调用与传引用调用" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/computer/" rel="tag">computer</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/12/17/computer/2016-12-17-computer-BIOS-0x7C00/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          BIOS与0x7C00
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/09/30/android/2016/2016-09-30-Android-Splash/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">Android Splash实践</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chrome/">chrome</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/computer/">computer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/fe/">fe</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/introspection/">introspection</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/math/">math</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/physics/">physics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/product/">product</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/software/">software</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/talk/">talk</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c51/" rel="tag">c51</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/computer/" rel="tag">computer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fe/" rel="tag">fe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/introspection/" rel="tag">introspection</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/" rel="tag">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memo/" rel="tag">memo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/product/" rel="tag">product</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rx/" rel="tag">rx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/" rel="tag">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/talk/" rel="tag">talk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/volley/" rel="tag">volley</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/c51/" style="font-size: 11.25px;">c51</a> <a href="/tags/chrome/" style="font-size: 11.25px;">chrome</a> <a href="/tags/computer/" style="font-size: 17.5px;">computer</a> <a href="/tags/fe/" style="font-size: 13.75px;">fe</a> <a href="/tags/introspection/" style="font-size: 10px;">introspection</a> <a href="/tags/java/" style="font-size: 13.75px;">java</a> <a href="/tags/javascript/" style="font-size: 18.75px;">javascript</a> <a href="/tags/math/" style="font-size: 10px;">math</a> <a href="/tags/memo/" style="font-size: 10px;">memo</a> <a href="/tags/product/" style="font-size: 15px;">product</a> <a href="/tags/rx/" style="font-size: 10px;">rx</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/talk/" style="font-size: 16.25px;">talk</a> <a href="/tags/volley/" style="font-size: 11.25px;">volley</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">三月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/04/">四月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/">《其实你不懂进化论》简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/">单元测试的艺术-第三版 简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/">网民的故事分析-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/01/talk/2021-12-01-talk-book-user-stories-applied/">用户故事与敏捷方法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/03/talk/2021-11-03-talk-logic-1/">不令人讨厌的分析逻辑</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 xesam<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

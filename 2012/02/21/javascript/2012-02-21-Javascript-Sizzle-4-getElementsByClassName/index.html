@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>【Javascript】Sizzle引擎--原生getElementsByClassName对选择结果的影响（jQuery） | XiaoPingYuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="个人觉得这个例子虽然可能不具有实际意义，但是可以很好的理解Sizzle选择的过程 实例说明先看一个例子： 1234567891011121314151617&lt;html&gt;&lt;head&gt;    &lt;meta http-equiv&#x3D;&quot;Content-Type&quot; content&#x3D;&quot;text&#x2F;html; charset&#x3D;utf-8&quot;&#x2F;&gt;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Javascript】Sizzle引擎--原生getElementsByClassName对选择结果的影响（jQuery）">
+<meta property="og:url" content="https://xesam.github.io/2012/02/21/javascript/2012-02-21-Javascript-Sizzle-4-getElementsByClassName/index.html">
+<meta property="og:site_name" content="XiaoPingYuan">
+<meta property="og:description" content="个人觉得这个例子虽然可能不具有实际意义，但是可以很好的理解Sizzle选择的过程 实例说明先看一个例子： 1234567891011121314151617&lt;html&gt;&lt;head&gt;    &lt;meta http-equiv&#x3D;&quot;Content-Type&quot; content&#x3D;&quot;text&#x2F;html; charset&#x3D;utf-8&quot;&#x2F;&gt;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2012-02-21T02:46:04.000Z">
+<meta property="article:modified_time" content="2024-04-01T13:40:44.038Z">
+<meta property="article:author" content="xesam">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="XiaoPingYuan" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">XiaoPingYuan</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Just Do IT</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://xesam.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-javascript/2012-02-21-Javascript-Sizzle-4-getElementsByClassName" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2012/02/21/javascript/2012-02-21-Javascript-Sizzle-4-getElementsByClassName/" class="article-date">
+  <time class="dt-published" datetime="2012-02-21T02:46:04.000Z" itemprop="datePublished">2012-02-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      【Javascript】Sizzle引擎--原生getElementsByClassName对选择结果的影响（jQuery）
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>个人觉得这个例子虽然可能不具有实际意义，但是可以很好的理解Sizzle选择的过程</p>
+<h2 id="实例说明"><a href="#实例说明" class="headerlink" title="实例说明"></a>实例说明</h2><p>先看一个例子：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;Content-Type&quot;</span> <span class="attr">content</span>=<span class="string">&quot;text/html; charset=utf-8&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;tab&quot;</span> <span class="attr">id</span>=<span class="string">&quot;a1&quot;</span>&gt;</span>1<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;tab&quot;</span> <span class="attr">id</span>=<span class="string">&quot;a2&quot;</span>&gt;</span>2<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;tab&quot;</span> <span class="attr">id</span>=<span class="string">&quot;a3&quot;</span>&gt;</span>3<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;../sizzle.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;.tab:not(:first)&#x27;</span>));  </span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;p:not(:first)&#x27;</span>));      </span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;p.tab:not(:first)&#x27;</span>));  </span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>看上面三个结果的三个表达式，估计很多人会觉得结果肯定是一样的，不错，除去IE6&#x2F;7&#x2F;8，结果应该都是一样的，结果（一）：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;.tab:not(:first)&#x27;</span>));  <span class="comment">//[#a2,#a3]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;p:not(:first)&#x27;</span>));     <span class="comment">//[#a2,#a3]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;p.tab:not(:first)&#x27;</span>)); <span class="comment">//[#a2,#a3]</span></span><br></pre></td></tr></table></figure>
+
+<p>但是在IE6&#x2F;7&#x2F;8下面，结果（二）：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;.tab:not(:first)&#x27;</span>));  <span class="comment">//[#a1,#a2，#a3]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;p:not(:first)&#x27;</span>));     <span class="comment">//[#a2,#a3]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;p.tab:not(:first)&#x27;</span>)); <span class="comment">//[#a2,#a3]</span></span><br></pre></td></tr></table></figure>
+<p>其实不仅是IE6&#x2F;7&#x2F;8，任何不支持 getElementsByClassName 方法的浏览器结果都是结果（二）这样。</p>
+<h3 id="结果分析"><a href="#结果分析" class="headerlink" title="结果分析"></a>结果分析</h3><p>在结果（一）的过程中，</p>
+<p>‘.tab:not(:first)’选择流程是：</p>
+<ol>
+<li>document.getElementsByClassName(‘.tab’)获得结果集[#a1,#a2,#a3];</li>
+<li>过滤:not(:first)，获得结果集[#a2,#a3];</li>
+</ol>
+<p>‘p:not(:first)’选择流程是：</p>
+<ol>
+<li>document.getElementsByTagName(‘p’)获得结果集[#a1,#a2,#a3];</li>
+<li>过滤:not(:first)，获得结果集[#a2,#a3];</li>
+</ol>
+<p>‘p.tab:not(:first)’选择流程是：</p>
+<ol>
+<li>document.getElementsByClassName(‘.tab’)获得结果集[#a1,#a2,#a3];</li>
+<li>过滤p，获得结果集[#a1,#a2,#a3];</li>
+<li>过滤:not(:first)，获得结果集[#a2,#a3];</li>
+</ol>
+<p>在结果（二）的过程中：</p>
+<p>‘.tab:not(:first)’选择流程是：</p>
+<ol>
+<li>document.getElementsByTagName(‘*’)获得结果集[html,head,body,#a1,#a2,#a3,script,script]</li>
+<li>过滤:not(:first)，获得结果集[head,body,#a1,#a2,#a3,script,script]</li>
+<li>过滤.tab，获得结果集[#a1,#a2,#a3]</li>
+</ol>
+<p>‘p:not(:first)’选择流程是：</p>
+<ol>
+<li>document.getElementsByTagName(‘p’)获得结果集[#a1,#a2,#a3];</li>
+<li>过滤:not(:first)，获得结果集[#a2,#a3];</li>
+</ol>
+<p>‘p.tab:not(:first)’选择流程是：</p>
+<ol>
+<li>document.getElementsByTagName(‘p’)获得结果集[#a1,#a2,#a3];</li>
+<li>过滤:not(:first)，获得结果集[#a2,#a3];</li>
+<li>过滤.tab，获得结果集[#a2,#a3]</li>
+</ol>
+<p>可以看到，在不含class的选择符中，两种情况过程是一样的，当含有class的时候，会优先去寻找含有class的元素，从而直接影响了后面过滤步骤的候选集。</p>
+<h3 id="原因分析"><a href="#原因分析" class="headerlink" title="原因分析"></a>原因分析</h3><p>至于产生的原因，我们回到代码层面来解释：</p>
+<h4 id="第一个影响因素"><a href="#第一个影响因素" class="headerlink" title="第一个影响因素"></a>第一个影响因素</h4><p>先看Sizzle.find部分</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> ( i = <span class="number">0</span>, len = <span class="title class_">Expr</span>.<span class="property">order</span>.<span class="property">length</span>; i &lt; len; i++ ) &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Expr</span>.<span class="property">order</span>: [ <span class="string">&quot;ID&quot;</span>, <span class="string">&quot;NAME&quot;</span>, <span class="string">&quot;TAG&quot;</span> ];</span><br></pre></td></tr></table></figure>
+
+<p>最初的查找的时候，匹配type的是有一个优先级的 ID–&gt;NAME–&gt;TAG ,对于支持 getElementsByClassName 的浏览器，Sizzle 源码进行了一个处理：</p>
+<p>在1296行：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Expr</span>.<span class="property">order</span>.<span class="title function_">splice</span>(<span class="number">1</span>, <span class="number">0</span>, <span class="string">&quot;CLASS&quot;</span>);</span><br><span class="line">    <span class="title class_">Expr</span>.<span class="property">find</span>.<span class="property">CLASS</span> = <span class="keyword">function</span>(<span class="params"> match, context, isXML </span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> ( <span class="keyword">typeof</span> context.<span class="property">getElementsByClassName</span> !== <span class="string">&quot;undefined&quot;</span> &amp;&amp; !isXML ) &#123;</span><br><span class="line">            <span class="keyword">return</span> context.<span class="title function_">getElementsByClassName</span>(match[<span class="number">1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br></pre></td></tr></table></figure>
+<p>于是在支持getElementsByClassName的浏览器中，Sizzle.find的实现变成</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> ( i = <span class="number">0</span>, len = <span class="title class_">Expr</span>.<span class="property">order</span>.<span class="property">length</span>; i &lt; len; i++ ) &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Expr</span>.<span class="property">order</span>: [ <span class="string">&quot;ID&quot;</span>,<span class="string">&quot;CLASS&quot;</span> <span class="string">&quot;NAME&quot;</span>, <span class="string">&quot;TAG&quot;</span> ];</span><br></pre></td></tr></table></figure>
+
+<p>而且CLASS的优先级仅次于ID。</p>
+<p>所以.tab:not(:first)在过滤的第一步，不同浏览器的候选集就已经发生了差异。</p>
+<h4 id="第二个影响因素"><a href="#第二个影响因素" class="headerlink" title="第二个影响因素"></a>第二个影响因素</h4><p>再看Sizzle.filter部分</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> ( type <span class="keyword">in</span> <span class="title class_">Expr</span>.<span class="property">filter</span> ) &#123;&#125;</span><br><span class="line"><span class="title class_">Expr</span>.<span class="property">filter</span>=&#123;</span><br><span class="line">        <span class="attr">CLASS</span>: <span class="keyword">function</span>(<span class="params"> match, curLoop, inplace, result, not, isXML </span>) &#123;&#125;,</span><br><span class="line">        <span class="attr">ID</span>: <span class="keyword">function</span>(<span class="params"> match </span>) &#123;&#125;,</span><br><span class="line">        <span class="attr">TAG</span>: <span class="keyword">function</span>(<span class="params"> match, curLoop </span>) &#123;&#125;,</span><br><span class="line">        <span class="attr">CHILD</span>: <span class="keyword">function</span>(<span class="params"> match </span>) &#123;&#125;,</span><br><span class="line">        <span class="attr">ATTR</span>: <span class="keyword">function</span>(<span class="params"> match, curLoop, inplace, result, not, isXML </span>) &#123;&#125;,</span><br><span class="line">        <span class="attr">PSEUDO</span>: <span class="keyword">function</span>(<span class="params"> match, curLoop, inplace, result, not </span>) &#123;&#125;</span><br><span class="line">        <span class="attr">POS</span>: <span class="keyword">function</span>(<span class="params"> match </span>) &#123;&#125;</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure>
+
+<p>这里与 Sizzle.find 的一个显著不同是这里用的 for..in 循环，没有确定的顺序【优先级】，因此并不能保证先过滤什么类型。</p>
+<p>所以.tab:not(:first)在先过滤了:not(:first)，然后再过滤.tab，所以结果和想想的不一致。</p>
+<h4 id="第三个影响因素"><a href="#第三个影响因素" class="headerlink" title="第三个影响因素"></a>第三个影响因素</h4><p>这个涉及到filter的实现，对于含有not的表达式，候选集合会被筛选一遍。</p>
+<p>.tab:not(:first)在not部分集合改变，直接去除了第一个元素。</p>
+<p>.tab:first 就没有改变，因为first是在POS匹配中处理的。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>如果我们把Sizzle.filter的实现改成和Sizzle.find一致，变成如下形式：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> ( i = <span class="number">0</span>, len = <span class="title class_">Expr</span>.<span class="property">filterOrder</span>.<span class="property">length</span>; i &lt; len; i++ ) &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Expr</span>.<span class="property">filterOrder</span>: [ <span class="string">&quot;ID&quot;</span>,<span class="string">&quot;CLASS&quot;</span> <span class="string">&quot;NAME&quot;</span>, <span class="string">&quot;TAG&quot;</span> ,<span class="string">&quot;ATTR&quot;</span>,<span class="string">&quot;CHILD&quot;</span>,<span class="string">&quot;PSEUDO&quot;</span>,<span class="string">&quot;POS&quot;</span>];</span><br></pre></td></tr></table></figure>
+
+<p>那么我们就可以保证选择的结果和预期的一致。不过这种牵一发而动全身的事情，显然是不适合的。</p>
+<p>另外一个方法就是避免使用这种有歧义的选择符，将:not(:first)作为集合的一个方法调用，而不直接写到选择表达式里面。</p>
+<p>另外，如果知道DOM的结构，处理方式就很多了，比如加tag限制，层级限制等等</p>
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>这种问题并不是出现在没个类似的选择表达式中，具体的情况可以查看Sizzle源码的filter部分。</p>
+<p>filter部分比较麻烦，有什么错误之处，欢迎交流。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2012/02/21/javascript/2012-02-21-Javascript-Sizzle-4-getElementsByClassName/" data-id="cluh0140l005o38wb36ac0p3g" data-title="【Javascript】Sizzle引擎--原生getElementsByClassName对选择结果的影响（jQuery）" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2012/02/25/javascript/2012-02-25-Javascript-Sizzle-5/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          【Javascript】Sizzle引擎--原理与实践（五）
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2012/02/18/javascript/2012-02-18-Javascript-Sizzle-4/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">【Javascript】Sizzle引擎--原理与实践（四）</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chrome/">chrome</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/computer/">computer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/fe/">fe</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/introspection/">introspection</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/math/">math</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/physics/">physics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/product/">product</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/software/">software</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/talk/">talk</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c51/" rel="tag">c51</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/computer/" rel="tag">computer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fe/" rel="tag">fe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/introspection/" rel="tag">introspection</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/" rel="tag">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memo/" rel="tag">memo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/product/" rel="tag">product</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rx/" rel="tag">rx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/" rel="tag">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/talk/" rel="tag">talk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/volley/" rel="tag">volley</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/c51/" style="font-size: 11.25px;">c51</a> <a href="/tags/chrome/" style="font-size: 11.25px;">chrome</a> <a href="/tags/computer/" style="font-size: 17.5px;">computer</a> <a href="/tags/fe/" style="font-size: 13.75px;">fe</a> <a href="/tags/introspection/" style="font-size: 10px;">introspection</a> <a href="/tags/java/" style="font-size: 13.75px;">java</a> <a href="/tags/javascript/" style="font-size: 18.75px;">javascript</a> <a href="/tags/math/" style="font-size: 10px;">math</a> <a href="/tags/memo/" style="font-size: 10px;">memo</a> <a href="/tags/product/" style="font-size: 15px;">product</a> <a href="/tags/rx/" style="font-size: 10px;">rx</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/talk/" style="font-size: 16.25px;">talk</a> <a href="/tags/volley/" style="font-size: 11.25px;">volley</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">三月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/04/">四月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/">《其实你不懂进化论》简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/">单元测试的艺术-第三版 简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/">网民的故事分析-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/01/talk/2021-12-01-talk-book-user-stories-applied/">用户故事与敏捷方法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/03/talk/2021-11-03-talk-logic-1/">不令人讨厌的分析逻辑</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 xesam<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

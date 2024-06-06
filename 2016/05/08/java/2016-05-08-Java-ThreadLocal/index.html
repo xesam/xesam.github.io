@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>ThreadLocal设计意图 | XiaoPingYuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="核心原理  ThreadLocal 处理的是线程的专属对象，各个线程的对象都是独立的。 ThreadLocal 用来辅助平衡效率与资源分配。 ThreadLocal 不是同步机制，也不解决共享对象的多线程竞态条件问题。  基本设计首先看一个熟悉的场景：排队买票。 从理论上看，针对“排队买票”这个场景，我们可以有以下几种方案设计： 第一种. 固定设置一个售票窗口，每新来一个购票者就排在队伍的最后面。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ThreadLocal设计意图">
+<meta property="og:url" content="https://xesam.github.io/2016/05/08/java/2016-05-08-Java-ThreadLocal/index.html">
+<meta property="og:site_name" content="XiaoPingYuan">
+<meta property="og:description" content="核心原理  ThreadLocal 处理的是线程的专属对象，各个线程的对象都是独立的。 ThreadLocal 用来辅助平衡效率与资源分配。 ThreadLocal 不是同步机制，也不解决共享对象的多线程竞态条件问题。  基本设计首先看一个熟悉的场景：排队买票。 从理论上看，针对“排队买票”这个场景，我们可以有以下几种方案设计： 第一种. 固定设置一个售票窗口，每新来一个购票者就排在队伍的最后面。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xesam.github.io/image/java_threadlocal_1.png">
+<meta property="og:image" content="https://xesam.github.io/image/java_threadlocal_2.png">
+<meta property="og:image" content="https://xesam.github.io/image/java_threadlocal_3.png">
+<meta property="article:published_time" content="2016-05-08T05:46:04.000Z">
+<meta property="article:modified_time" content="2024-04-01T13:40:44.030Z">
+<meta property="article:author" content="xesam">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xesam.github.io/image/java_threadlocal_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="XiaoPingYuan" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">XiaoPingYuan</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Just Do IT</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://xesam.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-java/2016-05-08-Java-ThreadLocal" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2016/05/08/java/2016-05-08-Java-ThreadLocal/" class="article-date">
+  <time class="dt-published" datetime="2016-05-08T05:46:04.000Z" itemprop="datePublished">2016-05-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/java/">java</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      ThreadLocal设计意图
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>核心原理</p>
+<ol>
+<li>ThreadLocal 处理的是线程的专属对象，各个线程的对象都是独立的。</li>
+<li>ThreadLocal 用来辅助平衡效率与资源分配。</li>
+<li>ThreadLocal 不是同步机制，也不解决共享对象的多线程竞态条件问题。</li>
+</ol>
+<h2 id="基本设计"><a href="#基本设计" class="headerlink" title="基本设计"></a>基本设计</h2><p>首先看一个熟悉的场景：排队买票。</p>
+<p>从理论上看，针对“排队买票”这个场景，我们可以有以下几种方案设计：</p>
+<p>第一种. 固定设置一个售票窗口，每新来一个购票者就排在队伍的最后面。如图：</p>
+<p><img src="/image/java_threadlocal_1.png" alt="1"></p>
+<p>第二种. 动态设置售票窗口数量，每新来一个购票者就新开一个窗口来进行接待。如图：</p>
+<p><img src="/image/java_threadlocal_2.png" alt="1"></p>
+<p>第三种. 固定设置 N 个售票窗口，每新来一个购票者就选择一个售票窗口。如图：</p>
+<p><img src="/image/java_threadlocal_3.png" alt="1"></p>
+<p>比较一下上面的三种方案，很明显现实社会中使用的是第三种，那么各自有什么优势与缺点呢？</p>
+<span id="more"></span>
+
+<p>首先，整个卖票过程中，售票员是稀缺资源，售票窗口也是要消耗资源的。而且卖票的瓶颈也在售票窗口，因为售票员与购票者的交流需要花费很多时间，购票者多是在等待而已。</p>
+<p>第一种：</p>
+<p>优势是资源消耗低，只需要一个售票窗口就可以了，另一个好处就是不用处理不同售票窗口卖出了同一张票的问题（即竞态条件处理），<br>因为任一时刻只会有一个售票窗口，一次只会卖一张票，后台数据中心按顺序出票就行了。<br>但是劣势更明显，就是排队的效率低，如果购票者人数比较多，那么购票者的队伍会非常长。</p>
+<p>第二种：</p>
+<p>优势是排队效率高（根本就不用排队）。<br>劣势也很明显，不可能提供无限的售票窗口来满足大量的购票需求，另外，新建售票窗口也是需要时间的。<br>另一个问题就是，如果不同售票窗口都想卖出同一张票，这时后台数据中心就需要进行协调处理了（即竞态条件处理）。</p>
+<p>第三种：</p>
+<p>这种方式与上面两种并无绝对优势，只是一种平衡而已。<br>相比第一种方式，购票者需要排的队短很多；相比第二种方式，在售票窗口的资源投入上会少很多。</p>
+<p><strong>本文不讨论竞态条件的问题，因为为了防止卖出同一张票，你也可以让所有的售票窗口自己协商（比如任一时刻只能有一个售票窗口卖票，等等）。</strong></p>
+<p>那么，这个场景怎样对应到具体的程序中呢？</p>
+<pre><code>后台数据中心 —— 数据库
+售票窗口 —— 数据库连接
+购票者 —— 单个消息（也就是具体的单个任务，此处我称之为“消息”）
+购票队列 —— 消息队列
+</code></pre>
+<p>其中：</p>
+<pre><code>一组 售票窗口 + 购票队列 + 购票者
+</code></pre>
+<p>属于同一个线程的内部变量。</p>
+<p>注意，本文的核心是关注点是售票窗口资源消耗。这个时候就是 ThreadLocal 出场的时候，看一个演示程序：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ThreadLocalTest</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                <span class="type">TicketWindow</span> <span class="variable">ticketWindow</span> <span class="operator">=</span> TicketWindow.prepare();</span><br><span class="line">                IntStream.range(<span class="number">0</span>, <span class="number">5</span>).forEach(i -&gt; <span class="keyword">new</span> <span class="title class_">Buyer</span>(<span class="string">&quot;buyer_&quot;</span> + i).enqueue());</span><br><span class="line">                ticketWindow.open();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;.start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                <span class="type">TicketWindow</span> <span class="variable">ticketWindow</span> <span class="operator">=</span> TicketWindow.prepare();</span><br><span class="line">                IntStream.range(<span class="number">5</span>, <span class="number">10</span>).forEach(i -&gt; <span class="keyword">new</span> <span class="title class_">Buyer</span>(<span class="string">&quot;buyer_&quot;</span> + i).enqueue());</span><br><span class="line">                ticketWindow.open();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TicketWindow</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ThreadLocal&lt;TicketWindow&gt; sTicketWindow = <span class="keyword">new</span> <span class="title class_">ThreadLocal</span>&lt;TicketWindow&gt;() &#123;</span><br><span class="line">        <span class="keyword">public</span> TicketWindow <span class="title function_">initialValue</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">TicketWindow</span>(Thread.currentThread().getName());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> TicketWindow <span class="title function_">prepare</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> sTicketWindow.get();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> BuyerQueue buyerQueue;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">TicketWindow</span><span class="params">(String name)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.buyerQueue = <span class="keyword">new</span> <span class="title class_">BuyerQueue</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">enqueue</span><span class="params">(Buyer buyer)</span> &#123;</span><br><span class="line">        buyerQueue.enqueue(buyer);</span><br><span class="line">        System.out.println(<span class="string">&quot;enqueue:&quot;</span> + buyer.getName());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">open</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            <span class="type">Buyer</span> <span class="variable">buyer</span> <span class="operator">=</span> buyerQueue.poll();</span><br><span class="line">            <span class="keyword">if</span> (buyer != <span class="literal">null</span>) &#123;</span><br><span class="line">                System.out.println(getName() + <span class="string">&quot; turn:&quot;</span> + buyer.getName());</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                buyer.buy();</span><br><span class="line">                System.out.println(getName() + <span class="string">&quot; sold:&quot;</span> + buyer.getName());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BuyerQueue</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Queue&lt;Buyer&gt; queue = <span class="keyword">new</span> <span class="title class_">LinkedBlockingDeque</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">enqueue</span><span class="params">(Buyer buyer)</span> &#123;</span><br><span class="line">        queue.add(buyer);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Buyer <span class="title function_">poll</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> queue.poll();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Buyer</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Buyer</span><span class="params">(String name)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">enqueue</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">TicketWindow</span> <span class="variable">ticketWindow</span> <span class="operator">=</span> TicketWindow.prepare();</span><br><span class="line">        ticketWindow.enqueue(<span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">buy</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中，TicketWindow 在每个 Thread 只会有一个，每个 Thread 的 TicketWindow 都不同。</p>
+<p>在使用的过程中，既不需要显示的给线程设置 TicketWindow，其他线程也访问不了当前线程的 TicketWindow，也起到了排除干扰的效果。</p>
+<p><strong>当然，不用 ThreadLocal，直接用 Map 也可以，ThreadLocal 也是用 Map 实现的</strong></p>
+<h2 id="一个实际的应用"><a href="#一个实际的应用" class="headerlink" title="一个实际的应用"></a>一个实际的应用</h2><p>SimpleDateFormat 是线程不安全的，如果每次调用都 new 一个新的 SimpleDateFormat 对象，实在浪费。所以这个时候就可以用 ThreadLocal<br>来让每个线程都持有一个 SimpleDateFormat 的实例，避免创建无用的对象。</p>
+<h2 id="ThreadLocal-与-clone"><a href="#ThreadLocal-与-clone" class="headerlink" title="ThreadLocal 与 clone"></a>ThreadLocal 与 clone</h2><p>到这里，似乎不需要 ThreadLocal，直接用 clone() 也可以达到相同的效果。<br>这当然没错，不过使用 clone() 的话，就需要处理更多的细节，而且与 ThreadLocal#initialValue() 的作用是一致的。</p>
+<h2 id="存在问题"><a href="#存在问题" class="headerlink" title="存在问题"></a>存在问题</h2><p>通常来讲，ThreadLocal 不会造成什么大问题，因为在 Thread 执行完毕的时候，所有的资源都会被自动释放掉。</p>
+<p>唯一的问题就是——线程池。</p>
+<p>如果我们在线程池中使用了 ThreadLocal ，由于我们通常无法直接控制线程池线程的创建与释放，也就意味着除非手动清除掉 ThreadLocal 中的资源，<br>否则，ThreadLocal 持有的资源可能永远无法释放，内存泄漏的隐患由此而生。</p>
+<h2 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h2><p>ThreadLocal 把对象级别的变量共享变为线程级别的变量共享，从而辅助平衡资源与效率，本身并不是一种同步机制，因为每个线程持有的都是不同的对象。<br>至于对象所要处理的状态问题，交给别的角色去处理了。所以，本质上是将整个同步的时机向后延迟了（或者说，转移了同步责任）。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2016/05/08/java/2016-05-08-Java-ThreadLocal/" data-id="cluh01413008b38wbeyrb1uyg" data-title="ThreadLocal设计意图" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/" rel="tag">java</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/05/10/android/2016/2016-05-10-Android-MockWebServer/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          Android 使用MockWebServer来进行单元测试
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/05/06/android/2016/2016-05-06-Android-web-local/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">Android 远程网页访问本地资源</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chrome/">chrome</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/computer/">computer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/fe/">fe</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/introspection/">introspection</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/math/">math</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/physics/">physics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/product/">product</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/software/">software</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/talk/">talk</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c51/" rel="tag">c51</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/computer/" rel="tag">computer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fe/" rel="tag">fe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/introspection/" rel="tag">introspection</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/" rel="tag">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memo/" rel="tag">memo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/product/" rel="tag">product</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rx/" rel="tag">rx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/" rel="tag">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/talk/" rel="tag">talk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/volley/" rel="tag">volley</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/c51/" style="font-size: 11.25px;">c51</a> <a href="/tags/chrome/" style="font-size: 11.25px;">chrome</a> <a href="/tags/computer/" style="font-size: 17.5px;">computer</a> <a href="/tags/fe/" style="font-size: 13.75px;">fe</a> <a href="/tags/introspection/" style="font-size: 10px;">introspection</a> <a href="/tags/java/" style="font-size: 13.75px;">java</a> <a href="/tags/javascript/" style="font-size: 18.75px;">javascript</a> <a href="/tags/math/" style="font-size: 10px;">math</a> <a href="/tags/memo/" style="font-size: 10px;">memo</a> <a href="/tags/product/" style="font-size: 15px;">product</a> <a href="/tags/rx/" style="font-size: 10px;">rx</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/talk/" style="font-size: 16.25px;">talk</a> <a href="/tags/volley/" style="font-size: 11.25px;">volley</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">三月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/04/">四月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/">《其实你不懂进化论》简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/">单元测试的艺术-第三版 简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/">网民的故事分析-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/01/talk/2021-12-01-talk-book-user-stories-applied/">用户故事与敏捷方法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/03/talk/2021-11-03-talk-logic-1/">不令人讨厌的分析逻辑</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 xesam<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

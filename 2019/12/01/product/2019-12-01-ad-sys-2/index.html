@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>广告投放系统（二） | XiaoPingYuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="自家广告组件的演化历程。 2017年的时候，我们发布了自家小程序，当时小程序还不支持任何广告变现，所以上线之后一段时间并没有任何广告内容。 后来，随着小程序商业化的推进，小程序平台推出了原生的平台广告组件，因此我们也第一时间接入了下小程序的平台广告。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="广告投放系统（二）">
+<meta property="og:url" content="https://xesam.github.io/2019/12/01/product/2019-12-01-ad-sys-2/index.html">
+<meta property="og:site_name" content="XiaoPingYuan">
+<meta property="og:description" content="自家广告组件的演化历程。 2017年的时候，我们发布了自家小程序，当时小程序还不支持任何广告变现，所以上线之后一段时间并没有任何广告内容。 后来，随着小程序商业化的推进，小程序平台推出了原生的平台广告组件，因此我们也第一时间接入了下小程序的平台广告。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-12-01T00:00:00.000Z">
+<meta property="article:modified_time" content="2024-04-01T13:40:44.044Z">
+<meta property="article:author" content="xesam">
+<meta property="article:tag" content="product">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="XiaoPingYuan" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">XiaoPingYuan</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Just Do IT</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://xesam.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-product/2019-12-01-ad-sys-2" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/12/01/product/2019-12-01-ad-sys-2/" class="article-date">
+  <time class="dt-published" datetime="2019-12-01T00:00:00.000Z" itemprop="datePublished">2019-12-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/product/">product</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      广告投放系统（二）
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>自家广告组件的演化历程。</p>
+<p>2017年的时候，我们发布了自家小程序，当时小程序还不支持任何广告变现，所以上线之后一段时间并没有任何广告内容。</p>
+<p>后来，随着小程序商业化的推进，小程序平台推出了原生的平台广告组件，因此我们也第一时间接入了下小程序的平台广告。</p>
+<span id="more"></span>
+
+<h4 id="第一阶段：直接使用平台广告"><a href="#第一阶段：直接使用平台广告" class="headerlink" title="第一阶段：直接使用平台广告"></a>第一阶段：直接使用平台广告</h4><p>由于当时也没有预期，因此这一阶段的接入很简单，就是页面指定的位置放置平台广告组件，比如:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;page&gt;</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">mp-ad</span>&gt;</span><span class="tag">&lt;/<span class="name">mp-ad</span>&gt;</span></span></span><br><span class="line">&lt;/page&gt;</span><br></pre></td></tr></table></figure>
+
+<p>其中 mp-ad 为平台广告组件。</p>
+<p>一段时间之后，有商户找我们合作，希望在我们的应用中进行广告推广，这就意味着在平台广告之外，我们还需要支持自采广告。</p>
+<h4 id="第二阶段：增加自采广告"><a href="#第二阶段：增加自采广告" class="headerlink" title="第二阶段：增加自采广告"></a>第二阶段：增加自采广告</h4><p>展示广告之前，先向后台请求广告对象：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">TYPE_MP</span> = <span class="number">0</span>; <span class="comment">//平台广告</span></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">TYPE_SELF</span> = <span class="number">1</span>; <span class="comment">//自采广告</span></span><br><span class="line"><span class="keyword">const</span> ad = <span class="title function_">fetchAd</span>();</span><br></pre></td></tr></table></figure>
+
+<p>在页面内部进行一个判断：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">page</span>&gt;</span></span><br><span class="line">&#123;&#123; if ad &#125;&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;&#123;&#123;ad.image_url&#125;&#125;&quot;</span> /&gt;</span></span><br><span class="line">&#123;&#123; else &#125;&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="name">mp-ad</span>&gt;</span><span class="tag">&lt;/<span class="name">mp-ad</span>&gt;</span></span><br><span class="line">&#123;&#123; endif &#125;&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">page</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>发现有自采的机会之后，我们希望一个广告位能够同时放多个自采买的广告，于是就需要支持广告轮播。</p>
+<h4 id="第三阶段：支持轮播广告"><a href="#第三阶段：支持轮播广告" class="headerlink" title="第三阶段：支持轮播广告"></a>第三阶段：支持轮播广告</h4><p>这个需求出现之后，我们面临两个问题：</p>
+<ol>
+<li>广告形式可能会更多，页面内的判断会变复杂，于是对广告组件进行封装。</li>
+<li>以前的数据结构设计不合理，现在需要的是一个广告数组，但以前只返回单个广告对象。接口需要变动，而且这个变动还是不兼容的，于是增加字段。</li>
+</ol>
+<p>创建应用内部的广告组件：ad-loader。结构如下（组合模式）：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ad-loader</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">mp-ad</span>&gt;</span><span class="tag">&lt;/<span class="name">mp-ad</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">self-ad</span>&gt;</span><span class="tag">&lt;/<span class="name">self-ad</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">else-ad</span>&gt;</span><span class="tag">&lt;/<span class="name">else-ad</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ad-loader</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>其中，self-ad 为自采广告组件，else-ad 为未来可能引入的其他类型广告组件。</p>
+<p>修改广告接口，返回一个广告列表：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">const</span> &#123;type, ads&#125; = <span class="title function_">fetchAds</span>();</span><br></pre></td></tr></table></figure>
+
+<p>self-ad 组件逻辑：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">view</span>&gt;</span></span><br><span class="line">    &#123;&#123; if ads.length == 1 &#125;&#125;</span><br><span class="line">        <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;&#123;&#123;ads[0]&#125;&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">img</span>&gt;</span></span><br><span class="line">    &#123;&#123; elif ads.length &gt; 1 &#125;&#125;</span><br><span class="line">        <span class="tag">&lt;<span class="name">swiper</span> <span class="attr">src</span>=<span class="string">&quot;&#123;&#123;ads&#125;&#125;&quot;</span> /&gt;</span></span><br><span class="line">    &#123;&#123; endif &#125;&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>ad-loader 组件逻辑：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">view</span>&gt;</span></span><br><span class="line">&#123;&#123; if ads.length &#125;&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="name">self-ad</span> <span class="attr">src</span>=<span class="string">&quot;&#123;&#123;ads&#125;&#125;&quot;</span> /&gt;</span></span><br><span class="line">&#123;&#123; else &#125;&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="name">mp-ad</span>&gt;</span><span class="tag">&lt;/<span class="name">mp-ad</span>&gt;</span></span><br><span class="line">&#123;&#123; endif &#125;&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这么跑了一段时间之后，对比收益发现，原生平台广告的收益较高，因此我们再次修改了策略：先显示平台广告，如果没有平台广告，就显示自采广告。</p>
+<p>于是广告加载逻辑变成：</p>
+<ol>
+<li>页面加载完成之后，放置平台广告组件</li>
+<li>如果平台广告加载失败，则移除平台广告组件，放置自采广告组件</li>
+<li>如果自采广告加载失败，则移除自采广告组件，不显示广告</li>
+</ol>
+<h4 id="第四阶段：优先展示平台广告"><a href="#第四阶段：优先展示平台广告" class="headerlink" title="第四阶段：优先展示平台广告"></a>第四阶段：优先展示平台广告</h4><p>由于 ad-loader 已经隔离了广告逻辑，所以只需要更改 ad-loader 组件即可，无需更改其他内容。</p>
+<p>ad-loader :</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ad-loader</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">mp-ad</span> <span class="attr">loadError</span>=<span class="string">&quot;onLoadError&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">mp-ad</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">swipe-ad</span>&gt;</span><span class="tag">&lt;/<span class="name">swipe-ad</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ad-loader</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>ad-loader.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">showMpAd</span>();</span><br><span class="line">adDom.<span class="title function_">addEventListener</span>(<span class="string">&#x27;onLoadError&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="title function_">hideMpAd</span>();</span><br><span class="line">    <span class="title function_">showSwipeAd</span>();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="第五阶段：修改广告优先级"><a href="#第五阶段：修改广告优先级" class="headerlink" title="第五阶段：修改广告优先级"></a>第五阶段：修改广告优先级</h4><p>这次希望部分指定广告可以在平台广告之前显示，接口又不满足了，需要增加字段。广告逻辑变为：</p>
+<ol>
+<li>页面加载完成之后，判断自采广告优先级</li>
+<li>如果自采广告优先级高，则放置自采广告组件，无视结果</li>
+<li>如果自采广告优先级低，则放置平台广告组件</li>
+<li>如果平台广告加载失败，则移除平台广告组件，放置自采广告组件</li>
+<li>如果自采广告加载失败，则移除自采广告组件，不显示广告</li>
+</ol>
+<p>代码：略</p>
+<h4 id="第六阶段：控制广告的展示与否"><a href="#第六阶段：控制广告的展示与否" class="headerlink" title="第六阶段：控制广告的展示与否"></a>第六阶段：控制广告的展示与否</h4><p>上面所有的逻辑都有一个共同的遗留问题，没法控制广告是否展示。所以增加一个判断：</p>
+<pre><code>如果没有获取到广告对象，则不展示广告（包括平台广告）。
+</code></pre>
+<h4 id="第七阶段：独立控制每一种类型的广告"><a href="#第七阶段：独立控制每一种类型的广告" class="headerlink" title="第七阶段：独立控制每一种类型的广告"></a>第七阶段：独立控制每一种类型的广告</h4><p>其实兜兜转转又回来了，新问题就是现在只想展示平台广告，却没法控制了，着实尴尬。</p>
+<p>最终结果，接口和逻辑设计的时候，一定要保持简单独立，最后的措施还是：</p>
+<ol>
+<li>返回一组广告列表，每个广告对象都带有广告组件的类型。</li>
+<li>依次判断广告对象的展示结果，如果有广告展示成功，则完成广告逻辑。</li>
+</ol>
+<p>讨论：广告类型应该是白名单机制还是黑名单机制？</p>
+<p>白名单，只显示指定类型的广告，任何广告实例只处理自身可以处理的广告类型，如果没有任何广告实例可以处理，那么广告就不应该被显示。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2019/12/01/product/2019-12-01-ad-sys-2/" data-id="cluh01417008x38wbh5o95cm6" data-title="广告投放系统（二）" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/product/" rel="tag">product</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/12/02/product/2019-12-02-ue-del/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          产品中的基础删除操作
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/09/09/talk/2019-09-09-talk-about-app/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">客户端产品重要的事</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chrome/">chrome</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/computer/">computer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/fe/">fe</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/introspection/">introspection</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/math/">math</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/physics/">physics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/product/">product</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/software/">software</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/talk/">talk</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c51/" rel="tag">c51</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/computer/" rel="tag">computer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fe/" rel="tag">fe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/introspection/" rel="tag">introspection</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/" rel="tag">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memo/" rel="tag">memo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/product/" rel="tag">product</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rx/" rel="tag">rx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/" rel="tag">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/talk/" rel="tag">talk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/volley/" rel="tag">volley</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/c51/" style="font-size: 11.25px;">c51</a> <a href="/tags/chrome/" style="font-size: 11.25px;">chrome</a> <a href="/tags/computer/" style="font-size: 17.5px;">computer</a> <a href="/tags/fe/" style="font-size: 13.75px;">fe</a> <a href="/tags/introspection/" style="font-size: 10px;">introspection</a> <a href="/tags/java/" style="font-size: 13.75px;">java</a> <a href="/tags/javascript/" style="font-size: 18.75px;">javascript</a> <a href="/tags/math/" style="font-size: 10px;">math</a> <a href="/tags/memo/" style="font-size: 10px;">memo</a> <a href="/tags/product/" style="font-size: 15px;">product</a> <a href="/tags/rx/" style="font-size: 10px;">rx</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/talk/" style="font-size: 16.25px;">talk</a> <a href="/tags/volley/" style="font-size: 11.25px;">volley</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">三月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/04/">四月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/">《其实你不懂进化论》简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/">单元测试的艺术-第三版 简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/">网民的故事分析-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/01/talk/2021-12-01-talk-book-user-stories-applied/">用户故事与敏捷方法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/03/talk/2021-11-03-talk-logic-1/">不令人讨厌的分析逻辑</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 xesam<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

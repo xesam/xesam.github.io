@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Android NDK与Eclipse | XiaoPingYuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="AS 对 NDK 的支持一直不太好，所以基本所有关于的 NDK 的书籍都是基于 Eclipse 开发的，不过 Eclipse 已经放弃支持了，AS 支持 NDK 的实验版 gradle 插件已经出来了，可以试试。本文简单记录《Android.NDK.Beginner’s.Guide》的 Eclipse 配置而已。 环境ubuntu: 14.04 eclipse: Mars.2 Release (4">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android NDK与Eclipse">
+<meta property="og:url" content="https://xesam.github.io/2016/07/04/android/2016/2016-07-04-Android-NDK-Eclipse/index.html">
+<meta property="og:site_name" content="XiaoPingYuan">
+<meta property="og:description" content="AS 对 NDK 的支持一直不太好，所以基本所有关于的 NDK 的书籍都是基于 Eclipse 开发的，不过 Eclipse 已经放弃支持了，AS 支持 NDK 的实验版 gradle 插件已经出来了，可以试试。本文简单记录《Android.NDK.Beginner’s.Guide》的 Eclipse 配置而已。 环境ubuntu: 14.04 eclipse: Mars.2 Release (4">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xesam.github.io/image/ndk-eclipse-1.png">
+<meta property="og:image" content="https://xesam.github.io/image/ndk-eclipse-2.png">
+<meta property="og:image" content="https://xesam.github.io/image/ndk-eclipse-3.png">
+<meta property="og:image" content="https://xesam.github.io/image/ndk-eclipse-4.png">
+<meta property="og:image" content="https://xesam.github.io/image/ndk-eclipse-4-2.png">
+<meta property="og:image" content="https://xesam.github.io/image/ndk-eclipse-5.png">
+<meta property="article:published_time" content="2016-07-04T06:46:04.000Z">
+<meta property="article:modified_time" content="2024-04-01T13:40:43.938Z">
+<meta property="article:author" content="xesam">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xesam.github.io/image/ndk-eclipse-1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="XiaoPingYuan" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">XiaoPingYuan</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Just Do IT</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://xesam.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-android/2016/2016-07-04-Android-NDK-Eclipse" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2016/07/04/android/2016/2016-07-04-Android-NDK-Eclipse/" class="article-date">
+  <time class="dt-published" datetime="2016-07-04T06:46:04.000Z" itemprop="datePublished">2016-07-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Android NDK与Eclipse
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>AS 对 NDK 的支持一直不太好，所以基本所有关于的 NDK 的书籍都是基于 Eclipse 开发的，不过 Eclipse 已经放弃支持了，<br>AS 支持 NDK 的实验版 gradle 插件已经出来了，可以试试。<br>本文简单记录《Android.NDK.Beginner’s.Guide》的 Eclipse 配置而已。</p>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><pre><code>ubuntu: 14.04
+eclipse: Mars.2 Release (4.5.2) 安装 ADT，CDT
+</code></pre>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>添加环境变量：</p>
+<pre><code>JAVA_HOME
+ANDROID_HOME
+ANDROID_NDK
+</code></pre>
+<h2 id="javah-生成头文件"><a href="#javah-生成头文件" class="headerlink" title="javah 生成头文件"></a>javah 生成头文件</h2><p>主要使用 External Tools：</p>
+<pre><code>Run --&gt; External Tools --&gt; External Tools Configurations 
+</code></pre>
+<p>新建一个 Configuration：</p>
+<p><img src="/image/ndk-eclipse-1.png" alt="ndk-eclipse-1"></p>
+<pre><code>$&#123;system_path:javah&#125;
+</code></pre>
+<p>javah 命令的路径，前提是 javah 已经加入到 $PATH 中，不然需要指定 javah 的完整路径。</p>
+<pre><code>$&#123;project_loc&#125;/jni
+</code></pre>
+<p>生成的 *.h 文件目录，${project_loc} 表示工程目录</p>
+<pre><code>-cp &quot;$&#123;project_classpath&#125;:$&#123;env_var:ANDROID_HOME&#125;/platforms/android-23/android.jar&quot; $&#123;java_type_name&#125;
+</code></pre>
+<p>指定 classpath，javah 命令需要用到。由于 javah 是从 class 文件中生成对应的 *.h 文件，因此，src 中改动之后需要先 build 一下，javah 才能正确生成。<br>所以，最好是开启 Build Automatically。</p>
+<p>如果要生成对应的 .h 文件，先在 src 中选择要生成的 .java 源文件，然后运行</p>
+<pre><code>Run --&gt; External Tools --&gt; ndk_header(这里是刚添加的，也可以是其他的名字)
+</code></pre>
+<h2 id="ndk-build"><a href="#ndk-build" class="headerlink" title="ndk-build"></a>ndk-build</h2><p>将 ndk-build 命令集成到 eclipse 中：</p>
+<ol>
+<li><p>先将 Android 工程转成 C&#x2F;C++ 工程,</p>
+<pre><code> New --&gt; Other --&gt; C/C++ --&gt; Convert to a C/C++ Project
+</code></pre>
+</li>
+<li><p>工程上右键 Properties</p>
+<p> C&#x2F;C++ Build： 配置编译选项</p>
+<pre><code>     --&gt; Builder Settings --&gt; Build command 改为 ndk-build
+ 
+</code></pre>
+<p> <img src="/image/ndk-eclipse-2.png" alt="ndk-eclipse-2"></p>
+<pre><code>     --&gt; Behaviour --&gt; Build on resource save .每次修改保存的时候即时编译
+ 
+</code></pre>
+<p> <img src="/image/ndk-eclipse-3.png" alt="ndk-eclipse-3"></p>
+<p> C&#x2F;C++ General： 添加各种头文件</p>
+<pre><code>     --&gt; Paths and Symbols 具体位置视情况而定
+     /apps/android-sdk-linux/ndk-bundle/platforms/android-9/arch-arm/usr/include
+     /apps/android-sdk-linux/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/include
+     
+</code></pre>
+<p> <img src="/image/ndk-eclipse-4.png" alt="ndk-eclipse-4"></p>
+<p> 每种语言都加上，所以添加的时候选择 all 就行。</p>
+<p> <img src="/image/ndk-eclipse-4-2.png" alt="ndk-eclipse-4"></p>
+<p> Builders ：配置 build 顺序，将 CDT Builder 调整到 Android Package Builder 的正上方：</p>
+<p> <img src="/image/ndk-eclipse-5.png" alt="ndk-eclipse-5"></p>
+</li>
+<li><p>自动运行 javah </p>
+<p> 这个其实没必要，因为没必要每次都生成 .h 文件，就算生成了，也没有可用的实现，所以个人觉得还是手动调用比较靠谱。<br> 操作就是添加一个 Builder 放到 CDT Builder 的正上方：</p>
+<pre><code> Builders --&gt; New --&gt; Program
+ 
+</code></pre>
+<p> 所有参数配置与 “javah生成头文件的配置”一样即可，</p>
+</li>
+</ol>
+<p>一切完成之后，每次 Run 的时候，都会将最新的 so 文件打包编译打包进去。</p>
+<h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><p>上面的的  ndk-build 命令需要添加参数 </p>
+<pre><code>ndk-build NDK_DEBUG=1
+</code></pre>
+<p>Google 官方的 ADT 只更新到 23.0.7，如果你的 ndk 比较新，那么，调试的时候会出现各种乱七八糟的 bug ，比如，找不到 gdb 之类。<br>所以，先把 ADT 更新到最新，野生版本参见<a target="_blank" rel="noopener" href="https://github.com/khaledev/ADT">https://github.com/khaledev/ADT</a>。</p>
+<p>然后直接 Debug AS “Android Native Application” 就行了，也不需要像书中那般配置，因为书的配置已经过时了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2016/07/04/android/2016/2016-07-04-Android-NDK-Eclipse/" data-id="cluh0142w00gm38wb6sm4ex9w" data-title="Android NDK与Eclipse" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/07/06/android/2016/2016-07-06-Android-NDK-SWIG/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          Android NDK与SWIG
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/06/30/android/2016/2016-06-30-Android-SoundPool/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">Android 的SoundPool</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chrome/">chrome</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/computer/">computer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/fe/">fe</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/introspection/">introspection</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/math/">math</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/physics/">physics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/product/">product</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/software/">software</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/talk/">talk</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c51/" rel="tag">c51</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/computer/" rel="tag">computer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fe/" rel="tag">fe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/introspection/" rel="tag">introspection</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/" rel="tag">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memo/" rel="tag">memo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/product/" rel="tag">product</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rx/" rel="tag">rx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/" rel="tag">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/talk/" rel="tag">talk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/volley/" rel="tag">volley</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/c51/" style="font-size: 11.25px;">c51</a> <a href="/tags/chrome/" style="font-size: 11.25px;">chrome</a> <a href="/tags/computer/" style="font-size: 17.5px;">computer</a> <a href="/tags/fe/" style="font-size: 13.75px;">fe</a> <a href="/tags/introspection/" style="font-size: 10px;">introspection</a> <a href="/tags/java/" style="font-size: 13.75px;">java</a> <a href="/tags/javascript/" style="font-size: 18.75px;">javascript</a> <a href="/tags/math/" style="font-size: 10px;">math</a> <a href="/tags/memo/" style="font-size: 10px;">memo</a> <a href="/tags/product/" style="font-size: 15px;">product</a> <a href="/tags/rx/" style="font-size: 10px;">rx</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/talk/" style="font-size: 16.25px;">talk</a> <a href="/tags/volley/" style="font-size: 11.25px;">volley</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">三月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/04/">四月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/">《其实你不懂进化论》简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/">单元测试的艺术-第三版 简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/">网民的故事分析-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/01/talk/2021-12-01-talk-book-user-stories-applied/">用户故事与敏捷方法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/03/talk/2021-11-03-talk-logic-1/">不令人讨厌的分析逻辑</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 xesam<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Android 触屏事件流 | XiaoPingYuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="本文请忽略，初学 Android 时的幼稚记录而已。 一次触屏事件分为三个动作  ACTION_DOWN ACTION_MOVE ACTION_UP  其中 ACTION_DOWN 和 ACTION_UP 在一次触屏事件中只会触发一次，ACTION_MOVE 可能触发任意次（包括0次）。 主要响应触屏的组件有两种，一种是可以包含子元素的（ViewGroup比如LinearLayout），另一种是不">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 触屏事件流">
+<meta property="og:url" content="https://xesam.github.io/2012/08/06/android/2012/2012-08-06-Android-touchevent/index.html">
+<meta property="og:site_name" content="XiaoPingYuan">
+<meta property="og:description" content="本文请忽略，初学 Android 时的幼稚记录而已。 一次触屏事件分为三个动作  ACTION_DOWN ACTION_MOVE ACTION_UP  其中 ACTION_DOWN 和 ACTION_UP 在一次触屏事件中只会触发一次，ACTION_MOVE 可能触发任意次（包括0次）。 主要响应触屏的组件有两种，一种是可以包含子元素的（ViewGroup比如LinearLayout），另一种是不">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2012-08-06T05:46:04.000Z">
+<meta property="article:modified_time" content="2024-04-01T13:40:43.925Z">
+<meta property="article:author" content="xesam">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="XiaoPingYuan" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">XiaoPingYuan</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Just Do IT</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://xesam.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-android/2012/2012-08-06-Android-touchevent" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2012/08/06/android/2012/2012-08-06-Android-touchevent/" class="article-date">
+  <time class="dt-published" datetime="2012-08-06T05:46:04.000Z" itemprop="datePublished">2012-08-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Android 触屏事件流
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>本文请忽略，初学 Android 时的幼稚记录而已。</p>
+<p>一次触屏事件分为三个动作</p>
+<ol>
+<li>ACTION_DOWN</li>
+<li>ACTION_MOVE</li>
+<li>ACTION_UP</li>
+</ol>
+<p>其中 ACTION_DOWN 和 ACTION_UP 在一次触屏事件中只会触发一次，ACTION_MOVE 可能触发任意次（包括0次）。</p>
+<p>主要响应触屏的组件有两种，一种是可以包含子元素的（ViewGroup比如LinearLayout），另一种是不能包含子元素的View（最底层的View比如Button）。</p>
+<p>当一个触屏事件产生时，正两者的响应方法有一个主要的区别就是LinearLayout有onInterceptTouchEvent方法，而Button没有onInterceptTouchEvent方法。</p>
+<p>ViewGroup（比如LinearLayout）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">boolean</span> <span class="title function_">dispatchTouchEvent</span><span class="params">(MotionEvent event)</span></span><br><span class="line"><span class="type">boolean</span> <span class="title function_">onInterceptTouchEvent</span><span class="params">(MotionEvent event)</span></span><br><span class="line"><span class="type">boolean</span> <span class="title function_">onTouchEvent</span><span class="params">(MotionEvent event)</span></span><br></pre></td></tr></table></figure>
+
+<p>View（比如Button）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">boolean</span> <span class="title function_">dispatchTouchEvent</span><span class="params">(MotionEvent event)</span></span><br><span class="line"><span class="type">boolean</span> <span class="title function_">onTouchEvent</span><span class="params">(MotionEvent event)</span></span><br></pre></td></tr></table></figure>
+
+<p>总的来说，dispatchTouchEvent 决定处不处理，onInterceptTouchEvent 决定谁来处理，onTouchEvent 决定怎么处理。<br>所以对于Button来谁，没有小弟，自然不存在决定谁来处理的问题，故没有onInterceptTouchEvent方法</p>
+<p>下面具体说一下这三个函数的主要作用：</p>
+<h3 id="dispatchTouchEvent"><a href="#dispatchTouchEvent" class="headerlink" title="dispatchTouchEvent"></a>dispatchTouchEvent</h3><p>dispatchTouchEvent 决定处不处理，看名字就知道是事件分发，初看我还以为是分发到子元素呢，原来不是直接到子元素。其实更好的理解是这是一个过滤方法。<br>此方法的主要作用是决定相应事件的类型。</p>
+<p>假如dispatchTouchEvent 返回 false，那么在响应了 ACTION_DOWN 之后，后续的 ACTION_MOVE 和 ACTION_UP 均忽略，因此ACTION_MOVE和ACTION_UP永远不会有得到处理的机会。<br>假如dispatchTouchEvent 返回 true，那么后续的 ACTION_MOVE 和 ACTION_UP 均被接受，可以被其他方法响应。</p>
+<p>特别注意，如果在这一步的dispatchTouchEvent中没有调用super.dispatchTouchEvent(event),那么事件就到此为止，被终结了。<br>此时此刻只有dispatchTouchEvent会响应事件，另外两个方法根本没有机会来响应事件。并且，事件不会传递到子元素中。</p>
+<h3 id="onInterceptTouchEvent"><a href="#onInterceptTouchEvent" class="headerlink" title="onInterceptTouchEvent"></a>onInterceptTouchEvent</h3><p>onInterceptTouchEvent，主要决定谁来处理（即是否拦截事件）。</p>
+<p>只要在dispatchTouchEvent中调用了super.dispatchTouchEvent(event)那么，事件(event)会被交给onInterceptTouchEvent去处理。<br>注意，这里事件(event)是否会调用onInterceptTouchEvent与dispatchTouchEvent的返回值是true还是false无关。<br>再次强调，dispatchTouchEvent只决定处理什么，并不能指定谁来调用。</p>
+<p>假如onInterceptTouchEvent返回false，将事件(event)交自己的子元素处理（此时事件流是从外到内，从父元素到子元素）。</p>
+<p>假如onInterceptTouchEvent返回true，将事件(event)交给自己的onTouchEvent来处理,并且如果有后续的 ACTION_MOVE 和 ACTION_UP（前一步dispatchTouchEvent中返回true）的话，将不再调用onInterceptTouchEvent，直接将事件传递给自己的onTouchEvent来处理。</p>
+<h3 id="onTouchEvent"><a href="#onTouchEvent" class="headerlink" title="onTouchEvent"></a>onTouchEvent</h3><p>注意上一步，在 onInterceptTouchEvent 返回true的情况下，onTouchEvent 将获得事件并进行具体的处理。</p>
+<p>假如 onTouchEvent 返回 false，将事件(event)交父元素处理，（注意在这一步，事件流反向了，此时事件流是从内到外，从子元素到父元素）。<br>假如 onTouchEvent 返回 true，本次事件(event)就到此为止，被终结了。</p>
+<p>对照上面的说法，下面给出实例说明：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyLinearLayout1</span> <span class="keyword">extends</span> <span class="title class_">LinearLayout</span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="type">String</span> <span class="variable">TAG</span> <span class="operator">=</span> <span class="string">&quot;第一层MyLinearLayout&quot;</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> <span class="title function_">MyLinearLayout1</span><span class="params">(Context context)</span> &#123;</span><br><span class="line">		<span class="built_in">super</span>(context);</span><br><span class="line">		<span class="built_in">this</span>.setBackgroundColor(Color.WHITE);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setTagString</span><span class="params">(String tag)</span>&#123;</span><br><span class="line">		TAG = tag;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">dispatchTouchEvent</span><span class="params">(MotionEvent event)</span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(MotionEvent.ACTION_DOWN == event.getAction())&#123;</span><br><span class="line">			Log.v(TAG + <span class="string">&quot;dispatchTouchEvent:&quot;</span>, <span class="string">&quot;ACTION_DOWN&quot;</span>);</span><br><span class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span>(MotionEvent.ACTION_MOVE == event.getAction())&#123;</span><br><span class="line">			Log.v(TAG + <span class="string">&quot;dispatchTouchEvent:&quot;</span>, <span class="string">&quot;ACTION_MOVE&quot;</span>);</span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">			Log.v(TAG + <span class="string">&quot;dispatchTouchEvent:&quot;</span>, <span class="string">&quot;ACTION_UP&quot;</span>);</span><br><span class="line">		&#125; <span class="comment">//super.dispatchTouchEvent(event); return true;</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">onInterceptTouchEvent</span><span class="params">(MotionEvent event)</span>&#123;<span class="built_in">super</span>.onInterceptTouchEvent</span><br><span class="line"></span><br><span class="line">		<span class="title function_">if</span><span class="params">(MotionEvent.ACTION_DOWN == event.getAction()</span>)&#123;</span><br><span class="line">			Log.v(TAG + <span class="string">&quot;onInterceptTouchEvent:&quot;</span>, <span class="string">&quot;ACTION_DOWN&quot;</span>);</span><br><span class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span>(MotionEvent.ACTION_MOVE == event.getAction())&#123;</span><br><span class="line">			Log.v(TAG + <span class="string">&quot;onInterceptTouchEvent:&quot;</span>, <span class="string">&quot;ACTION_MOVE&quot;</span>);</span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">			Log.v(TAG + <span class="string">&quot;onInterceptTouchEvent:&quot;</span>, <span class="string">&quot;ACTION_UP&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">onTouchEvent</span><span class="params">(MotionEvent event)</span>&#123;<span class="built_in">super</span>.onTouchEvent(event)</span><br><span class="line">		<span class="keyword">if</span>(MotionEvent.ACTION_DOWN == event.getAction())&#123;</span><br><span class="line">			Log.v(TAG + <span class="string">&quot;onTouchEvent:&quot;</span>, <span class="string">&quot;ACTION_DOWN&quot;</span>);</span><br><span class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span>(MotionEvent.ACTION_MOVE == event.getAction())&#123;</span><br><span class="line">			Log.v(TAG + <span class="string">&quot;onTouchEvent:&quot;</span>, <span class="string">&quot;ACTION_MOVE&quot;</span>);</span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">			Log.v(TAG + <span class="string">&quot;onTouchEvent:&quot;</span>, <span class="string">&quot;ACTION_UP&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此时没有调用super.dispatchTouchEvent(event)，所以事件没有机会得到其他的处理。</p>
+<p>打印信息：</p>
+<pre><code>第一层MyLinearLayoutdispatchTouchEvent:(460): ACTION_DOWN
+第一层MyLinearLayoutdispatchTouchEvent:(460): ACTION_UP
+如果将上面boolean dispatchTouchEvent(MotionEvent event)的返回值修改为false，那么按照前面说的，MyLinearLayout1在响应了ACTION_DOWN之后，不会再响应本次触屏操作的其他事件。所以此时的打印结果是：
+第一层MyLinearLayoutdispatchTouchEvent:(460): ACTION_DOWN
+</code></pre>
+<p>可以看到，ACTION_UP没有被响应，因为本事件被忽略了。</p>
+<p>现在，将super.dispatchTouchEvent(event)的注释去掉，注意，现在的boolean dispatchTouchEvent(MotionEvent event)变成下面这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">dispatchTouchEvent</span><span class="params">(MotionEvent event)</span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(MotionEvent.ACTION_DOWN == event.getAction())&#123;</span><br><span class="line">			Log.v(TAG + <span class="string">&quot;dispatchTouchEvent:&quot;</span>, <span class="string">&quot;ACTION_DOWN&quot;</span>);</span><br><span class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span>(MotionEvent.ACTION_MOVE == event.getAction())&#123;</span><br><span class="line">			Log.v(TAG + <span class="string">&quot;dispatchTouchEvent:&quot;</span>, <span class="string">&quot;ACTION_MOVE&quot;</span>);</span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">			Log.v(TAG + <span class="string">&quot;dispatchTouchEvent:&quot;</span>, <span class="string">&quot;ACTION_UP&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">super</span>.dispatchTouchEvent(event);<span class="comment">//去掉注释了</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>打印信息：</p>
+<pre><code>第一层MyLinearLayout ACTION_DOWN:(783): ACTION_DOWN
+第一层MyLinearLayout onInterceptTouchEvent:(783): ACTION_DOWN
+第一层MyLinearLayout onTouchEvent:(783): ACTION_DOWN
+第一层MyLinearLayout dispatchTouchEvent:(783): ACTION_UP
+第一层MyLinearLayout onTouchEvent:(783): ACTION_UP
+</code></pre>
+<p>具体顺序为下：</p>
+<pre><code>ACTION_DOWN：ACTION_DOWN——&gt;onInterceptTouchEvent——&gt;onTouchEvent
+ACTION_UP：ACTION_DOWN——&gt;onTouchEvent
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2012/08/06/android/2012/2012-08-06-Android-touchevent/" data-id="cluh0141x00ci38wb2xpi3n4i" data-title="Android 触屏事件流" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2012/10/09/javascript/2012-10-09-Javascript-parseInt/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          【Javascript】有关parseInt的讨论
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2012/07/23/talk/2012-07-23-talk-HTML5-WHATWG-W3C/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">哪个HTML5？WHATWG与W3C或分道扬镳</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chrome/">chrome</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/computer/">computer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/fe/">fe</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/introspection/">introspection</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/math/">math</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/physics/">physics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/product/">product</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/software/">software</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/talk/">talk</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c51/" rel="tag">c51</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/computer/" rel="tag">computer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fe/" rel="tag">fe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/introspection/" rel="tag">introspection</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/" rel="tag">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memo/" rel="tag">memo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/product/" rel="tag">product</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rx/" rel="tag">rx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/" rel="tag">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/talk/" rel="tag">talk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/volley/" rel="tag">volley</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/c51/" style="font-size: 11.25px;">c51</a> <a href="/tags/chrome/" style="font-size: 11.25px;">chrome</a> <a href="/tags/computer/" style="font-size: 17.5px;">computer</a> <a href="/tags/fe/" style="font-size: 13.75px;">fe</a> <a href="/tags/introspection/" style="font-size: 10px;">introspection</a> <a href="/tags/java/" style="font-size: 13.75px;">java</a> <a href="/tags/javascript/" style="font-size: 18.75px;">javascript</a> <a href="/tags/math/" style="font-size: 10px;">math</a> <a href="/tags/memo/" style="font-size: 10px;">memo</a> <a href="/tags/product/" style="font-size: 15px;">product</a> <a href="/tags/rx/" style="font-size: 10px;">rx</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/talk/" style="font-size: 16.25px;">talk</a> <a href="/tags/volley/" style="font-size: 11.25px;">volley</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">三月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/04/">四月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/">《其实你不懂进化论》简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/">单元测试的艺术-第三版 简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/">网民的故事分析-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/01/talk/2021-12-01-talk-book-user-stories-applied/">用户故事与敏捷方法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/03/talk/2021-11-03-talk-logic-1/">不令人讨厌的分析逻辑</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 xesam<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>XiaoPingYuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="XiaoPingYuan">
+<meta property="og:url" content="https://xesam.github.io/page/13/index.html">
+<meta property="og:site_name" content="XiaoPingYuan">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="xesam">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="XiaoPingYuan" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">XiaoPingYuan</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Just Do IT</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://xesam.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-android/2015/2015-05-17-Android-Context-basic" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2015/05/17/android/2015/2015-05-17-Android-Context-basic/" class="article-date">
+  <time class="dt-published" datetime="2015-05-17T04:46:04.000Z" itemprop="datePublished">2015-05-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2015/05/17/android/2015/2015-05-17-Android-Context-basic/">Android Context基础！</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>英文原文：<a target="_blank" rel="noopener" href="http://possiblemobile.com/2013/06/context/">Context, What Context?</a></p>
+<p>译文Github地址:<a target="_blank" rel="noopener" href="https://github.com/xesam/tech-translate/blob/master/android/Context-What_Context.md">Context, What Context?</a></p>
+<h2 id="Context"><a href="#Context" class="headerlink" title="Context"></a>Context</h2><p>Context 估计是 Android 开发中最常用的元素了，它的获取和使用如此普遍，加载资源，启动新的 Activity，获取系统服务，获取内部文件路径以及创建 View 都离不开 Context。同时，Context 也是最容易误操作的元素，以致于很容易把你带到坑里面去。下面就让我们全面对比了解一下 Context，让你的开发更得心应手。</p>
+<h2 id="Context-类型"><a href="#Context-类型" class="headerlink" title="Context 类型"></a>Context 类型</h2><p>不同类型的Context各异：根据 Android 组件的不同，获得到的 Context 也是不同的。</p>
+<h3 id="Application"><a href="#Application" class="headerlink" title="Application"></a>Application</h3><p>Application 是存在于 app 进程的一个单例 Context 对象。在 Activity 或者 Service 中，可以使用 getApplication() 方法获取这个 Application 对象。除此之外，从他继承了 Context 的组件，都可以通过 getApplicationContext() 来获取到这个 Application 对象。不过，不论是通过什么方法获得，最后得到的 Application 对象都是同一个。</p>
+<p><em>【译者注：这个单例 Context 对象在后文用 application context 指代】</em></p>
+<h3 id="Activity-Service"><a href="#Activity-Service" class="headerlink" title="Activity&#x2F;Service"></a>Activity&#x2F;Service</h3><p>Activity&#x2F;Service 继承自同一个基类 Context —— ContextWrapper，因此两者拥有相同的 Context API，但是具体任务还是通过将调用委托代理给实际的内部对象来完成。每当你创建一个新的 Activity 或者 Service 的时候，同时就会创建一个新的 ContextImpl，ContextImpl 就是最终处理所有 Context API 方法的内部对象。不同的Activity 或者 Service 的 Context 都是不一样的。</p>
+<h3 id="BroadcastReceiver"><a href="#BroadcastReceiver" class="headerlink" title="BroadcastReceiver"></a>BroadcastReceiver</h3><p>BroadcastReceiver 本身并不是一个 Context，但是 Android framework 会在每一个广播事件发生的时候，给相应 BroadcastReceiver 的 onReceive() 传递一个 Context，这个 ReceiverRestrictedContext 有个两个方法不可用： registerReceiver() 和 bindService()。BroadcastReceiver 每次处理 broadcast 的时候，传递给它的 Context 都是一个新的实例。</p>
+<h3 id="ContentProvider"><a href="#ContentProvider" class="headerlink" title="ContentProvider"></a>ContentProvider</h3><p>ContentProvider 本身也不是 Context，但是调用 getContext() 可以获取一个 Context。如果调用者与 ContentProvider 运行在同一个进程内，那么这个返回的 Context 就是上文的 application context。如果调用者与 ContentProvider 不是运行在同一个进程之内，那么这个方法会返回一个指代 provider 所在包的新 Context 实例。</p>
+<h2 id="保存-Context-引用"><a href="#保存-Context-引用" class="headerlink" title="保存 Context 引用"></a>保存 Context 引用</h2><p>第一个问题：当我们将一个 Context 的引用保存到一个存活时间比 Context 本身生命周期还长的对象时，问题就来了。比如，我们有一个单例对象，要求使用一个 Context 来执行资源加载或访问 ContentProvider，并且传入的是一个 Activity 或 Service 对象：</p>
+<p>错误的 Singleton 实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CustomManager</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> CustomManager sInstance;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> CustomManager <span class="title function_">getInstance</span><span class="params">(Context context)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (sInstance == <span class="literal">null</span>) &#123;</span><br><span class="line">            sInstance = <span class="keyword">new</span> <span class="title class_">CustomManager</span>(context);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> sInstance;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Context mContext;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">CustomManager</span><span class="params">(Context context)</span> &#123;</span><br><span class="line">        mContext = context;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们知道，单例对象是一个静态变量，受其所在类的生命周期控制。这就意味着，在这个单例对象的存活时间内，这个单例持有的对象（引用）都不会被垃圾回收。<br>所以这种实现的问题就是你无法知道 Context 到底来自何处，如果这个 Context 是一个 Activity 或者 Service， 就会变得不安全：这个被持有的 Activity，以及其内部所有的 View 或者其他的耗内存对象都无法被回收，从而引发内存泄露。</p>
+<p>为了防止这种问题，我们改为让单例持有 application context：</p>
+<p>改进的实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CustomManager</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> CustomManager sInstance;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> CustomManager <span class="title function_">getInstance</span><span class="params">(Context context)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (sInstance == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="comment">//Always pass in the Application Context</span></span><br><span class="line">            sInstance = <span class="keyword">new</span> <span class="title class_">CustomManager</span>(context.getApplicationContext());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> sInstance;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Context mContext;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">CustomManager</span><span class="params">(Context context)</span> &#123;</span><br><span class="line">        mContext = context;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如此以来，我们就不用再关心 Context 来自哪里，也不用关心 Context 是什么类型，因为最终持有的都会是 application context，因此就避免了内存泄露的问题。这个处理技巧在后台线程或者 Handler 处理中同样有效。</p>
+<p>既然如此，是不是意味着我们可以在任何情况下都用 application context 来处理呢？这样就永远不用担心内存泄露了。答案显然是否定的，就如上文说的一样，不同情况下的 Context 各不相同。这就像葫芦娃一样，虽然都是葫芦娃，但是每个娃的技能都不一样。</p>
+<h2 id="Context-特点"><a href="#Context-特点" class="headerlink" title="Context 特点"></a>Context 特点</h2><p>Context 能实现哪些功能，主要还是取决于 Context 从何而来，下表列出了不同 Context 的一些不同点：</p>
+<table border="1" width="90%" align="center">
+<thead>
+<tr>
+<th></th>
+<th align="center">Application</th>
+<th align="center">Activity</th>
+<th align="center">Service</th>
+<th align="center">ContentProvider</th>
+<th align="center">BroadcastReceiver</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Show a Dialog</td>
+<td align="center">NO</td>
+<td align="center">YES</td>
+<td align="center">NO</td>
+<td align="center">NO</td>
+<td align="center">NO</td>
+</tr>
+<tr>
+<td>Start an Activity</td>
+<td align="center">NO<sup>1</sup></td>
+<td align="center">YES</td>
+<td align="center">NO<sup>1</sup></td>
+<td align="center">NO<sup>1</sup></td>
+<td align="center">NO<sup>1</sup></td>
+</tr>
+<tr>
+<td>Layout Inflation</td>
+<td align="center">NO<sup>2</sup></td>
+<td align="center">YES</td>
+<td align="center">NO<sup>2</sup></td>
+<td align="center">NO<sup>2</sup></td>
+<td align="center">NO<sup>2</sup></td>
+</tr>
+<tr>
+<td>Start a Service</td>
+<td align="center">YES</td>
+<td align="center">YES</td>
+<td align="center">YES</td>
+<td align="center">YES</td>
+<td align="center">YES</td>
+</tr>
+<tr>
+<td>Bind to a Service</td>
+<td align="center">YES</td>
+<td align="center">YES</td>
+<td align="center">YES</td>
+<td align="center">YES</td>
+<td align="center">NO</td>
+</tr>
+<tr>
+<td>Send a Broadcast</td>
+<td align="center">YES</td>
+<td align="center">YES</td>
+<td align="center">YES</td>
+<td align="center">YES</td>
+<td align="center">YES</td>
+</tr>
+<tr>
+<td>Register BroadcastReceiver</td>
+<td align="center">YES</td>
+<td align="center">YES</td>
+<td align="center">YES</td>
+<td align="center">YES</td>
+<td align="center">NO<sup>3</sup></td>
+</tr>
+<tr>
+<td>Load Resource Values</td>
+<td align="center">YES</td>
+<td align="center">YES</td>
+<td align="center">YES</td>
+<td align="center">YES</td>
+<td align="center">YES</td>
+</tr>
+</tbody>
+</table>
+
+<ol>
+<li>application context 可以启动 Activity， 但是前提是需要创建一个新任务。在某些情况下，我们可以使用这种方式实现某种特殊目的，这种方式会创建一个非标准的回退栈，一般不推荐使用，至少不是一个好的实践。</li>
+<li>这个是合法的调用，但是 inflation 获得的 View 只会应用系统的主题，而不是当前 app 的自定义主题。</li>
+<li>在 4.2 及以上系统版本中， 允许注册 receiver 为 null 的广播监听，主要目的是为了获取 sticky broadcast 的当前值。</li>
+</ol>
+<h2 id="User-Interface"><a href="#User-Interface" class="headerlink" title="User Interface"></a>User Interface</h2><p>从上面的列表可以看到，application context 不能胜任很多场景，而且都是与UI相关的情况。实际上，只有 Activity 拥有处理 UI 的能力，其他类型的 Context 在这方面都大同小异。</p>
+<p>上面的三种行为，除了 Activity， 其他的 Context 也都无法处理，从而避免误用。试图显示一个使用 application context 创建的 Dialog，或者从 application context 启动一个Activity，都会导致 app 崩溃，系统通过这种方式告诉你：你用错了。</p>
+<p>另一个问题就是 inflating layout。如果你读过 <a target="_blank" rel="noopener" href="http://www.doubleencore.com/2013/05/layout-inflation-as-intended/">layout inflation</a>一文， 你就会知道 inflating layout 有一些容易让人迷惑的地方，如何正确使用 Context 就是其中一个。如果你使用 application context 来进行 inflating layout，并不会发生任何错误，但是当前 app 所定义的 themes 以及 styles 都被忽略了。究其原因，正如你在 manifest 中定义的一样， 只有 Activity 才是唯一能够响应 themes 定义的组件。任何其他组件所含有的 Context 都会应用 Android 系统自身的主题，所以，最终的 UI 表现可能出乎你的意料。</p>
+<h2 id="规则冲突"><a href="#规则冲突" class="headerlink" title="规则冲突"></a>规则冲突</h2><p>可能有人会提出这样一种场景：在 app 的当前设计下，由于涉及到处理 UI 的操作，所以需要长期持有一个 Activity 的引用。如果是这样的话，我只能说：请重新考虑你的设计。</p>
+<h2 id="经验法则"><a href="#经验法则" class="headerlink" title="经验法则"></a>经验法则</h2><p>简而言之，在组件的生命周期之内可以直接使用自身的 Context， 一旦需要在超出组件生命周期之外的对象中使用 Context ，就应该只用 application context，哪怕只是临时的引用，也是如此。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2015/05/17/android/2015/2015-05-17-Android-Context-basic/" data-id="cluh0142a00ec38wb8by79mbn" data-title="Android Context基础！" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-talk/2015-05-03-talk-business" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2015/05/03/talk/2015-05-03-talk-business/" class="article-date">
+  <time class="dt-published" datetime="2015-05-03T05:46:04.000Z" itemprop="datePublished">2015-05-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/talk/">talk</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2015/05/03/talk/2015-05-03-talk-business/">如何判断是某个领域是否值得进入</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>同事教给我的方法，如何判断是某个领域是否值得进入，大致分为三个步骤：</p>
+<ol>
+<li>定义市场</li>
+<li>分析玩家</li>
+<li>评估路径</li>
+</ol>
+        
+          <p class="article-more-link">
+            <a href="/2015/05/03/talk/2015-05-03-talk-business/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2015/05/03/talk/2015-05-03-talk-business/" data-id="cluh0141l00aw38wbfrsg50kq" data-title="如何判断是某个领域是否值得进入" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/talk/" rel="tag">talk</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-android/2015/2015-04-30-AndroidSupport-SupportAnnotations" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2015/04/30/android/2015/2015-04-30-AndroidSupport-SupportAnnotations/" class="article-date">
+  <time class="dt-published" datetime="2015-04-30T04:46:04.000Z" itemprop="datePublished">2015-04-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2015/04/30/android/2015/2015-04-30-AndroidSupport-SupportAnnotations/">Support Annotations</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><a target="_blank" rel="noopener" href="http://anupcowkur.com/posts/a-look-at-android-support-annotations/">查看原文</a></p>
+<p>在Support Library 19.1以及以后的版本中，Android工具小组引入了几个很酷的注解类型，方便开发者在工程中使用，同时Support Library自身也使用了这些注解。</p>
+<p>本文的代码都使用android studio完成。首先，添加注解支持：</p>
+<pre><code>compile &#39;com.android.support:support-annotations:22.1.1&#39;
+</code></pre>
+<p>有三种类型的注解：</p>
+<ol>
+<li>NonNull &amp; Nullable</li>
+<li>资源Id</li>
+<li>IntDef &amp; StringDef</li>
+</ol>
+<h2 id="Nullness注解"><a href="#Nullness注解" class="headerlink" title="Nullness注解"></a>Nullness注解</h2><p>@NonNull 用来修饰不能为null的参数。在下面的代码例子中，我们有一个取值为 null 的 name 变量，它被作为参数传递给 sayHello 方法，而该方法要求这个参数是非null的String类型：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MainActivity</span> <span class="keyword">extends</span> <span class="title class_">ActionBarActivity</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(Bundle savedInstanceState)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        <span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        sayHello(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">sayHello</span><span class="params">(<span class="meta">@NonNull</span> String name)</span> &#123;</span><br><span class="line">        Toast.makeText(<span class="built_in">this</span>, <span class="string">&quot;Hello &quot;</span> + s, Toast.LENGTH_LONG).show();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于代码中参数 name 被 @NonNull 注解修饰，因此 android studio 将会以警告的形式提醒我们这个地方有问题：</p>
+<p><img src="http://anupcowkur.com/images/name_is_null_warning.png" alt="name_is_null_warning"></p>
+<p>如果我们给 name 赋值，例如</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> “Our Lord Duarte”</span><br></pre></td></tr></table></figure>
+
+<p>那么警告将消失。</p>
+<p>【注：这个我试了一下，在android studio里面，就算不用注解，也会有提示的，android studio 就是这么智能。】</p>
+<p>@Nullable 用来修饰方法的参数或者返回值可能为 null。示例如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MainActivity</span> <span class="keyword">extends</span> <span class="title class_">ActionBarActivity</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(Bundle savedInstanceState)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        Toast.makeText(<span class="built_in">this</span>, getName().toLowerCase(), Toast.LENGTH_LONG).show();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因为 getName 方法的返回值使用 @Nullable 修饰，所以 android studio 会提示</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">    Method invocation <span class="string">&quot;getName().toLowerCase()&quot;</span> may produce <span class="string">&quot;java.lang.NollPointerException&quot;</span></span><br><span class="line"></span><br><span class="line">## 资源注解</span><br><span class="line"></span><br><span class="line">资源类型注解可以帮助我们准确的使用资源id，例如，避免我们在要求colorId的地方错误的使用了dimenId。</span><br><span class="line">在下面的代码中，我们的sayHello方法预期接受一个字符串类型的资源Id，并使用<span class="meta">@StringRes</span>注解修饰：</span><br><span class="line"></span><br><span class="line">```java</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MainActivity</span> <span class="keyword">extends</span> <span class="title class_">ActionBarActivity</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(Bundle savedInstanceState)</span> &#123;</span><br><span class="line">            <span class="built_in">super</span>.onCreate(savedInstanceState);</span><br><span class="line">            setContentView(R.layout.activity_main);</span><br><span class="line"></span><br><span class="line">            sayHello(R.style.AppTheme);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">void</span> <span class="title function_">sayHello</span><span class="params">(<span class="meta">@StringRes</span> <span class="type">int</span> id)</span> &#123;</span><br><span class="line">            Toast.makeText(<span class="built_in">this</span>, <span class="string">&quot;Hello &quot;</span> + getString(id), Toast.LENGTH_LONG).show();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>而我们传递给它的是一个样式资源Id，与预期的字符串资源Id不符合，这时IDE将提示警告如下：</p>
+<p><img src="http://anupcowkur.com/images/wrong_resource_type_error.png" alt="wrong_resource_type_error"></p>
+<p>类似的，我们把警告的地方使用一个字符串资源Id代替警告就消失了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sayHello(R.string.name);</span><br></pre></td></tr></table></figure>
+
+<p>基本上，每一种资源类型都有相应的资源注解</p>
+<pre><code>AnimatorRes
+AnimRes
+AnyRes
+ArrayRes
+AttrRes
+BoolRes
+ColorRes
+DimenRes
+DrawableRes
+FractionRes
+IdRes
+IntegerRes
+InterpolatorRes
+LayoutRes
+MenuRes
+PluralsRes
+RawRes
+StringRes
+StyleableRes
+StyleRes
+XmlRes
+</code></pre>
+<h2 id="IntDef和StringDef注解"><a href="#IntDef和StringDef注解" class="headerlink" title="IntDef和StringDef注解"></a>IntDef和StringDef注解</h2><p>最后一种类型的注解是基于Intellij的<a target="_blank" rel="noopener" href="http://blog.jetbrains.com/idea/2012/02/new-magic-constant-inspection/">“魔数”检查机制</a>功能</p>
+<p>【注：“魔数”就是那些不能看出有什么含义的数字常量，这里也包括字符串常量】</p>
+<p>很多时候，出于性能的考虑，我们会使用整型常量代替枚举类型。例如我们有一个IceCreamFlavourManager类，它定义三种操作：</p>
+<pre><code>VANILLA
+CHOCOLATE
+STRAWBERRY
+</code></pre>
+<p>我们可以定义一个名为@Flavour的新注解，并使用@IntDef指定它可以接受的取值范围，如下例所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">IceCreamFlavourManager</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> flavour;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">VANILLA</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">CHOCOLATE</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">STRAWBERRY</span> <span class="operator">=</span> <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@IntDef(&#123;VANILLA, CHOCOLATE, STRAWBERRY&#125;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="meta">@interface</span> Flavour &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Flavour</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getFlavour</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> flavour;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setFlavour</span><span class="params">(<span class="meta">@Flavour</span> <span class="type">int</span> flavour)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.flavour = flavour;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这时如果我们使用直接字面量来调用IceCreamFlavourManager.setFlavour，IDE将提示错误如下：</p>
+<p><img src="http://anupcowkur.com/images/wrong_flavour_error.png" alt="wrong_flavour_error"></p>
+<p>IDE甚至会提示我们可以使用的有效取值：</p>
+<p><img src="http://anupcowkur.com/images/ide_suggests_flavours.png" alt="ide_suggests_flavours"></p>
+<p>我们也可以指定整型取值可以用作标志，也就是说这些整型值可以使用’｜’或者’&amp;’进行与或等操作。如果我们定义@Flavour如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@IntDef(flag = true, value = &#123;VANILLA, CHOCOLATE, STRAWBERRY&#125;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="meta">@interface</span> Flavour &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么可以进行如下调用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iceCreamFlavourManager.setFlavour(IceCreamFlavourManager.VANILLA &amp; IceCreamFlavourManager.CHOCOLATE);</span><br></pre></td></tr></table></figure>
+
+<p>@StringDef 用法与 @IntDef 基本差不多，只不过是针对String类型值而已。</p>
+<p>更多信息可以参考<a target="_blank" rel="noopener" href="http://tools.android.com/tech-docs/support-annotations">tools site</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2015/04/30/android/2015/2015-04-30-AndroidSupport-SupportAnnotations/" data-id="cluh0142900e638wb9jrjeso9" data-title="Support Annotations" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-android/2015/2015-04-27-Android-Drawable-center" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2015/04/27/android/2015/2015-04-27-Android-Drawable-center/" class="article-date">
+  <time class="dt-published" datetime="2015-04-27T04:46:04.000Z" itemprop="datePublished">2015-04-27</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2015/04/27/android/2015/2015-04-27-Android-Drawable-center/">让Drawable居中的小控件</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>让TextView的drawableLeft 或者 drawableTop 或者 drawableRight 或者 drawableBottom与文字一起居中</p>
+<p>Github地址： <a target="_blank" rel="noopener" href="https://github.com/xesam/CenterDrawableTextView">CenterDrawableTextView</a></p>
+<p><img src="https://github.com/xesam/CenterDrawableTextView/raw/master/center_drawable.png" alt="demo"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2015/04/27/android/2015/2015-04-27-Android-Drawable-center/" data-id="cluh0142800e038wb1opph5p0" data-title="让Drawable居中的小控件" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-java/2015-04-26-Java-how-to-eventbus" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2015/04/26/java/2015-04-26-Java-how-to-eventbus/" class="article-date">
+  <time class="dt-published" datetime="2015-04-26T04:46:04.000Z" itemprop="datePublished">2015-04-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/java/">java</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2015/04/26/java/2015-04-26-Java-how-to-eventbus/">如何实现一个简单的事件总线</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><a target="_blank" rel="noopener" href="https://github.com/konmik/MicroBus">MicroBus</a></p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>注册</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Receiver</span> <span class="keyword">implements</span> <span class="title class_">MicroBus</span>.BusEventReceiver &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">onCreate</span><span class="params">()</span> &#123;</span><br><span class="line">        bus.register(<span class="built_in">this</span>, String.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">onDestroy</span><span class="params">()</span> &#123;</span><br><span class="line">        bus.unregister(<span class="built_in">this</span>, String.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onBusEvent</span><span class="params">(Object event)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (event <span class="keyword">instanceof</span> String)</span><br><span class="line">            System.out.println(<span class="string">&quot;Hello, &quot;</span> + event);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行</p>
+<pre><code>bus.post(&quot;World|&quot;);
+</code></pre>
+<p>运行结果</p>
+<pre><code>Hello, World!
+</code></pre>
+        
+          <p class="article-more-link">
+            <a href="/2015/04/26/java/2015-04-26-Java-how-to-eventbus/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2015/04/26/java/2015-04-26-Java-how-to-eventbus/" data-id="cluh01411008038wbeo9q3ewx" data-title="如何实现一个简单的事件总线" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/" rel="tag">java</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-android/2015/2015-04-23-Android-communication" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2015/04/23/android/2015/2015-04-23-Android-communication/" class="article-date">
+  <time class="dt-published" datetime="2015-04-23T04:46:04.000Z" itemprop="datePublished">2015-04-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2015/04/23/android/2015/2015-04-23-Android-communication/">Android 组件通信模式</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>本文对原文进行了精简</p>
+<p>原文链接:<a target="_blank" rel="noopener" href="http://vinsol.com/blog/2014/11/04/communication-patterns-for-application-components/">Communication patterns for application components</a></p>
+<h2 id="紧耦合"><a href="#紧耦合" class="headerlink" title="紧耦合"></a>紧耦合</h2><p>组件之间相互持有引用,以及直接调用方法.在下面的代码中,MenuFragment持有MagazineActivity的直接引用,因此, MenuFragment 就与 MagazineActivity紧耦合了.<br>一旦没有了MagazineActivity,就无法工作了.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 紧耦合示例</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MenuFragment</span> <span class="keyword">extends</span> <span class="title class_">Fragment</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">onArticleClick</span><span class="params">(<span class="type">int</span> articleId)</span> &#123;</span><br><span class="line">        <span class="type">MagazineActivity</span> <span class="variable">magAct</span> <span class="operator">=</span> (MagazineActivity) getActivity();</span><br><span class="line">        magAct.showArticle(articleId);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这样的设计中,一个类的修改可能会影响到一大波相关的类,如果开发中还涉及到多个开发人员,那么这种情况带来的只会是痛苦和悲哀..</p>
+<p>松耦合的核心就是一种减少组件之间的依赖关系,一个松耦合系统可以很方便的分解为良构的元素.这样就使得系统更具有弹性与扩展性.<br>每个开发人员可以维护一个单独的模块,并使用标准的协议与其他部分通信.</p>
+<h2 id="常规解耦方式-接口"><a href="#常规解耦方式-接口" class="headerlink" title="常规解耦方式:接口"></a>常规解耦方式:接口</h2><p>(个人补充:接口并不是单纯指代的java里面的interface关键字,而是指的一种消息规范&#x2F;协议)<br>接口是一个强大的解耦工具:类可以通过接口进行通信,而不必要直接引用另一个具体类.一个类可以向外提供一个接口供其他类与之通信.在这个抽象层上,其他类不用关心具体的实现是什么.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//接口示例</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MenuFragment</span> <span class="keyword">extends</span> <span class="title class_">Fragment</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> MenuFragment <span class="title function_">instantiate</span><span class="params">(ArticleSwitcher articleSwitcher)</span> &#123;</span><br><span class="line">        <span class="type">MenuFragment</span> <span class="variable">menuFragment</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MenuFragment</span>();</span><br><span class="line">        menuFragment.articleSwitcher = articleSwitcher;</span><br><span class="line">        <span class="keyword">return</span> menuFragment;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ArticleSwitcher articleSwitcher;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onArticleClick</span><span class="params">(<span class="type">int</span> articleId)</span> &#123;</span><br><span class="line">	    articleSwitcher.showArticle(articleId);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用接口的缺点:</p>
+<ol>
+<li>组件之间还是需要相互了解以传递接口,部分依赖依旧存在</li>
+<li>接口不能通过intent传递</li>
+<li>在大项目中,接口数量会急剧增加,导致大量的模板代码</li>
+<li>当接口在组件之间传递时会形成接口链,导致复杂度上升</li>
+</ol>
+<h2 id="优雅解决方案-消息总线"><a href="#优雅解决方案-消息总线" class="headerlink" title="优雅解决方案:消息总线"></a>优雅解决方案:消息总线</h2><p>基于发布&#x2F;订阅者模式的通信方案.发布者发布一个通知,订阅者得到通知并做出反应,因此,发布者和订阅者之间就实现了解耦.</p>
+<h2 id="实现消息总线"><a href="#实现消息总线" class="headerlink" title="实现消息总线"></a>实现消息总线</h2><h3 id="隐式intent-BroadcastReceiver"><a href="#隐式intent-BroadcastReceiver" class="headerlink" title="隐式intent + BroadcastReceiver"></a>隐式intent + BroadcastReceiver</h3><p>通过隐式Intent的通信可以看作是消息队列的一种形式:<br>sendBroadcast(Intent) 或者 startActivity(Intent)是发布者方法,含有相应IntentFilter的BroadcastReceiver 或者 Activity则扮演订阅者的角色.</p>
+<p>优点与缺点</p>
+<p>优点:可以跨应用传递,也是Android里面的标准方法</p>
+<p>缺点:无法传递复杂数据,必须通过bundle来传递</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/alexvasilkov/fluffy-events">FluffyEvents</a> 就是一个通过 BroadcastReceiver 实现的消息总线.</p>
+<h3 id="EventBus-基于事件的消息总线"><a href="#EventBus-基于事件的消息总线" class="headerlink" title="EventBus: 基于事件的消息总线"></a>EventBus: 基于事件的消息总线</h3><p>(“事件”本身也是一种消息,原理还是订阅&#x2F;发布者模式)</p>
+<p>事件本身可以是任何java类,如下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 一个示例事件类</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DownloadProgressEvent</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">float</span> progress;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">DownloadProgressEvent</span><span class="params">(<span class="type">float</span> progress)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.progress = progress;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">float</span> <span class="title function_">getProgress</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> progress;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="EventBus-大致原理"><a href="#EventBus-大致原理" class="headerlink" title="EventBus: 大致原理"></a>EventBus: 大致原理</h4><p>EventBus使用合适的数据结构来维持事件以及订阅者的对应关系,比如Otto使用的方式:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** Cache event bus subscriber methods for each class. */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Map&lt;Class&lt;?&gt;, Map&lt;EventClass, Set&gt;&gt; SUBSCRIBERS_CACHE = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;Class&lt;?&gt;, Map&lt;EventClass, Set&gt;&gt;();</span><br></pre></td></tr></table></figure>
+
+<p>每当有订阅者注册或者注销的时候,都会同时更新相应的对应关系,通常,Activity 或者 Fragment会在onResume阶段进行注册,在onPause阶段进行注销.(译者注:可以减少内存泄露的问题)</p>
+<p>每当有事件发布的时候,EventBus遍历整个对应关系,找到所有符合条件的订阅者方法并执行.</p>
+<h4 id="Sticky-Event"><a href="#Sticky-Event" class="headerlink" title="Sticky Event"></a>Sticky Event</h4><p>类似Android原生的StickyBroadcast,使得一个订阅者在任何时候注册都可以获得这个事件.</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>由于EventBus并不是Android的内在机制,因此无法跨应用传递事件.</p>
+<p>比较常用的两个EventBus开源类库:</p>
+<p><a target="_blank" rel="noopener" href="http://square.github.io/otto/">Square’s Otto</a>:基于注解,在Guava EventBus基础上针对Android平台进行了优化</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/greenrobot/EventBus">GreenRobot’s EventBus</a>:更好的线程分发机制.</p>
+<p>(译者注: EventBus比较适合组件之间的解耦, 而接口是一个更抽象的概念,还可以用在view或者其他方面)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2015/04/23/android/2015/2015-04-23-Android-communication/" data-id="cluh0142800e338wb3b8m6cjz" data-title="Android 组件通信模式" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-android/2015/2015-04-11-Android-UI-vars" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2015/04/11/android/2015/2015-04-11-Android-UI-vars/" class="article-date">
+  <time class="dt-published" datetime="2015-04-11T04:46:04.000Z" itemprop="datePublished">2015-04-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2015/04/11/android/2015/2015-04-11-Android-UI-vars/">Android UI组件变量组织</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><em><strong>这不是一篇技术文章，而是因为最近项目新来了几个android新人，所以我琢磨在代码风格上进行一下统一，所以有了以下以及后面的几篇文章。</strong></em></p>
+<h2 id="java文件内部UI组件变量组织"><a href="#java文件内部UI组件变量组织" class="headerlink" title="java文件内部UI组件变量组织"></a>java文件内部UI组件变量组织</h2><h3 id="UI组件使用小写字母“v”作为前缀。"><a href="#UI组件使用小写字母“v”作为前缀。" class="headerlink" title="UI组件使用小写字母“v”作为前缀。"></a>UI组件使用小写字母“v”作为前缀。</h3><p>v主要表示“View”，android源码中，变量前缀主要是“m”，但是个人觉得对于UI变量，还是用“v”比较清晰</p>
+<h3 id="意图导向，最小化抽象"><a href="#意图导向，最小化抽象" class="headerlink" title="意图导向，最小化抽象"></a>意图导向，最小化抽象</h3><p>UI变量的“声明类型”应该是能够实现意图的最小化抽象类型，变量名需要能表现出一个组件的功能。</p>
+<p>比如，交互需求有一个ImageButton，点击之后的动作是触发一个搜索请求。应该怎么组织变量呢？</p>
+<h4 id="第一步：声明类型"><a href="#第一步：声明类型" class="headerlink" title="第一步：声明类型"></a>第一步：声明类型</h4><p>声明这个变量大概有几种方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> <span class="keyword">private</span> ImageButton varName;</span><br><span class="line"><span class="number">2.</span> <span class="keyword">private</span> ImageView varName;</span><br><span class="line"><span class="number">3.</span> <span class="keyword">private</span> View varName;</span><br></pre></td></tr></table></figure>
+
+<p>这些声明都没有什么问题，问题是如果这个按钮只是单纯的触发一个点击事件，<br>那么也就表明我们的意图只需要使用View级别就行，因为View.setOnClickListener(OnClickListener)是我们唯一关心的功能，所以只需要将类型限定在View级别就行。</p>
+<p>另外，UI是一个变化频度比较高的部分，越抽象就越容易修改。<br>换句话说，就是“面向接口编程”，View在这里就充当了接口的角色，这样，不管以后我们把ImageButton换成ImageView，Button或者TextView都不用修改定义的。</p>
+<h4 id="第二步：变量名"><a href="#第二步：变量名" class="headerlink" title="第二步：变量名"></a>第二步：变量名</h4><p>变量命名可能有下面几种：</p>
+<ol>
+<li></li>
+</ol>
+<pre><code>    ImageButton vImageButton1
+</code></pre>
+<p>这种命名只应该出现在教程代码中，项目代码中是绝对不应该出现的</p>
+<ol start="2">
+<li></li>
+</ol>
+<pre><code>    ImageButton vSearchImageButton（或者vQueryBtn）
+</code></pre>
+<p>这个命名其实可以接受，但是一个问题就是，变量名涉及到具体的组件类型，参照上面第一步的说明，如果并不会使用到“ImageButton”特定的方法，就没有必要过于具体化一个变量。</p>
+<ol start="3">
+<li></li>
+</ol>
+<pre><code>    ImageButton vSearch
+</code></pre>
+<p>这个命名其实也可以接受，而且也比较适用。</p>
+<ol start="4">
+<li></li>
+</ol>
+<pre><code>    ImageButton vSearchAction
+</code></pre>
+<p>相比上面的vSearch，个人还是比较偏向于这种命名。<br>虽然都是纯粹的意图相关，但一个问题就是完成某个意图可能需要几个组件配合，比如对于搜索来说，一般还会有一个输入框，这时候就可以将输入框命名为vSearchContent，这样可以使用后缀“Action”和“Content”将两个部分区分开来</p>
+<h2 id="XML内部组件id命名"><a href="#XML内部组件id命名" class="headerlink" title="XML内部组件id命名"></a>XML内部组件id命名</h2><p>xml文件中的id命名也是一样，需要提供给java文件使用的尽量意图导线。<br>比如RelativeLayout命名中没有必要含有完整的“RelativeLayout”字段，因为实际项目中，需要调用RelativeLayout特定方法的情况基本没有。所以使用container等更泛的名字也可以。</p>
+<p>至于只在布局文件中用来进行定位或者锚点的组件，可以将id命名得更明显一下，比如使用local,anchor之类名字，以便告诉java代码不应该随意获取这些组件，因为这些id并非稳定字段。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2015/04/11/android/2015/2015-04-11-Android-UI-vars/" data-id="cluh0142700dx38wbd3287jvm" data-title="Android UI组件变量组织" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-android/2015/2015-04-07-Android-touch" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2015/04/07/android/2015/2015-04-07-Android-touch/" class="article-date">
+  <time class="dt-published" datetime="2015-04-07T04:46:04.000Z" itemprop="datePublished">2015-04-07</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2015/04/07/android/2015/2015-04-07-Android-touch/">Android 触屏事件传递简述</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>ActivityA包含ViewGroupB，ViewGroupB包含ViewC，这里选取ViewGroupB（中间节点）作为当前节点视角</p>
+<p><img src="http://static.oschina.net/uploads/space/2015/0407/015042_pxbX_93688.png" alt="在此输入图片描述"></p>
+<h2 id="过程一：当前节点与父节点的事件关系"><a href="#过程一：当前节点与父节点的事件关系" class="headerlink" title="过程一：当前节点与父节点的事件关系"></a>过程一：当前节点与父节点的事件关系</h2><p>ActivityA只关心ViewGroupB.onDispatchTouchEvent返回值，只要在ACTION_DOWN分发过程中B.onDispatchTouchEvent()返回为true，那么后续的事件都会向B分发。至于ViewGroupB在onDispatchTouchEvent方法中是怎么处理的，父节点ActivityA并不会过问。</p>
+<p>换句话说，父节点向<em><strong>直接子节点ViewGroupB</strong></em>兜售ACTION_DOWN事件，子节点使用onDispatchTouchEvent方法的返回值进行应答，只要子节点表示能够处理ACTION_DOWN，那么父节点就会将后续事件持续交给子节点。</p>
+<h2 id="过程二：当前节点与子节点的事件关系"><a href="#过程二：当前节点与子节点的事件关系" class="headerlink" title="过程二：当前节点与子节点的事件关系"></a>过程二：当前节点与子节点的事件关系</h2><p>ViewGroupB从上一级收到ACTION_DOWN事件之后，会调用onInterceptTouchEvent判断是否进行拦截。如果不拦截，那么流程与上面的“过程一”一致，如果拦截，那么ViewGroupB就吃掉事件，直接忽略ViewC。</p>
+<p>不过onInterceptTouchEvent属于内部方法，这个方法本身并不会影响当前节点的onDispatchTouchEvent返回值。</p>
+<h2 id="onDispatchTouchEvent返回值的判断"><a href="#onDispatchTouchEvent返回值的判断" class="headerlink" title="onDispatchTouchEvent返回值的判断"></a>onDispatchTouchEvent返回值的判断</h2><p>通常情况下，一个节点的onDispatchTouchEvent返回值只与当前节点的onTouchEvent返回值和子节点的onDispatchTouchEvent返回值有关：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">this</span>.onDispatchTouchEventValue = child.onDispatchTouchEventValue || <span class="built_in">this</span>.onTouchEvent</span><br></pre></td></tr></table></figure>
+
+<p>当然，也可以强制给onDispatchTouchEvent赋一个返回值，尽管如此，也不应该强制抛弃原有的事件机制，因为原有的事件机制会进行一些状态清理等操作。</p>
+<p>ACTION_DOWN示例图：<br><img src="http://static.oschina.net/uploads/space/2015/0411/120049_AoiN_93688.png" alt="在此输入图片描述"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2015/04/07/android/2015/2015-04-07-Android-touch/" data-id="cluh0142600du38wb6kxcey2x" data-title="Android 触屏事件传递简述" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-android/2015/2015-04-06-Android-menu" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2015/04/06/android/2015/2015-04-06-Android-menu/" class="article-date">
+  <time class="dt-published" datetime="2015-04-06T04:46:04.000Z" itemprop="datePublished">2015-04-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2015/04/06/android/2015/2015-04-06-Android-menu/">Android 修改菜单</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>常用的与菜单相关的主要有三个回调：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建菜单的时候调用</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">onCreateOptionsMenu</span><span class="params">(Menu menu)</span>；</span><br><span class="line"></span><br><span class="line"><span class="comment">//显示菜单的时候调用</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">onPrepareOptionsMenu</span><span class="params">(Menu menu)</span>；</span><br><span class="line"></span><br><span class="line"><span class="comment">//选择菜单项的时候调用</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">onOptionsItemSelected</span><span class="params">(MenuItem item)</span>；</span><br></pre></td></tr></table></figure>
+
+<h2 id="修改view"><a href="#修改view" class="headerlink" title="修改view"></a>修改view</h2><p>因此，如果我们想自定义菜单的显示效果，应该在创建菜单项的时候去干预创建过程，但是这个过程并没有向开发者开放。<br>这种情况下，我们要么重新自定义整个菜单视图，要么在系统创建号之后，再去修改每一个菜单项。</p>
+<p>对于后面一中情况，我们可以在onCreateOptionsMenu中对每一项进行修改，主要方法就是通过ActionView来模拟：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">MenuItem.setActionView(actionView);</span><br><span class="line"></span><br><span class="line">或者</span><br><span class="line"></span><br><span class="line">MenuItemCompat.setActionView(menuItem, actionView);<span class="comment">//兼容包</span></span><br></pre></td></tr></table></figure>
+
+<p>比如，替换成Textview：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">TextView</span> <span class="variable">action</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TextView</span>(<span class="built_in">this</span>);</span><br><span class="line">action.setText(menuItem.getTitle());</span><br><span class="line">action.setOnClickListener(<span class="keyword">new</span> <span class="title class_">View</span>.OnClickListener() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onClick</span><span class="params">(View v)</span> &#123;</span><br><span class="line">        onOptionsItemSelected(menuItem);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line">MenuItemCompat.setActionView(menuItem, action);</span><br></pre></td></tr></table></figure>
+
+<h2 id="动态修改"><a href="#动态修改" class="headerlink" title="动态修改"></a>动态修改</h2><p>有时候需要动态修改菜单，这个时候就需要分情况了，对于那些被收起来的菜单，可以在onPrepareOptionsMenu中进行动态增减，<br>因为onPrepareOptionsMenu会在每次菜单展示给用户的时候调用（比如点击ActionBar上的“更多”按钮）。</p>
+<p>但是如果需要修改的菜单是一直展示在ActionBar或者Toolbar上面的话，可能触发修改菜单事件的时候，并不会涉及到onPrepareOptionsMenu，这个时候可以重新创建菜单,使用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Activity.invalidateOptionsMenu()</span><br><span class="line"></span><br><span class="line">或者</span><br><span class="line"></span><br><span class="line">ActionBarActivity.supportInvalidateOptionsMenu()<span class="comment">//兼容包</span></span><br></pre></td></tr></table></figure>
+
+<p>来重新进入菜单流程。</p>
+<h2 id="演示图"><a href="#演示图" class="headerlink" title="演示图"></a>演示图</h2><p><img src="http://static.oschina.net/uploads/space/2015/0406/210351_3vdX_93688.png" alt="在此输入图片描述"></p>
+<h2 id="demo源码"><a href="#demo源码" class="headerlink" title="demo源码"></a>demo源码</h2><p><a target="_blank" rel="noopener" href="http://git.oschina.net/xesam/AndroidLollipop/blob/master/archive/AndroidMenu.zip">android_menu</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2015/04/06/android/2015/2015-04-06-Android-menu/" data-id="cluh0142600dr38wba8oydm1h" data-title="Android 修改菜单" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-android/2015/2015-03-28-Android-SlidingTabs" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2015/03/28/android/2015/2015-03-28-Android-SlidingTabs/" class="article-date">
+  <time class="dt-published" datetime="2015-03-28T04:46:04.000Z" itemprop="datePublished">2015-03-28</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2015/03/28/android/2015/2015-03-28-Android-SlidingTabs/">Android SlidingTabs</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>一个google sample里面的轻量级滑动Tab修改版本：</p>
+<p>地址：<a target="_blank" rel="noopener" href="https://github.com/xesam/SlidingTabs">https://github.com/xesam/SlidingTabs</a></p>
+<h2 id="增加支持："><a href="#增加支持：" class="headerlink" title="增加支持："></a>增加支持：</h2><ol>
+<li>是否占满视图</li>
+<li>是否显示分隔符</li>
+<li>指示条在顶部或者底部</li>
+<li>自定义默认tab尺寸</li>
+<li>自定义tab视图布局</li>
+</ol>
+<h2 id="演示图"><a href="#演示图" class="headerlink" title="演示图"></a>演示图</h2><p><img src="http://git.oschina.net/xesam/Blog/raw/master/android/view/demo.png" alt="http://git.oschina.net/xesam/Blog/raw/master/android/view/demo.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2015/03/28/android/2015/2015-03-28-Android-SlidingTabs/" data-id="cluh0142500do38wbgrbydj90" data-title="Android SlidingTabs" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/12/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/14/">下一页 &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chrome/">chrome</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/computer/">computer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/fe/">fe</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/introspection/">introspection</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/math/">math</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/physics/">physics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/product/">product</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/software/">software</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/talk/">talk</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c51/" rel="tag">c51</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/computer/" rel="tag">computer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fe/" rel="tag">fe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/introspection/" rel="tag">introspection</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/" rel="tag">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memo/" rel="tag">memo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/product/" rel="tag">product</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rx/" rel="tag">rx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/" rel="tag">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/talk/" rel="tag">talk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/volley/" rel="tag">volley</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/c51/" style="font-size: 11.25px;">c51</a> <a href="/tags/chrome/" style="font-size: 11.25px;">chrome</a> <a href="/tags/computer/" style="font-size: 17.5px;">computer</a> <a href="/tags/fe/" style="font-size: 13.75px;">fe</a> <a href="/tags/introspection/" style="font-size: 10px;">introspection</a> <a href="/tags/java/" style="font-size: 13.75px;">java</a> <a href="/tags/javascript/" style="font-size: 18.75px;">javascript</a> <a href="/tags/math/" style="font-size: 10px;">math</a> <a href="/tags/memo/" style="font-size: 10px;">memo</a> <a href="/tags/product/" style="font-size: 15px;">product</a> <a href="/tags/rx/" style="font-size: 10px;">rx</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/talk/" style="font-size: 16.25px;">talk</a> <a href="/tags/volley/" style="font-size: 11.25px;">volley</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">三月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/04/">四月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/">《其实你不懂进化论》简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/">单元测试的艺术-第三版 简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/">网民的故事分析-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/01/talk/2021-12-01-talk-book-user-stories-applied/">用户故事与敏捷方法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/03/talk/2021-11-03-talk-logic-1/">不令人讨厌的分析逻辑</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 xesam<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

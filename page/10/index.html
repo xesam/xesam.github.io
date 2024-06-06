@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>XiaoPingYuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="XiaoPingYuan">
+<meta property="og:url" content="https://xesam.github.io/page/10/index.html">
+<meta property="og:site_name" content="XiaoPingYuan">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="xesam">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="XiaoPingYuan" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">XiaoPingYuan</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Just Do IT</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://xesam.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-android/2016/2016-03-20-Android-Service-lifecycle" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2016/03/20/android/2016/2016-03-20-Android-Service-lifecycle/" class="article-date">
+  <time class="dt-published" datetime="2016-03-20T05:46:04.000Z" itemprop="datePublished">2016-03-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2016/03/20/android/2016/2016-03-20-Android-Service-lifecycle/">Android Service生命周期回顾</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>Service 经历的生命周期较少，可以分三种情况记录。</p>
+<h2 id="第一种，startService-stopService"><a href="#第一种，startService-stopService" class="headerlink" title="第一种，startService &#x2F; stopService"></a>第一种，startService &#x2F; stopService</h2><p><img src="/image/service_lifecycle_1_and_2.png" alt="1"></p>
+<p>注意点：</p>
+<ol>
+<li>第一次 startService 会触发 onCreate 和 onStartCommand，以后在服务运行过程中，每次 startService 都只会触发 onStartCommand</li>
+<li>不论 startService 多少次，stopService 一次就会停止服务</li>
+</ol>
+<h2 id="第二种，bindService-unbindService"><a href="#第二种，bindService-unbindService" class="headerlink" title="第二种，bindService &#x2F; unbindService"></a>第二种，bindService &#x2F; unbindService</h2><p>图示同上。</p>
+<p>注意点：</p>
+<ol>
+<li>第一次 bindService 会触发 onCreate 和 onBind，以后在服务运行过程中，每次 bindService 都不会触发任何回调</li>
+<li>bindService 多少次，就对应多少次的 unbindService， bindService &#x2F; unbindService 操作顺序以及次数对应的话， 就会停止当前服务</li>
+</ol>
+<h2 id="第三种，前面两种交错"><a href="#第三种，前面两种交错" class="headerlink" title="第三种，前面两种交错"></a>第三种，前面两种交错</h2><p><img src="/image/service_lifecycle_3.png" alt="1"></p>
+<p>注意点：</p>
+<ol>
+<li>只有当 startService &#x2F; stopService 与 bindService &#x2F; unbindService 都满足条件时，才会停止服务</li>
+</ol>
+<h3 id="onBind-的作用"><a href="#onBind-的作用" class="headerlink" title="onBind 的作用"></a>onBind 的作用</h3><p>如果我们将 “开始有 client 发起 bindService”到“所有 client 都调用 unbindService”中间的过程视为一个“轮回”，<br>那么同一个服务的同一个运行生命周期（从 onCrete 到 onDestroy 之间）内，就有可能发生多次“轮回”。</p>
+<p>onBind 主要用来产生一个 Binder，只需要知道同一个服务的 Binder 只会有一个，onBind 只会在第一个“轮回”调用一次，主要负责则 “Create Binder”。</p>
+<h3 id="onRebind"><a href="#onRebind" class="headerlink" title="onRebind"></a>onRebind</h3><p>onBind 与 onRebind 不会在一个“轮回”中同时被调用。</p>
+<p>如果 bindService 操作触发了 onCreate 回调，那么，同时也会触发 onBind。</p>
+<h3 id="onUnbind-的返回值"><a href="#onUnbind-的返回值" class="headerlink" title="onUnbind 的返回值"></a>onUnbind 的返回值</h3><p>onUnbind 的返回值只会在服务运行期间从第二个“轮回”开始发生作用。<br>那如何才能出现第二个“轮回”？肯定只有在调用了 startService 的情况下，服务保持运行期间，才会有第二，第三个“轮回”。<br>否则，每一个“轮回”就都是第二种情况了。举个例子说明下：</p>
+<p>第一个例子，onUnbind 返回 false</p>
+<ol>
+<li>调用 startService。触发 onCreate 与 onStartCommand</li>
+<li>调用 bindService。触发 onBind</li>
+<li>调用 unbindService 触发 unbindService</li>
+<li>调用 bindService。无回调</li>
+<li>调用 unbindService 无回调</li>
+<li>调用 stopService。触发 onDestroy</li>
+</ol>
+<p>第二种例子，onUnbind 返回 true</p>
+<ol>
+<li>调用 startService。触发 onCreate 与 onStartCommand</li>
+<li>调用 bindService。触发 onBind</li>
+<li>调用 unbindService 触发 unbindService</li>
+<li>调用 bindService。触发 onRebind</li>
+<li>调用 unbindService 触发 onUnbind</li>
+<li>调用 stopService。触发 onDestroy</li>
+</ol>
+<h2 id="几个问题"><a href="#几个问题" class="headerlink" title="几个问题"></a>几个问题</h2><h3 id="bindService-与什么有关？"><a href="#bindService-与什么有关？" class="headerlink" title="bindService 与什么有关？"></a>bindService 与什么有关？</h3><p>ServiceConnection 对象是 bind 操作的标识符。</p>
+<p>bindService &#x2F; unbindService 都需要与同一个 ServiceConnection 对象配对。<br>同一个 ServiceConnection 对象只会触发一次绑定。只有在 unbindService 后才能重新绑定。</p>
+<h3 id="如何知道绑定了多少个-client"><a href="#如何知道绑定了多少个-client" class="headerlink" title="如何知道绑定了多少个 client"></a>如何知道绑定了多少个 client</h3><p>Service 本身不能知道有多少个 client，可以在每次触发 ServiceConnection 的时候增加一次静态计数。</p>
+<h3 id="Service-如何指导是否有新的-client-绑定？"><a href="#Service-如何指导是否有新的-client-绑定？" class="headerlink" title="Service 如何指导是否有新的 client 绑定？"></a>Service 如何指导是否有新的 client 绑定？</h3><p>如果不是在“轮回”的开始，Service 无法知道有新的 client 绑定，只能 client 主动通知给 Service。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2016/03/20/android/2016/2016-03-20-Android-Service-lifecycle/" data-id="cluh0142k00fl38wbdo7m0nb9" data-title="Android Service生命周期回顾" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-android/2016/2016-03-07-Android-fg-bg" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2016/03/07/android/2016/2016-03-07-Android-fg-bg/" class="article-date">
+  <time class="dt-published" datetime="2016-03-07T04:46:04.000Z" itemprop="datePublished">2016-03-07</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2016/03/07/android/2016/2016-03-07-Android-fg-bg/">Android 前后台切换监听</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>Android 本身并有提供这样的监听，所以就只能走偏门了。</p>
+<p>首先，需要定义一下，什么叫“前台”，什么叫“后台”。本文定义如下：</p>
+<p>前台</p>
+<pre><code>Activity 处在 FOREGROUND 优先级
+</code></pre>
+<p>后台</p>
+<pre><code>App进程没有停止，除去在“前台”的所有情况
+</code></pre>
+<p>所以，退到后台的方式太多了，大致有：</p>
+<ol>
+<li>按Home键</li>
+<li>按“最近任务”键</li>
+<li>从通知栏启动其他应用</li>
+<li>从应用内部启动其他应用</li>
+<li>关掉屏幕</li>
+</ol>
+<p>既然是监听变化，所以肯定是在相关生命周期的回调中来进行处理。ActivityA 启动 ActivityB 的生命周期方法调用顺序如下：</p>
+<pre><code>ActivityA#onPause -&gt; ActivityB#onStart -&gt; ActivityB#onResume -&gt; ActivityA#onStop
+</code></pre>
+<p>从 ActivityB 回退到 ActivityA 的生命周期方法调用顺序如下：</p>
+<pre><code>ActivityB#onPause -&gt; ActivityA#onStart -&gt; ActivityA#onResume -&gt; ActivityB#onStop -&gt; ActivityB#onDestroy
+</code></pre>
+<p>一个思路就是通过统计当前活动的 Activity 数目来计算。</p>
+<p>在 Activity#onStart 中来检测前一个状态是否是“后台”，如果是，则触发“切换到前台”事件，并将活动 Activity 数目加1。<br>在 Activity#onStop 中并将活动 Activity 数目减1。如果活动的 Activity 数目等于0，<br>就认为当前应用处于“后台”状态， 并触发“切换到后台”事件。</p>
+<p>所以，一个初步方案大致是，实现一个基类 BaseActivity，并重写以下 onStart 和 onStop 回调方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">compatStartCount</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="variable">isCompatForeground</span> <span class="operator">=</span> <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onStart</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>.onStart();</span><br><span class="line">    compatStartCount++;</span><br><span class="line">    <span class="keyword">if</span> (!isCompatForeground) &#123;</span><br><span class="line">        isCompatForeground = <span class="literal">true</span>;</span><br><span class="line">        onBackgroundToForeground(activity);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onStop</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>.onStop();</span><br><span class="line">    compatStartCount--;</span><br><span class="line">    <span class="keyword">if</span> (compatStartCount == <span class="number">0</span>) &#123;</span><br><span class="line">        isCompatForeground = <span class="literal">false</span>;</span><br><span class="line">        onForegroundToBackground(activity);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="开始趟坑"><a href="#开始趟坑" class="headerlink" title="开始趟坑"></a>开始趟坑</h2><ol>
+<li><p>在关掉&#x2F;点亮屏幕的情况下，android3 之前不会触发 onStart 和 onStop 回调。只会触发 onPause 和 onStop。所以以上代码失效。<br>按理来说，这应该是 Android 的含糊之处，onStop 的触发时机定义如下：</p>
+<pre><code> Called when you are no longer visible to the user
+</code></pre>
+</li>
+</ol>
+<p>按理来说，屏幕关闭的时候也符合条件，但是 android3 之前并未按照如此定义而来。所以需要 hack 一下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="variable">isCompatLockStop</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isStandard</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.HONEYCOMB;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isInteractive</span><span class="params">(Context context)</span> &#123;</span><br><span class="line">    <span class="type">PowerManager</span> <span class="variable">pm</span> <span class="operator">=</span> (PowerManager) context.getSystemService(Context.POWER_SERVICE);</span><br><span class="line">    <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= VERSION_CODES.KITKAT_WATCH) &#123;</span><br><span class="line">        <span class="keyword">return</span> pm.isInteractive();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> pm.isScreenOn();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onResume</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>.onResume();</span><br><span class="line">    <span class="keyword">if</span> (isStandard()) &#123;</span><br><span class="line">        <span class="comment">//np</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (isCompatLockStop) &#123;</span><br><span class="line">            isCompatLockStop = <span class="literal">false</span>;</span><br><span class="line">            onStart();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onPause</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>.onPause();</span><br><span class="line">    <span class="keyword">if</span> (isStandard()) &#123;</span><br><span class="line">        <span class="comment">//np</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!isInteractive(activity)) &#123; <span class="comment">//锁屏触发</span></span><br><span class="line">            isCompatLockStop = <span class="literal">true</span>;</span><br><span class="line">            onStop();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于 android3 之前的系统，我们在 onPause 中处理 锁屏问题，如果 onPause 被触发的时候，手机处于 “非交互” 状态，就认为是按下了电源键（或者其他锁屏方式），触发“后台”状态。<br>在 onResume 中判断如果是从锁屏界面恢复，则回到“前台”状态。</p>
+<p>存在问题：点亮屏幕的时候就被认为回到“前台”状态，这个暂未找到好的方法避免。</p>
+<ol start="2">
+<li>快速锁屏&#x2F;点亮的情况下，会多次触发生命周期回调。</li>
+</ol>
+<p>这个问题在 nexus 5 （Android 6.0） 上稳定重现，重现步骤：关掉屏幕后快速点亮再快速关闭。本来预期的表现应该是：</p>
+<pre><code>onPause
+onStop
+</code></pre>
+<p>但是实际的表现如下：</p>
+<pre><code>onPause
+onStop
+onStart
+onResume
+onPause
+onStop
+</code></pre>
+<p>所以，最终结果就是：</p>
+<pre><code>前台 -&gt; 后台
+后台 -&gt; 前台 
+前台 -&gt; 后台
+</code></pre>
+<p>多了一个周期。</p>
+<p>这个问题我还没有解决。尝试过解决办法有：</p>
+<p>1.在 onStart 中判断 inKeyguardRestrictedInputMode 状态：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">inKeyguardRestrictedInputMode</span><span class="params">(Context context)</span> &#123;</span><br><span class="line">    <span class="type">KeyguardManager</span> <span class="variable">keyguardManager</span> <span class="operator">=</span> (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);</span><br><span class="line">    <span class="keyword">return</span> keyguardManager.inKeyguardRestrictedInputMode();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在锁屏状态下就不触发计数。但是这个判断根本不可信，在快速切换的情况下，在非锁屏情况下返回 true 的几率也比较大。</p>
+<ol start="2">
+<li>网上有一种判断应用是否在前台的方法</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isAppOnForeground</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">ActivityManager</span> <span class="variable">activityManager</span> <span class="operator">=</span> (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE); </span><br><span class="line">    <span class="type">String</span> <span class="variable">packageName</span> <span class="operator">=</span> getApplicationContext().getPackageName(); </span><br><span class="line">    </span><br><span class="line">    List&lt;ActivityManager.RunningAppProcessInfo&gt; appProcesses = activityManager </span><br><span class="line">        .getRunningAppProcesses(); </span><br><span class="line">    <span class="keyword">if</span> (appProcesses == <span class="literal">null</span>) </span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>; </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) &#123; </span><br><span class="line">      <span class="comment">// The name of the process that this object is associated with. </span></span><br><span class="line">      <span class="keyword">if</span> (appProcess.processName.equals(packageName) </span><br><span class="line">          &amp;&amp; appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) &#123; </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>; </span><br><span class="line">      &#125; </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>; </span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<p>但是这种测试方法并不靠谱，比如在魅族手机上，锁屏状态下也是返回 true。</p>
+<ol start="3">
+<li>监听 ACTION_USER_PRESENT， ACTION_SCREEN_ON， ACTION_SCREEN_OFF 等事件。</li>
+</ol>
+<p>回调事件比较晚，在生命周期中已经跑完好几圈之后，广播才接收到。而且在各个生命周期内无法判断是否因为锁屏导致的周期变化。</p>
+<p>顺便说一下， ACTION_USER_PRESENT 和 ACTION_SCREEN_ON 存在下面几种情况:</p>
+<ol>
+<li>只触发 ACTION_SCREEN_ON</li>
+<li>先触发 ACTION_SCREEN_ON，再触发 ACTION_USER_PRESENT （电源键，然后解锁）</li>
+<li>先触发 ACTION_USER_PRESENT，再触发 ACTION_SCREEN_ON （指纹解锁）</li>
+</ol>
+<p>这样的话，无法通过简单的计数来判断，需要加入 hashCode 来处理。</p>
+<p>所以最终这种快速切换的情况被我忽略了，因为无非就是多了一个周期而已。</p>
+<h2 id="不完美实现"><a href="#不完美实现" class="headerlink" title="不完美实现"></a>不完美实现</h2><p>对于 API&gt;&#x3D;14 的系统上，可以直接增加 ActivityLifecycleCallbacks 监听，这样可以省去定义 BaseActivity 的步骤，减少侵入性。</p>
+<p>所以在 API&gt;&#x3D;14 的系统上，直接使用 ActivityLifecycleCallbacks， 如果需要兼容 2.3，那么还是需要抽象出 BaseActivity。</p>
+<p>演示代码地址 ： <a target="_blank" rel="noopener" href="https://github.com/xesam/AppMonitor">https://github.com/xesam/AppMonitor</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2016/03/07/android/2016/2016-03-07-Android-fg-bg/" data-id="cluh0142i00ff38wb9gxd7gi1" data-title="Android 前后台切换监听" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-computer/2016-03-04-python-package" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2016/03/05/computer/2016-03-04-python-package/" class="article-date">
+  <time class="dt-published" datetime="2016-03-05T01:00:00.000Z" itemprop="datePublished">2016-03-05</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/computer/">computer</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2016/03/05/computer/2016-03-04-python-package/">Python 包小结</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="如何导入本地库"><a href="#如何导入本地库" class="headerlink" title="如何导入本地库"></a>如何导入本地库</h2><p>为了能够导入本地库，我们需要将本地库所在的目录添加到PYTHONPATH环境变量中。PYTHONPATH 是一个包含多个目录的列表，Pyton解释器会在这些目录中查找要导入的模块。</p>
+<h3 id="设置临时PYTHONPATH"><a href="#设置临时PYTHONPATH" class="headerlink" title="设置临时PYTHONPATH"></a>设置临时PYTHONPATH</h3><p>通过在Python脚本中设置PYTHONPATH环境变量来临时添加本地库的路径。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">sys.path.append(<span class="string">&#x27;/path/to/mylib&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="设置永久PYTHONPATH"><a href="#设置永久PYTHONPATH" class="headerlink" title="设置永久PYTHONPATH"></a>设置永久PYTHONPATH</h3><p>在Linux或Mac系统上，我们可以通过在编辑 ~&#x2F;.bashrc （具体的文件需要参照具体的系统）文件中添加如下行来设置永久的PYTHONPATH:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PYTHONPATH=&quot;/path/to/mylib:$PYTHONPATH&quot;</span><br></pre></td></tr></table></figure>
+
+<p>在Windows系统上，我们可以通过以下步骤设置永久的PYTHONPATH:</p>
+<ol>
+<li>右键点击“我的电脑”（注意不是磁盘驱动符），选择”属性”；</li>
+<li>点击”高级系统设置”；</li>
+<li>点击“环境变量”；</li>
+<li>在”系统变量”中，找到名为”PYTHONPATH”的变量，如果不存在则创建；</li>
+<li>编辑”PYTHONPATH”变量，将本地库的路径添加到其中，多个路径之间用分号(;)分隔。</li>
+<li>点击“确定”关闭窗口。</li>
+<li>如果没生效，可能需要重启你的命令终端。</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2016/03/05/computer/2016-03-04-python-package/" data-id="clx2tatw8000010wb8zan26ln" data-title="Python 包小结" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/computer/" rel="tag">computer</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-talk/2016-03-03-talk-digital-currency" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2016/03/04/talk/2016-03-03-talk-digital-currency/" class="article-date">
+  <time class="dt-published" datetime="2016-03-04T05:46:04.000Z" itemprop="datePublished">2016-03-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/talk/">talk</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2016/03/04/talk/2016-03-03-talk-digital-currency/">数字货币与现金战争</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>最近有两个新闻总是引人关注：</p>
+<h3 id="第一个事件：Apple-pay-入华，支付大战愈演愈烈。"><a href="#第一个事件：Apple-pay-入华，支付大战愈演愈烈。" class="headerlink" title="第一个事件：Apple pay 入华，支付大战愈演愈烈。"></a>第一个事件：Apple pay 入华，支付大战愈演愈烈。</h3><p>不过是Apple pay入场，媒体就叫嚣着“狼来了”，替支付宝们着急。没错，他们都是各种 pay：</p>
+<pre><code>银联是 union pay
+支付宝是 ali pay
+微信支付是 tencent pay
+applepay就更露骨了，apple pay
+</code></pre>
+<p>在支付占有率上他们是竞争对手。不过，这对民众影响能有多大呢？无非是多了一种选择而已，需要关心这件事本身吗？</p>
+<p>或许，我们更应该关注背后的变化。因为在更大的框架内，所有的 pay 都是同一阵营的队友，他们都有一个共同任务：普及货币的数字化。</p>
+<h3 id="第二个事件：央行放信号：数字货币不远了"><a href="#第二个事件：央行放信号：数字货币不远了" class="headerlink" title="第二个事件：央行放信号：数字货币不远了"></a>第二个事件：央行放信号：数字货币不远了</h3><p>注意区分“货币的数字化”和”数字货币”。先来看看什么是数字货币，“货币”本身的概念就很难理解，“数字货币”就更难理解了。结合实际的例子来理解比较直观 —— 比特币就是一种数字货币。</p>
+<p>央行2014年就开始研究“区块链”技术，“区块链”技术起源于比特币，所谓无利不起早，干这事肯定有大利可图。</p>
+        
+          <p class="article-more-link">
+            <a href="/2016/03/04/talk/2016-03-03-talk-digital-currency/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2016/03/04/talk/2016-03-03-talk-digital-currency/" data-id="cluh0141o00bc38wbhhn62j6j" data-title="数字货币与现金战争" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/talk/" rel="tag">talk</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-computer/2016-03-04-python-pip-1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2016/03/04/computer/2016-03-04-python-pip-1/" class="article-date">
+  <time class="dt-published" datetime="2016-03-04T02:00:00.000Z" itemprop="datePublished">2016-03-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/computer/">computer</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2016/03/04/computer/2016-03-04-python-pip-1/">pip 记录</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="常用的命令"><a href="#常用的命令" class="headerlink" title="常用的命令"></a>常用的命令</h2><h4 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h4><pre><code>install &#123;package name&#125; #安装包
+download &#123;package name&#125; #下载包   
+uninstall &#123;package name&#125; #卸载包                 
+freeze #按照 requirements 格式导出已安装的包               
+list #查看已安装包列表                    
+show &#123;package name&#125; #查看已安装的包信息                     
+check &#123;package name&#125; #检查已安装的包依赖                
+config                      Manage local and global configuration.
+search                      Search PyPI for packages.
+wheel                       Build wheels from your requirements.
+</code></pre>
+<h4 id="指定镜像"><a href="#指定镜像" class="headerlink" title="指定镜像"></a>指定镜像</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">install &#123;package name&#125; -i &#123;mirror site&#125;  </span><br></pre></td></tr></table></figure>
+
+<p>常用镜像：</p>
+<pre><code>清华：https://pypi.tuna.tsinghua.edu.cn/simple
+阿里云：http://mirrors.aliyun.com/pypi/simple/
+中国科技大学 https://pypi.mirrors.ustc.edu.cn/simple/
+华中理工大学：http://pypi.hustunique.com/
+山东理工大学：http://pypi.sdutlinux.org/
+豆瓣：http://pypi.douban.com/simple/
+</code></pre>
+<h4 id="升级-pip"><a href="#升级-pip" class="headerlink" title="升级 pip"></a>升级 pip</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install --upgrade pip</span><br></pre></td></tr></table></figure>
+
+<h4 id="升级库"><a href="#升级库" class="headerlink" title="升级库"></a>升级库</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install --upgrade &#123;package name&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2016/03/04/computer/2016-03-04-python-pip-1/" data-id="cluh013za000g38wb9gbg8882" data-title="pip 记录" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/computer/" rel="tag">computer</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-java/2016-03-03-Java-thread-state" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2016/03/03/java/2016-03-03-Java-thread-state/" class="article-date">
+  <time class="dt-published" datetime="2016-03-03T06:46:04.000Z" itemprop="datePublished">2016-03-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/java/">java</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2016/03/03/java/2016-03-03-Java-thread-state/">打印线程状态</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>其实这是一个面试题。</p>
+<h2 id="线程状态"><a href="#线程状态" class="headerlink" title="线程状态"></a>线程状态</h2><p>按照 Thread.State 的定义，一个线程可能处在以下六种状态之一 ：</p>
+<ol>
+<li><p>NEW</p>
+<p> 线程对象被创建,但是还未开始。即还没有调用过 Thread.start</p>
+</li>
+<li><p>RUNNABLE</p>
+<p> 线程正在运行，或者等待分配运行资源</p>
+</li>
+<li><p>BLOCKED</p>
+<p> 等待进入同步块(monitor lock),注意与Lock对象的区别。<br> 或者在调用 Object.wait 之后再次进入同步的块&#x2F;方法（意思就是再次进入的这个时候依旧没有获取到锁）。</p>
+</li>
+<li><p>WAITING</p>
+<p> 等待其他线程的操作,触发进入此状态是操作:</p>
+<pre><code> Object.wait with no timeout
+ Thread.join with no timeout
+ LockSupport.park //比如condition.await()
+</code></pre>
+</li>
+<li><p>TIMED_WAITING</p>
+<p> 等待一定的时间</p>
+<pre><code> Thread.sleep
+ Object.wait with timeout
+ Thread.join with timeout
+ LockSupport.parkNanos
+ LockSupport.parkUntil
+</code></pre>
+</li>
+<li><p>TERMINATED</p>
+<p> 线程已经执行完成</p>
+</li>
+</ol>
+        
+          <p class="article-more-link">
+            <a href="/2016/03/03/java/2016-03-03-Java-thread-state/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2016/03/03/java/2016-03-03-Java-thread-state/" data-id="cluh01413008838wbat03fjy5" data-title="打印线程状态" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/" rel="tag">java</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-computer/2016-03-04-python-venv" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2016/03/03/computer/2016-03-04-python-venv/" class="article-date">
+  <time class="dt-published" datetime="2016-03-03T01:00:00.000Z" itemprop="datePublished">2016-03-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/computer/">computer</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2016/03/03/computer/2016-03-04-python-venv/">venv 常用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>venv 主要用来管理 Python 的执行环境，简单说来就是管理包的版本，是无法控制 Phthon 的版本的。比如想在 Python3.6 与 Python3.8之间切换，靠现阶段的 venv 是做不到的，可能需要借助 conda、pyenv 之类的工具。</p>
+<p>从 Python 3.4 开始，pip 与 venv 模块会在安装 Python 时一起默认安装。</p>
+<h3 id="创建虚拟环境"><a href="#创建虚拟环境" class="headerlink" title="创建虚拟环境"></a>创建虚拟环境</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m venv &#123;project name&#125;</span><br></pre></td></tr></table></figure>
+<p>如果是当前目录，直接使用 </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m venv .</span><br></pre></td></tr></table></figure>
+<p>就行了。此时在 {project name} 文件夹下创建下述文件夹：</p>
+<pre><code>Include
+Lib
+Scripts（也有可能是 bin 之类的名称）
+pyvenv.cfg
+</code></pre>
+<p>用 venv 工具创建出的虚拟环境，初始只装有 pip 与 setuptools 模块，除此之外，没有预装其他的软件包。</p>
+<h3 id="激活虚拟环境"><a href="#激活虚拟环境" class="headerlink" title="激活虚拟环境"></a>激活虚拟环境</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./Scripts/activate</span><br></pre></td></tr></table></figure>
+<p>不同的操作系统脚本文件可能不一致，比如 windows 下面是 activate.bat 。<br>如果在 linux 环境下，可以使用：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source ./Scripts/activate</span><br></pre></td></tr></table></figure>
+
+<p>执行脚本之后，就会激活虚拟环境，此时执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">which python </span><br></pre></td></tr></table></figure>
+<p>可以查看相关的 python 或者 pip 信息。</p>
+<h3 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h3><p>在激活的终端里面，可以使用 pip 安装对应的模块。比如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install json5</span><br></pre></td></tr></table></figure>
+<p>通过</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip show json5</span><br></pre></td></tr></table></figure>
+<p>可以验证 json5 的安装路径以及其他信息。</p>
+<h3 id="退出虚拟环境"><a href="#退出虚拟环境" class="headerlink" title="退出虚拟环境"></a>退出虚拟环境</h3><p>通过与 activate 相反的 deactivate 操作，即可回到默认环境。</p>
+<h3 id="重建依赖"><a href="#重建依赖" class="headerlink" title="重建依赖"></a>重建依赖</h3><p>使用 pip freeze 命令把当前环境所依赖的包明确地保存到一份外部文件中（按照惯例，这个文件命名为 requirements.txt）。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 -m pip freeze &gt; requirements.txt</span><br></pre></td></tr></table></figure>
+<p>或者：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip freeze &gt; requirements.txt</span><br></pre></td></tr></table></figure>
+<p>就会在执行目录生成一份 requirements.txt 文件，内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">json5==0.9.6</span><br></pre></td></tr></table></figure>
+<p>如果对版本规则比较熟悉，也可以手写这份文件。</p>
+<p>假设要用 {project name} 环境之中的配置来构建另外一套相似虚拟环境。我们先用venv工具把那套环境创建出来，然后用activate激活它。具体命令可以参见 上文。</p>
+<p>我们可以执行python3 -m pip install命令，把刚才用 python3 -m pip freeze 所保存的 requirements.txt 文件通过 -r 选项传给它，这样就能够将那份文件所记录的软件包安装到这套环境里面了。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 -m pip install -r /a/b/c/d/requirements.txt</span><br></pre></td></tr></table></figure>
+<p>或者：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install -r requirements.txt</span><br></pre></td></tr></table></figure>
+
+<h4 id="哈希值检查"><a href="#哈希值检查" class="headerlink" title="哈希值检查"></a>哈希值检查</h4><p>要实现哈希检查模式，只需在需求文件中写入带有包名的摘要:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">json5==0.9.6 --hash=sha256:&#123;hash digest&#125;</span><br></pre></td></tr></table></figure>
+<p>支持的哈希算法包括 md5、sha1、sha224、sha224、sha384、sha256 和 sha512。</p>
+<h3 id="需要注意的问题"><a href="#需要注意的问题" class="headerlink" title="需要注意的问题"></a>需要注意的问题</h3><ol>
+<li>Python本身的版本并不包含在requirements.txt之中，所以必须单独管理。</li>
+<li>虚拟环境有个很容易出错的地方，就是不能直接把它移动到其他路径下面，因为它里面的一些命令（例如python3）所指向的位置都是固定写好的，其中用到了这套环境的安装路径，假如移动到别处，那么这些路径就会失效。</li>
+</ol>
+<p>参考《Effective Python》，纯做记录用。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2016/03/03/computer/2016-03-04-python-venv/" data-id="cluh013zb000h38wb8d4wborq" data-title="venv 常用" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/computer/" rel="tag">computer</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-computer/2016-03-04-python-conda-1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2016/03/02/computer/2016-03-04-python-conda-1/" class="article-date">
+  <time class="dt-published" datetime="2016-03-02T00:00:00.000Z" itemprop="datePublished">2016-03-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/computer/">computer</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2016/03/02/computer/2016-03-04-python-conda-1/">conda 常用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>conda是一款软件管理软件，相当于应用商店，在使用 Python 的过程中，可以用来管理 Python 版本。</p>
+<h2 id="常用的命令"><a href="#常用的命令" class="headerlink" title="常用的命令"></a>常用的命令</h2><h3 id="1-查看安装了哪些包"><a href="#1-查看安装了哪些包" class="headerlink" title="1. 查看安装了哪些包"></a>1. 查看安装了哪些包</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda list</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-查看当前存在哪些虚拟环境"><a href="#2-查看当前存在哪些虚拟环境" class="headerlink" title="2. 查看当前存在哪些虚拟环境"></a>2. 查看当前存在哪些虚拟环境</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda <span class="built_in">env</span> list </span><br><span class="line">conda info -e</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-检查更新当前conda"><a href="#3-检查更新当前conda" class="headerlink" title="3. 检查更新当前conda"></a>3. 检查更新当前conda</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda update conda</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-创建虚拟环境"><a href="#4-创建虚拟环境" class="headerlink" title="4. 创建虚拟环境"></a>4. 创建虚拟环境</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda create -n your_env_name</span><br><span class="line">conda create -n your_env_name python==x.x <span class="comment">#指定 python 版本</span></span><br></pre></td></tr></table></figure>
+
+<p>create 命令创建 python 版本为 x.x，名字为 your_env_name 的虚拟环境。your_env_name 文件可以在 conda 安装目录的 envs 文件下找到。</p>
+<h3 id="5-激活或者切换虚拟环境"><a href="#5-激活或者切换虚拟环境" class="headerlink" title="5. 激活或者切换虚拟环境"></a>5. 激活或者切换虚拟环境</h3><p>打开命令行，输入 python –version 检查当前 python 版本。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Linux:  <span class="built_in">source</span> activate your_env_nam</span><br><span class="line">Windows: activate your_env_name</span><br><span class="line">Mac:  conda activate your_env_name</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-在虚拟环境中安装额外的包"><a href="#6-在虚拟环境中安装额外的包" class="headerlink" title="6. 在虚拟环境中安装额外的包"></a>6. 在虚拟环境中安装额外的包</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda install -n your_env_name [package]</span><br><span class="line">conda install -n your_env_name [package=x.y.z] <span class="comment"># 指定 package 版本</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="7-关闭虚拟环境-即从当前环境退出返回使用PATH环境中的默认python版本"><a href="#7-关闭虚拟环境-即从当前环境退出返回使用PATH环境中的默认python版本" class="headerlink" title="7. 关闭虚拟环境(即从当前环境退出返回使用PATH环境中的默认python版本)"></a>7. 关闭虚拟环境(即从当前环境退出返回使用PATH环境中的默认python版本)</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deactivate env_name</span><br></pre></td></tr></table></figure>
+
+<p>或者<code>activate root</code>切回root环境，Linux下：source deactivate </p>
+<h3 id="8-删除虚拟环境"><a href="#8-删除虚拟环境" class="headerlink" title="8. 删除虚拟环境"></a>8. 删除虚拟环境</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda <span class="built_in">env</span> remove -n your_env_name</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-删除环境中的某个包"><a href="#9-删除环境中的某个包" class="headerlink" title="9. 删除环境中的某个包"></a>9. 删除环境中的某个包</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda remove --name <span class="variable">$your_env_name</span>  <span class="variable">$package_name</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="10-重命名环境名称"><a href="#10-重命名环境名称" class="headerlink" title="10. 重命名环境名称"></a>10. 重命名环境名称</h3><p>在 Conda 4.14 版本之前，是没有直接内置命令的，只能删除原环境然后重新创建。从 Conda 4.14 版本开始，你可以使用以下命令来改变环境名称：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda rename -n old_env_name new_env_name</span><br></pre></td></tr></table></figure>
+
+<p><em>虽然这个命令在内部的实现方式有点尴尬，但是起码算是直接支持了。</em></p>
+<h2 id="镜像配置"><a href="#镜像配置" class="headerlink" title="镜像配置"></a>镜像配置</h2><h2 id="查看-conda-的配置："><a href="#查看-conda-的配置：" class="headerlink" title="查看 conda 的配置："></a>查看 conda 的配置：</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda config --show</span><br></pre></td></tr></table></figure>
+
+<p>查看或者直接查看 channels：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda config --show channels</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加镜像"><a href="#添加镜像" class="headerlink" title="添加镜像"></a>添加镜像</h3><p>比如添加中科大的源：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda config --add channels https://mirrors.ustc.edu.cn/anaconda/pkgs/free/</span><br><span class="line">conda config --set show_channel_urls yes</span><br></pre></td></tr></table></figure>
+
+<p><em>conda config –set show_channel_urls yes的意思是从channel中安装包时显示channel的 url，这样在搜索或者安装的时候可知来源</em></p>
+<h3 id="移除镜像"><a href="#移除镜像" class="headerlink" title="移除镜像"></a>移除镜像</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda config --remove channels defaults</span><br><span class="line">conda config --remove channels https://mirrors.ustc.edu.cn/anaconda/pkgs/free/</span><br></pre></td></tr></table></figure>
+
+<h2 id="Jupyter"><a href="#Jupyter" class="headerlink" title="Jupyter"></a>Jupyter</h2><p>如果 conda 环境不出现在 jupyter 选项中，可以按照如下方法处理：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nb_conda_kernels</span><br></pre></td></tr></table></figure>
+
+<p> should be installed in the environment from which you run Jupyter Notebook or JupyterLab. This might be your base conda environment, but it need not be. For instance, if the environment notebook_env contains the notebook package, then you would run</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install -n notebook_env nb_conda_kernels</span><br></pre></td></tr></table></figure>
+
+<p>Any other environments you wish to access in your notebooks must have an appropriate kernel package installed. For instance, to access a Python environment, it must have the ipykernel package; e.g.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install -n python_env ipykernel</span><br></pre></td></tr></table></figure>
+
+<p>To utilize an R environment, it must have the r-irkernel package; e.g.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install -n r_env r-irkernel</span><br></pre></td></tr></table></figure>
+
+<p>For other languages, their corresponding kernels must be installed.</p>
+<p>参考</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/39604271/conda-environments-not-showing-up-in-jupyter-notebook">https://stackoverflow.com/questions/39604271/conda-environments-not-showing-up-in-jupyter-notebook</a></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2016/03/02/computer/2016-03-04-python-conda-1/" data-id="cluh013zc000m38wb1boyebst" data-title="conda 常用" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/computer/" rel="tag">computer</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-computer/2016-03-01-Linux-assemble-error" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2016/03/01/computer/2016-03-01-Linux-assemble-error/" class="article-date">
+  <time class="dt-published" datetime="2016-03-01T08:46:04.000Z" itemprop="datePublished">2016-03-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/computer/">computer</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2016/03/01/computer/2016-03-01-Linux-assemble-error/">linux 汇编错误记录</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="insight-安装"><a href="#insight-安装" class="headerlink" title="insight 安装"></a>insight 安装</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">variable &#x27;errcount&#x27; set but not used</span><br></pre></td></tr></table></figure>
+
+<p>解决办法：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --disable-werror</span><br></pre></td></tr></table></figure>
+
+<p>参考阅读： <a target="_blank" rel="noopener" href="http://www.tuicool.com/articles/VRJf6v">http://www.tuicool.com/articles/VRJf6v</a></p>
+<h4 id="32-64-位问题"><a href="#32-64-位问题" class="headerlink" title="32&#x2F;64 位问题"></a>32&#x2F;64 位问题</h4><p>编译一个简单的汇编文件，然后链接出现的时候这个问题。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$</span><span class="language-bash">nasm -f elf -g -F stabs easy.asm</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">ld -o easy easy.o</span> </span><br></pre></td></tr></table></figure>
+
+<p>错误结果：</p>
+<pre><code>ld: i386 architecture of input file `eatsyscall.o&#39; is incompatible with i386:x86-64 output
+</code></pre>
+<p>解决方案：</p>
+<p>指定 64 位</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$</span><span class="language-bash">nasm -f elf64 -g -F stabs easy.asm</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">ld -o easy easy.o</span> </span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2016/03/01/computer/2016-03-01-Linux-assemble-error/" data-id="cluh013zd000n38wbf8av3ucf" data-title="linux 汇编错误记录" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/computer/" rel="tag">computer</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-android/2016/2016-02-29-Android-signature" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2016/02/29/android/2016/2016-02-29-Android-signature/" class="article-date">
+  <time class="dt-published" datetime="2016-02-29T04:46:04.000Z" itemprop="datePublished">2016-02-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2016/02/29/android/2016/2016-02-29-Android-signature/">Android Android签名相关</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="替换默认的-debug-keystore"><a href="#替换默认的-debug-keystore" class="headerlink" title="替换默认的 debug.keystore"></a>替换默认的 debug.keystore</h4><p>新生成一个 debug.keystore，关键配置如下：</p>
+<pre><code>alias :androiddebugkey
+keystore密码:android
+alias密码:android
+</code></pre>
+<p>替换 .&#x2F;.android 目录下面的 debug.keystore 即可。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2016/02/29/android/2016/2016-02-29-Android-signature/" data-id="cluh0142j00fi38wba8kg72ip" data-title="Android Android签名相关" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/9/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/11/">下一页 &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chrome/">chrome</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/computer/">computer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/fe/">fe</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/introspection/">introspection</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/math/">math</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/physics/">physics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/product/">product</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/software/">software</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/talk/">talk</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c51/" rel="tag">c51</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/computer/" rel="tag">computer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fe/" rel="tag">fe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/introspection/" rel="tag">introspection</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/" rel="tag">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memo/" rel="tag">memo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/product/" rel="tag">product</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rx/" rel="tag">rx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/" rel="tag">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/talk/" rel="tag">talk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/volley/" rel="tag">volley</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/c51/" style="font-size: 11.25px;">c51</a> <a href="/tags/chrome/" style="font-size: 11.25px;">chrome</a> <a href="/tags/computer/" style="font-size: 17.5px;">computer</a> <a href="/tags/fe/" style="font-size: 13.75px;">fe</a> <a href="/tags/introspection/" style="font-size: 10px;">introspection</a> <a href="/tags/java/" style="font-size: 13.75px;">java</a> <a href="/tags/javascript/" style="font-size: 18.75px;">javascript</a> <a href="/tags/math/" style="font-size: 10px;">math</a> <a href="/tags/memo/" style="font-size: 10px;">memo</a> <a href="/tags/product/" style="font-size: 15px;">product</a> <a href="/tags/rx/" style="font-size: 10px;">rx</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/talk/" style="font-size: 16.25px;">talk</a> <a href="/tags/volley/" style="font-size: 11.25px;">volley</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">三月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/04/">四月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/">《其实你不懂进化论》简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/">单元测试的艺术-第三版 简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/">网民的故事分析-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/01/talk/2021-12-01-talk-book-user-stories-applied/">用户故事与敏捷方法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/03/talk/2021-11-03-talk-logic-1/">不令人讨厌的分析逻辑</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 xesam<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>【Javascript】移动Native+HTML5混搭应用感受 | XiaoPingYuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="说到HTML5在移动领域的开发，最推崇的估计就是跨平台与低门槛。同时又为了有native APP一样的效果，必须兼具原生特性，Titainium与Phonegap是两个比较典型的例子。 下面说的是我最近一段时间的开发感受以及尝试的几种方案： 第一种方案：我一开始用的是phonegap + jq + jq mobile,从界面到效果都是JS撑起来的，最大的感受就是UI界面延迟无法忍受，不过如果只是发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Javascript】移动Native+HTML5混搭应用感受">
+<meta property="og:url" content="https://xesam.github.io/2012/04/26/javascript/2012-04-26-Javascript-native+hubrid/index.html">
+<meta property="og:site_name" content="XiaoPingYuan">
+<meta property="og:description" content="说到HTML5在移动领域的开发，最推崇的估计就是跨平台与低门槛。同时又为了有native APP一样的效果，必须兼具原生特性，Titainium与Phonegap是两个比较典型的例子。 下面说的是我最近一段时间的开发感受以及尝试的几种方案： 第一种方案：我一开始用的是phonegap + jq + jq mobile,从界面到效果都是JS撑起来的，最大的感受就是UI界面延迟无法忍受，不过如果只是发">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2012-04-26T05:46:04.000Z">
+<meta property="article:modified_time" content="2024-04-01T13:40:44.039Z">
+<meta property="article:author" content="xesam">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="XiaoPingYuan" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">XiaoPingYuan</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Just Do IT</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://xesam.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-javascript/2012-04-26-Javascript-native+hubrid" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2012/04/26/javascript/2012-04-26-Javascript-native+hubrid/" class="article-date">
+  <time class="dt-published" datetime="2012-04-26T05:46:04.000Z" itemprop="datePublished">2012-04-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      【Javascript】移动Native+HTML5混搭应用感受
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>说到HTML5在移动领域的开发，最推崇的估计就是跨平台与低门槛。同时又为了有native APP一样的效果，必须兼具原生特性，Titainium与Phonegap是两个比较典型的例子。</p>
+<p>下面说的是我最近一段时间的开发感受以及尝试的几种方案：</p>
+<h2 id="第一种方案："><a href="#第一种方案：" class="headerlink" title="第一种方案："></a>第一种方案：</h2><p>我一开始用的是phonegap + jq + jq mobile,从界面到效果都是JS撑起来的，最大的感受就是UI界面延迟无法忍受，不过如果只是发布为本地网站，那么一切都可以忍受，<br>因为用户对APP和网页的要求从来都不一样,不过这就不干phonegap鸟事了。</p>
+<h4 id="phonegap的优点："><a href="#phonegap的优点：" class="headerlink" title="phonegap的优点："></a>phonegap的优点：</h4><ol>
+<li>基于JS和HTML5,没有门槛</li>
+<li>跨平台，这个是废话。</li>
+<li>无</li>
+</ol>
+<h4 id="phonegap的缺点："><a href="#phonegap的缺点：" class="headerlink" title="phonegap的缺点："></a>phonegap的缺点：</h4><ol>
+<li>UI延迟厉害</li>
+<li>兼容性，比如WEB SQL database在Android版本的问题，最后采用localstorage来模拟数据库。</li>
+<li>webview资源占用问题，以后就看apache基金会的造化了。</li>
+</ol>
+<p>一句话总结：专用浏览器</p>
+<h2 id="第二种方案："><a href="#第二种方案：" class="headerlink" title="第二种方案："></a>第二种方案：</h2><p>后来做完一个项目之后，开始采用另一个方案 Titainium。</p>
+<p>Titainium 采用 js 来编写应用，而且JS符合部分 commonJs 规范。大致原理是：</p>
+<pre><code>android或者IOS API --&gt; Titanium API--&gt; JS组装。
+</code></pre>
+<h4 id="Titanium的优点："><a href="#Titanium的优点：" class="headerlink" title="Titanium的优点："></a>Titanium的优点：</h4><ol>
+<li>JS作为一个胶水层，入门比较简单，1.8版本之后，引入了V8引擎，因此性能大幅提升。对最新的JS规范支持比较好，一些forEach方法可以调用。</li>
+<li>各种组件都是基于原生的，因此性能和UI表现可以甩phonegap几条街。</li>
+<li>部分跨平台，切换平台还是需要修改部分代码。</li>
+<li>文档全，分类很清晰。</li>
+</ol>
+<h4 id="Titanium的缺点："><a href="#Titanium的缺点：" class="headerlink" title="Titanium的缺点："></a>Titanium的缺点：</h4><ol>
+<li>大！局限于Titianium的运行机制，这个问题暂时无解。同时也是因为引入了V8的引擎，所以什么代码都不写的话，编译生成的apk文件最少都有5M。</li>
+<li>文档质量需要控制，有些文档根本就是错误的。</li>
+<li>由于是重新封装了两个平台的API，所以Titanium的API也是很多的。但是由于中间添加了新的一层，当你需要去调用某些原生特性时，那就比较麻烦了。虽然说可以自己编写module，可是Titanium没有办法紧跟Android的版本，所以有关module这一块，从搭环境开始，就比较痛苦。我遇到的一个问题：三星某些机型阉割了google map服务，所以我要改用百度的地图，百度有API，所以我决定做一个module。但是从搭建Titanium module开发环境到开始写module，一天都没有成功。官方文档只是纯粹的堆砌,貌似根本就没有考虑实际情况。本来module是非常赞的一个特性【亮点】，但是不知道基于什么考虑，被官方弱化了。难道和他们的收费政策有关?最后地图问题用的JS版本地图+webview解决。每当此时，我就越发发现IOS的好了，而且真心话，Titanium更适合IOS一些。</li>
+<li>用的人少，部分bug基本无解。</li>
+<li>资源占用比较多，我的ME722，打开十几个window就挂掉了（这个做法不明智，我只是测试），换做view,超过20个一样延迟明显，最后使用数据栈勉强可以达到要求。</li>
+</ol>
+<p>一句话总结：原型利器。</p>
+<h2 id="第三种方案："><a href="#第三种方案：" class="headerlink" title="第三种方案："></a>第三种方案：</h2><p>原生APP + web内容。自己编写一个外壳，底部tab或者头部固定，外壳定制化。</p>
+<p>为了避免庞大的jq，jqmobile或者jqmobi，我只能自己编写一个小型的库来处理,采用了jqmobile的思想，动画用CSS来实现，不过android2.2的CSS动画效果也是无法令人满意啊。<br>另外，最大的问题，外壳与内容的交互可能会比较复杂。这算是很接近phonegap的一种方案，但是相比phonegap，这种定制化能力更强，<br>有些头疼的问题（比如动态生成的页面中webview中滚动条的问题）可以采用别的方案（比如webview分割）来解决。</p>
+<p>一句话总结：愚公移山。</p>
+<p>上面是面向web开发人员的三种方案，总的来说，实现起来都比较简单,phonegap还可以很快的迁移到移动网站上。<br>但是测试工作量可以说是成倍增长，新版本周期短，升级快，bug产生的速度估计刚好抵消bug消除的速度。</p>
+<p>但是，在这个JS和HTML5在移动领域还不够强大，并且缺乏杀手级应用的现在。一句话：“要把web app做得和native app一样，是不明智的”。<br>web app 就该是 web app 的样子，native app 就该是 native app 的样子，虽然我无法明确的告诉你他们到底应该是什么样子。</p>
+<p>那么什么情况下应该用HTML5的方案，什么时候应该用原生的方案呢。</p>
+<p>还是一句话：“it depends”，如果产品可以忍受UI和click的延迟以及组件奇怪的显示，多是内容获取而不涉及过多的交互，phonegap完全胜任。<br>如果需要原生的速度和显示，并且功能比较中庸不计较体积，那么Titanium可以胜任。<br>如果介于两者之间，那么可以自己做壳。前面的“如果”都是基于一个前提“团队初期或者人手不够”，如果真正要做一个好的应用的话，至少现阶段，还是原生搞起吧。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2012/04/26/javascript/2012-04-26-Javascript-native+hubrid/" data-id="cluh0140o006938wb5r1r8gki" data-title="【Javascript】移动Native+HTML5混搭应用感受" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2012/05/18/javascript/2012-05-18-Javascript-mobile-swipe/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          【Javascript】手机滑动应用
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2012/03/26/javascript/2012-03-26-Javascript-DOM-bind/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">【Javascript】向后兼容的DOM事件绑定</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chrome/">chrome</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/computer/">computer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/fe/">fe</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/introspection/">introspection</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/math/">math</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/physics/">physics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/product/">product</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/software/">software</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/talk/">talk</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c51/" rel="tag">c51</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/computer/" rel="tag">computer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fe/" rel="tag">fe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/introspection/" rel="tag">introspection</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/" rel="tag">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memo/" rel="tag">memo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/product/" rel="tag">product</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rx/" rel="tag">rx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/" rel="tag">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/talk/" rel="tag">talk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/volley/" rel="tag">volley</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/c51/" style="font-size: 11.25px;">c51</a> <a href="/tags/chrome/" style="font-size: 11.25px;">chrome</a> <a href="/tags/computer/" style="font-size: 17.5px;">computer</a> <a href="/tags/fe/" style="font-size: 13.75px;">fe</a> <a href="/tags/introspection/" style="font-size: 10px;">introspection</a> <a href="/tags/java/" style="font-size: 13.75px;">java</a> <a href="/tags/javascript/" style="font-size: 18.75px;">javascript</a> <a href="/tags/math/" style="font-size: 10px;">math</a> <a href="/tags/memo/" style="font-size: 10px;">memo</a> <a href="/tags/product/" style="font-size: 15px;">product</a> <a href="/tags/rx/" style="font-size: 10px;">rx</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/talk/" style="font-size: 16.25px;">talk</a> <a href="/tags/volley/" style="font-size: 11.25px;">volley</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">三月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/04/">四月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/">《其实你不懂进化论》简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/">单元测试的艺术-第三版 简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/">网民的故事分析-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/01/talk/2021-12-01-talk-book-user-stories-applied/">用户故事与敏捷方法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/03/talk/2021-11-03-talk-logic-1/">不令人讨厌的分析逻辑</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 xesam<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>【Javascript】有关parseInt的讨论 | XiaoPingYuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="问题由来，某群的一个讨论： 1parseInt(1&#x2F;0, 19) &#x3D; 18;  parseInt的用法： 1parseInt(string [, radix]) 注意，第一个参数是String类型，当radix未指定的时候，那么默认基地是10。 转换规则：  首先查看位置 0 处的字符，判断它是否是个有效数字；如果不是，该方法将返回 NaN，不再继续执行其他操作。 位置 0 处的字符有效，该方法将">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Javascript】有关parseInt的讨论">
+<meta property="og:url" content="https://xesam.github.io/2012/10/09/javascript/2012-10-09-Javascript-parseInt/index.html">
+<meta property="og:site_name" content="XiaoPingYuan">
+<meta property="og:description" content="问题由来，某群的一个讨论： 1parseInt(1&#x2F;0, 19) &#x3D; 18;  parseInt的用法： 1parseInt(string [, radix]) 注意，第一个参数是String类型，当radix未指定的时候，那么默认基地是10。 转换规则：  首先查看位置 0 处的字符，判断它是否是个有效数字；如果不是，该方法将返回 NaN，不再继续执行其他操作。 位置 0 处的字符有效，该方法将">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2012-10-09T05:46:04.000Z">
+<meta property="article:modified_time" content="2024-04-01T13:40:44.040Z">
+<meta property="article:author" content="xesam">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="XiaoPingYuan" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">XiaoPingYuan</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Just Do IT</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://xesam.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-javascript/2012-10-09-Javascript-parseInt" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2012/10/09/javascript/2012-10-09-Javascript-parseInt/" class="article-date">
+  <time class="dt-published" datetime="2012-10-09T05:46:04.000Z" itemprop="datePublished">2012-10-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      【Javascript】有关parseInt的讨论
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>问题由来，某群的一个讨论：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">parseInt</span>(<span class="number">1</span>/<span class="number">0</span>, <span class="number">19</span>) = <span class="number">18</span>;</span><br></pre></td></tr></table></figure>
+
+<p>parseInt的用法：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">parseInt</span>(string [, radix])</span><br></pre></td></tr></table></figure>
+<p>注意，第一个参数是String类型，当radix未指定的时候，那么默认基地是10。</p>
+<p>转换规则：</p>
+<ol>
+<li>首先查看位置 0 处的字符，判断它是否是个有效数字；如果不是，该方法将返回 NaN，不再继续执行其他操作。</li>
+<li>位置 0 处的字符有效，该方法将查看位置 1 处的字符，依次向后进行同样的测试，直到发现非有效数字的字符或者到达字符串末尾为止，</li>
+<li>返回转换成功的数字</li>
+</ol>
+<p>因此有比较熟悉的例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">parseInt</span>(<span class="string">&#x27;F&#x27;</span>) =&gt; <span class="string">&#x27;NaN&#x27;</span></span><br><span class="line"><span class="built_in">parseInt</span>(<span class="string">&#x27;F&#x27;</span>, <span class="number">16</span>) =&gt; <span class="number">15</span></span><br></pre></td></tr></table></figure>
+
+<p>下面将Infinity作为第一参数，结果就是下面这样：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">parseInt</span>(<span class="title class_">Infinity</span>) =&gt; <span class="string">&#x27;NaN&#x27;</span></span><br><span class="line"><span class="built_in">parseInt</span>(<span class="title class_">Infinity</span>, <span class="number">16</span>) =&gt; <span class="string">&#x27;NaN&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>先将Infinity转换为String类型（Infinity.toString() &#x3D;&gt; ‘Infinity’），因为不论是十进制还是十六进制，第一个字符串都会失败，所以直接返回’NaN’。</p>
+<p>但是’I’在19 ~ 36进制情况下，是可以转换为数字的，而且表示的数字就是18，所以：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">parseInt</span>(<span class="string">&#x27;I&#x27;</span>, <span class="number">19</span>) =&gt; <span class="number">18</span></span><br><span class="line"><span class="built_in">parseInt</span>(<span class="string">&#x27;I&#x27;</span>, <span class="number">20</span>) =&gt; <span class="number">18</span></span><br><span class="line">...</span><br><span class="line"><span class="built_in">parseInt</span>(<span class="string">&#x27;I&#x27;</span>, <span class="number">36</span>) =&gt; <span class="number">18</span></span><br></pre></td></tr></table></figure>
+
+<p>由于</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>/<span class="number">0</span> =&gt; <span class="title class_">Infinity</span>;</span><br></pre></td></tr></table></figure>
+
+<p>所以</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">parseInt</span>(<span class="number">1</span>/<span class="number">0</span>, <span class="number">19</span>) =&gt; <span class="number">18</span>;</span><br></pre></td></tr></table></figure>
+
+<p>由于基数radix的范围介于2 ~ 36之间，所以0 ~ 9, a ~ z, A ~ Z在36进制下都可以转换成功，转换测试如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [], A_code = <span class="number">65</span>, Z_code = <span class="number">65</span> + <span class="number">25</span>;</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt;= <span class="number">9</span>; ++i)&#123;</span><br><span class="line">    arr.<span class="title function_">push</span>(i);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i = A_code; i &lt;= Z_code; ++i)&#123;</span><br><span class="line">    arr.<span class="title function_">push</span>(<span class="title class_">String</span>.<span class="title function_">fromCharCode</span>(i));</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//arr = [0, 1, 2, ... 9, &#x27;A&#x27;, &#x27;B&#x27;, ... &#x27;Z&#x27;]</span></span><br><span class="line">arr.<span class="title function_">forEach</span>(<span class="keyword">function</span>(<span class="params">item</span>)&#123;</span><br><span class="line">   <span class="comment">// console.log(item, &#x27;:&#x27;, parseInt(item, 36));</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//output : 0:0, 1:1, 2:2, ... Z:35;</span></span><br></pre></td></tr></table></figure>
+
+<p>回到Infinity的例子：</p>
+<p>第一个字符’I’在19 ~ 36基数的情况下都可以转换成功</p>
+<p>第二个字符’N’在36进制中表示为23， 所以’N’在24 ~ 36基数的情况下都可以转换成功，</p>
+<p>后面的字符类推<br>测试：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">    <span class="keyword">function</span> <span class="title function_">ret_output</span>(<span class="params">arr</span>)&#123;</span><br><span class="line">        <span class="keyword">var</span> str_output = [];</span><br><span class="line">        arr.<span class="title function_">reverse</span>().<span class="title function_">forEach</span>(<span class="keyword">function</span>(<span class="params">el, index</span>)&#123;</span><br><span class="line">            str_output.<span class="title function_">push</span>(el + <span class="string">&#x27; * &#x27;</span> + i + <span class="string">&#x27;**&#x27;</span> + index); <span class="comment">//&#x27;**&#x27; 表示阶乘</span></span><br><span class="line"><span class="comment">//            str_output.push(el + &#x27; * &#x27; + &#x27;Math.pow(&#x27; + i + &#x27;,&#x27; + index + &#x27;)&#x27;);</span></span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>( i + <span class="string">&#x27;进制：&#x27;</span>,str_output.<span class="title function_">join</span>(<span class="string">&#x27; + &#x27;</span>), <span class="string">&#x27;=&#x27;</span>, <span class="built_in">parseInt</span>(<span class="title class_">Infinity</span>, i));</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&#x27;trans abort&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">19</span>; i &lt;= <span class="number">36</span>; ++i)&#123;</span><br><span class="line">        <span class="keyword">var</span> arr = [];</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            <span class="title class_">Infinity</span>.<span class="title function_">toString</span>().<span class="title function_">split</span>(<span class="string">&#x27;&#x27;</span>).<span class="title function_">forEach</span>(<span class="keyword">function</span>(<span class="params">item, s_index</span>)&#123;</span><br><span class="line">                <span class="keyword">var</span> r = <span class="built_in">parseInt</span>(item, i);</span><br><span class="line">                <span class="keyword">if</span>(<span class="built_in">isNaN</span>(r))&#123;</span><br><span class="line">                    <span class="title function_">ret_output</span>(arr);</span><br><span class="line">                &#125;</span><br><span class="line">               arr.<span class="title function_">push</span>(r);</span><br><span class="line">　　　　　　　　　<span class="keyword">if</span>(s_index == <span class="title class_">Infinity</span>.<span class="title function_">toString</span>().<span class="property">length</span> - <span class="number">1</span>)&#123;</span><br><span class="line">                    <span class="title function_">ret_output</span>(arr);</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;<span class="keyword">catch</span>(e)&#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<pre><code>19进制： 18 * 19**0 = 18 
+20进制： 18 * 20**0 = 18 
+21进制： 18 * 21**0 = 18 
+22进制： 18 * 22**0 = 18 
+23进制： 18 * 23**0 = 18 
+24进制： 18 * 24**5 + 23 * 24**4 + 15 * 24**3 + 18 * 24**2 + 23 * 24**1 + 18 * 24**0 = 151176378 
+25进制： 18 * 25**5 + 23 * 25**4 + 15 * 25**3 + 18 * 25**2 + 23 * 25**1 + 18 * 25**0 = 185011843 
+26进制： 18 * 26**5 + 23 * 26**4 + 15 * 26**3 + 18 * 26**2 + 23 * 26**1 + 18 * 26**0 = 224651640 
+27进制： 18 * 27**5 + 23 * 27**4 + 15 * 27**3 + 18 * 27**2 + 23 * 27**1 + 18 * 27**0 = 270812475 
+28进制： 18 * 28**5 + 23 * 28**4 + 15 * 28**3 + 18 * 28**2 + 23 * 28**1 + 18 * 28**0 = 324267766 
+29进制： 18 * 29**5 + 23 * 29**4 + 15 * 29**3 + 18 * 29**2 + 23 * 29**1 + 18 * 29**0 = 385849803 
+30进制： 18 * 30**6 + 23 * 30**5 + 15 * 30**4 + 18 * 30**3 + 23 * 30**2 + 18 * 30**1 + 29 * 30**0 = 13693557269 
+31进制： 18 * 31**6 + 23 * 31**5 + 15 * 31**4 + 18 * 31**3 + 23 * 31**2 + 18 * 31**1 + 29 * 31**0 = 16647948474 
+32进制： 18 * 32**6 + 23 * 32**5 + 15 * 32**4 + 18 * 32**3 + 23 * 32**2 + 18 * 32**1 + 29 * 32**0 = 20115447389 
+33进制： 18 * 33**6 + 23 * 33**5 + 15 * 33**4 + 18 * 33**3 + 23 * 33**2 + 18 * 33**1 + 29 * 33**0 = 24164998832 
+34进制： 18 * 34**6 + 23 * 34**5 + 15 * 34**4 + 18 * 34**3 + 23 * 34**2 + 18 * 34**1 + 29 * 34**0 = 28872273981 
+35进制： 18 * 35**7 + 23 * 35**6 + 15 * 35**5 + 18 * 35**4 + 23 * 35**3 + 18 * 35**2 + 29 * 35**1 + 34 * 35**0 = 1201203301724 
+36进制： 18 * 36**7 + 23 * 36**6 + 15 * 36**5 + 18 * 36**4 + 23 * 36**3 + 18 * 36**2 + 29 * 36**1 + 34 * 36**0 = 1461559270678
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2012/10/09/javascript/2012-10-09-Javascript-parseInt/" data-id="cluh0140p006c38wbc9jg2n6x" data-title="【Javascript】有关parseInt的讨论" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2012/11/06/talk/2012-11-06-talk-word-PPTtopdf/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          批量word和PPT文档转pdf
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2012/08/06/android/2012/2012-08-06-Android-touchevent/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">Android 触屏事件流</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chrome/">chrome</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/computer/">computer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/fe/">fe</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/introspection/">introspection</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/math/">math</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/physics/">physics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/product/">product</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/software/">software</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/talk/">talk</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c51/" rel="tag">c51</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/computer/" rel="tag">computer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fe/" rel="tag">fe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/introspection/" rel="tag">introspection</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/" rel="tag">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memo/" rel="tag">memo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/product/" rel="tag">product</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rx/" rel="tag">rx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/" rel="tag">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/talk/" rel="tag">talk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/volley/" rel="tag">volley</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/c51/" style="font-size: 11.25px;">c51</a> <a href="/tags/chrome/" style="font-size: 11.25px;">chrome</a> <a href="/tags/computer/" style="font-size: 17.5px;">computer</a> <a href="/tags/fe/" style="font-size: 13.75px;">fe</a> <a href="/tags/introspection/" style="font-size: 10px;">introspection</a> <a href="/tags/java/" style="font-size: 13.75px;">java</a> <a href="/tags/javascript/" style="font-size: 18.75px;">javascript</a> <a href="/tags/math/" style="font-size: 10px;">math</a> <a href="/tags/memo/" style="font-size: 10px;">memo</a> <a href="/tags/product/" style="font-size: 15px;">product</a> <a href="/tags/rx/" style="font-size: 10px;">rx</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/talk/" style="font-size: 16.25px;">talk</a> <a href="/tags/volley/" style="font-size: 11.25px;">volley</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">三月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/04/">四月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/">《其实你不懂进化论》简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/">单元测试的艺术-第三版 简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/">网民的故事分析-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/01/talk/2021-12-01-talk-book-user-stories-applied/">用户故事与敏捷方法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/03/talk/2021-11-03-talk-logic-1/">不令人讨厌的分析逻辑</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 xesam<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

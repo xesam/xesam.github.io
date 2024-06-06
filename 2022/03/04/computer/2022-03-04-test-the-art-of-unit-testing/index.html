@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>单元测试的艺术-第三版 简记 | XiaoPingYuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="本文是《The Art of Unit Testing with example in JavaScript, 3rd Edition》一书的读书简记，此书前两版有中文版本：第一版使用 C 语言描述，第二版使用 C# 语言描述。第三版暂未出版中文版，使用 Javascript&#x2F;Typescript 语言描述，使用的主要测试框架的 Jest">
+<meta property="og:type" content="article">
+<meta property="og:title" content="单元测试的艺术-第三版 简记">
+<meta property="og:url" content="https://xesam.github.io/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/index.html">
+<meta property="og:site_name" content="XiaoPingYuan">
+<meta property="og:description" content="本文是《The Art of Unit Testing with example in JavaScript, 3rd Edition》一书的读书简记，此书前两版有中文版本：第一版使用 C 语言描述，第二版使用 C# 语言描述。第三版暂未出版中文版，使用 Javascript&#x2F;Typescript 语言描述，使用的主要测试框架的 Jest">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xesam.github.io/assets/the_art_of_unit_testing_3rd/EntryPoints&ExitPoints.png">
+<meta property="og:image" content="https://xesam.github.io/assets/the_art_of_unit_testing_3rd/ExtractEntryPoint.png">
+<meta property="og:image" content="https://xesam.github.io/assets/the_art_of_unit_testing_3rd/ExtractAdapter.png">
+<meta property="article:published_time" content="2022-03-04T01:00:00.000Z">
+<meta property="article:modified_time" content="2024-04-01T13:40:44.017Z">
+<meta property="article:author" content="xesam">
+<meta property="article:tag" content="computer">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xesam.github.io/assets/the_art_of_unit_testing_3rd/EntryPoints&ExitPoints.png">
+  
+    <link rel="alternate" href="/atom.xml" title="XiaoPingYuan" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">XiaoPingYuan</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Just Do IT</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://xesam.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-computer/2022-03-04-test-the-art-of-unit-testing" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/" class="article-date">
+  <time class="dt-published" datetime="2022-03-04T01:00:00.000Z" itemprop="datePublished">2022-03-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/computer/">computer</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      单元测试的艺术-第三版 简记
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>本文是《The Art of Unit Testing with example in JavaScript, 3rd Edition》一书的读书简记，此书前两版有中文版本：第一版使用 C 语言描述，第二版使用 C# 语言描述。<br>第三版暂未出版中文版，使用 Javascript&#x2F;Typescript 语言描述，使用的主要测试框架的 <a target="_blank" rel="noopener" href="https://jestjs.io/">Jest</a></p>
+<span id="more"></span>
+
+<p>作者对 Unit of Work 的定义：</p>
+<p>*A unit of work is the sum of actions that take place between the invocation of an entry point up until a noticeable end result through one or more exit points. The entry point is the thing we trigger. *</p>
+<p>A unit of work can be a single function, multiple functions, multiple functions or even multiple modules or components. But it always has an entry point which we can trigger from the outside, and it always ends up doing something useful.</p>
+<p>这里就引出了全文的核心概念——<strong>Entry Points &amp; Exit Points</strong>：</p>
+<p><strong>Exit points are end results of a unit of work.</strong></p>
+<p><img src="/assets/the_art_of_unit_testing_3rd/EntryPoints&ExitPoints.png" alt="1"></p>
+<p>Three different types of end results: </p>
+<ol>
+<li>The invoked function returns a useful value (not undefined). </li>
+<li>There’s a noticeable change to the state or behavior of the system before and after invocation that can be determined without interrogating private state. </li>
+<li>There’s a callout to a third-party system over which the test has no control.</li>
+</ol>
+<p>根据适用测试技术的不同，上述又可以分为：</p>
+<ol>
+<li>Return-value based exit points (direct outputs) of all the exit point types, should be the easiest to test. You trigger an entry point, you get something back, you check the value you get back.</li>
+<li>State based tests (indirect outputs) require a little more gymnastics usually. You call something, then you do another call to check something else (or call the previous thing again) to see if everything went according to plan.</li>
+</ol>
+<p>整个单元测试的侧重点是“Exit Points”。</p>
+<p>Characteristics of a good unit test:</p>
+<ol>
+<li>It should be easy to read and understand the intent of the test author. </li>
+<li>It should be easy to read and write </li>
+<li>It should be automated and repeatable. </li>
+<li>It should be useful and provide actionable results. </li>
+<li>Anyone should be able to run it at the push of a button. </li>
+<li>When it fails, it should be easy to detect what was expected and determine how to pinpoint the problem.</li>
+</ol>
+<p>Great unit tests should also exhibit the following properties: </p>
+<ol>
+<li>It should run quickly. </li>
+<li>It should be consistent in its results . </li>
+<li>It should have full control of the code under test. </li>
+<li>It should be fully isolated. </li>
+<li>It should run in memory without requiring system files, networks, databases It should be as synchronous and linear as possible when it makes sense.</li>
+</ol>
+<p>To start off, ask yourself the following questions about the tests you’ve written&#x2F;executed up to now:</p>
+<ol>
+<li>Can I run and get results from a test I wrote two weeks or months or years ago? </li>
+<li>Can any member of my team run and get results from tests I wrote two months ago? </li>
+<li>Can I run all the tests I’ve written in no more than a few minutes? </li>
+<li>Can I run all the tests I’ve written at the push of a button?</li>
+<li>Do the tests I wrote always report the same outcome (given no code changes on my team)? </li>
+<li>Do my tests pass when there are bugs in another team’s code? </li>
+<li>Do my test show the same result when run on different machines or environments? </li>
+<li>Do my tests stop working if there’s no database, network or deployment? </li>
+<li>If I delete, move or change one test, do other tests remain unaffected? </li>
+<li>Can I easily set up the needed state for a test without relying on outside resources like a database or a 3rd party, with very little code?</li>
+</ol>
+<p>关于 legacy code 的调侃：</p>
+<p><em>A client once defined legacy code in a down-to-earth way: “code that works.” Many people like to define legacy code as “code that has no tests.”</em></p>
+<p>这些自省的问题，都围绕者单元测试的核心原则：</p>
+<ol>
+<li>Readability. </li>
+<li>Maintainability.</li>
+<li>Trust.</li>
+</ol>
+<p>做个简单的总结：</p>
+<p>A unit test is an automated piece of code that invokes the unit of work trough an entry point, and then checks one of its exit points. A unit test is almost always written using a unit testing framework. It can be written easily and runs quickly. It’s trustworthy, readable &amp; maintainable. It is consistent as long as the production code we control has not changed.</p>
+<h3 id="TDD"><a href="#TDD" class="headerlink" title="TDD"></a>TDD</h3><p>最佳实践之一：TDD（我的补充：可以参考 《Java测试驱动开发》等等书籍）。</p>
+<p>The technique of TDD is quite simple: </p>
+<ol>
+<li>Write a failing test to prove code or functionality is missing from the end product. </li>
+<li>Make the test pass by adding functionality to the production code that meets the expectations of your test. </li>
+<li>Refactor your code.</li>
+</ol>
+<p>Technically, one of the biggest benefits of TDD nobody tells you about is that by seeing a test fail, and then seeing it pass without changing the test, you’re basically testing the test itself. If you expect it to fail and it passes, you might have a bug in your test or you’re testing the wrong thing. If the test failed and now you expect it to pass, and it still fails, your test could have a bug, or it’s expecting the wrong thing to happen.</p>
+<p>Three core skills needed for successful TDD：</p>
+<ol>
+<li>Writing Good Tests.</li>
+<li>Writing Test First.</li>
+<li>SOLID Design.</li>
+</ol>
+<h3 id="Unit-testing-frameworks-Jest"><a href="#Unit-testing-frameworks-Jest" class="headerlink" title="Unit testing frameworks &amp; Jest"></a>Unit testing frameworks &amp; Jest</h3><p>Jest acted in several capacities for us: </p>
+<ol>
+<li>It acted as a test library to use when writing the test </li>
+<li>It acted as an assertion library for asserting inside the test (‘expect’) </li>
+<li>It acted as the test runner </li>
+<li>It acted as the test reporter for the test run.</li>
+</ol>
+<p>What unit testing frameworks offer:</p>
+<ol>
+<li>Structure.</li>
+<li>Repeatability.</li>
+<li>Confidence through time savings.</li>
+</ol>
+<p>Unit tests usually are made of three main “steps”: <strong>Arrange, Act and Assert</strong>. </p>
+<ol>
+<li>Arrange: setup the scenario under test.</li>
+<li>Act: invoke the entry point with inputs.</li>
+<li>Assert: check the exit point.</li>
+</ol>
+<p>This is colloquially called the ‘<strong>AAA</strong>’ Pattern.</p>
+<p>Put three pieces of information in test names, so that the reader of the test will be able to answer most of their mental questions just by looking at the name of the test. These three parts include: </p>
+<ol>
+<li>The unit of work under test.</li>
+<li>The scenario or inputs to the unit.</li>
+<li>The expected behavior or exit point.</li>
+</ol>
+<p>A nice acronym for this: <strong>U.S.E</strong>: </p>
+<ol>
+<li>Unit under test.</li>
+<li>Scenario.</li>
+<li>Expectation.</li>
+</ol>
+<p>作者的心得：<em>It’s human nature to put things in the easiest place possible, especially if everyone else before you have done so as well.</em></p>
+<h3 id="Stub-Mock"><a href="#Stub-Mock" class="headerlink" title="Stub &amp; Mock"></a>Stub &amp; Mock</h3><p>There are two main types of dependencies that our unit of can use.</p>
+<ol>
+<li>Outgoing Dependencies: dependencies that represent an exit point of our unit of work.</li>
+<li>Dependencies: dependencies that are not exit points. They do not represent a requirement on the eventual behavior of the unit of work. They are merely there to provide test-specific specialized data or behavior into the unit of work.</li>
+</ol>
+<h4 id="STUB"><a href="#STUB" class="headerlink" title="STUB:"></a>STUB:</h4><p>Break incoming dependencies (indirect inputs). Stubs are fake modules, objects or functions that provide fake behavior or data into the code under test. We do not assert against them. We can have many stubs in a single test. </p>
+<p>Stubs represent waypoints, not exit points. They do not represent exit points because the data or behavior flow into the unit of work. They are points of interaction, but they do not represent an ultimate outcome the the unit of work ends up doing. Instead they are an interaction on the way to achieve the end result we care about, so we don’t treat them as exit.</p>
+<h4 id="MOCK"><a href="#MOCK" class="headerlink" title="MOCK"></a>MOCK</h4><p>Break outgoing dependencies (outputs, exit points). Mocks are fake modules, objects or functions that we assert were called in our tests. A Mock represents an exit point in a unit test. Because of this, it is recommended to have no more than a single mock per test.</p>
+<p>概念参考：</p>
+<pre><code>Dependencies： 
+The things that make our testing lives &amp; code maintainability difficult, since we cannot control them from our tests. 
+
+Control：
+The ability to instruct a dependency how to behave. Whoever is creating the dependencies is said to be in control over them since they have the ability to configure them before they are used in the code under test. 
+
+Inversion of Control： 
+Designing the code to remove the responsibility of creating the dependency internally and externalizing it instead. 
+
+Dependency Injection ：
+The act of sending a dependency through the design interface to be used internally by apiece of code. The place where you inject the dependency is the injection point. 
+
+Seam ：
+Seams are where two pieces of software meet and something else can be injected. They are a place where you can alter behavior in your program without editing in that place. 
+</code></pre>
+<h3 id="Interaction-testing"><a href="#Interaction-testing" class="headerlink" title="Interaction testing"></a>Interaction testing</h3><p>Interaction testing is checking how a unit of work interacts and sends messages to a dependency beyond its control. Mock functions or objects are used to assert that a call was made correctly to an external dependency.</p>
+<p>常用技巧：</p>
+<pre><code>Standard:
+Introduce Parameter 
+
+Functional:
+Convert to partial application function 
+Convert to Factory Function 
+
+Modular:
+Abstract Module Dependency 
+
+Object Oriented: 
+Inject Untyped Object Inject Interface
+</code></pre>
+<p>A simple rule of thumb: </p>
+<p><strong>It should be OK to have multiple stubs in a test, but you don’t usually want to have more than a single mock per test – because that means you’re testing more than requirements in a single test.</strong></p>
+<p>I use the word “Fake” to denote anything that isn’t real. Another common word for this sort of thing is “Test Double”. Fake is shorter so I like it.<br>I highly recommend to use only fake interfaces that answer both of these conditions: </p>
+<ol>
+<li>You control those interfaces (they are not made by a 3rd party). </li>
+<li>They are adapted to the needs of your unit of work or component.</li>
+</ol>
+<p>这里作者吐槽了一下 spy 的设计（或者说命名），作者这个特性引发了滥用：</p>
+<p>Both in test frameworks, to “take over” existing objects and functions and “spy” on them. By spying on them we can later check if they were called, how many times and with which arguments.<br>This essentially can turn parts of real objects into mock functions, while keeping the rest of the object as a real object. This can create more complicated tests that are more brittle, but can sometimes be a viable option, especially if you’re dealing with legacy code.</p>
+<p>Spy was originally designed as the idea that you can look at a real function and “spy” on it without altering its behavior. <strong>Whenever you see someone mention “spy” think “partial mock&#x2F;stub” because chance are that’s what they’re trying to achieve. When in doubt, think of “Spy” as “Partial Mock&#x2F;Stub”</strong></p>
+<p>Isolation Frameworks 的定义：</p>
+<p><em>An isolation framework is a set of programmable APIs that allow the dynamic creation, configuration and verification of mocks and stubs, either in object or function form; Using a framework, these tasks can often be simpler, faster, and shorter than hand-coding them.</em></p>
+<p>Because JavaScript supports multiple paradigms of programming design, we can split the frameworks in our world to two main flavors: </p>
+<ol>
+<li><p>Loose JS Isolation Frameworks: </p>
+<pre><code>Vanilla JS friendly loose-typed isolation frameworks. These usually also lend themselves better to more functional style code because they require less “ceremony” and boilerplate code to do their work. 
+</code></pre>
+</li>
+<li><p>Typed JS Isolation Frameworks: </p>
+<pre><code> More Object Oriented/TypeScript friendly isolation frameworks. Very useful when dealing with whole classes and interfaces.
+</code></pre>
+</li>
+</ol>
+<p>What type of dependencies will you need to fake mostly? </p>
+<ol>
+<li>Module dependencies (imports, requires).</li>
+<li>Functional (single and higher order functions, simple parameters and values) .</li>
+<li>Full objects, object hierarchies and interfaces.</li>
+</ol>
+<p>Distinct advantages to using isolation frameworks: </p>
+<ol>
+<li>Easier modular faking. </li>
+<li>Easier simulation of values or errors. </li>
+<li>Easier fakes creation.</li>
+</ol>
+<p>A few things to watch out for: </p>
+<ol>
+<li>You don’t need mock objects most of the time.</li>
+<li>Unreadable test code.</li>
+<li>Verifying the wrong things.(A lot of people new to tests end up verifying things just because they can, not because it makes sense.)</li>
+<li>Having more than one mock per test.</li>
+<li>Over specifying the tests.</li>
+</ol>
+<p><strong>Testing interactions is a double-edged sword: test it too much, and you start to lose sight of the big picture—the overall functionality; test it too little, and you’ll miss the important interactions between units of work.</strong> </p>
+<p>Here are some ways to balance this effect:</p>
+<ol>
+<li>Use stubs instead of mocks when you can.</li>
+<li>Avoid using stubs as mocks if humanly possible.</li>
+</ol>
+<h3 id="Async"><a href="#Async" class="headerlink" title="Async"></a>Async</h3><p>Make the code more unit-testable:</p>
+<ol>
+<li>Extract Entry Point. Extracting the parts that are pure logic into their own function and treating those functions as entry points for our tests. </li>
+<li>Extract Adapter: Extracting the thing that is inherently asynchronous and abstracting it away so that we can replace it with something that is synchronous.</li>
+</ol>
+<h4 id="Extract-Entry-Point"><a href="#Extract-Entry-Point" class="headerlink" title="Extract Entry Point"></a>Extract Entry Point</h4><p>In this pattern, we take a specific piece of async work, and split it into the two pieces:</p>
+<ol>
+<li>The async part (which stays intact)</li>
+<li>The callbacks that are invoked when the async execution finishes. Those are extracted as new functions which eventually become entry points for a purely logical unit of work that we can invoke with pure unit tests.</li>
+</ol>
+<p><img src="/assets/the_art_of_unit_testing_3rd/ExtractEntryPoint.png" alt="1"></p>
+<h4 id="Extract-Adapter"><a href="#Extract-Adapter" class="headerlink" title="Extract Adapter"></a>Extract Adapter</h4><p>We look at the asynchronous piece of code just like we look at any dependency we’d like to replace in our tests to gain more control.<br>Instead of extracting the logical code into its own set of entry points, we’re extracting the asynchronous code (our dependency) and abstracting it away under an adapter, which we can later inject just like any other dependency.</p>
+<p><img src="/assets/the_art_of_unit_testing_3rd/ExtractAdapter.png" alt="1"></p>
+<h3 id="Dealing-with-Timers"><a href="#Dealing-with-Timers" class="headerlink" title="Dealing with Timers"></a>Dealing with Timers</h3><p>Two patterns of getting around them directly: </p>
+<ol>
+<li>Directly Monkey patching the function.Monkey patching is a way for a program to extend or modify supporting system software locally (affecting only the running instance of the program).</li>
+<li>Using test frameworks to disable and control them.</li>
+</ol>
+<h3 id="写好单元测试"><a href="#写好单元测试" class="headerlink" title="写好单元测试"></a>写好单元测试</h3><p>The tests that you write should have three properties that together make them good:</p>
+<ol>
+<li>Trustworthiness—Developers will want to run trustworthy tests, and they’ll accept the test results with confidence. Trustworthy tests don’t have bugs, and they test the right things. </li>
+<li>Maintainability—Unmaintainable tests are nightmares because they can ruin project schedules, or they may be sidelined when the project is put on a more aggressive schedule. Developers will simply stop maintaining and fixing tests that take too long to change or that need to change very often on very minor production code changes. </li>
+<li>Readability—This means not just being able to read a test but also figuring out the problem if the test seems to be wrong. Without readability, the other two pillars fall pretty quickly. Maintaining tests becomes harder, and you can’t trust them anymore because you don’t understand them.</li>
+</ol>
+<h3 id="Trustworthiness"><a href="#Trustworthiness" class="headerlink" title="Trustworthiness"></a>Trustworthiness</h3><p>Why Tests Fail？</p>
+<ol>
+<li>A real bug has been uncovered in the production code.</li>
+<li>Buggy (lying) test.</li>
+<li>Out of Date test (feature changed).</li>
+<li>Conflicting test (with another test).</li>
+<li>Flaky Test.</li>
+<li>Smelling a false sense of trust in passing tests</li>
+</ol>
+<p>降低测试代码自身的出错可能性：</p>
+<ol>
+<li>write your code in a test driven manner.</li>
+<li>remove the amount of logic related code that exists in the test.</li>
+</ol>
+<p><em>大家跟我一起喊：No ifs, switches, loops or other forms of logic if I can help it.</em></p>
+<p>又一条准则：</p>
+<p><strong>Avoid dynamically creating the expected value in your asserts, use hardcoded values when possible.</strong></p>
+<p>Out of Date test (feature changed)：</p>
+<ol>
+<li>Adapt the test to the new functionality.</li>
+<li>Write a new test for the new functionality and remove the old test because it has now become irrelevant.</li>
+</ol>
+<p>Here are some reasons I reduce my trust in tests even if they are passing:</p>
+<ol>
+<li>Tests that don’t assert anything.</li>
+<li>Not understanding the tests.</li>
+<li>Mixing Unit &amp; Integration (Flaky) Tests.</li>
+<li>Having logic inside unit tests.</li>
+<li>Testing multiple concerns (entry&#x2F;exit points).</li>
+<li>Tests that keep changing.</li>
+</ol>
+<p>对开发经理&#x2F;项目经理的话: Code coverage shouldn’t ever be a goal on its own. It doesn’t mean “code quality”. In fact, it often causes your developers to write meaningless tests that will cost even more time to maintain. Instead, measure “Escaped Bugs” ,“Time to Fix” and well as other metrics.</p>
+<p>The test-break-up rule: </p>
+<p><strong>if the first assert fails, do you still care what the result of the next assert is?? If you do, you should probably separate the test into two tests.</strong></p>
+<p>Here are some ways to reduce the costs associated with handling flaky tests: </p>
+<ol>
+<li>Agree on what flaky means to your organization.</li>
+<li>Place any test deemed “flaky” in a special category or folder of tests that can be run separately. </li>
+<li>Prune and remove flakiness from quarantined tests.</li>
+</ol>
+<p>Dealing with flaky tests:</p>
+<ol>
+<li>Quarantine.</li>
+<li>Fix.</li>
+<li>Convert.</li>
+<li>Kill.</li>
+</ol>
+<h3 id="Maintainability"><a href="#Maintainability" class="headerlink" title="Maintainability"></a>Maintainability</h3><p>Ask these questions if we ever want to get down to the root causes: </p>
+<ol>
+<li>When do we notice that a test might require a change? (When tests fail) </li>
+<li>Why do tests fail?</li>
+<li>Which test failures “force” us to change the test? </li>
+<li>When do we “choose” to change a test even if we are not forced to?</li>
+</ol>
+<p>The basic concept to keep in mind is that <strong>a test should always run in its own little world, isolated from even the knowledge that other tests out there may do similar or different things</strong>.</p>
+<p>CONSTRAINED TEST ORDER（意味着测试之间存在依赖）</p>
+<p>Refactoring this we can take a few steps: </p>
+<ol>
+<li>Extract a helper function for adding a user </li>
+<li>Reusing this function form multiple tests </li>
+<li>Reset the user cache between tests.</li>
+</ol>
+<p>Refactoring to increase maintainability</p>
+<ol>
+<li>Avoid Testing private or protected methods.</li>
+<li>Remove duplication.</li>
+<li>Avoid setup methods( in a maintainable manner).</li>
+<li>Using parameterized tests to remove duplication.</li>
+<li>Avoid overspecification.</li>
+</ol>
+<p>if you see a private method, find the public use case in the system that will exercise it.Sometimes if a private method is worth testing, it might be worth making it public, static, or at least internal and defining a public contract against any code that uses it. In some cases, the design may be cleaner if you put the method in a different class altogether.</p>
+<p>Here are ways unit tests are often over specified:</p>
+<ol>
+<li>A test asserts purely internal state in an object under test. </li>
+<li>A test uses multiple mocks. </li>
+<li>A test uses stubs also as mocks. </li>
+<li>A test assumes specific order or exact string matches when it isn’t required.</li>
+</ol>
+<p>The real exit point depends on the type of test we wish to perform:</p>
+<ol>
+<li>For a value based test, which I would highly recommend to lean towards when possible, we look for a return value from the called function.</li>
+<li>For a state based test we look for a sibling function (a function that exists at the same level of scope as the entry point.</li>
+<li>For a 3d party test we would have to use a mock, and that would require us to find out where is the “fire and forget” location inside the code.</li>
+</ol>
+<h3 id="Readability"><a href="#Readability" class="headerlink" title="Readability"></a>Readability</h3><p>There are several facets to readability: </p>
+<ol>
+<li>Naming unit tests </li>
+<li>Naming variables </li>
+<li>Creating good assert messages </li>
+<li>Separating asserts from actions</li>
+</ol>
+<p>Three important pieces of information are present in the name of the test:</p>
+<ol>
+<li>The entry point to the unit of work (or, the name of the feature you’re testing) </li>
+<li>The scenario under which you’re testing the entry point </li>
+<li>The expected behavior of the exit point</li>
+</ol>
+<p>Variable names and values are just as much about explaining to the reader what they should NOT care about as it is about explaining what IS important.</p>
+<p>readability! readability! readability!</p>
+<p>作者在书中不止一个地方提到了测试框架的 setup 特性，并表示这个特性也导致了太多的滥用：</p>
+<p>I like that each test is self- encapsulating its own state. The nested describe structure acts as a good way to know where we are, but the state is all triggered from inside the ‘it’ blocks. Not outside of them.</p>
+<p>Factory methods &amp; Parameterized tests can help maintainability even more.</p>
+<h3 id="书中提到的参考书籍"><a href="#书中提到的参考书籍" class="headerlink" title="书中提到的参考书籍"></a>书中提到的参考书籍</h3><p>《XUnit Test Patterns》<a target="_blank" rel="noopener" href="http://xunitpatterns.com/">http://xunitpatterns.com/</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/" data-id="cluh013zt002738wb3kd60mhx" data-title="单元测试的艺术-第三版 简记" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/computer/" rel="tag">computer</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          《其实你不懂进化论》简记
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">网民的故事分析-1</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chrome/">chrome</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/computer/">computer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/fe/">fe</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/introspection/">introspection</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/math/">math</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/physics/">physics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/product/">product</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/software/">software</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/talk/">talk</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c51/" rel="tag">c51</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/computer/" rel="tag">computer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fe/" rel="tag">fe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/introspection/" rel="tag">introspection</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/" rel="tag">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memo/" rel="tag">memo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/product/" rel="tag">product</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rx/" rel="tag">rx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/" rel="tag">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/talk/" rel="tag">talk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/volley/" rel="tag">volley</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/c51/" style="font-size: 11.25px;">c51</a> <a href="/tags/chrome/" style="font-size: 11.25px;">chrome</a> <a href="/tags/computer/" style="font-size: 17.5px;">computer</a> <a href="/tags/fe/" style="font-size: 13.75px;">fe</a> <a href="/tags/introspection/" style="font-size: 10px;">introspection</a> <a href="/tags/java/" style="font-size: 13.75px;">java</a> <a href="/tags/javascript/" style="font-size: 18.75px;">javascript</a> <a href="/tags/math/" style="font-size: 10px;">math</a> <a href="/tags/memo/" style="font-size: 10px;">memo</a> <a href="/tags/product/" style="font-size: 15px;">product</a> <a href="/tags/rx/" style="font-size: 10px;">rx</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/talk/" style="font-size: 16.25px;">talk</a> <a href="/tags/volley/" style="font-size: 11.25px;">volley</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">三月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/04/">四月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/">《其实你不懂进化论》简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/">单元测试的艺术-第三版 简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/">网民的故事分析-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/01/talk/2021-12-01-talk-book-user-stories-applied/">用户故事与敏捷方法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/03/talk/2021-11-03-talk-logic-1/">不令人讨厌的分析逻辑</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 xesam<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

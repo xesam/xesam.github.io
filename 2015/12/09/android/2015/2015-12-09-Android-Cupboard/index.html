@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>数据库工具 Cupboard | XiaoPingYuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Cupboard 官方托管 翻译与示例托管 Cupboard for AndroidCupboard 是针对 Android 的一个简单的持久化存储方案，简单而且容易与现有代码集成。 更准确的说， Cupboard 是一个存取对象的方式。并不是一个真正的ORM，因为为了保持简单，它并不会去维护对象之间的关系。 设计理念设计 Cupboard 是因为现有的持久化框架并不能满足实际的需求：  想要一个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据库工具 Cupboard">
+<meta property="og:url" content="https://xesam.github.io/2015/12/09/android/2015/2015-12-09-Android-Cupboard/index.html">
+<meta property="og:site_name" content="XiaoPingYuan">
+<meta property="og:description" content="Cupboard 官方托管 翻译与示例托管 Cupboard for AndroidCupboard 是针对 Android 的一个简单的持久化存储方案，简单而且容易与现有代码集成。 更准确的说， Cupboard 是一个存取对象的方式。并不是一个真正的ORM，因为为了保持简单，它并不会去维护对象之间的关系。 设计理念设计 Cupboard 是因为现有的持久化框架并不能满足实际的需求：  想要一个">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2015-12-09T05:46:04.000Z">
+<meta property="article:modified_time" content="2024-04-01T13:40:43.933Z">
+<meta property="article:author" content="xesam">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="XiaoPingYuan" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">XiaoPingYuan</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Just Do IT</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://xesam.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-android/2015/2015-12-09-Android-Cupboard" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2015/12/09/android/2015/2015-12-09-Android-Cupboard/" class="article-date">
+  <time class="dt-published" datetime="2015-12-09T05:46:04.000Z" itemprop="datePublished">2015-12-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      数据库工具 Cupboard
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><a target="_blank" rel="noopener" href="https://bitbucket.org/littlerobots/cupboard">Cupboard 官方托管</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/xesam/CupboardTips">翻译与示例托管</a></p>
+<h2 id="Cupboard-for-Android"><a href="#Cupboard-for-Android" class="headerlink" title="Cupboard for Android"></a>Cupboard for Android</h2><p>Cupboard 是针对 Android 的一个简单的持久化存储方案，简单而且容易与现有代码集成。</p>
+<p>更准确的说， Cupboard 是一个存取对象的方式。并不是一个真正的ORM，因为为了保持简单，它并不会去维护对象之间的关系。</p>
+<h3 id="设计理念"><a href="#设计理念" class="headerlink" title="设计理念"></a>设计理念</h3><p>设计 Cupboard 是因为现有的持久化框架并不能满足实际的需求：</p>
+<ol>
+<li>想要一个非侵入的：不必要继承某个特殊的Activity，你的 model 也不必要无实现某个特殊的接口，如果不愿意，都不必要实现 DAO 模式</li>
+<li>需要一个通用的选择：在整个应用中都可以使用所定义的 model 对象，而并不局限于数据库</li>
+<li>需要完美适应 Android 自有的类，比如 Cursor 以及 ContentValues，这样，可以在任何时候回退到 Android 框架里面。</li>
+</ol>
+<h3 id="使用方式-Using-Cupboard"><a href="#使用方式-Using-Cupboard" class="headerlink" title="使用方式&#x2F;Using Cupboard"></a>使用方式&#x2F;Using Cupboard</h3><p>引入 Cupboard 依赖，然后静态导入 cupboard():</p>
+<p>build.gradle:</p>
+<pre><code>compile &#39;nl.qbusict:cupboard:(insert latest version)&#39;
+最新是 2.1.4 所以可以这么写： compile &#39;nl.qbusict:cupboard:2.1.4&#39;
+</code></pre>
+<p>java 类:</p>
+<pre><code>import static nl.qbusict.cupboard.CupboardFactory.cupboard;
+</code></pre>
+<p>在代码中可以这么调用：</p>
+<pre><code>public long storeBook(SQLiteDatabase database, Book book) &#123;
+    return cupboard().withDatabase(database).put(book);
+&#125;
+</code></pre>
+<p>上面的代码将一个 Book  entity 存入数据库中，然后返回记录的 id， 就这么简单。</p>
+<h3 id="Entities"><a href="#Entities" class="headerlink" title="Entities"></a>Entities</h3><p>Cupboard 中的 entity 就是一个POJO，Cupboard使用反射来操作字段，没有使用注解，因为 Android 中的注解反射实在是太低效了。</p>
+<p> entity 在使用之前，需要先使用 Cupboard.register() 进行注册。一个示例：</p>
+<pre><code>public class Book &#123;
+    public Long _id;
+    public String title;
+    public Author author;
+    public Date publishDate;
+&#125;
+</code></pre>
+<p>entity 的字段名对应 SQLite 数据库中的 列名，表名根据 entity 名得来，本例中，表名就是 book。<br>每个 entity 都应该有一个 Long 类型的 _id 字段，采用 Long 类型是因为这样 _id 就可以取 null了。<br>而且，Android 原生的 Cursor 本身就期望一个 _id。<br>entity 的一个字段可以是任何基本类型，相应的包装类，java.util.Date，或者另一个 entity 。</p>
+<h3 id="Operations"><a href="#Operations" class="headerlink" title="Operations"></a>Operations</h3><p>你可以：</p>
+<ol>
+<li>使用 put 来创建或者更新一个 entity </li>
+<li>使用 get 来获取一个 entity </li>
+<li>使用 delete 来删除一个 entity </li>
+<li>使用 query 来查询 entity</li>
+</ol>
+<p>当使用 withDatabase() 【见后文】的时候，也可以像使用 SQL 一样来执行 update 操作。</p>
+<h3 id="Compartments"><a href="#Compartments" class="headerlink" title="Compartments"></a>Compartments</h3><p>在许多通常的应用中，你需要从不同的组件访问 model，比如 ContentProvider 可能就持有 SQLiteDatabase 的连接，然后你从 Activity 或者 Service 来访问。</p>
+<p>如果你只能在 ContentProvider 使用持久化库，而在其他组件里面只能使用原始的 ContentValues， 这不就是一个笑话吗。</p>
+<p>Cupboard 以及预料到这一点：</p>
+<pre><code>SQliteDataBase db = getDatabase();
+
+// 将一个 entity 保存到数据库中
+cupboard().withDatabase(db).put(book);
+Cursor cursor = getCursor();
+
+// 从 cursor 获取第一个条记录
+Book book = cupboard().withCursor(cursor).get(Book.class);
+
+// 遍历所有的记录
+Iterable&lt;Book&gt; itr = cupboard().withCursor(cursor).iterate();
+for (Book book : itr) &#123;
+  // do something with book
+&#125;
+
+// 使用 content provider 来保存一条记录
+Uri bookUri = ...
+cupboard().withContext(this).put(bookUri, book);
+
+//将 Book  entity 传递给另一个需要 ContentValues 对象参数的方法
+ContentValues values = cupboard().withEntity(Book.class).toContentValues(book);
+
+// 我们可能正在构建一组 ContentProviderOperation 
+ArrayList&lt;ContentProviderOperation&gt; ops = new ArrayList&lt;ContentProviderOperation&gt;(10);
+Book newBook = new Book();
+...
+cupboard().withOperations(ops).put(bookUri, book).put(bookUri, newBook);
+</code></pre>
+<h2 id="官方文档翻译"><a href="#官方文档翻译" class="headerlink" title="官方文档翻译"></a>官方文档翻译</h2><ol>
+<li><a href="./doc/Working_with_databases.md">Working_with_databases</a></li>
+<li><a href="./doc/Working_with_ContentProviders.md">Working_with_ContentProviders</a></li>
+<li><a href="./doc/Working_with_Cursors.md">Working_with_Cursors</a></li>
+<li><a href="./doc/Working_with_existing_data_structures_and_annotation_support.md">Working_with_existing_data_structures_and_annotation_support</a></li>
+<li><a href="./doc/Custom_Converters.md">Custom_Converters</a></li>
+<li><a href="./doc/ProGuard_configuration.md">ProGuard_configuration</a></li>
+</ol>
+<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p>参见工程 app</p>
+<h2 id="Q-A"><a href="#Q-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h2><h3 id="id的生成机制"><a href="#id的生成机制" class="headerlink" title="_id的生成机制"></a>_id的生成机制</h3><p>注意每个 model 里面定义的 _id，Cupboard 要求使用 Long 类型，这样就可以根据 _id 是否为 null 来判断是否需要自动分配 _id。<br>当然，你也可以定义为 long 或者 int 等等任意其他类型的数值，但是，由于数值的默认值都是 0，因此，Cupboard 无法判断这个值到底是默认值还是用户赋值。<br>从而需要用户自己来为维护 _id 的分配。比如，定义如下：</p>
+<pre><code>public class SimpleBook &#123;
+    public long _id;
+    public String title;
+&#125;
+</code></pre>
+<p>如果你使用下面的调用：</p>
+<pre><code>SimpleBook simpleBook = new SimpleBook();
+simpleBook.title = &quot;title_single_&quot; + System.currentTimeMillis();
+cupboard().withDatabase(cupboardSQLiteOpenHelper.getWritableDatabase()).put(simpleBook);
+</code></pre>
+<p>那么，不论你调用多少次，数据库里面只会得到一条数据，而且 _id &#x3D; 0；所以除非你手动赋值 _id：</p>
+<pre><code>SimpleBook simpleBook = new SimpleBook();
+simpleBook._id = System.currentTimeMillis();
+simpleBook.title = &quot;title_single_&quot; + System.currentTimeMillis();
+cupboard().withDatabase(cupboardSQLiteOpenHelper.getWritableDatabase()).put(simpleBook);
+</code></pre>
+<p>所以，如果 _id 没有特别的需求，还是按照 Cupboard 默认要求。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2015/12/09/android/2015/2015-12-09-Android-Cupboard/" data-id="cluh0142h00f638wbcefgg0qp" data-title="数据库工具 Cupboard" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/01/01/computer/2016-01-01-Linux-config/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          【Linux】各种配置记录
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/11/12/android/2015/2015-11-12-AndroidSupport-RoundedBitmapDrawable/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">RoundedBitmapDrawable 创建圆角图片</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chrome/">chrome</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/computer/">computer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/fe/">fe</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/introspection/">introspection</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/math/">math</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/physics/">physics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/product/">product</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/software/">software</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/talk/">talk</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c51/" rel="tag">c51</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/computer/" rel="tag">computer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fe/" rel="tag">fe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/introspection/" rel="tag">introspection</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/" rel="tag">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memo/" rel="tag">memo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/product/" rel="tag">product</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rx/" rel="tag">rx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/" rel="tag">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/talk/" rel="tag">talk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/volley/" rel="tag">volley</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/c51/" style="font-size: 11.25px;">c51</a> <a href="/tags/chrome/" style="font-size: 11.25px;">chrome</a> <a href="/tags/computer/" style="font-size: 17.5px;">computer</a> <a href="/tags/fe/" style="font-size: 13.75px;">fe</a> <a href="/tags/introspection/" style="font-size: 10px;">introspection</a> <a href="/tags/java/" style="font-size: 13.75px;">java</a> <a href="/tags/javascript/" style="font-size: 18.75px;">javascript</a> <a href="/tags/math/" style="font-size: 10px;">math</a> <a href="/tags/memo/" style="font-size: 10px;">memo</a> <a href="/tags/product/" style="font-size: 15px;">product</a> <a href="/tags/rx/" style="font-size: 10px;">rx</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/talk/" style="font-size: 16.25px;">talk</a> <a href="/tags/volley/" style="font-size: 11.25px;">volley</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">三月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/04/">四月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/">《其实你不懂进化论》简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/">单元测试的艺术-第三版 简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/">网民的故事分析-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/01/talk/2021-12-01-talk-book-user-stories-applied/">用户故事与敏捷方法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/03/talk/2021-11-03-talk-logic-1/">不令人讨厌的分析逻辑</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 xesam<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

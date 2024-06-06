@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>远程调用 | XiaoPingYuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="首先，定义一下本文中的几个概念： 远程调用：跨进程的方法调用 客户进程：发起方法调用的进程 服务进程：实际实现方法的进程  如果需要设计一个“远程调用”的机制，我们需要考虑以下几个问题：  客户进程如何发起方法调用 服务进程如何知道要调用的方法名，如何接收方法参数 客户进程与服务进程如何通信  基础模式如下：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="远程调用">
+<meta property="og:url" content="https://xesam.github.io/2016/02/24/talk/2016-02-24-talk-rpc/index.html">
+<meta property="og:site_name" content="XiaoPingYuan">
+<meta property="og:description" content="首先，定义一下本文中的几个概念： 远程调用：跨进程的方法调用 客户进程：发起方法调用的进程 服务进程：实际实现方法的进程  如果需要设计一个“远程调用”的机制，我们需要考虑以下几个问题：  客户进程如何发起方法调用 服务进程如何知道要调用的方法名，如何接收方法参数 客户进程与服务进程如何通信  基础模式如下：">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xesam.github.io/image/sf_remote_1.png">
+<meta property="og:image" content="https://xesam.github.io/image/sf_remote_2.png">
+<meta property="og:image" content="https://xesam.github.io/image/sf_remote_3.png">
+<meta property="article:published_time" content="2016-02-24T05:46:04.000Z">
+<meta property="article:modified_time" content="2024-04-01T13:40:44.064Z">
+<meta property="article:author" content="xesam">
+<meta property="article:tag" content="talk">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xesam.github.io/image/sf_remote_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="XiaoPingYuan" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">XiaoPingYuan</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Just Do IT</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://xesam.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-talk/2016-02-24-talk-rpc" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2016/02/24/talk/2016-02-24-talk-rpc/" class="article-date">
+  <time class="dt-published" datetime="2016-02-24T05:46:04.000Z" itemprop="datePublished">2016-02-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/talk/">talk</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      远程调用
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>首先，定义一下本文中的几个概念：</p>
+<pre><code>远程调用：跨进程的方法调用
+客户进程：发起方法调用的进程
+服务进程：实际实现方法的进程
+</code></pre>
+<p>如果需要设计一个“远程调用”的机制，我们需要考虑以下几个问题：</p>
+<ol>
+<li>客户进程如何发起方法调用</li>
+<li>服务进程如何知道要调用的方法名，如何接收方法参数</li>
+<li>客户进程与服务进程如何通信</li>
+</ol>
+<p>基础模式如下：</p>
+<p><img src="/image/sf_remote_1.png" alt="1"></p>
+<span id="more"></span>
+
+<h2 id="HTTP"><a href="#HTTP" class="headerlink" title="HTTP"></a>HTTP</h2><p>如果按照这里的定义，HTTP 访问本质上也是一个远程调用。针对 HTTP 协议规范，我们看看它的实现原理：</p>
+<ol>
+<li><p>用户在浏览器地址栏输入“<a target="_blank" rel="noopener" href="http://www.chelaile.net.cn/index.html%E2%80%9D%EF%BC%8C%E7%84%B6%E5%90%8E%E6%89%93%E5%BC%80%E4%B8%80%E4%B8%AA%E7%BD%91%E9%A1%B5">http://www.chelaile.net.cn/index.html”，然后打开一个网页</a></p>
+</li>
+<li><p>浏览器内部发起http请求</p>
+</li>
+</ol>
+<p>即：</p>
+<pre><code>GET /index.html HTTP/1.1
+Host: www.chelaile.net.cn
+</code></pre>
+<p>代码表示如下：</p>
+<pre><code>browser.open(&quot;http://www.chelaile.net.cn/index.html&quot;);
+
+browser.parse(&quot;http://www.chelaile.net.cn/index.html&quot;);
+
+data = browser.marshalling(&#123;
+    Host : www.chelaile.net.cn,
+    method : get,
+    page : /index.html
+&#125;);
+
+browser.send(data)
+</code></pre>
+<ol start="3">
+<li><p>浏览器通过 TCP 协议将 data 发往服务器</p>
+</li>
+<li><p>服务器接收 data</p>
+</li>
+</ol>
+<p>即：</p>
+<pre><code>server.receive(data);
+
+server.unmarshalling(data); //得到&#123;
+                                        Host : www.chelaile.net.cn,
+                                        method : get,
+                                        page : /index.html
+                                    &#125;
+
+server.get(&quot;/index.html&quot;);
+    
+</code></pre>
+<p>所以，远程调用的核心过程就是：</p>
+<ol>
+<li>客户进程与服务进程协商编组格式，即“协议”</li>
+<li>客户进程将“调用”本身所需的所有数据按照“协议”进行编组</li>
+<li>客户进程将编组后的数据发送给服务进程</li>
+<li>服务进程收到数据之后按照“协议”进行反编组</li>
+<li>服务进程根据反编组后的数据进行相应的方法调用</li>
+</ol>
+<p>通常来说，第3步属于底层通信细节，是“协议”独立的。所以，使用Socket即可。图形表示如下：</p>
+<p><img src="/image/sf_remote_2.png" alt="2"></p>
+<h2 id="RPC"><a href="#RPC" class="headerlink" title="RPC"></a>RPC</h2><p>RPC 的 5 个部分：</p>
+<ol>
+<li>Client</li>
+<li>Client-stub</li>
+<li>RPCRuntime</li>
+<li>Server-stub</li>
+<li>Server</li>
+</ol>
+<p>对应表示即：</p>
+<p><img src="/image/sf_remote_3.png" alt="3"></p>
+<h2 id="RMI"><a href="#RMI" class="headerlink" title="RMI"></a>RMI</h2><p>RPC 更接近于“远程调用”协议，而 RMI 就是特定的 java “远程调用”实现了。由于 java 不能进行动态类或者方法定义，所以一切调用都是基于接口来进行。</p>
+<p>一个简单的例子如下：</p>
+<ol>
+<li>约定服务接口</li>
+</ol>
+<pre><code class="java">
+        public interface IHelloService extends Remote &#123;
+            public String sayHello() throws RemoteException;
+        &#125;
+</code></pre>
+<ol start="2">
+<li>实现服务</li>
+</ol>
+<pre><code class="java">
+        public class HelloServiceImpl extends UnicastRemoteObject implements IHelloService &#123;
+            protected HelloServiceImpl() throws RemoteException &#123;
+            &#125;
+        
+            protected HelloServiceImpl(int port) throws RemoteException &#123;
+                super(port);
+            &#125;
+        
+            protected HelloServiceImpl(int port, RMIClientSocketFactory csf, RMIServerSocketFactory ssf) throws RemoteException &#123;
+                super(port, csf, ssf);
+            &#125;
+        
+            @Override
+            public String sayHello() throws RemoteException &#123;
+                return &quot;this is ServiceImpl&quot;;
+            &#125;
+        &#125;
+</code></pre>
+<ol start="3">
+<li>注册服务</li>
+</ol>
+<pre><code class="java">
+        public class HelloServer &#123;
+            public static void main(String[] args) &#123;
+                try &#123;
+                    IHelloService service = new HelloServiceImpl();
+                    LocateRegistry.createRegistry(20000);
+                    Naming.bind(&quot;rmi://localhost:20000/Hello&quot;, service);
+                &#125; catch (AlreadyBoundException | MalformedURLException | RemoteException e) &#123;
+                    e.printStackTrace();
+                &#125;
+                System.out.println(&quot;bind success&quot;);
+            &#125;
+        &#125;
+</code></pre>
+<ol start="4">
+<li>客户端查找服务并调用</li>
+</ol>
+<pre><code class="java">
+        public class HelloClient &#123;
+            public static void main(String[] args) &#123;
+                try &#123;
+                    IHelloService helloService = (IHelloService) Naming.lookup(&quot;rmi://localhost:20000/Hello&quot;);
+                    String resp = helloService.sayHello();
+                    System.out.println(resp);
+                &#125; catch (NotBoundException | MalformedURLException | RemoteException e) &#123;
+                    e.printStackTrace();
+                &#125;
+            &#125;
+        &#125;
+    
+        //output 
+        this is ServiceImpl
+</code></pre>
+<p>上面的代码中并没有具体的“编组”或者 stub 相关的代码，因为 RMI 处理了这些细节，从而在更高的层面来对外提供接口。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2016/02/24/talk/2016-02-24-talk-rpc/" data-id="cluh0141n00b738wbbttadjuk" data-title="远程调用" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/talk/" rel="tag">talk</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/02/29/android/2016/2016-02-29-Android-signature/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          Android Android签名相关
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/02/23/android/2016/2016-02-23-Android-AndroidStduio-error/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">AndroidStduio错误记录</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chrome/">chrome</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/computer/">computer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/fe/">fe</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/introspection/">introspection</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/math/">math</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/physics/">physics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/product/">product</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/software/">software</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/talk/">talk</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c51/" rel="tag">c51</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/computer/" rel="tag">computer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fe/" rel="tag">fe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/introspection/" rel="tag">introspection</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/" rel="tag">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memo/" rel="tag">memo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/product/" rel="tag">product</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rx/" rel="tag">rx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/" rel="tag">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/talk/" rel="tag">talk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/volley/" rel="tag">volley</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/c51/" style="font-size: 11.25px;">c51</a> <a href="/tags/chrome/" style="font-size: 11.25px;">chrome</a> <a href="/tags/computer/" style="font-size: 17.5px;">computer</a> <a href="/tags/fe/" style="font-size: 13.75px;">fe</a> <a href="/tags/introspection/" style="font-size: 10px;">introspection</a> <a href="/tags/java/" style="font-size: 13.75px;">java</a> <a href="/tags/javascript/" style="font-size: 18.75px;">javascript</a> <a href="/tags/math/" style="font-size: 10px;">math</a> <a href="/tags/memo/" style="font-size: 10px;">memo</a> <a href="/tags/product/" style="font-size: 15px;">product</a> <a href="/tags/rx/" style="font-size: 10px;">rx</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/talk/" style="font-size: 16.25px;">talk</a> <a href="/tags/volley/" style="font-size: 11.25px;">volley</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">三月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/04/">四月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/">《其实你不懂进化论》简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/">单元测试的艺术-第三版 简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/">网民的故事分析-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/01/talk/2021-12-01-talk-book-user-stories-applied/">用户故事与敏捷方法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/03/talk/2021-11-03-talk-logic-1/">不令人讨厌的分析逻辑</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 xesam<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

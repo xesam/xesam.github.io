@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>【Javascript】Prototype源码浅析—String部分(四)之补充 | XiaoPingYuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="interpolate ： 将字符串看作一个模板，并使用 object 的属性填充它。 sub ： 将字符串中前指定个个与 pattern 指定的模式匹配的子串用 replacement 替换 scan ： 遍历字符串中与参数 pattern 指定的模式匹配的所有子串。返回原始字符串本身。  truncate ： 将字符串截短为指定的长度（包含后缀部分）， 并添加一个后缀。  gsub ：将字符串">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Javascript】Prototype源码浅析—String部分(四)之补充">
+<meta property="og:url" content="https://xesam.github.io/2012/01/13/javascript/2012-02-03-Javascript-Prototype-String-4/index.html">
+<meta property="og:site_name" content="XiaoPingYuan">
+<meta property="og:description" content="interpolate ： 将字符串看作一个模板，并使用 object 的属性填充它。 sub ： 将字符串中前指定个个与 pattern 指定的模式匹配的子串用 replacement 替换 scan ： 遍历字符串中与参数 pattern 指定的模式匹配的所有子串。返回原始字符串本身。  truncate ： 将字符串截短为指定的长度（包含后缀部分）， 并添加一个后缀。  gsub ：将字符串">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2012-01-13T03:36:04.000Z">
+<meta property="article:modified_time" content="2024-04-01T13:40:44.036Z">
+<meta property="article:author" content="xesam">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="XiaoPingYuan" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">XiaoPingYuan</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Just Do IT</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://xesam.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-javascript/2012-02-03-Javascript-Prototype-String-4" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2012/01/13/javascript/2012-02-03-Javascript-Prototype-String-4/" class="article-date">
+  <time class="dt-published" datetime="2012-01-13T03:36:04.000Z" itemprop="datePublished">2012-01-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      【Javascript】Prototype源码浅析—String部分(四)之补充
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <pre><code>interpolate ： 将字符串看作一个模板，并使用 object 的属性填充它。
+sub ： 将字符串中前指定个个与 pattern 指定的模式匹配的子串用 replacement 替换
+scan ： 遍历字符串中与参数 pattern 指定的模式匹配的所有子串。返回原始字符串本身。 
+truncate ： 将字符串截短为指定的长度（包含后缀部分）， 并添加一个后缀。 
+gsub ：将字符串中所有与 pattern 指定的模式匹配的值全部用 replacement 替换掉
+</code></pre>
+<p>上面的方法中，最重要的一个方法是 gsub，具体说明参见《浅析Prototype的模板类–Template》</p>
+<p>sub除了可以限定次数外，其他与gsub完全一致。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">sub</span>(<span class="params">pattern, replacement, count</span>) &#123;</span><br><span class="line">    replacement = <span class="title function_">prepareReplacement</span>(replacement);</span><br><span class="line">    count = <span class="title class_">Object</span>.<span class="title function_">isUndefined</span>(count) ? <span class="number">1</span> : count;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">gsub</span>(pattern, <span class="keyword">function</span>(<span class="params">match</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (--count &lt; <span class="number">0</span>) <span class="keyword">return</span> match[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_">replacement</span>(match);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>scan 也是一样的，不过scan最后返回的是字符串本身而已。</p>
+<p>interpolate 是将字符串当做模板来用，核心还是gsub</p>
+<p>truncate 是唯一有点区别的（我现在依稀感觉我分错类了）。</p>
+<p>以字符串’fuck the gfw’为例，truncate 的执行’fuck the gfw’.truncate(10,’****’)的步骤是：</p>
+<ol>
+<li>获得前面10 - ‘****’.length个字符 ‘fuck t’</li>
+<li>拼上后缀’<strong><strong>‘，得到 ‘fuck t</strong></strong>‘，长度为10.</li>
+</ol>
+<p>处理很简单，源码也简单：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">truncate</span>(<span class="params">length, truncation</span>) &#123;</span><br><span class="line">    length = length || <span class="number">30</span>;<span class="comment">//默认长度30</span></span><br><span class="line">    truncation = <span class="title class_">Object</span>.<span class="title function_">isUndefined</span>(truncation) ? <span class="string">&#x27;...&#x27;</span> : truncation;<span class="comment">//默认后缀...</span></span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">length</span> &gt; length ?</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">slice</span>(<span class="number">0</span>, length - truncation.<span class="property">length</span>) + truncation : <span class="title class_">String</span>(<span class="variable language_">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>另：Prototype的一个方便之处就是随时可以抽取有用的代码作为单独的部分或者收为自己用。下面是单独提出来的模板方法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Template</span>(<span class="params">template, pattern</span>)&#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">template</span> = template;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">pattern</span>  = pattern || <span class="regexp">/(^|.|\r|\n)(#\&#123;(.*?)\&#125;)/</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">Template</span>.<span class="property"><span class="keyword">prototype</span></span> = (<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">evaluate</span>(<span class="params">obj</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> gsub.<span class="title function_">call</span>(<span class="variable language_">this</span>,<span class="keyword">function</span>(<span class="params">match</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(obj == <span class="literal">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> match[<span class="number">0</span>] + <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">var</span> before = match[<span class="number">1</span>] || <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">            <span class="keyword">if</span>(before == <span class="string">&#x27;\\&#x27;</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> match[<span class="number">2</span>];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">var</span> ctx = obj;</span><br><span class="line">            <span class="keyword">var</span> expr = match[<span class="number">3</span>];</span><br><span class="line">            <span class="keyword">var</span> pattern = <span class="regexp">/^([^.[]+|\[((?:.*?[^\\])?)\])(\.|\[|$)/</span>;</span><br><span class="line"></span><br><span class="line">            match = pattern.<span class="title function_">exec</span>(expr);</span><br><span class="line">            <span class="keyword">if</span> (match == <span class="literal">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> before;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">while</span> (match != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">var</span> comp = match[<span class="number">1</span>].<span class="title function_">search</span>(<span class="regexp">/^\[/</span>) != -<span class="number">1</span> ? match[<span class="number">2</span>].<span class="title function_">replace</span>(<span class="regexp">/\\\\]/g</span>, <span class="string">&#x27;]&#x27;</span>) : match[<span class="number">1</span>];</span><br><span class="line">                ctx = ctx[comp];</span><br><span class="line">                <span class="keyword">if</span> (<span class="literal">null</span> == ctx || <span class="string">&#x27;&#x27;</span> == match[<span class="number">3</span>]) <span class="keyword">break</span>;</span><br><span class="line">                expr = expr.<span class="title function_">substring</span>(<span class="string">&#x27;[&#x27;</span> == match[<span class="number">3</span>] ? match[<span class="number">1</span>].<span class="property">length</span> : match[<span class="number">0</span>].<span class="property">length</span>);</span><br><span class="line">                match = pattern.<span class="title function_">exec</span>(expr);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> before + (ctx === <span class="literal">null</span> ? <span class="string">&#x27;&#x27;</span> : <span class="title class_">String</span>(ctx));</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">gsub</span>(<span class="params">replacement</span>)&#123;</span><br><span class="line">        <span class="keyword">var</span> pattern = <span class="variable language_">this</span>.<span class="property">pattern</span>;</span><br><span class="line">        <span class="keyword">var</span> result  = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">        <span class="keyword">var</span> match   = <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">var</span> source  = <span class="variable language_">this</span>.<span class="property">template</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!(pattern.<span class="property">length</span> || pattern.<span class="property">source</span>)) &#123;</span><br><span class="line">            replacement = <span class="title function_">replacement</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line">            <span class="keyword">return</span> replacement + source.<span class="title function_">split</span>(<span class="string">&#x27;&#x27;</span>).<span class="title function_">join</span>(replacement) + replacement;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> (source.<span class="property">length</span> &gt; <span class="number">0</span>) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (match = source.<span class="title function_">match</span>(pattern)) &#123;</span><br><span class="line">                result += source.<span class="title function_">slice</span>(<span class="number">0</span>, match.<span class="property">index</span>);</span><br><span class="line">                result += <span class="title function_">replacement</span>(match) === <span class="literal">null</span> ? <span class="string">&#x27;&#x27;</span> : <span class="title class_">String</span>(<span class="title function_">replacement</span>(match));</span><br><span class="line">                source  = source.<span class="title function_">slice</span>(match.<span class="property">index</span> + match[<span class="number">0</span>].<span class="property">length</span>);</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                result += source;</span><br><span class="line">                source = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        constructor : <span class="title class_">Template</span>,</span><br><span class="line">        evaluate : evaluate</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+
+<p>使用：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> template = <span class="keyword">new</span> <span class="title class_">Template</span>(<span class="string">&#x27;my age is : #&#123;name.age&#125;&#x27;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(template.evaluate(&#123;name : &#123;age : <span class="number">24</span>&#125;&#125;));<span class="comment">//my age is : 24</span></span><br></pre></td></tr></table></figure>
+
+<p>String部分（完）</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2012/01/13/javascript/2012-02-03-Javascript-Prototype-String-4/" data-id="cluh0140i005c38wb4g41g62z" data-title="【Javascript】Prototype源码浅析—String部分(四)之补充" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2012/01/13/javascript/2012-01-12-Javascript-Prototype-String-3-HTML/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          【Javascript】Prototype源码浅析—String部分(三)之HTML字符串处理
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2012/01/12/javascript/2012-01-12-Javascript-url-params/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">【Javascript】从URL中提取参数与将对象转换为URL查询参数</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chrome/">chrome</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/computer/">computer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/fe/">fe</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/introspection/">introspection</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/math/">math</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/physics/">physics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/product/">product</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/software/">software</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/talk/">talk</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c51/" rel="tag">c51</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/computer/" rel="tag">computer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fe/" rel="tag">fe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/introspection/" rel="tag">introspection</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/" rel="tag">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memo/" rel="tag">memo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/product/" rel="tag">product</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rx/" rel="tag">rx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/" rel="tag">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/talk/" rel="tag">talk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/volley/" rel="tag">volley</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/c51/" style="font-size: 11.25px;">c51</a> <a href="/tags/chrome/" style="font-size: 11.25px;">chrome</a> <a href="/tags/computer/" style="font-size: 17.5px;">computer</a> <a href="/tags/fe/" style="font-size: 13.75px;">fe</a> <a href="/tags/introspection/" style="font-size: 10px;">introspection</a> <a href="/tags/java/" style="font-size: 13.75px;">java</a> <a href="/tags/javascript/" style="font-size: 18.75px;">javascript</a> <a href="/tags/math/" style="font-size: 10px;">math</a> <a href="/tags/memo/" style="font-size: 10px;">memo</a> <a href="/tags/product/" style="font-size: 15px;">product</a> <a href="/tags/rx/" style="font-size: 10px;">rx</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/talk/" style="font-size: 16.25px;">talk</a> <a href="/tags/volley/" style="font-size: 11.25px;">volley</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">三月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/04/">四月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/">《其实你不懂进化论》简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/">单元测试的艺术-第三版 简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/">网民的故事分析-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/01/talk/2021-12-01-talk-book-user-stories-applied/">用户故事与敏捷方法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/03/talk/2021-11-03-talk-logic-1/">不令人讨厌的分析逻辑</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 xesam<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>【Javascript】从字符串中解析出JSON | XiaoPingYuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="JSON介绍http:&#x2F;&#x2F;json.org&#x2F; 这个解析JSON，也是Prototype源码浅析的一个铺垫。 下面是一个开篇例子，其中response是从服务器获得的JSON字符串： 1234567891011121314151617181920212223242526272829303132var response_1 &#x3D; &quot;&#123;\&quot;user\&quot;:\&amp;quot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Javascript】从字符串中解析出JSON">
+<meta property="og:url" content="https://xesam.github.io/2012/01/01/javascript/2012-01-01-Javascript-string-JSON/index.html">
+<meta property="og:site_name" content="XiaoPingYuan">
+<meta property="og:description" content="JSON介绍http:&#x2F;&#x2F;json.org&#x2F; 这个解析JSON，也是Prototype源码浅析的一个铺垫。 下面是一个开篇例子，其中response是从服务器获得的JSON字符串： 1234567891011121314151617181920212223242526272829303132var response_1 &#x3D; &quot;&#123;\&quot;user\&quot;:\&amp;quot">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://json.org/string.gif">
+<meta property="article:published_time" content="2012-01-01T02:36:04.000Z">
+<meta property="article:modified_time" content="2024-04-01T13:40:44.032Z">
+<meta property="article:author" content="xesam">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://json.org/string.gif">
+  
+    <link rel="alternate" href="/atom.xml" title="XiaoPingYuan" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">XiaoPingYuan</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Just Do IT</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://xesam.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-javascript/2012-01-01-Javascript-string-JSON" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2012/01/01/javascript/2012-01-01-Javascript-string-JSON/" class="article-date">
+  <time class="dt-published" datetime="2012-01-01T02:36:04.000Z" itemprop="datePublished">2012-01-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      【Javascript】从字符串中解析出JSON
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>JSON介绍<a target="_blank" rel="noopener" href="http://json.org/">http://json.org/</a></p>
+<p>这个解析JSON，也是Prototype源码浅析的一个铺垫。</p>
+<p>下面是一个开篇例子，其中response是从服务器获得的JSON字符串：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> response_1 = <span class="string">&quot;&#123;\&quot;user\&quot;:\&quot;xesam\&quot;,\&quot;info\&quot;:&#123;\&quot;age\&quot;:\&quot;24\&quot;&#125;&#125;&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> response_2 = <span class="string">&quot;&#123;&#x27;user&#x27; : &#x27;xesam&#x27;&#125;&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> response_3 = <span class="string">&quot;console.log(&#x27;xss&#x27;)&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj_1_1 = <span class="built_in">eval</span>(<span class="string">&#x27;(&#x27;</span> + response_1 + <span class="string">&#x27;)&#x27;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_1_1&#x27;</span>,obj_1_1);</span><br><span class="line"><span class="keyword">var</span> obj_1_2 = <span class="built_in">eval</span>(<span class="string">&#x27;(&#x27;</span> + response_2 + <span class="string">&#x27;)&#x27;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_1_2&#x27;</span>,obj_1_2);</span><br><span class="line"><span class="keyword">var</span> obj_1_3 = <span class="built_in">eval</span>(<span class="string">&#x27;(&#x27;</span> + response_3 + <span class="string">&#x27;)&#x27;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_1_3&#x27;</span>,obj_1_3);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj_2_1 = (<span class="keyword">new</span> <span class="title class_">Function</span>(<span class="string">&#x27;return &#x27;</span> + response_1))();</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_2_1&#x27;</span>,obj_2_1);</span><br><span class="line"><span class="keyword">var</span> obj_2_2 = (<span class="keyword">new</span> <span class="title class_">Function</span>(<span class="string">&#x27;return &#x27;</span> + response_2))();</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_2_2&#x27;</span>,obj_2_2);</span><br><span class="line"><span class="keyword">var</span> obj_2_3 = (<span class="keyword">new</span> <span class="title class_">Function</span>(<span class="string">&#x27;return &#x27;</span> + response_3))();</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_2_3&#x27;</span>,obj_2_3);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj_3_1 = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(response_1);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_3_1&#x27;</span>,obj_3_1);</span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> obj_3_2 = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(response_2);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_3_2&#x27;</span>,obj_3_2);</span><br><span class="line">&#125;<span class="keyword">catch</span>(e)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_3_2&#x27;</span>,<span class="string">&#x27;error&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> obj_3_3 = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(response_3);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_3_3&#x27;</span>,obj_3_3);</span><br><span class="line">&#125;<span class="keyword">catch</span>(e)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_3_3&#x27;</span>,<span class="string">&#x27;error&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">obj_1_1 <span class="title class_">Object</span> </span><br><span class="line">obj_1_2 <span class="title class_">Object</span></span><br><span class="line">xss</span><br><span class="line">obj_1_3 <span class="literal">undefined</span></span><br><span class="line">obj_2_1 <span class="title class_">Object</span></span><br><span class="line">obj_2_2 <span class="title class_">Object</span></span><br><span class="line">xss</span><br><span class="line">obj_2_3 <span class="literal">undefined</span></span><br><span class="line">obj_3_1 <span class="title class_">Object</span></span><br><span class="line">obj_3_2 error</span><br><span class="line">obj_3_3 error</span><br></pre></td></tr></table></figure>
+
+<p>可见，对于浏览器自带的标准JSON解析器来说，response_2和response_3是非法的。因此，我们可以更进一步的了解到JSON的几点主要的地方。</p>
+<p>第一、对于key&#x2F;value的形式，每一个key都需要有引号（这个和javascript原生对象可有可无的引号不同），需要是字符串（这种字符串形式上更类似于C语言里面的字符串，必须是双引号，这个和javascript原生对象引号可以使双引号也可以是单引号不同）。</p>
+<p><img src="http://json.org/string.gif" alt="1"></p>
+<p>上面的图示是对JSON中string的要求</p>
+<p>第二、JSON本来就是一种交换数据的格式，因此，里面是不应该包含需要执行的javascript代码的。</p>
+<p>所以，只有严格符合标准的JSON字符串形式，才能通过JSON.parse的解析。</p>
+<p>对于大部分现代浏览器而言，window.JSON 是一个内置的对象，但是对于IE6&#x2F;7来说，这个对象是缺失的，所以，需要借助例子中的前两种形式eval和new Function。</p>
+<p>平常而言，eval用的比较多，但是eval够强大，所以够危险。</p>
+<p>response_2 被解析成对象是eval本身的功能，跟JSON无关。如果服务器返回的是类似response_2的形式，八成是一开始的传值就有问题，我就犯过这种错误。不过如果是服务端生成的，一般倒不会有什么问题。</p>
+<p>response_3 被解析成可执行代码页是eval本身的功能，是危险的来源，不过好像平时也没怎么注意。</p>
+<p>不过，对于IE6&#x2F;7来说，要从字符串中解析出来JSON对象，又必须借助于eval（依稀听说新的ECMAScript标准抛弃了eval？不过这跟IE6&#x2F;7半毛钱的关系都没有）。</p>
+<p>因此，这一部分可以参考JSON.js的String.prototype.parseJSON</p>
+<p>对于</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> response_1 = <span class="string">&quot;&#123;\&quot;user\&quot;:\&quot;xesam\&quot;,\&quot;info\&quot;:&#123;\&quot;age\&quot;:\&quot;24\&quot;&#125;&#125;&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这段，String.prototype.parseJSON的转换流程如下：</p>
+<p>第一，先检测待转换字符串的合法性</p>
+<p>第二，eval字符串</p>
+<p>所以response_1的解析情况大致如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> responseTemp = response_1.<span class="title function_">replace</span>(<span class="regexp">/\\./g</span>, <span class="string">&#x27;@&#x27;</span>).<span class="title function_">replace</span>(<span class="regexp">/&quot;[^&quot;\\\n\r]*&quot;/g</span>, <span class="string">&#x27;&#x27;</span>);</span><br><span class="line">    <span class="keyword">var</span> correct = <span class="regexp">/^[,:&#123;&#125;\[\]0-9.\-+Eaeflnr-u \n\r\t]*$/</span>.<span class="title function_">test</span>(responseTemp);</span><br><span class="line">    <span class="keyword">if</span>(correct)&#123;</span><br><span class="line">        <span class="keyword">var</span> j = <span class="built_in">eval</span>(<span class="string">&#x27;(&#x27;</span> + response_1+ <span class="string">&#x27;)&#x27;</span>);</span><br><span class="line">        <span class="keyword">return</span> j;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">SyntaxError</span>(<span class="string">&#x27;parseJSON&#x27;</span>);</span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">replace</span>(<span class="regexp">/\\./g</span>, <span class="string">&#x27;@&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>先把一些转义字符替换掉，那个“@”并没有什么特殊意思，至于为什么@，估计是因为正则里面没有这个元字符，所以避免冲突，想换做其他的，应该也可以。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">replace</span>(<span class="regexp">/&quot;[^&quot;\\\n\r]*&quot;/g</span>, <span class="string">&#x27;&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>这一步替换掉了所有引号包含的内容，于是，字符串中剩下的部分就是除去string外可以存在的字符。</p>
+<p>看这个，</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/^[,:&#123;&#125;\[\]<span class="number">0</span>-<span class="number">9.</span>\-+<span class="title class_">Eaeflnr</span>-u \n\r\t]*$/</span><br></pre></td></tr></table></figure>
+<p>其实好理解，JSON的value值可以是string，object，array，number，false，true，null等7种，需要引号包含string的内容都处理掉了，所以除了这些，JSON格式还有</p>
+<pre><code>&#123;&#125;表示对象结构，对应,:&#123;&#125;
+[]表示数组结构，对应\[\]
+0-9 . E e表示数字类型，对应0-9.\-+Ee
+true 和 false 对应aflsrtu
+null 对应n
+其他一些特殊字符对应 \n\r\t
+</code></pre>
+<p>这些组合起来就是上面的一段正则。</p>
+<p>下面是完整的JSON.js的源码，无非是添加了一个递归而已，从而可以安全的解析整个嵌套的部分。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span>(<span class="params">s</span>)&#123;</span><br><span class="line">    s.<span class="property">parseJSON</span> = <span class="keyword">function</span> (<span class="params">filter</span>) &#123;</span><br><span class="line">      <span class="keyword">var</span> j;</span><br><span class="line">      <span class="keyword">function</span> <span class="title function_">walk</span>(<span class="params">k, v</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> i;</span><br><span class="line">        <span class="keyword">if</span> (v &amp;&amp; <span class="keyword">typeof</span> v === <span class="string">&#x27;object&#x27;</span>) &#123;</span><br><span class="line">          <span class="keyword">for</span> (i <span class="keyword">in</span> v) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">hasOwnProperty</span>.<span class="title function_">apply</span>(v, [i])) &#123;</span><br><span class="line">              v[i] = <span class="title function_">walk</span>(i, v[i]);</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_">filter</span>(k, v);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (<span class="regexp">/^[,:&#123;&#125;\[\]0-9.\-+Eaeflnr-u \n\r\t]*$/</span>.<span class="title function_">test</span>(<span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/\\./g</span>, <span class="string">&#x27;@&#x27;</span>).<span class="title function_">replace</span>(<span class="regexp">/&quot;[^&quot;\\\n\r]*&quot;/g</span>, <span class="string">&#x27;&#x27;</span>))) &#123;</span><br><span class="line">        j = <span class="built_in">eval</span>(<span class="string">&#x27;(&#x27;</span> + <span class="variable language_">this</span> + <span class="string">&#x27;)&#x27;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">typeof</span> filter === <span class="string">&#x27;function&#x27;</span> ? <span class="title function_">walk</span>(<span class="string">&#x27;&#x27;</span>, j) : j;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">SyntaxError</span>(<span class="string">&#x27;parseJSON&#x27;</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;)(<span class="title class_">String</span>.<span class="property"><span class="keyword">prototype</span></span>);</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2012/01/01/javascript/2012-01-01-Javascript-string-JSON/" data-id="cluh01405003x38wb36ug1usb" data-title="【Javascript】从字符串中解析出JSON" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2012/01/10/javascript/2012-01-10-Javascript-Prototype-String-1-indexOf/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          【Javascript】Prototype源码浅析—String部分(一)有关indexOf优化
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2012/01/01/javascript/2012-01-01-Javascript-ie-check/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">【Javascript】有关IE版本检测</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chrome/">chrome</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/computer/">computer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/fe/">fe</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/introspection/">introspection</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/math/">math</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/physics/">physics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/product/">product</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/software/">software</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/talk/">talk</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c51/" rel="tag">c51</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/computer/" rel="tag">computer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fe/" rel="tag">fe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/introspection/" rel="tag">introspection</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/" rel="tag">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memo/" rel="tag">memo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/product/" rel="tag">product</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rx/" rel="tag">rx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/" rel="tag">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/talk/" rel="tag">talk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/volley/" rel="tag">volley</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/c51/" style="font-size: 11.25px;">c51</a> <a href="/tags/chrome/" style="font-size: 11.25px;">chrome</a> <a href="/tags/computer/" style="font-size: 17.5px;">computer</a> <a href="/tags/fe/" style="font-size: 13.75px;">fe</a> <a href="/tags/introspection/" style="font-size: 10px;">introspection</a> <a href="/tags/java/" style="font-size: 13.75px;">java</a> <a href="/tags/javascript/" style="font-size: 18.75px;">javascript</a> <a href="/tags/math/" style="font-size: 10px;">math</a> <a href="/tags/memo/" style="font-size: 10px;">memo</a> <a href="/tags/product/" style="font-size: 15px;">product</a> <a href="/tags/rx/" style="font-size: 10px;">rx</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/talk/" style="font-size: 16.25px;">talk</a> <a href="/tags/volley/" style="font-size: 11.25px;">volley</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">三月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/04/">四月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/">《其实你不懂进化论》简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/">单元测试的艺术-第三版 简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/">网民的故事分析-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/01/talk/2021-12-01-talk-book-user-stories-applied/">用户故事与敏捷方法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/03/talk/2021-11-03-talk-logic-1/">不令人讨厌的分析逻辑</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 xesam<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

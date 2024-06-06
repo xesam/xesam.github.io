@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>XiaoPingYuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="XiaoPingYuan">
+<meta property="og:url" content="https://xesam.github.io/page/19/index.html">
+<meta property="og:site_name" content="XiaoPingYuan">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="xesam">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="XiaoPingYuan" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">XiaoPingYuan</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Just Do IT</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://xesam.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-javascript/2012-01-14-Javascript-Prototype-Number" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2012/01/14/javascript/2012-01-14-Javascript-Prototype-Number/" class="article-date">
+  <time class="dt-published" datetime="2012-01-14T03:46:04.000Z" itemprop="datePublished">2012-01-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2012/01/14/javascript/2012-01-14-Javascript-Prototype-Number/">【Javascript】Prototype源码浅析—Number部分</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>Prototype在原生对象的基础上扩展，分别是 Object，Function，String，Number，Array，Date，前面分析了 Object，Function，String，还剩下Number，Array，Date。</p>
+<p>Number部分方法比较少，一共有8个：</p>
+<pre><code>toColorPart: 将 Number 对象转换为具有两位数字的十六进制形式
+succ:  返回当前 Number 对象的下一个值，即当前值加一         
+times: 采用 Ruby 的风格来封装一个标准的 [0...n] 循环
+toPaddedString:将当前 Number 对象转换为字符串，如果转换后的字符串长度小于 length 指定的值，则用 0 在左边补足其余的位数 
+abs:   返回当前 Number 对象的绝对值。        
+round: 返回当前 Number 对象四舍五入后的整数值。
+ceil:  返回大于等于当前 Number 对象的最小整数值。
+floor: 返回小于等于当前 Number 对象的最大整数值。
+</code></pre>
+<p>其中一个重要的方法是toPaddedString。Number对象重写了toString方法：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">NumberObject</span>.<span class="title function_">toString</span>(radix)</span><br></pre></td></tr></table></figure>
+<p>radix	可选。规定表示数字的基数，使 2 ~ 36 之间的整数。若省略该参数，则使用基数 10。但是要注意，如果该参数是 10 以外的其他值，则 ECMAScript 标准允许实现返回任意值。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">toPaddedString</span>(<span class="params">length,radix</span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> string = <span class="variable language_">this</span>.<span class="title function_">toString</span>(radix || <span class="number">10</span>);<span class="comment">//先将数字转换成相应的进制</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;0&#x27;</span>.<span class="title function_">times</span>(length - string.<span class="property">length</span>) + string;<span class="comment">//times方法在String中扩展的，将一个字符重复n遍</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有了这个方法，就有一个比较有用的延伸就是toColorPart，可用于CSS中的颜色转换：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">toColorPart</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">toPaddedString</span>(<span class="number">2</span>, <span class="number">16</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>既然是CSS颜色转换，因此数字就要求在[0-255]范围内。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>((<span class="number">10</span>).<span class="title function_">toColorPart</span>());<span class="comment">//0a</span></span><br></pre></td></tr></table></figure>
+<p>有一个和String中同名的方法succ，作用也差不多，String中是按照字符表来递加的，Number中是按照自然数的顺序来的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">succ</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span> + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>((<span class="number">10</span>).<span class="title function_">succ</span>());<span class="comment">//11</span></span><br></pre></td></tr></table></figure>
+<p>从这个方法出发，来一个简单的0-n的数组</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">range</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> ret = [<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="variable language_">this</span> - <span class="number">1</span>; i++)&#123;</span><br><span class="line">        ret.<span class="title function_">push</span>(i.<span class="title function_">succ</span>());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>((<span class="number">10</span>).<span class="title function_">range</span>());<span class="comment">//[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</span></span><br></pre></td></tr></table></figure>
+<p>暂时用这个range函数来得到times函数：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">    <span class="keyword">function</span> <span class="title function_">times</span>(<span class="params">iterator, context</span>)&#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">range</span>().<span class="title function_">forEach</span>(iterator, context);<span class="comment">//源码中使用的是R()方法</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> s = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    (<span class="number">5</span>).<span class="title function_">times</span>(<span class="keyword">function</span>(<span class="params">item</span>)&#123;</span><br><span class="line">        s += item;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(s);<span class="comment">//01234</span></span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string">  </span></span><br><span class="line"><span class="string">除去上面几个方法，其他的方法就是将Math的静态方法扩展到Number对象上【说法不准确，意会··=。=】</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>javascript</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">abs</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title class_">Math</span>.<span class="title function_">abs</span>(<span class="variable language_">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">round</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title class_">Math</span>.<span class="title function_">round</span>(<span class="variable language_">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">ceil</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title class_">Math</span>.<span class="title function_">ceil</span>(<span class="variable language_">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">floor</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title class_">Math</span>.<span class="title function_">floor</span>(<span class="variable language_">this</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2012/01/14/javascript/2012-01-14-Javascript-Prototype-Number/" data-id="cluh0140b004r38wbgavkg3ka" data-title="【Javascript】Prototype源码浅析—Number部分" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-javascript/2012-01-13-Javascript-from-alert" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2012/01/13/javascript/2012-01-13-Javascript-from-alert/" class="article-date">
+  <time class="dt-published" datetime="2012-01-13T03:46:04.000Z" itemprop="datePublished">2012-01-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2012/01/13/javascript/2012-01-13-Javascript-from-alert/">【Javascript】改造alert的引发的争论</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>今天在群里讨论alert的问题，说到了alert的改造，虽然说改造原生方法不是好做法，但是既然提到了就可以讨论下，所以我按照他们的讨论给出了下面的一段代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> _alert = <span class="variable language_">window</span>.<span class="property">alert</span>;</span><br><span class="line"><span class="variable language_">window</span>.<span class="property">alert</span> = <span class="keyword">function</span>(<span class="params">param,isDebug</span>)&#123;</span><br><span class="line">    <span class="keyword">if</span>(isDebug)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(param);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="title function_">_alert</span>(param);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">alert</span>(<span class="string">&#x27;x&#x27;</span>);</span><br><span class="line"><span class="title function_">alert</span>(<span class="string">&#x27;x&#x27;</span>,<span class="literal">true</span>);</span><br><span class="line"><span class="title function_">alert</span>(<span class="string">&#x27;x&#x27;</span>);</span><br><span class="line"><span class="title function_">alert</span>(<span class="string">&#x27;x&#x27;</span>,<span class="literal">true</span>);</span><br></pre></td></tr></table></figure>
+<p>于是开始反驳我，大致的论点集中在下面的一段上面：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">_alert = <span class="variable language_">window</span>.<span class="property">alert</span>;</span><br><span class="line"><span class="variable language_">window</span>.<span class="property">alert</span> = <span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>反方论点：这么写之后，_alert与window.alert应该还是一致的，因为大家都知道函数名称保存的只是引用而已。</p>
+<p>当时被弄糊涂了，难道价值观被颠覆了？后来仔细想了一会儿，发现貌似被忽悠了。函数变量名保存的是引用没错，可是这个例子和引用的关系不是这么讲的吧···</p>
+<p>要说明函数的引用关系，应该是这个例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</span><br><span class="line"><span class="keyword">var</span> b = a;</span><br><span class="line">a.<span class="title function_">push</span>(<span class="number">4</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a,b);<span class="comment">//[1,2,3,4],[1,2,3,4]</span></span><br></pre></td></tr></table></figure>
+
+<p>后来回想一下，问题的最终原因还是值类型和引用类型被忽悠了，于是分析一下。先看下面的例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">var</span> b = a;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a,b);</span><br></pre></td></tr></table></figure>
+<p>在这个例子中a，b完全只是一个名字而已，没有其他的作用。不论要不要，那个1都是真实存在的（假如可以无端产生一个变量1，那么1在被回收之前，无论有没有名字，都是存在的），此时的情况是：</p>
+<p><img src="/image/javascript_alert_1.png" alt="1"></p>
+<p>继续上面的例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">var</span> b = a;</span><br><span class="line">a = <span class="number">2</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a,b);</span><br></pre></td></tr></table></figure>
+
+<p><img src="/image/javascript_alert_2.png" alt="1"></p>
+<p>上面是Number类型的情况，下面换做一个引用类型的，比如Array。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</span><br><span class="line"><span class="keyword">var</span> b = a;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a,b);</span><br></pre></td></tr></table></figure>
+
+<p><img src="/image/javascript_alert_3.png" alt="1"><br>继续：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</span><br><span class="line"><span class="keyword">var</span> b = a;</span><br><span class="line">a.<span class="title function_">push</span>(<span class="number">4</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a,b);</span><br></pre></td></tr></table></figure>
+
+<p><img src="/image/javascript_alert_4.png" alt="1"></p>
+<p>这就是引用传递，在整个过程中，变量名本身还是a，b没有变化，但是他们引用的东西发生了变化。</p>
+<p>此时a与b之间没有半毛钱的关系，他们是通过[1,2,3,4]存在一丝形式上的相同性，而不是b与[1,2,3,4]通过a有联系，这一点才是引用传递要注意的。此时a&#x3D;&#x3D;&#x3D;b为true。</p>
+<p>下面换一个操作：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</span><br><span class="line"><span class="keyword">var</span> b = a;</span><br><span class="line">a = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a,b);</span><br></pre></td></tr></table></figure>
+<p>此时，虽然a，b各自保存的还是引用类型数据，但是a与b本来就半毛钱的关系都没有，所以此时a换个内容，与b的关系就完全没有了，连通过最初[1,2,3]获得的相同性都没有了，此时a&#x3D;&#x3D;&#x3D;b为false。对应下面的图：</p>
+<p><img src="/image/javascript_alert_5.png" alt="1"></p>
+<p>继续操作a：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</span><br><span class="line"><span class="keyword">var</span> b = a;</span><br><span class="line">a = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</span><br><span class="line">a.<span class="title function_">push</span>(<span class="number">4</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a,b);</span><br></pre></td></tr></table></figure>
+
+<p><img src="/image/javascript_alert_6.png" alt="1"></p>
+<p>所以，“引用”引用的内存中的值，而非那个变量名。</p>
+<p>回到开头的例子中：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> _alert = <span class="variable language_">window</span>.<span class="property">alert</span>;</span><br><span class="line"><span class="variable language_">window</span>.<span class="property">alert</span> = <span class="keyword">function</span>(<span class="params">param,isDebug</span>)&#123;</span><br><span class="line">    <span class="keyword">if</span>(isDebug)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(param);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="title function_">_alert</span>(param);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在执行var _alert &#x3D; window.alert;的时候，三者的关系是：</p>
+<p><img src="/image/javascript_alert_7.png" alt="1"></p>
+<p>执行：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">window</span>.<span class="property">alert</span> = <span class="keyword">function</span>(<span class="params">param,isDebug</span>)&#123;</span><br><span class="line">   <span class="comment">//</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/image/javascript_alert_8.png" alt="1"></p>
+<p>所以最初讨论的时候，一开始就错了，因为_alert引用的不是window.alert，而是window.alert所引用的那个函数，不论是_alert还是window.alert，都只是一个名字而已，两者没有半毛钱的关系，最终的枢纽还是真实存在的内存中的那个变量。</p>
+<p>然后另外一个问题就是关于才浏览器控制台测试代码的问题。</p>
+<p>我们讨论的时候，先运行了一段测试代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> _alert = <span class="variable language_">window</span>.<span class="property">alert</span>;</span><br><span class="line"><span class="variable language_">window</span>.<span class="property">alert</span> = <span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(_alert === <span class="variable language_">window</span>.<span class="property">alert</span>);</span><br></pre></td></tr></table></figure>
+<p>然后我们又在相同的控制台里面运行了我在开头给出的那一段代码，所以在同一个窗口里面，控制台的环境并没有刷新，测试代码的效果还在，所以alert已经混乱了。</p>
+<p>要完全测试的话，最好还是每次都新开一个窗口测试。</p>
+<p>错误之处请大牛指教~</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2012/01/13/javascript/2012-01-13-Javascript-from-alert/" data-id="cluh0140a004o38wb4ro8h65u" data-title="【Javascript】改造alert的引发的争论" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-javascript/2012-01-12-Javascript-Prototype-String-3-HTML" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2012/01/13/javascript/2012-01-12-Javascript-Prototype-String-3-HTML/" class="article-date">
+  <time class="dt-published" datetime="2012-01-13T03:36:04.000Z" itemprop="datePublished">2012-01-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2012/01/13/javascript/2012-01-12-Javascript-Prototype-String-3-HTML/">【Javascript】Prototype源码浅析—String部分(三)之HTML字符串处理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <pre><code>HTML处理	stripTags    |  escapeHTML      |  unescapeHTML 	 
+JSON处理	unfilterJSON |  isJSON          |  evalJSON     |  parseJSON
+脚本处理	stripScripts |  extractScripts  |  evalScripts
+</code></pre>
+<p>现在，String部分转入具体的关联应用，分别对应 HTML字符串，JSON字符串和HTML中的脚本字符串。</p>
+<p>【乱入一句，有关JSON的一点东西，可以看看<a target="_blank" rel="noopener" href="http://www.cnblogs.com/TomXu/archive/2012/01/11/2311956.html">http://www.cnblogs.com/TomXu/archive/2012/01/11/2311956.html</a>】</p>
+<p>下面分别叙述：</p>
+<h3 id="一、HTML字符串"><a href="#一、HTML字符串" class="headerlink" title="一、HTML字符串"></a>一、HTML字符串</h3><pre><code>stripTags  ：移除字符串中所有的 HTML 标签。
+escapeHTML ： 将 HTML 特殊字符转换为它们的等价实体。（&amp;对应&amp;amp; &lt;对应&amp;lt; &gt;对应&amp;gt; ）
+unescapeHTML ：移除字符串中的标签，并将用实体表示的 HTML 特殊字符转换为它们的正常形式。（escapeHTML 的逆操作）
+</code></pre>
+<p>stripTags  中的一段正则</p>
+<pre><code>/&lt;\w+(\s+(&quot;[^&quot;]*&quot;|&#39;[^&#39;]*&#39;|[^&gt;])+)?&gt;|&lt;\/\w+&gt;/gi
+</code></pre>
+<p>用来匹配标签中的内容，注意不能换行，不过换行的话就有语法错误了。</p>
+<p>【这个方法唯一需要注意的位置是，stripTags会移除<script>标签，但是不会移除里面的内容，所以可能将<script>里面的内容暴露出来，影响页面结构】</p>
+<h3 id="二、脚本字符串"><a href="#二、脚本字符串" class="headerlink" title="二、脚本字符串"></a>二、脚本字符串</h3><pre><code>stripScripts ： 移除字符串中所有的 HTML script 块。弥补stripTags方法对script标签的缺陷
+extractScripts ：提取出字符串中包含的所有 script 的内容，并将之返回作为一个字符串数组。
+evalScripts ：执行字符串中包含的所有 script 块的内容。返回一个数组，该数组包含每个 script 执行后返回的值。  
+</code></pre>
+<p>stripScripts中的正则是对stripTags中一个正则的发展</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">stripScripts</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> pattern = <span class="keyword">new</span> <span class="title class_">RegExp</span>(<span class="string">&#x27;&lt;script[^&gt;]*&gt;([\\S\\s]*?)&lt;\/script&gt;&#x27;</span>, <span class="string">&#x27;img&#x27;</span>);<span class="comment">//i忽略大小写，m换行，g全局</span></span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">replace</span>(pattern , <span class="string">&#x27;&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">extractScripts</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> matchAll = <span class="keyword">new</span> <span class="title class_">RegExp</span>(<span class="string">&#x27;&lt;script[^&gt;]*&gt;([\\S\\s]*?)&lt;\/script&gt;&#x27;</span>, <span class="string">&#x27;img&#x27;</span>),</span><br><span class="line">    matchOne = <span class="keyword">new</span> <span class="title class_">RegExp</span>(<span class="string">&#x27;&lt;script[^&gt;]*&gt;([\\S\\s]*?)&lt;\/script&gt;&#x27;</span>, <span class="string">&#x27;im&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> (<span class="variable language_">this</span>.<span class="title function_">match</span>(matchAll) || []).<span class="title function_">map</span>(<span class="keyword">function</span>(<span class="params">scriptTag</span>) &#123; </span><br><span class="line">        <span class="keyword">return</span> (scriptTag.<span class="title function_">match</span>(matchOne) || [<span class="string">&#x27;&#x27;</span>, <span class="string">&#x27;&#x27;</span>])[<span class="number">1</span>];</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>map是对数组的一个扩展，某些浏览器有这个原生方法，参见《chrome原生方法之数组》<br>最后获得的是一个所有script标签内部内容的一个数组，因此evalScripts 的做法就很自然的可以想出来——循环遍历获得的数组，然后依次执行（eval），存储每一项执行的结果。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">evalScripts</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">extractScripts</span>().<span class="title function_">map</span>(<span class="keyword">function</span>(<span class="params">script</span>) &#123; <span class="keyword">return</span> <span class="built_in">eval</span>(script) &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="三、JSON处理"><a href="#三、JSON处理" class="headerlink" title="三、JSON处理"></a>三、JSON处理</h3><pre><code>unfilterJSON：移除 Ajax JSON 或 JavaScript 响应内容周围的安全注释界定符。
+isJSON：使用正则表达式检测字符串是否是合法的 JSON 格式
+evalJSON：执行一个 JSON 格式的字符串，并返回结果对象
+</code></pre>
+<p>其中isJSON和evalJSON就是JSON.js中的parseJSON，而且代码也差不多，参见《从字符串中解析出JSON》</p>
+<p>顺便说一点unfilterJSON中的安全注释界定符，这是一种安全机制，对于自家的数据，可以在返回值两端加上特殊的字符（界定符）来表明数据的来源，客户端解析的时候用unfilterJSON来处理掉添加的界定符，借此可以在一定程度上减少一些XSS的攻击。</p>
+<p>Prototype中默认的形式是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;/*-secure-\n&#123;&quot;name&quot;: &quot;小西山子&quot;,&quot;age&quot;: 24&#125;\n*/&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>其中界定符号是 /<em>-secure-\n'和'\n</em>/'</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2012/01/13/javascript/2012-01-12-Javascript-Prototype-String-3-HTML/" data-id="cluh01408004d38wbfqe06my5" data-title="【Javascript】Prototype源码浅析—String部分(三)之HTML字符串处理" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-javascript/2012-02-03-Javascript-Prototype-String-4" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2012/01/13/javascript/2012-02-03-Javascript-Prototype-String-4/" class="article-date">
+  <time class="dt-published" datetime="2012-01-13T03:36:04.000Z" itemprop="datePublished">2012-01-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2012/01/13/javascript/2012-02-03-Javascript-Prototype-String-4/">【Javascript】Prototype源码浅析—String部分(四)之补充</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <pre><code>interpolate ： 将字符串看作一个模板，并使用 object 的属性填充它。
+sub ： 将字符串中前指定个个与 pattern 指定的模式匹配的子串用 replacement 替换
+scan ： 遍历字符串中与参数 pattern 指定的模式匹配的所有子串。返回原始字符串本身。 
+truncate ： 将字符串截短为指定的长度（包含后缀部分）， 并添加一个后缀。 
+gsub ：将字符串中所有与 pattern 指定的模式匹配的值全部用 replacement 替换掉
+</code></pre>
+<p>上面的方法中，最重要的一个方法是 gsub，具体说明参见《浅析Prototype的模板类–Template》</p>
+<p>sub除了可以限定次数外，其他与gsub完全一致。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">sub</span>(<span class="params">pattern, replacement, count</span>) &#123;</span><br><span class="line">    replacement = <span class="title function_">prepareReplacement</span>(replacement);</span><br><span class="line">    count = <span class="title class_">Object</span>.<span class="title function_">isUndefined</span>(count) ? <span class="number">1</span> : count;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">gsub</span>(pattern, <span class="keyword">function</span>(<span class="params">match</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (--count &lt; <span class="number">0</span>) <span class="keyword">return</span> match[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_">replacement</span>(match);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>scan 也是一样的，不过scan最后返回的是字符串本身而已。</p>
+<p>interpolate 是将字符串当做模板来用，核心还是gsub</p>
+<p>truncate 是唯一有点区别的（我现在依稀感觉我分错类了）。</p>
+<p>以字符串’fuck the gfw’为例，truncate 的执行’fuck the gfw’.truncate(10,’****’)的步骤是：</p>
+<ol>
+<li>获得前面10 - ‘****’.length个字符 ‘fuck t’</li>
+<li>拼上后缀’<strong><strong>‘，得到 ‘fuck t</strong></strong>‘，长度为10.</li>
+</ol>
+<p>处理很简单，源码也简单：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">truncate</span>(<span class="params">length, truncation</span>) &#123;</span><br><span class="line">    length = length || <span class="number">30</span>;<span class="comment">//默认长度30</span></span><br><span class="line">    truncation = <span class="title class_">Object</span>.<span class="title function_">isUndefined</span>(truncation) ? <span class="string">&#x27;...&#x27;</span> : truncation;<span class="comment">//默认后缀...</span></span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">length</span> &gt; length ?</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">slice</span>(<span class="number">0</span>, length - truncation.<span class="property">length</span>) + truncation : <span class="title class_">String</span>(<span class="variable language_">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>另：Prototype的一个方便之处就是随时可以抽取有用的代码作为单独的部分或者收为自己用。下面是单独提出来的模板方法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Template</span>(<span class="params">template, pattern</span>)&#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">template</span> = template;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">pattern</span>  = pattern || <span class="regexp">/(^|.|\r|\n)(#\&#123;(.*?)\&#125;)/</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">Template</span>.<span class="property"><span class="keyword">prototype</span></span> = (<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">evaluate</span>(<span class="params">obj</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> gsub.<span class="title function_">call</span>(<span class="variable language_">this</span>,<span class="keyword">function</span>(<span class="params">match</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(obj == <span class="literal">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> match[<span class="number">0</span>] + <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">var</span> before = match[<span class="number">1</span>] || <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">            <span class="keyword">if</span>(before == <span class="string">&#x27;\\&#x27;</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> match[<span class="number">2</span>];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">var</span> ctx = obj;</span><br><span class="line">            <span class="keyword">var</span> expr = match[<span class="number">3</span>];</span><br><span class="line">            <span class="keyword">var</span> pattern = <span class="regexp">/^([^.[]+|\[((?:.*?[^\\])?)\])(\.|\[|$)/</span>;</span><br><span class="line"></span><br><span class="line">            match = pattern.<span class="title function_">exec</span>(expr);</span><br><span class="line">            <span class="keyword">if</span> (match == <span class="literal">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> before;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">while</span> (match != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">var</span> comp = match[<span class="number">1</span>].<span class="title function_">search</span>(<span class="regexp">/^\[/</span>) != -<span class="number">1</span> ? match[<span class="number">2</span>].<span class="title function_">replace</span>(<span class="regexp">/\\\\]/g</span>, <span class="string">&#x27;]&#x27;</span>) : match[<span class="number">1</span>];</span><br><span class="line">                ctx = ctx[comp];</span><br><span class="line">                <span class="keyword">if</span> (<span class="literal">null</span> == ctx || <span class="string">&#x27;&#x27;</span> == match[<span class="number">3</span>]) <span class="keyword">break</span>;</span><br><span class="line">                expr = expr.<span class="title function_">substring</span>(<span class="string">&#x27;[&#x27;</span> == match[<span class="number">3</span>] ? match[<span class="number">1</span>].<span class="property">length</span> : match[<span class="number">0</span>].<span class="property">length</span>);</span><br><span class="line">                match = pattern.<span class="title function_">exec</span>(expr);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> before + (ctx === <span class="literal">null</span> ? <span class="string">&#x27;&#x27;</span> : <span class="title class_">String</span>(ctx));</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">gsub</span>(<span class="params">replacement</span>)&#123;</span><br><span class="line">        <span class="keyword">var</span> pattern = <span class="variable language_">this</span>.<span class="property">pattern</span>;</span><br><span class="line">        <span class="keyword">var</span> result  = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">        <span class="keyword">var</span> match   = <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">var</span> source  = <span class="variable language_">this</span>.<span class="property">template</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!(pattern.<span class="property">length</span> || pattern.<span class="property">source</span>)) &#123;</span><br><span class="line">            replacement = <span class="title function_">replacement</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line">            <span class="keyword">return</span> replacement + source.<span class="title function_">split</span>(<span class="string">&#x27;&#x27;</span>).<span class="title function_">join</span>(replacement) + replacement;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> (source.<span class="property">length</span> &gt; <span class="number">0</span>) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (match = source.<span class="title function_">match</span>(pattern)) &#123;</span><br><span class="line">                result += source.<span class="title function_">slice</span>(<span class="number">0</span>, match.<span class="property">index</span>);</span><br><span class="line">                result += <span class="title function_">replacement</span>(match) === <span class="literal">null</span> ? <span class="string">&#x27;&#x27;</span> : <span class="title class_">String</span>(<span class="title function_">replacement</span>(match));</span><br><span class="line">                source  = source.<span class="title function_">slice</span>(match.<span class="property">index</span> + match[<span class="number">0</span>].<span class="property">length</span>);</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                result += source;</span><br><span class="line">                source = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        constructor : <span class="title class_">Template</span>,</span><br><span class="line">        evaluate : evaluate</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+
+<p>使用：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> template = <span class="keyword">new</span> <span class="title class_">Template</span>(<span class="string">&#x27;my age is : #&#123;name.age&#125;&#x27;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(template.evaluate(&#123;name : &#123;age : <span class="number">24</span>&#125;&#125;));<span class="comment">//my age is : 24</span></span><br></pre></td></tr></table></figure>
+
+<p>String部分（完）</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2012/01/13/javascript/2012-02-03-Javascript-Prototype-String-4/" data-id="cluh0140i005c38wb4g41g62z" data-title="【Javascript】Prototype源码浅析—String部分(四)之补充" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-javascript/2012-01-12-Javascript-url-params" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2012/01/12/javascript/2012-01-12-Javascript-url-params/" class="article-date">
+  <time class="dt-published" datetime="2012-01-12T02:36:04.000Z" itemprop="datePublished">2012-01-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2012/01/12/javascript/2012-01-12-Javascript-url-params/">【Javascript】从URL中提取参数与将对象转换为URL查询参数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>这两种主要是对《Prototype浅析》先前略过的String部分中toQueryParams和Object部分的toQueryString方法的补充</p>
+<h2 id="一、从URL中提取参数"><a href="#一、从URL中提取参数" class="headerlink" title="一、从URL中提取参数"></a>一、从URL中提取参数</h2><p>有下列字符串：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> linkURL = <span class="string">&#x27;http://localhost:8080/String/string_6.html?昵称=小西山子&amp;age=24#id1&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>对于一个真实的URL地址，可以用js来读取location中的相关信息来获得某些信息，下面列举一些：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">location.<span class="property">origin</span> : <span class="attr">http</span>:<span class="comment">//localhost【域】</span></span><br><span class="line">location.<span class="property">pathname</span> : <span class="regexp">/project_js/</span><span class="title class_">Javascript</span>/js_basic/demo/<span class="title class_">String</span>/string_6.<span class="property">html</span>【<span class="variable constant_">URL</span>路径】</span><br><span class="line">location.<span class="property">host</span> : localhost【主机+端口】</span><br><span class="line">location.<span class="property">hostname</span> : localhost【主机名】</span><br><span class="line">location.<span class="property">port</span> :【端口】</span><br><span class="line">location.<span class="property">search</span> : ?name=xesam【查询字符串】</span><br><span class="line">location.<span class="property">hash</span> : #age【锚点】</span><br><span class="line">location.<span class="property">href</span> : <span class="attr">http</span>:<span class="comment">//localhost/project_js/Javascript/js_basic/demo/String/string_6.html?name=xesam#age【完整形式】</span></span><br><span class="line">location.<span class="property">protocol</span> : http【协议】</span><br></pre></td></tr></table></figure>
+<p>其中，与从URL中提取参数主要是用到location.search。不过为了通用，我们不去读取location.search，直接处理字符串。</p>
+<p>提取字符串查询字符串之后，转化为对象的形式。</p>
+<p>先讨论几种查询字符串的情况：</p>
+<ol>
+<li>?昵称&#x3D;小西山子&amp;age&#x3D;24#id1  –&gt;{昵称:’小西山子’,age:’24’}</li>
+<li>?昵称&amp;age&#x3D;24#id1’;  –&gt;{昵称:undefined,age:’24’}</li>
+<li>?&#x3D;小西山子&amp;age&#x3D;24#id1  –&gt;{age:’24’}</li>
+<li>?昵称&#x3D;小西山子&#x3D;又一个&amp;age&#x3D;24&amp;age&#x3D;24#id1   –&gt;{昵称:’小西山子&#x3D;又一个’,age:[‘24’,’24’]}</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">    <span class="keyword">function</span> <span class="title function_">toQueryParams</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="keyword">var</span> search = <span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/^\s+/</span>,<span class="string">&#x27;&#x27;</span>).<span class="title function_">replace</span>(<span class="regexp">/\s+$/</span>,<span class="string">&#x27;&#x27;</span>).<span class="title function_">match</span>(<span class="regexp">/([^?#]*)(#.*)?$/</span>);<span class="comment">//提取location.search中&#x27;?&#x27;后面的部分</span></span><br><span class="line">        <span class="keyword">if</span>(!search)&#123;</span><br><span class="line">            <span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">var</span> searchStr  = search[<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">var</span> searchHash = searchStr.<span class="title function_">split</span>(<span class="string">&#x27;&amp;&#x27;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> ret = &#123;&#125;;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>, len = searchHash.<span class="property">length</span>; i &lt; len; i++)&#123; <span class="comment">//这里可以调用each方法</span></span><br><span class="line">            <span class="keyword">var</span> pair = searchHash[i];</span><br><span class="line">            <span class="keyword">if</span>((pair = pair.<span class="title function_">split</span>(<span class="string">&#x27;=&#x27;</span>))[<span class="number">0</span>])&#123;</span><br><span class="line">                <span class="keyword">var</span> key   = <span class="built_in">decodeURIComponent</span>(pair.<span class="title function_">shift</span>());</span><br><span class="line">                <span class="keyword">var</span> value = pair.<span class="property">length</span> &gt; <span class="number">1</span> ? pair.<span class="title function_">join</span>(<span class="string">&#x27;=&#x27;</span>) : pair[<span class="number">0</span>];</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">if</span>(value != <span class="literal">undefined</span>)&#123;</span><br><span class="line">                    value = <span class="built_in">decodeURIComponent</span>(value);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span>(key <span class="keyword">in</span> ret)&#123;</span><br><span class="line">                    <span class="keyword">if</span>(ret[key].<span class="property">constructor</span> != <span class="title class_">Array</span>)&#123;</span><br><span class="line">                        ret[key] = [ret[key]];</span><br><span class="line">                    &#125;</span><br><span class="line">                    ret[key].<span class="title function_">push</span>(value);</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    ret[key] = value;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">dir</span>(toQueryParams.<span class="title function_">call</span>(linkURL));</span><br><span class="line"><span class="string">``</span><span class="string">``</span></span><br><span class="line"></span><br><span class="line">上面基本就是<span class="title class_">Prototype</span>中toQueryParams的实现，上面有一个步骤是用<span class="string">&#x27;=&#x27;</span>分割参数，然后在value中再拼接。另外可以用substring来实现：</span><br><span class="line"></span><br><span class="line"><span class="string">``</span><span class="string">`javascript</span></span><br><span class="line"><span class="string">    function toQueryParams()&#123;</span></span><br><span class="line"><span class="string">        var search = this.replace(/^\s+/,&#x27;&#x27;).replace(/\s+$/,&#x27;&#x27;).match(/([^?#]*)(#.*)?$/);</span></span><br><span class="line"><span class="string">        if(!search)&#123;</span></span><br><span class="line"><span class="string">            return &#123;&#125;;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">        var searchStr  = search[1];</span></span><br><span class="line"><span class="string">        var searchHash = searchStr.split(&#x27;&amp;&#x27;);</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        var ret = &#123;&#125;;</span></span><br><span class="line"><span class="string">        searchHash.forEach(function(pair)&#123;</span></span><br><span class="line"><span class="string">            var temp = &#x27;&#x27;;</span></span><br><span class="line"><span class="string">            if(temp = (pair.split(&#x27;=&#x27;,1))[0])&#123;</span></span><br><span class="line"><span class="string">                var key   = decodeURIComponent(temp);</span></span><br><span class="line"><span class="string">                var value = pair.substring(key.length + 1);</span></span><br><span class="line"><span class="string">                if(value != undefined)&#123;</span></span><br><span class="line"><span class="string">                    value = decodeURIComponent(value);</span></span><br><span class="line"><span class="string">                &#125;</span></span><br><span class="line"><span class="string">                if(key in ret)&#123;</span></span><br><span class="line"><span class="string">                    if(ret[key].constructor != Array)&#123;</span></span><br><span class="line"><span class="string">                        ret[key] = [ret[key]];</span></span><br><span class="line"><span class="string">                    &#125;</span></span><br><span class="line"><span class="string">                    ret[key].push(value);</span></span><br><span class="line"><span class="string">                &#125;else&#123;</span></span><br><span class="line"><span class="string">                    ret[key] = value;</span></span><br><span class="line"><span class="string">                &#125;</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string">        &#125;);</span></span><br><span class="line"><span class="string">        return ret;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">    console.dir(toQueryParams.call(linkURL));</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="二、对象转换为URL查询参数"><a href="#二、对象转换为URL查询参数" class="headerlink" title="二、对象转换为URL查询参数"></a>二、对象转换为URL查询参数</h2><p>对象转换为URL查询参数就麻烦一点。不过由于是转换成查询参数形式，因此只能处理单层嵌套的对象，子对象就不能处理了。其原理就是toQueryParams的反向操作。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">toQueryPair</span>(<span class="params">key, value</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> value == <span class="string">&#x27;undefined&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> key;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> key + <span class="string">&#x27;=&#x27;</span> + <span class="built_in">encodeURIComponent</span>(value === <span class="literal">null</span> ? <span class="string">&#x27;&#x27;</span> : <span class="title class_">String</span>(value));</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">toQueryString</span>(<span class="params">obj</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> ret = [];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> key <span class="keyword">in</span> obj)&#123;</span><br><span class="line">        key = <span class="built_in">encodeURIComponent</span>(key);</span><br><span class="line">        <span class="keyword">var</span> values = obj[key];</span><br><span class="line">        <span class="keyword">if</span>(values &amp;&amp; values.<span class="property">constructor</span> == <span class="title class_">Array</span>)&#123;<span class="comment">//数组</span></span><br><span class="line">            <span class="keyword">var</span> queryValues = [];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, len = values.<span class="property">length</span>, value; i &lt; len; i++) &#123;</span><br><span class="line">                value = values[i];</span><br><span class="line">                queryValues.<span class="title function_">push</span>(<span class="title function_">toQueryPair</span>(key, value));</span><br><span class="line">            &#125;</span><br><span class="line">            ret = ret.<span class="title function_">concat</span>(queryValues);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123; <span class="comment">//字符串</span></span><br><span class="line">            ret.<span class="title function_">push</span>(<span class="title function_">toQueryPair</span>(key, values));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ret.<span class="title function_">join</span>(<span class="string">&#x27;&amp;&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">toQueryString</span>(&#123;</span><br><span class="line">    name : <span class="string">&#x27;xesam&#x27;</span>,</span><br><span class="line">    age : <span class="number">24</span></span><br><span class="line">&#125;)); <span class="comment">//name=xesam&amp;age=24</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">toQueryString</span>(&#123;</span><br><span class="line">    name : <span class="string">&#x27;xesam&#x27;</span>,</span><br><span class="line">    age : [<span class="number">24</span>,<span class="number">25</span>,<span class="number">26</span>]</span><br><span class="line">&#125;)); <span class="comment">//name=xesam&amp;age=24&amp;age=25&amp;age=26</span></span><br></pre></td></tr></table></figure>
+
+<p>真实源码中用的是inject方法，不过在Enumerable部分，因此上面作了替换。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2012/01/12/javascript/2012-01-12-Javascript-url-params/" data-id="cluh01409004g38wbfvqzctc7" data-title="【Javascript】从URL中提取参数与将对象转换为URL查询参数" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-javascript/2012-01-11-Javascript-Prototype-String-2" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2012/01/11/javascript/2012-01-11-Javascript-Prototype-String-2/" class="article-date">
+  <time class="dt-published" datetime="2012-01-11T03:36:04.000Z" itemprop="datePublished">2012-01-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2012/01/11/javascript/2012-01-11-Javascript-Prototype-String-2/">【Javascript】Prototype源码浅析—String部分(二)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>本文接着上面的String部分，继续下面表格的部分</p>
+<pre><code>格式	camelize | capitalize |  underscore |  dasherize  | inspect          
+变形	toArray |  succ  | times
+</code></pre>
+<p>这里面一个有用的方法是inspect，按照参考手册的说明，他的作用是“返回该字符串针对调试的字符串表现形式（即用单引号或双引号包括起来，并使用 ‘&#39; 对特殊字符进行转义）”，在Object的toJSON里面也涉及到这个方法。</p>
+<p>既然涉及到需要转义的字符，我们自然要一份转义字符信息，下面直接给出：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">String</span>.<span class="property">specialChar</span> = &#123;</span><br><span class="line">  <span class="string">&#x27;\b&#x27;</span>: <span class="string">&#x27;\\b&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;\t&#x27;</span>: <span class="string">&#x27;\\t&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;\n&#x27;</span>: <span class="string">&#x27;\\n&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;\f&#x27;</span>: <span class="string">&#x27;\\f&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;\r&#x27;</span>: <span class="string">&#x27;\\r&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;\\&#x27;</span>: <span class="string">&#x27;\\\\&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>【在JSON.js里面，多了一个’”‘，因为JSON里面string里面是不能出现”的，所以需要转义】</p>
+<p>第一步，当然是要替换特殊的转义字符，初始版本：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">inspect</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/[\b\t\n\f\r\\]/</span>,<span class="keyword">function</span>(<span class="params">a</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title class_">String</span>.<span class="property">specialChar</span>[a];</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于JSON形式来说，双引号是必须的，因此，我们应该可以选择自己的返回形式，所以，给inspect一个参数useDoubleQuotes，默认是用单引号返回字符串的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">inspect</span>(<span class="params">useDoubleQuotes</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> escapedString =  <span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/[\b\t\n\f\r\\]/</span>,<span class="keyword">function</span>(<span class="params">a</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title class_">String</span>.<span class="property">specialChar</span>[a];</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">if</span> (useDoubleQuotes)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;&quot;&#x27;</span> + escapedString.<span class="title function_">replace</span>(<span class="regexp">/&quot;/g</span>, <span class="string">&#x27;\\&quot;&#x27;</span>) + <span class="string">&#x27;&quot;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;&#x27;&quot;</span> + escapedString.<span class="title function_">replace</span>(<span class="regexp">/&#x27;/g</span>, <span class="string">&#x27;\\\&#x27;&#x27;</span>) + <span class="string">&quot;&#x27;&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在这跟源码中的功能差不多，不过Prototype源码中的实现方式并不是这样的，主要区别在于escapedString这一段。源码中直接列出来所有的控制字符，表示为[\x00-\x1f]，外加’&#39;就是[\x00-\x1f\]，因此改造上面的初始版本就是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">inspect</span>(<span class="params">useDoubleQuotes</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> escapedString = <span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/[\x00-\x1f\\]/g</span>, <span class="keyword">function</span>(<span class="params">character</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (character <span class="keyword">in</span> <span class="title class_">String</span>.<span class="property">specialChar</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="title class_">String</span>.<span class="property">specialChar</span>[character];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> character ;</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">if</span> (useDoubleQuotes) <span class="keyword">return</span> <span class="string">&#x27;&quot;&#x27;</span> + escapedString.<span class="title function_">replace</span>(<span class="regexp">/&quot;/g</span>, <span class="string">&#x27;\\&quot;&#x27;</span>) + <span class="string">&#x27;&quot;&#x27;</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;&#x27;&quot;</span> + escapedString.<span class="title function_">replace</span>(<span class="regexp">/&#x27;/g</span>, <span class="string">&#x27;\\\&#x27;&#x27;</span>) + <span class="string">&quot;&#x27;&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果发现除了String.specialChar中的字符，还有其他的控制字符，源码中也有一步处理，就是将控制字符转变为unicode的表示形式，因为这个方法本身就是要获得字符串的形式。</p>
+<p>比如垂直制表符’\v’。’\v’.inspect() –&gt;’\u000b’</p>
+<p>完整版本：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">inspect</span>(<span class="params">useDoubleQuotes</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> escapedString = <span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/[\x00-\x1f\\]/g</span>, <span class="keyword">function</span>(<span class="params">character</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (character <span class="keyword">in</span> <span class="title class_">String</span>.<span class="property">specialChar</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="title class_">String</span>.<span class="property">specialChar</span>[character];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;\\u00&#x27;</span> + character.<span class="title function_">charCodeAt</span>().<span class="title function_">toPaddedString</span>(<span class="number">2</span>, <span class="number">16</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">if</span> (useDoubleQuotes) <span class="keyword">return</span> <span class="string">&#x27;&quot;&#x27;</span> + escapedString.<span class="title function_">replace</span>(<span class="regexp">/&quot;/g</span>, <span class="string">&#x27;\\&quot;&#x27;</span>) + <span class="string">&#x27;&quot;&#x27;</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;&#x27;&quot;</span> + escapedString.<span class="title function_">replace</span>(<span class="regexp">/&#x27;/g</span>, <span class="string">&#x27;\\\&#x27;&#x27;</span>) + <span class="string">&quot;&#x27;&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中toPaddedString(length[, radix])将当前 Number 对象转换为字符串，如果转换后的字符串长度小于 length 指定的值，则用 0 在左边补足其余的位数。可选的参数 radix 用于指定转换时所使用的进制。这是Prototype中Number的一个扩展，暂时知道即可。</p>
+<p>因此’\v’.charCodeAt().toPaddedString(2, 16)就是将’\v’的字符编码转换成16进制的两位编码符[操作字符不会范围有限制，因此不会超出]，最后冠以’\u00’开头即可。</p>
+<p>方法说明：</p>
+<p>toArray：将字符串拆分为字符数组。</p>
+<p>succ：根据 Unicode 字母表转换字符串最后的字符为后续的字符</p>
+<p>times：将字符串重复。</p>
+<p>对应具体的实现也很简单，String部分的重要之处在于后面的脚本,JSON和替换处理，其他都是增强性质的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">toArray</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">split</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中split(‘’)就将字符串打撒为单个字符，并以数组形式返回，如果还要再增强，可以给一个参数给toArray来指定分隔符。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">toArray</span>(<span class="params">pattern</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">split</span>(pattern);</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(toArray.<span class="title function_">call</span>(<span class="string">&#x27;my name is xesam&#x27;</span>,<span class="string">&#x27; &#x27;</span>));<span class="comment">//[&quot;my&quot;, &quot;name&quot;, &quot;is&quot;, &quot;xesam&quot;]</span></span><br></pre></td></tr></table></figure>
+<p>就是对split的使用而已，不过源码中并没有这么做，因为并没有这个必要。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">succ</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">slice</span>(<span class="number">0</span>, <span class="variable language_">this</span>.<span class="property">length</span> - <span class="number">1</span>) + <span class="title class_">String</span>.<span class="title function_">fromCharCode</span>(<span class="variable language_">this</span>.<span class="title function_">charCodeAt</span>(<span class="variable language_">this</span>.<span class="property">length</span> - <span class="number">1</span>) + <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里主要的就是fromCharCode和charCodeAt方法的使用。从代码中也可以看出，两者的明显区别是fromCharCode是String的静态方法，而charCodeAt是字符串的方法（挂在String.prototype上面）。然后两者的作用正好相反，下面是<a href="http://www.w3school.com.cn给出的解释：">http://www.w3school.com.cn给出的解释：</a></p>
+<p>fromCharCode() 可接受一个指定的 Unicode 值，然后返回一个字符串。</p>
+<p>charCodeAt() 方法可返回指定位置的字符的 Unicode 编码。这个返回值是 0 - 65535 之间的整数。<br>具体到succ，以字符串‘hello xesam’为例，先获取除结尾字符外的所有字符‘hello xesa’，然后加上Unicode表中‘m’后面的一个字符‘n’，因此结果就是‘hello xesan’<br>以此为基础，我们要打印从‘a’到‘z’的所有字母，可以用以下的函数：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">printChar</span>(<span class="params">start,end</span>)&#123;  </span><br><span class="line">    <span class="keyword">var</span> s = (start + <span class="string">&#x27;&#x27;</span>).<span class="title function_">charCodeAt</span>()</span><br><span class="line">    <span class="keyword">var</span> e = (end + <span class="string">&#x27;&#x27;</span>).<span class="title function_">charCodeAt</span>();</span><br><span class="line">    <span class="keyword">if</span>(s &gt; e)&#123;</span><br><span class="line">        s = [e,e=s][<span class="number">0</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i = s ;i &lt;= e; i++)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">String</span>.<span class="title function_">fromCharCode</span>(i));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">printChar</span>(<span class="string">&#x27;a&#x27;</span>,<span class="string">&#x27;z&#x27;</span>);</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">times</span>(<span class="params">count</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> count &lt; <span class="number">1</span> ? <span class="string">&#x27;&#x27;</span> : <span class="keyword">new</span> <span class="title class_">Array</span>(count + <span class="number">1</span>).<span class="title function_">join</span>(<span class="variable language_">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>times作用是重复整个字符串，其主要思想就是将当前字符作为数组的连接符调用join来获得预期结果。当然用循环添加也可以，不过没这么简洁。</p>
+<p>如果要重复字符串里面的每个字符，可以用相同的思想：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">String</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">letterTimes</span> =  <span class="keyword">function</span>(<span class="params">count</span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> arr = [];</span><br><span class="line">    arr.<span class="property">length</span> = count + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/\w/g</span>,<span class="keyword">function</span>(<span class="params">a</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> arr.<span class="title function_">join</span>(a);</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;xesam&#x27;</span>.<span class="title function_">letterTimes</span>(<span class="number">3</span>));<span class="comment">//xxxeeesssaaammm</span></span><br></pre></td></tr></table></figure>
+
+<p>camelize | capitalize |  underscore |  dasherize这四个主要是关于变量名转换的。</p>
+<p>camelize ： 将一个用横线分隔的字符串转换为 Camel 形式</p>
+<p>capitalize ：将一个字符串的首字母转换为大写，其它的字母全部转为小写。</p>
+<p>underscore ：将一个 Camel 形式的字符串转换为以下划线（”_”）分隔的一系列单词。</p>
+<p>dasherize ：将字符串中的下划线全部替换为横线（”_” 替换为 “-“）。</p>
+<p>最明显的，可以用在CSS属性与DOM的style属性的相互转换中【class与float不属于此范畴】。对应到上面的方法中，将CSS属性转换为对应的DOM的style属性可以使用camelize 方法，但是反过来却没有这个方法，因此必须连续调用underscore -&gt; dasherize 方法才行。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">camelize</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/-+(.)?/g</span>, <span class="keyword">function</span>(<span class="params">match, chr</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> chr ? chr.<span class="title function_">toUpperCase</span>() : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>核心是replace方法的使用，其他挺简单，参见《浅析字符串的replace方法应用》</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">capitalize</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">charAt</span>(<span class="number">0</span>).<span class="title function_">toUpperCase</span>() + <span class="variable language_">this</span>.<span class="title function_">substring</span>(<span class="number">1</span>).<span class="title function_">toLowerCase</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里注意charAt（charAt() 方法可返回指定位置的字符。）与charCodeAt的区别就可以了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">underscore</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/::/g</span>, <span class="string">&#x27;/&#x27;</span>)</span><br><span class="line">             .<span class="title function_">replace</span>(<span class="regexp">/([A-Z]+)([A-Z][a-z])/g</span>, <span class="string">&#x27;$1_$2&#x27;</span>)</span><br><span class="line">             .<span class="title function_">replace</span>(<span class="regexp">/([a-z\d])([A-Z])/g</span>, <span class="string">&#x27;$1_$2&#x27;</span>)</span><br><span class="line">             .<span class="title function_">replace</span>(<span class="regexp">/-/g</span>, <span class="string">&#x27;_&#x27;</span>)</span><br><span class="line">             .<span class="title function_">toLowerCase</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>实例来说明步骤：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;helloWorld::ABCDefg&#x27;</span>.<span class="title function_">underscore</span>()</span><br><span class="line"><span class="comment">//&#x27;helloWorld::ABCDefg&#x27;</span></span><br><span class="line"></span><br><span class="line">.<span class="title function_">replace</span>(<span class="regexp">/::/g</span>, <span class="string">&#x27;/&#x27;</span>)                      <span class="comment">//&#x27;helloWorld/ABCDefg&#x27;</span></span><br><span class="line">.<span class="title function_">replace</span>(<span class="regexp">/([A-Z]+)([A-Z][a-z])/g</span>, <span class="string">&#x27;$1_$2&#x27;</span>)<span class="comment">//helloWorld/ABC_Defg</span></span><br><span class="line">.<span class="title function_">replace</span>(<span class="regexp">/([a-z\d])([A-Z])/g</span>, <span class="string">&#x27;$1_$2&#x27;</span>)    <span class="comment">//hello_World/ABC_Defg</span></span><br><span class="line">.<span class="title function_">replace</span>(<span class="regexp">/-/g</span>, <span class="string">&#x27;_&#x27;</span>)                       <span class="comment">//hello_World/ABC_Defg</span></span><br><span class="line">.<span class="title function_">toLowerCase</span>();                           <span class="comment">//hello_world/abc_defg</span></span><br></pre></td></tr></table></figure>
+<p>这个方法只适合Camel 形式的，就是得有‘峰’。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">dasherize</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/_/g</span>, <span class="string">&#x27;-&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个就是单纯的字符替换而已。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2012/01/11/javascript/2012-01-11-Javascript-Prototype-String-2/" data-id="cluh01407004838wb4cvz38k0" data-title="【Javascript】Prototype源码浅析—String部分(二)" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-javascript/2012-01-10-Javascript-Prototype-String-1-indexOf" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2012/01/10/javascript/2012-01-10-Javascript-Prototype-String-1-indexOf/" class="article-date">
+  <time class="dt-published" datetime="2012-01-10T03:36:04.000Z" itemprop="datePublished">2012-01-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2012/01/10/javascript/2012-01-10-Javascript-Prototype-String-1-indexOf/">【Javascript】Prototype源码浅析—String部分(一)有关indexOf优化</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>添加到String.prototype中的方法比较多，不过归结起来，大致分为下面几类：</p>
+<pre><code>原始能力增强 strip |  include  |  startsWith  |  endsWith |  empty |  blank
+格式	camelize | capitalize |  underscore |  dasherize  | inspect          
+变形	toArray |  succ  | times
+替换	interpolate  | sub |  scan |  truncate | gsub
+HTML处理	stripTags  | escapeHTML |  unescapeHTML
+参数序列化	toQueryParams
+JSON处理	unfilterJSON |  isJSON |  evalJSON |  parseJSON
+脚本处理	stripScripts |  extractScripts  | evalScripts
+</code></pre>
+<p>（我自己分的，不妥之处请指出）</p>
+<p>从基本的原始能力增强开始，下面是具体的实现，这一段很好理解的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span>(<span class="params">s</span>)&#123;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">strip</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/^\s+/</span>,<span class="string">&#x27;&#x27;</span>).<span class="title function_">replace</span>(<span class="regexp">/\s+$/</span>,<span class="string">&#x27;&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">include</span>(<span class="params">pattern</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">indexOf</span>(pattern) &gt; -<span class="number">1</span>;<span class="comment">//split</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">startsWith</span>(<span class="params">pattern</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">lastIndexOf</span>(pattern, <span class="number">0</span>) === <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">endsWith</span>(<span class="params">pattern</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> d = <span class="variable language_">this</span>.<span class="property">length</span> - pattern.<span class="property">length</span>;</span><br><span class="line">        <span class="keyword">return</span> d &gt;= <span class="number">0</span> &amp;&amp; <span class="variable language_">this</span>.<span class="title function_">indexOf</span>(pattern, d) === d; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">empty</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span> == <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">blank</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="regexp">/^\s*$/</span>.<span class="title function_">test</span>(<span class="variable language_">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    s.<span class="property">strip</span> = <span class="title class_">String</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">trim</span> || strip;</span><br><span class="line">    s.<span class="property">include</span> = include;</span><br><span class="line">    s.<span class="property">startsWith</span> = startsWith;</span><br><span class="line">    s.<span class="property">endsWith</span> = endsWith;</span><br><span class="line">    s.<span class="property">empty</span> = empty;</span><br><span class="line">    s.<span class="property">blank</span> = blank;</span><br><span class="line">&#125;)(<span class="title class_">String</span>.<span class="property"><span class="keyword">prototype</span></span>);</span><br></pre></td></tr></table></figure>
+<p>上面的strip在jquery里面是$.trim,而且大部分貌似都是trim。这里直接扩展原生原型的悲剧之处就显现出来了，因为后面的JS实现中(比如chrome)就实现了trim方法，那就弄巧成拙了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">strip</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/^\s+/</span>,<span class="string">&#x27;&#x27;</span>).<span class="title function_">replace</span>(<span class="regexp">/\s+$/</span>,<span class="string">&#x27;&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里面的 replace(&#x2F;^\s+&#x2F;,’’) 就是 trimLeft，replace(&#x2F;\s+$&#x2F;,’’) 是 trimRight，不过 Prototype.String 中没有这两个方法。</p>
+<p>下面是这一部分比较有意思的地方：</p>
+<p>当时看这段的时候，对其中的startsWith和endsWith甚是不解，按理来说，startsWith用indexOf就可以了，这里却是用的lastIndexOf。后来去翻了一下Prototype1.6版本的实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">startsWith</span>(<span class="params">pattern</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">indexOf</span>(pattern) === <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">endsWith</span>(<span class="params">pattern</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> d = <span class="variable language_">this</span>.<span class="property">length</span> - pattern.<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">return</span> d &gt;= <span class="number">0</span> &amp;&amp; <span class="variable language_">this</span>.<span class="title function_">lastIndexOf</span>(pattern) === d;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可见，以前版本中startsWith用的就是indexOf，不过1.7版本修改了startsWith的实现。在1.7版本中：</p>
+<pre><code>startsWith 实现中lastIndexOf从后向前查找，不过起点（fromindex）设置为0，因此，只需要检测开头一次就可以了。
+endsWith 实现中indexOf从前向后查找，由于字符串长度不定，因此这里计算了一下长度，然后再确定了起点（fromindex），因此也只需要检测结尾一次就可以了。
+</code></pre>
+<p>这里的性能优化之处在于，1.6的实现中，如果开头没有匹配（就是startsWith不成立），但是indexOf依旧会向后查找，直到找到一个匹配的或者字符串结尾，这样就浪费了。<br>举个例子，对于下面的一个操作：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;abcdefgabcdefg&#x27;</span>.<span class="title function_">startsWith</span>(<span class="string">&#x27;abc&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>在1.6版本和1.7版本的实现中，没有任何区别，但是我们转换一下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;abcdefgabcdefg&#x27;</span>.<span class="title function_">startsWith</span>(<span class="string">&#x27;xesam&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>在1.6实现中，startsWith内部的 indexOf 操作会在开头的 a 没有和 x 匹配后，虽然没有必要再继续了，但是 indexOf 依旧会继续向后查找，直到找到匹配的‘xesam’或者字符串末尾。</p>
+<p>在1.7实现中，startsWith内部的lastIndexOf是反向查找的（fromIndex&#x3D;0），因此在开头的a没有和x匹配后，操作就停止了，因为lastIndexOf已经到头了。</p>
+<p>这么一对比，如果待检测的字符串非常长的话，两种实现方式的效率会有明显的区别。</p>
+<p>endsWith的原理也是一样的。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2012/01/10/javascript/2012-01-10-Javascript-Prototype-String-1-indexOf/" data-id="cluh01406004538wb7e3ha0hr" data-title="【Javascript】Prototype源码浅析—String部分(一)有关indexOf优化" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-javascript/2012-01-01-Javascript-string-JSON" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2012/01/01/javascript/2012-01-01-Javascript-string-JSON/" class="article-date">
+  <time class="dt-published" datetime="2012-01-01T02:36:04.000Z" itemprop="datePublished">2012-01-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2012/01/01/javascript/2012-01-01-Javascript-string-JSON/">【Javascript】从字符串中解析出JSON</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>JSON介绍<a target="_blank" rel="noopener" href="http://json.org/">http://json.org/</a></p>
+<p>这个解析JSON，也是Prototype源码浅析的一个铺垫。</p>
+<p>下面是一个开篇例子，其中response是从服务器获得的JSON字符串：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> response_1 = <span class="string">&quot;&#123;\&quot;user\&quot;:\&quot;xesam\&quot;,\&quot;info\&quot;:&#123;\&quot;age\&quot;:\&quot;24\&quot;&#125;&#125;&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> response_2 = <span class="string">&quot;&#123;&#x27;user&#x27; : &#x27;xesam&#x27;&#125;&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> response_3 = <span class="string">&quot;console.log(&#x27;xss&#x27;)&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj_1_1 = <span class="built_in">eval</span>(<span class="string">&#x27;(&#x27;</span> + response_1 + <span class="string">&#x27;)&#x27;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_1_1&#x27;</span>,obj_1_1);</span><br><span class="line"><span class="keyword">var</span> obj_1_2 = <span class="built_in">eval</span>(<span class="string">&#x27;(&#x27;</span> + response_2 + <span class="string">&#x27;)&#x27;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_1_2&#x27;</span>,obj_1_2);</span><br><span class="line"><span class="keyword">var</span> obj_1_3 = <span class="built_in">eval</span>(<span class="string">&#x27;(&#x27;</span> + response_3 + <span class="string">&#x27;)&#x27;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_1_3&#x27;</span>,obj_1_3);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj_2_1 = (<span class="keyword">new</span> <span class="title class_">Function</span>(<span class="string">&#x27;return &#x27;</span> + response_1))();</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_2_1&#x27;</span>,obj_2_1);</span><br><span class="line"><span class="keyword">var</span> obj_2_2 = (<span class="keyword">new</span> <span class="title class_">Function</span>(<span class="string">&#x27;return &#x27;</span> + response_2))();</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_2_2&#x27;</span>,obj_2_2);</span><br><span class="line"><span class="keyword">var</span> obj_2_3 = (<span class="keyword">new</span> <span class="title class_">Function</span>(<span class="string">&#x27;return &#x27;</span> + response_3))();</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_2_3&#x27;</span>,obj_2_3);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj_3_1 = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(response_1);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_3_1&#x27;</span>,obj_3_1);</span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> obj_3_2 = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(response_2);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_3_2&#x27;</span>,obj_3_2);</span><br><span class="line">&#125;<span class="keyword">catch</span>(e)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_3_2&#x27;</span>,<span class="string">&#x27;error&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> obj_3_3 = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(response_3);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_3_3&#x27;</span>,obj_3_3);</span><br><span class="line">&#125;<span class="keyword">catch</span>(e)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_3_3&#x27;</span>,<span class="string">&#x27;error&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">obj_1_1 <span class="title class_">Object</span> </span><br><span class="line">obj_1_2 <span class="title class_">Object</span></span><br><span class="line">xss</span><br><span class="line">obj_1_3 <span class="literal">undefined</span></span><br><span class="line">obj_2_1 <span class="title class_">Object</span></span><br><span class="line">obj_2_2 <span class="title class_">Object</span></span><br><span class="line">xss</span><br><span class="line">obj_2_3 <span class="literal">undefined</span></span><br><span class="line">obj_3_1 <span class="title class_">Object</span></span><br><span class="line">obj_3_2 error</span><br><span class="line">obj_3_3 error</span><br></pre></td></tr></table></figure>
+
+<p>可见，对于浏览器自带的标准JSON解析器来说，response_2和response_3是非法的。因此，我们可以更进一步的了解到JSON的几点主要的地方。</p>
+<p>第一、对于key&#x2F;value的形式，每一个key都需要有引号（这个和javascript原生对象可有可无的引号不同），需要是字符串（这种字符串形式上更类似于C语言里面的字符串，必须是双引号，这个和javascript原生对象引号可以使双引号也可以是单引号不同）。</p>
+<p><img src="http://json.org/string.gif" alt="1"></p>
+<p>上面的图示是对JSON中string的要求</p>
+<p>第二、JSON本来就是一种交换数据的格式，因此，里面是不应该包含需要执行的javascript代码的。</p>
+<p>所以，只有严格符合标准的JSON字符串形式，才能通过JSON.parse的解析。</p>
+<p>对于大部分现代浏览器而言，window.JSON 是一个内置的对象，但是对于IE6&#x2F;7来说，这个对象是缺失的，所以，需要借助例子中的前两种形式eval和new Function。</p>
+<p>平常而言，eval用的比较多，但是eval够强大，所以够危险。</p>
+<p>response_2 被解析成对象是eval本身的功能，跟JSON无关。如果服务器返回的是类似response_2的形式，八成是一开始的传值就有问题，我就犯过这种错误。不过如果是服务端生成的，一般倒不会有什么问题。</p>
+<p>response_3 被解析成可执行代码页是eval本身的功能，是危险的来源，不过好像平时也没怎么注意。</p>
+<p>不过，对于IE6&#x2F;7来说，要从字符串中解析出来JSON对象，又必须借助于eval（依稀听说新的ECMAScript标准抛弃了eval？不过这跟IE6&#x2F;7半毛钱的关系都没有）。</p>
+<p>因此，这一部分可以参考JSON.js的String.prototype.parseJSON</p>
+<p>对于</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> response_1 = <span class="string">&quot;&#123;\&quot;user\&quot;:\&quot;xesam\&quot;,\&quot;info\&quot;:&#123;\&quot;age\&quot;:\&quot;24\&quot;&#125;&#125;&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这段，String.prototype.parseJSON的转换流程如下：</p>
+<p>第一，先检测待转换字符串的合法性</p>
+<p>第二，eval字符串</p>
+<p>所以response_1的解析情况大致如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> responseTemp = response_1.<span class="title function_">replace</span>(<span class="regexp">/\\./g</span>, <span class="string">&#x27;@&#x27;</span>).<span class="title function_">replace</span>(<span class="regexp">/&quot;[^&quot;\\\n\r]*&quot;/g</span>, <span class="string">&#x27;&#x27;</span>);</span><br><span class="line">    <span class="keyword">var</span> correct = <span class="regexp">/^[,:&#123;&#125;\[\]0-9.\-+Eaeflnr-u \n\r\t]*$/</span>.<span class="title function_">test</span>(responseTemp);</span><br><span class="line">    <span class="keyword">if</span>(correct)&#123;</span><br><span class="line">        <span class="keyword">var</span> j = <span class="built_in">eval</span>(<span class="string">&#x27;(&#x27;</span> + response_1+ <span class="string">&#x27;)&#x27;</span>);</span><br><span class="line">        <span class="keyword">return</span> j;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">SyntaxError</span>(<span class="string">&#x27;parseJSON&#x27;</span>);</span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">replace</span>(<span class="regexp">/\\./g</span>, <span class="string">&#x27;@&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>先把一些转义字符替换掉，那个“@”并没有什么特殊意思，至于为什么@，估计是因为正则里面没有这个元字符，所以避免冲突，想换做其他的，应该也可以。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">replace</span>(<span class="regexp">/&quot;[^&quot;\\\n\r]*&quot;/g</span>, <span class="string">&#x27;&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>这一步替换掉了所有引号包含的内容，于是，字符串中剩下的部分就是除去string外可以存在的字符。</p>
+<p>看这个，</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/^[,:&#123;&#125;\[\]<span class="number">0</span>-<span class="number">9.</span>\-+<span class="title class_">Eaeflnr</span>-u \n\r\t]*$/</span><br></pre></td></tr></table></figure>
+<p>其实好理解，JSON的value值可以是string，object，array，number，false，true，null等7种，需要引号包含string的内容都处理掉了，所以除了这些，JSON格式还有</p>
+<pre><code>&#123;&#125;表示对象结构，对应,:&#123;&#125;
+[]表示数组结构，对应\[\]
+0-9 . E e表示数字类型，对应0-9.\-+Ee
+true 和 false 对应aflsrtu
+null 对应n
+其他一些特殊字符对应 \n\r\t
+</code></pre>
+<p>这些组合起来就是上面的一段正则。</p>
+<p>下面是完整的JSON.js的源码，无非是添加了一个递归而已，从而可以安全的解析整个嵌套的部分。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span>(<span class="params">s</span>)&#123;</span><br><span class="line">    s.<span class="property">parseJSON</span> = <span class="keyword">function</span> (<span class="params">filter</span>) &#123;</span><br><span class="line">      <span class="keyword">var</span> j;</span><br><span class="line">      <span class="keyword">function</span> <span class="title function_">walk</span>(<span class="params">k, v</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> i;</span><br><span class="line">        <span class="keyword">if</span> (v &amp;&amp; <span class="keyword">typeof</span> v === <span class="string">&#x27;object&#x27;</span>) &#123;</span><br><span class="line">          <span class="keyword">for</span> (i <span class="keyword">in</span> v) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">hasOwnProperty</span>.<span class="title function_">apply</span>(v, [i])) &#123;</span><br><span class="line">              v[i] = <span class="title function_">walk</span>(i, v[i]);</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_">filter</span>(k, v);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (<span class="regexp">/^[,:&#123;&#125;\[\]0-9.\-+Eaeflnr-u \n\r\t]*$/</span>.<span class="title function_">test</span>(<span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/\\./g</span>, <span class="string">&#x27;@&#x27;</span>).<span class="title function_">replace</span>(<span class="regexp">/&quot;[^&quot;\\\n\r]*&quot;/g</span>, <span class="string">&#x27;&#x27;</span>))) &#123;</span><br><span class="line">        j = <span class="built_in">eval</span>(<span class="string">&#x27;(&#x27;</span> + <span class="variable language_">this</span> + <span class="string">&#x27;)&#x27;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">typeof</span> filter === <span class="string">&#x27;function&#x27;</span> ? <span class="title function_">walk</span>(<span class="string">&#x27;&#x27;</span>, j) : j;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">SyntaxError</span>(<span class="string">&#x27;parseJSON&#x27;</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;)(<span class="title class_">String</span>.<span class="property"><span class="keyword">prototype</span></span>);</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2012/01/01/javascript/2012-01-01-Javascript-string-JSON/" data-id="cluh01405003x38wb36ug1usb" data-title="【Javascript】从字符串中解析出JSON" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-javascript/2012-01-01-Javascript-ie-check" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2012/01/01/javascript/2012-01-01-Javascript-ie-check/" class="article-date">
+  <time class="dt-published" datetime="2012-01-01T00:36:04.000Z" itemprop="datePublished">2012-01-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2012/01/01/javascript/2012-01-01-Javascript-ie-check/">【Javascript】有关IE版本检测</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>PS：检测浏览器虽然不是一个什么好的做法，但是有时候还是很必要的。</p>
+<p>见得最多的就是检测navigator.userAgent(这个可以面向所有浏览器，略过)。</p>
+<p>另外一种就是IE的条件注释，这篇有个比较详细的说明</p>
+<p><a target="_blank" rel="noopener" href="http://www.cnblogs.com/JustinYoung/archive/2009/03/02/ie-jiaojianzhushi.html">http://www.cnblogs.com/JustinYoung/archive/2009/03/02/ie-jiaojianzhushi.html</a>，注意看它下面的回复</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--[if !IE]&gt;&lt;!--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-handlebars"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars"> alert(&#x27;非IE&#x27;)</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">&lt;/ script&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars"><span class="comment">&lt;!--&lt;![endif]--&gt;</span></span></span></span><br></pre></td></tr></table></figure>
+
+<p>我测试的结果是这种形式是可用的。唯一需要注意的是&lt;!– [if IE 8]&gt; 中’IE’和’8’中间的这个空白符是必须的，掉了就悲剧了。</p>
+<p>基于IE的条件注释，变种版本就有几种，</p>
+<p>第一、类似下面的形式：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">    &lt;!--[<span class="keyword">if</span> <span class="variable constant_">IE</span> <span class="number">6</span>]&gt;</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">id</span>=<span class="string">&quot;ieVersion&quot;</span> <span class="attr">value</span>=<span class="string">&quot;6&quot;</span> /&gt;</span></span></span><br><span class="line">    &lt;![endif]--&gt;</span><br><span class="line">    &lt;!--[<span class="keyword">if</span> <span class="variable constant_">IE</span> <span class="number">7</span>]&gt;</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">id</span>=<span class="string">&quot;ieVersion&quot;</span> <span class="attr">value</span>=<span class="string">&quot;7&quot;</span> /&gt;</span></span></span><br><span class="line">    &lt;![endif]--&gt;</span><br><span class="line"><span class="keyword">var</span> ieVersion = (<span class="keyword">function</span>(<span class="params"></span>)&#123; <span class="keyword">return</span> <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;ieVersion&#x27;</span>)&#125;)();</span><br></pre></td></tr></table></figure>
+<p>以此类推，可以获得各个版本的信息，甚至可以添加gt，gte等，从而一次判定一类版本。</p>
+<p>关于这种写法，有个例子就是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">    &lt;!--[<span class="keyword">if</span> <span class="variable constant_">IE</span> <span class="number">6</span>]&gt;</span><br><span class="line">    &lt;html class=&quot;ie6&quot;&gt;</span><br><span class="line">    &lt;![endif]--&gt;</span><br><span class="line">    &lt;!--[if IE 7]&gt;</span><br><span class="line">    &lt;html class=&quot;ie7&quot;&gt;</span><br><span class="line">    &lt;![endif]--&gt;    </span><br><span class="line">&lt;!--[if !IE]&gt;&lt;!--&gt;</span><br><span class="line">    &lt;html&gt;&lt;!--&lt;![endif]--&gt;</span><br></pre></td></tr></table></figure>
+<p>于是在CSS里面就可以不用别的hack了,从而避免在IE里面多加载一次CSS，</p>
+<p>直接</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.ie6</span> xx&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.ie7</span> xx&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.ie8</span> xx&#123;&#125;</span><br><span class="line"></span><br><span class="line">xx&#123;&#125;</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+<p>第二、既然可以写在页面内，当然也可以JS来动态生成。我google了一把，发现还真有人这么做的。</p>
+<p>文章地址如下：<a target="_blank" rel="noopener" href="http://www.cnblogs.com/bruceli/archive/2011/04/11/2012470.html%EF%BC%8C%E5%86%99%E5%BE%97%E8%BF%98%E6%AF%94%E8%BE%83%E8%AF%A6%E7%BB%86%EF%BC%8C%E5%8E%9F%E7%90%86%E4%B9%9F%E5%BE%88%E7%AE%80%E5%8D%95%E3%80%82">http://www.cnblogs.com/bruceli/archive/2011/04/11/2012470.html，写得还比较详细，原理也很简单。</a></p>
+<p>不过这样的缺憾就是把条件注释限定到JS上了，于CSS就是鸡肋了。</p>
+<p>继续，既然可以动态生成条件注释来辨明IE版本，基于IE的CSS hack，应该也可以动态生成一段html片段，用样式值来判定版本。</p>
+<p>下面是最容易想到的形式，我测试发现这么确实可以，不过也发现了一个问题，看下面的一段代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;test_1&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">span</span> <span class="attr">style</span>=<span class="string">&quot;color: red; color: #ff6600\0; color: yellow\9\0;  *color:green; _color:blue;&quot;</span>&gt;</span>测试<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> test_1 = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;test_1&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> test_2 = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;div&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">    test_2.<span class="property">innerHTML</span> = <span class="string">&#x27;&lt;span style=&quot;color: red; color: #ff6600\\0; color: yellow\\9\\0;  *color:green; _color:blue;&quot;&gt;测试&lt;/span&gt;&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;test_1:&#x27;</span> + test_1.<span class="property">firstChild</span>.<span class="property">style</span>.<span class="property">color</span> + <span class="string">&#x27;----&#x27;</span> + <span class="string">&#x27;test_2:&#x27;</span> + test_2.<span class="property">firstChild</span>.<span class="property">style</span>.<span class="property">color</span>);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<pre><code>在IE9下结果：LOG: test_1:yellow----test_2:yellow 
+在IE8下结果：LOG: test_1:#ff6600----test_2:#ff6600 
+在IE7下结果：LOG: test_1:green----test_2:blue 
+在IE6下结果：test_1:blue ----test_2:blue （IE6没有console.log，所以上面的console.log需要换成alert）
+</code></pre>
+<p>上面的问题大家应该看出来了，IE7下两种情况不一致，不知道是我的IE7兼容模式的问题还是别的什么原因，知道的请指教。</p>
+<p>确认代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">span</span> <span class="attr">style</span>=<span class="string">&quot;*color:red; _color:blue;&quot;</span>&gt;</span>原始<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">var</span> test = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;div&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">test.<span class="property">innerHTML</span> = <span class="string">&#x27;&lt;span style=&quot;*color:red; _color:blue;&quot;&gt;动态生成&lt;/span&gt;&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">appendChild</span>(test);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<pre><code>IE7结果：&quot;原始&quot;显示为红色
+IE6结果：&quot;原始&quot;显示为蓝色
+</code></pre>
+<p>基本原理和IE的条件注释差不多，我们一次检测color值就可以了，所以改变一下上面的例子就是：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;test_1&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">span</span> <span class="attr">style</span>=<span class="string">&quot;color: red; color: #ff6600\0; color: yellow\9\0;  *color:green; _color:blue;&quot;</span>&gt;</span>测试<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> test_1 = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;test_1&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">//var test_2 = document.createElement(&#x27;div&#x27;);</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">//test_2.innerHTML = &#x27;&lt;span style=&quot;color: red; color: #ff6600\\0; color: yellow\\9\\0;  *color:green; _color:blue;&quot;&gt;测试&lt;/span&gt;&#x27;;</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> c = test_1.<span class="property">firstChild</span>.<span class="property">style</span>.<span class="property">color</span>;</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">alert</span>(c==<span class="string">&#x27;red&#x27;</span>?<span class="string">&#x27;other&#x27;</span>:c==<span class="string">&#x27;yellow&#x27;</span>?<span class="string">&#x27;IE9&#x27;</span>:c==<span class="string">&#x27;#ff6600&#x27;</span>?<span class="string">&#x27;IE8&#x27;</span>:c==<span class="string">&#x27;green&#x27;</span>?<span class="string">&#x27;IE7&#x27;</span>:<span class="string">&#x27;IE6&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code>在IE9下结果：IE9
+在IE8下结果：IE8
+在IE7下结果：IE7
+在IE6下结果：IE6
+</code></pre>
+<p>按理来说，对于FF,Chrome&#x2F;Safari、opera都可以利用-moz、-webkit、-o等私有前缀来辨别，不过对于属性的选取要斟酌，类似color是不行的。</p>
+<p>这个检测方法旁门左道而已，未来版本或者其他浏览器是不是有这个bug也不确定，而且IE7的那个bug我还没有弄清楚，所以也就暂时知道可以这么做就可以了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2012/01/01/javascript/2012-01-01-Javascript-ie-check/" data-id="cluh01406004038wbdyihhhcp" data-title="【Javascript】有关IE版本检测" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-javascript/2011-12-28-Javascript-Prototype-Class-2-extend" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2011/12/28/javascript/2011-12-28-Javascript-Prototype-Class-2-extend/" class="article-date">
+  <time class="dt-published" datetime="2011-12-28T00:36:04.000Z" itemprop="datePublished">2011-12-28</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2011/12/28/javascript/2011-12-28-Javascript-Prototype-Class-2-extend/">【Javascript】Prototype源码浅析——Class部分(二)之继承</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>前面分析了Class的构造部分，现在，需求变动啦（又变动啦！），现在需要一个Teacher类，同样有say方法，但是除此之外还有teach方法。我们再重复定义say就不划算了，因为Person有现成的，于是就牵扯到继承的问题，我要让Teacher类继承Person的方法。</p>
+<p>先复习一下JS常见继承的基本原理。假定现在有Person和Teacher类，让Teacher继承Person的方法：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Teacher</span>.<span class="property"><span class="keyword">prototype</span></span> = <span class="keyword">new</span> <span class="title class_">Person</span>();</span><br></pre></td></tr></table></figure>
+<p>这个方法的缺点是Person有可能很庞大，许多初始化操作是我们不必要的，我们只需要Person.prototype的方法而已。因此用一个Obj作为桥梁来传递prototype，改造如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Obj</span> = <span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;;</span><br><span class="line"><span class="title class_">Obj</span>.<span class="property"><span class="keyword">prototype</span></span> = <span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>;</span><br><span class="line"><span class="title class_">Teacher</span>.<span class="property"><span class="keyword">prototype</span></span> = <span class="keyword">new</span> <span class="title class_">Obj</span>();</span><br></pre></td></tr></table></figure>
+<p>现在回到Prototype的继承来：</p>
+<p>第一、先规定继承采用的调用形式：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> teacher = <span class="title class_">Class</span>.<span class="title function_">create</span>(<span class="title class_">Person</span>,&#123;</span><br><span class="line">    <span class="attr">initialize</span>:<span class="keyword">function</span>(<span class="params">age</span>)&#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">age</span> = age;</span><br><span class="line">    &#125;,</span><br><span class="line">    teach : <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;teach&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>第二、既然有父类和子类，我们规定用Teacher.superclass来表示Teacher的父类，用Teacher.subclasses来表示Teacher的子类，一旦Teacher被别的类（暂记为ClassTest）继承，那么Teacher.subclasses中就会添加ClassTest这一项。</p>
+<p>按照上面说的，继续改造我们的create方法。具体的步骤就是</p>
+<p>1、如果有父类，就获取父类——&gt;2、将新类的superclass指向父类——&gt;3、将新类推入父类的subclasses数组中，同时创建新类的subclasses——&gt;如果有父类，那么新类继承父类。</p>
+<p>所以可以得到我们的实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">　　　　　　<span class="keyword">var</span> <span class="title class_">Class</span> = (<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">     <span class="keyword">function</span> <span class="title function_">create</span>(<span class="params"></span>)&#123;</span><br><span class="line"></span><br><span class="line">         <span class="keyword">var</span> properties = $A(<span class="variable language_">arguments</span>);</span><br><span class="line"></span><br><span class="line">         <span class="keyword">var</span> parent = <span class="literal">null</span>;</span><br><span class="line">         <span class="keyword">if</span>(properties[<span class="number">0</span>].<span class="property">constructor</span> == <span class="title class_">Function</span>)&#123;</span><br><span class="line">             parent = properties.<span class="title function_">shift</span>(); <span class="comment">//如果有父类的话，那么在这一步就获得了父类的引用。</span></span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line">         <span class="keyword">function</span> <span class="title function_">kclass</span>(<span class="params"></span>)&#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">initialize</span>.<span class="title function_">apply</span>(<span class="variable language_">this</span>,<span class="variable language_">arguments</span>);</span><br><span class="line">         &#125;;</span><br><span class="line">         kclass.<span class="property">addMethods</span> = <span class="title class_">Class</span>.<span class="property">Methods</span>.<span class="property">addMethods</span>;</span><br><span class="line"></span><br><span class="line">         kclass.<span class="property">superclass</span> = parent;</span><br><span class="line">         kclass.<span class="property">subclasses</span> = [];<span class="comment">//用来存储类的子类</span></span><br><span class="line">         <span class="keyword">if</span>(parent)&#123;</span><br><span class="line">             <span class="keyword">var</span> blank = <span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;;</span><br><span class="line">             blank.<span class="property"><span class="keyword">prototype</span></span> = parent.<span class="property"><span class="keyword">prototype</span></span>;</span><br><span class="line">             kclass.<span class="property"><span class="keyword">prototype</span></span> = <span class="keyword">new</span> <span class="title function_">blank</span>();</span><br><span class="line">             parent.<span class="property">subclasses</span>.<span class="title function_">push</span>(kclass);</span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line">         <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; properties.<span class="property">length</span>; i++)&#123;</span><br><span class="line">            kclass.<span class="title function_">addMethods</span>(properties[i]);</span><br><span class="line">         &#125;</span><br><span class="line">         <span class="keyword">if</span> (!kclass.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">initialize</span>)&#123;</span><br><span class="line">             kclass.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">initialize</span> = <span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;;</span><br><span class="line">         &#125;</span><br><span class="line">         <span class="keyword">return</span> kclass;</span><br><span class="line">    &#125;</span><br><span class="line">　　　　　　  <span class="keyword">function</span> <span class="title function_">addMethods</span>(<span class="params">source</span>)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> property <span class="keyword">in</span> source)&#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property"><span class="keyword">prototype</span></span>[property] = source[property];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        create : create,</span><br><span class="line">        <span class="title class_">Methods</span> : &#123; </span><br><span class="line">            addMethods : addMethods</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<p>一个实例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Person</span> = <span class="title class_">Class</span>.<span class="title function_">create</span>(&#123;</span><br><span class="line">     <span class="attr">initialize</span>:<span class="keyword">function</span>(<span class="params">name</span>)&#123;</span><br><span class="line">         <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">     &#125;,</span><br><span class="line">     say : <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">         <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;hello &#x27;</span> + <span class="variable language_">this</span>.<span class="property">name</span>);</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;);</span><br><span class="line"> <span class="keyword">var</span> xesam =<span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&#x27;xesam&#x27;</span>);</span><br><span class="line"> xesam.<span class="title function_">say</span>();</span><br><span class="line"> </span><br><span class="line"> <span class="keyword">var</span> <span class="title class_">Teacher</span> = <span class="title class_">Class</span>.<span class="title function_">create</span>(<span class="title class_">Person</span>,&#123;</span><br><span class="line">     <span class="attr">initialize</span>:<span class="keyword">function</span>(<span class="params">name,age</span>)&#123;</span><br><span class="line">         <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">         <span class="variable language_">this</span>.<span class="property">age</span> = age;</span><br><span class="line">     &#125;,</span><br><span class="line">     teach : <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">         <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;teach&#x27;</span>);</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;);</span><br><span class="line"> <span class="keyword">var</span> teacher = <span class="keyword">new</span> <span class="title class_">Teacher</span>(<span class="string">&#x27;xesam_1&#x27;</span>,<span class="number">24</span>);</span><br><span class="line"> teacher.<span class="title function_">say</span>();</span><br></pre></td></tr></table></figure>
+
+<p>OK，到这里，继承部分可以算完了。不过现在需求又变了（真的是又TM变啦！）。</p>
+<p>现在要求Teacher里面有一个不一样的say方法，但是又部分功能是一样的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Teacher</span>_2 = <span class="title class_">Class</span>.<span class="title function_">create</span>(<span class="title class_">Person</span>,&#123;</span><br><span class="line">    <span class="attr">initialize</span>:<span class="keyword">function</span>(<span class="params">name,age</span>)&#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">age</span> = age;</span><br><span class="line">    &#125;,</span><br><span class="line">    teach : <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;teach&#x27;</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">    say : <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;hello &#x27;</span> + <span class="variable language_">this</span>.<span class="property">name</span>);<span class="comment">//这里和Person里面的say一致</span></span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;这里才是我自己的部分&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>因此我们需要一个调用父类同名方法的机制，现在还是按照Prototype的定义来做如下规定：</p>
+<p>要调用父类的方法，我们就将’$super’作为子类同名方法的第一个参数传入，来代替父类的同名方法，因此Teacher_2的定义就变为：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Teacher</span>_2 = <span class="title class_">Class</span>.<span class="title function_">create</span>(<span class="title class_">Person</span>,&#123;</span><br><span class="line">    <span class="attr">initialize</span>:<span class="keyword">function</span>(<span class="params">name,age</span>)&#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">age</span> = age;</span><br><span class="line">    &#125;,</span><br><span class="line">    teach : <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;teach&#x27;</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">    say : <span class="keyword">function</span>(<span class="params">$super</span>)&#123;</span><br><span class="line">        $super();</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;这里才是我自己的部分&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>现在继续来处理Class对象，下面的内容需要用到Function.prototype部分的知识。</p>
+<p>还记得大明湖畔的Function.prototype.wrap方法么，可以回过头去看看Prototype源码浅析——Function.prototype部分(一)。</p>
+<p>所以最终的实现为：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Class</span> = (<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">     <span class="keyword">function</span> <span class="title function_">create</span>(<span class="params"></span>)&#123;</span><br><span class="line">         <span class="keyword">var</span> properties = $A(<span class="variable language_">arguments</span>);</span><br><span class="line">         <span class="keyword">var</span> parent = <span class="literal">null</span>;</span><br><span class="line">         <span class="keyword">if</span>(properties[<span class="number">0</span>].<span class="property">constructor</span> == <span class="title class_">Function</span>)&#123;</span><br><span class="line">             parent = properties.<span class="title function_">shift</span>(); <span class="comment">//如果有父类的话，那么在这一步就获得了父类的引用。</span></span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line">         <span class="keyword">function</span> <span class="title function_">kclass</span>(<span class="params"></span>)&#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">initialize</span>.<span class="title function_">apply</span>(<span class="variable language_">this</span>,<span class="variable language_">arguments</span>);</span><br><span class="line">         &#125;;</span><br><span class="line">         kclass.<span class="property">addMethods</span> = <span class="title class_">Class</span>.<span class="property">Methods</span>.<span class="property">addMethods</span>;</span><br><span class="line"></span><br><span class="line">         kclass.<span class="property">superclass</span> = parent;</span><br><span class="line">         kclass.<span class="property">subclasses</span> = [];<span class="comment">//用来存储类的子类</span></span><br><span class="line">         <span class="keyword">if</span>(parent)&#123;</span><br><span class="line">             <span class="keyword">var</span> blank = <span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;;</span><br><span class="line">             blank.<span class="property"><span class="keyword">prototype</span></span> = parent.<span class="property"><span class="keyword">prototype</span></span>;</span><br><span class="line">             kclass.<span class="property"><span class="keyword">prototype</span></span> = <span class="keyword">new</span> <span class="title function_">blank</span>();</span><br><span class="line">             parent.<span class="property">subclasses</span>.<span class="title function_">push</span>(kclass);</span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line">         <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; properties.<span class="property">length</span>; i++)&#123;</span><br><span class="line">            kclass.<span class="title function_">addMethods</span>(properties[i]);</span><br><span class="line">         &#125;</span><br><span class="line">         <span class="keyword">if</span> (!kclass.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">initialize</span>)&#123;</span><br><span class="line">             kclass.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">initialize</span> = <span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;;</span><br><span class="line">         &#125;</span><br><span class="line">         <span class="keyword">return</span> kclass;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">addMethods</span>(<span class="params">source</span>)&#123;</span><br><span class="line">        <span class="keyword">var</span> ancestor = <span class="variable language_">this</span>.<span class="property">superclass</span> &amp;&amp; <span class="variable language_">this</span>.<span class="property">superclass</span>.<span class="property"><span class="keyword">prototype</span></span>;<span class="comment">//注意这里的写法，ancestor获得的是this.superclass.prototype</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> property <span class="keyword">in</span> source)&#123;</span><br><span class="line">            <span class="comment">//如果需要继承调用父类的同名方法，那么就会进入下面的条件分支</span></span><br><span class="line">            <span class="keyword">var</span> value = source[property]</span><br><span class="line">            <span class="keyword">if</span>(ancestor)&#123;</span><br><span class="line">                <span class="keyword">if</span> (ancestor &amp;&amp; value.<span class="title function_">argumentNames</span>()[<span class="number">0</span>] == <span class="string">&quot;$super&quot;</span>) &#123;</span><br><span class="line">                    <span class="keyword">var</span> method = value;</span><br><span class="line">                    value = (<span class="keyword">function</span>(<span class="params">m</span>) &#123;</span><br><span class="line">                        <span class="keyword">return</span> <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">                            <span class="keyword">return</span> ancestor[m].<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>);</span><br><span class="line">                        &#125;;</span><br><span class="line">                    &#125;)(property);</span><br><span class="line">                    value = value.<span class="title function_">wrap</span>(method);<span class="comment">//此时，value的第一个参数$super被替换成父类同名方法，并且修正了作用域</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property"><span class="keyword">prototype</span></span>[property] = value;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        create : create,</span><br><span class="line">        <span class="title class_">Methods</span> : &#123; </span><br><span class="line">            addMethods : addMethods</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<p>实例代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Person</span> = <span class="title class_">Class</span>.<span class="title function_">create</span>(&#123;</span><br><span class="line">    <span class="attr">initialize</span>:<span class="keyword">function</span>(<span class="params">name</span>)&#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">    &#125;,</span><br><span class="line">    say : <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;hello &#x27;</span> + <span class="variable language_">this</span>.<span class="property">name</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">var</span> xesam =<span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&#x27;xesam&#x27;</span>);</span><br><span class="line">xesam.<span class="title function_">say</span>();<span class="comment">// hello xesam</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">Teacher</span> = <span class="title class_">Class</span>.<span class="title function_">create</span>(<span class="title class_">Person</span>,&#123;</span><br><span class="line">    <span class="attr">initialize</span>:<span class="keyword">function</span>(<span class="params">name,age</span>)&#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">age</span> = age;</span><br><span class="line">    &#125;,</span><br><span class="line">    teach : <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;teach&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">var</span> teacher = <span class="keyword">new</span> <span class="title class_">Teacher</span>(<span class="string">&#x27;xesam_1&#x27;</span>,<span class="number">24</span>);</span><br><span class="line">teacher.<span class="title function_">say</span>();<span class="comment">// hello xesam_1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">Teacher</span>_2 = <span class="title class_">Class</span>.<span class="title function_">create</span>(<span class="title class_">Person</span>,&#123;</span><br><span class="line">    <span class="attr">initialize</span>:<span class="keyword">function</span>(<span class="params">$super,name,age</span>)&#123;</span><br><span class="line">        $super(name);</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">age</span> = age;</span><br><span class="line">    &#125;,</span><br><span class="line">    teach : <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;teach&#x27;</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">    say : <span class="keyword">function</span>(<span class="params">$super</span>)&#123;</span><br><span class="line">        $super();</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;这里才是我自己的部分&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> teacher_2 = <span class="keyword">new</span> <span class="title class_">Teacher</span>_2(<span class="string">&#x27;xesam_2&#x27;</span>,<span class="number">24</span>);</span><br><span class="line">teacher_2.<span class="title function_">say</span>();</span><br><span class="line"><span class="comment">// hello xesam_2</span></span><br><span class="line"><span class="comment">// 这里才是我自己的部分</span></span><br></pre></td></tr></table></figure>
+
+<p>最后有一点没有说的是对象枚举bug，就是Prototype源码中定义的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="variable constant_">IS_DONTENUM_BUGGY</span> = (<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> p <span class="keyword">in</span> &#123; <span class="attr">toString</span>: <span class="number">1</span> &#125;) &#123;</span><br><span class="line">        <span class="keyword">if</span> (p === <span class="string">&#x27;toString&#x27;</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<p>因为这个在前面的Object部分已经说过了，参见：Prototype源码浅析——Object部分(一)</p>
+<p>总结:在Prototype的Class中。</p>
+<p>在我们创建一个类的时候，完成类的方法设置、父类和子类之间的关系设置。<br>在我们创建一个实例的时候，initialize是自动调用的，以初始化一个实例。<br>一个类有addMethods方法，但是实例没有addMethods方法的，因为addMethods并没有加载到原型上面。<br>因此我们创建多少个类，就有多少个addMethods方法，这样也是一种浪费。而且，我们不能用addMethods来给一个实例添加方法。</p>
+<p>这里所有的类与继承机制都是很基本的，基本没有涉及封转的部分。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2011/12/28/javascript/2011-12-28-Javascript-Prototype-Class-2-extend/" data-id="cluh01403003p38wb12le2d87" data-title="【Javascript】Prototype源码浅析——Class部分(二)之继承" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/18/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="page-number" href="/page/18/">18</a><span class="page-number current">19</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/20/">下一页 &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chrome/">chrome</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/computer/">computer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/fe/">fe</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/introspection/">introspection</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/math/">math</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/physics/">physics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/product/">product</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/software/">software</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/talk/">talk</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c51/" rel="tag">c51</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/computer/" rel="tag">computer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fe/" rel="tag">fe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/introspection/" rel="tag">introspection</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/" rel="tag">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memo/" rel="tag">memo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/product/" rel="tag">product</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rx/" rel="tag">rx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/" rel="tag">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/talk/" rel="tag">talk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/volley/" rel="tag">volley</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/c51/" style="font-size: 11.25px;">c51</a> <a href="/tags/chrome/" style="font-size: 11.25px;">chrome</a> <a href="/tags/computer/" style="font-size: 17.5px;">computer</a> <a href="/tags/fe/" style="font-size: 13.75px;">fe</a> <a href="/tags/introspection/" style="font-size: 10px;">introspection</a> <a href="/tags/java/" style="font-size: 13.75px;">java</a> <a href="/tags/javascript/" style="font-size: 18.75px;">javascript</a> <a href="/tags/math/" style="font-size: 10px;">math</a> <a href="/tags/memo/" style="font-size: 10px;">memo</a> <a href="/tags/product/" style="font-size: 15px;">product</a> <a href="/tags/rx/" style="font-size: 10px;">rx</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/talk/" style="font-size: 16.25px;">talk</a> <a href="/tags/volley/" style="font-size: 11.25px;">volley</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">三月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/04/">四月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/">《其实你不懂进化论》简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/">单元测试的艺术-第三版 简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/">网民的故事分析-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/01/talk/2021-12-01-talk-book-user-stories-applied/">用户故事与敏捷方法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/03/talk/2021-11-03-talk-logic-1/">不令人讨厌的分析逻辑</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 xesam<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

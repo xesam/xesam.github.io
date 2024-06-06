@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>linux 搭建SVN服务器 | XiaoPingYuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="1.安装Subversion1sudo apt-get install subversion  2.创建仓库假定我们仓库的父目录为&#x2F;home&#x2F;svn 12cd &#x2F;home&#x2F;svnsudo svnadmin create &#x2F;home&#x2F;svn&#x2F;test 可以看到&#x2F;home&#x2F;svn目录下面有一个test文件夹，里面有conf，db，format，hooks，loc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux 搭建SVN服务器">
+<meta property="og:url" content="https://xesam.github.io/2013/03/15/computer/2013-03-15-Linux-svn/index.html">
+<meta property="og:site_name" content="XiaoPingYuan">
+<meta property="og:description" content="1.安装Subversion1sudo apt-get install subversion  2.创建仓库假定我们仓库的父目录为&#x2F;home&#x2F;svn 12cd &#x2F;home&#x2F;svnsudo svnadmin create &#x2F;home&#x2F;svn&#x2F;test 可以看到&#x2F;home&#x2F;svn目录下面有一个test文件夹，里面有conf，db，format，hooks，loc">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2013-03-15T04:46:04.000Z">
+<meta property="article:modified_time" content="2024-04-01T13:40:43.959Z">
+<meta property="article:author" content="xesam">
+<meta property="article:tag" content="computer">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="XiaoPingYuan" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">XiaoPingYuan</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Just Do IT</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://xesam.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-computer/2013-03-15-Linux-svn" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2013/03/15/computer/2013-03-15-Linux-svn/" class="article-date">
+  <time class="dt-published" datetime="2013-03-15T04:46:04.000Z" itemprop="datePublished">2013-03-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/computer/">computer</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      linux 搭建SVN服务器
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="1-安装Subversion"><a href="#1-安装Subversion" class="headerlink" title="1.安装Subversion"></a>1.安装Subversion</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install subversion</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-创建仓库"><a href="#2-创建仓库" class="headerlink" title="2.创建仓库"></a>2.创建仓库</h2><p>假定我们仓库的父目录为&#x2F;home&#x2F;svn</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /home/svn</span><br><span class="line">sudo svnadmin create /home/svn/test</span><br></pre></td></tr></table></figure>
+<p>可以看到&#x2F;home&#x2F;svn目录下面有一个test文件夹，里面有conf，db，format，hooks，locks，README.txt几个文件</p>
+<h2 id="3-启动svn服务器"><a href="#3-启动svn服务器" class="headerlink" title="3.启动svn服务器"></a>3.启动svn服务器</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo svnserve -d -r /home/svn</span><br></pre></td></tr></table></figure>
+<p>4.测试svn服务器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn co file://localhost/home/svn/test</span><br></pre></td></tr></table></figure>
+<p>输出：Checked out revision 0</p>
+<p>说明安装成功</p>
+<h1 id="浏览器访问"><a href="#浏览器访问" class="headerlink" title="浏览器访问"></a>浏览器访问</h1><p>如果要通过浏览器访问的，则需要与apache配合：</p>
+<h2 id="1-安装apache"><a href="#1-安装apache" class="headerlink" title="1.安装apache"></a>1.安装apache</h2><p>如果没有安装apache，需要先安装apache以及libapache2-svn</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install apache libapache2-svn</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-整合SVN"><a href="#2-整合SVN" class="headerlink" title="2.整合SVN"></a>2.整合SVN</h2><p>修改&#x2F;etc&#x2F;apache2&#x2F;mods-available&#x2F;dav_svn.conf</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Location</span> /<span class="attr">svn</span>&gt;</span></span><br><span class="line">    DAV svn</span><br><span class="line">    SVNParentPath /home/svn</span><br><span class="line">    AuthType Basic</span><br><span class="line">    AuthName &quot;Subversion Repository&quot;</span><br><span class="line">    AuthUserFile /etc/subversion/dav_svn.passwd</span><br><span class="line">    AuthzSVNAccessFile /etc/subversion/dav_svn.authz</span><br><span class="line">    Require valid-user</span><br><span class="line"><span class="tag">&lt;/<span class="name">Location</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>说明：</p>
+<pre><code>1. SVNParentPath表示的所有库的父级目录，SVNParentPath与SVNPath只能启用一个。SVNPath只能创建一个仓库，SVNParentPath则可以创建多个，由于通常不会只有一个仓库，所以通常都会选择SVNParentPath
+2. AuthUserFile 是svn的用户配置文件，位置可以自定义，文件也需要自己创建，不过得保证apache有访问权限
+3. AuthzSVNAccessFile 是svn的权限控制文件，其他同AuthUserFile
+</code></pre>
+<h2 id="3-添加SVN用户"><a href="#3-添加SVN用户" class="headerlink" title="3.添加SVN用户"></a>3.添加SVN用户</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo htpasswd -c /etc/subversion2/dav_svn.passwd username</span><br></pre></td></tr></table></figure>
+<p>回车之后需要输入两次密码。<br>据说 -c 参数创建文件会覆盖原有的信息，但是经过测试，并没有覆盖原有的用户信息，所以，执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo htpasswd -c /etc/subversion2/dav_svn.passwd user1</span><br><span class="line">sudo htpasswd -c /etc/subversion2/dav_svn.passwd user2</span><br></pre></td></tr></table></figure>
+<p>dav_svn.passwd文件中依旧会有user1和user2两个用户信息，没有冲突。</p>
+<p>另外，&#x2F;etc&#x2F;subversion2&#x2F;dav_svn.passwd文件需要与第2步中自定义的文件位置一致</p>
+<p>完成之后可以看到dav_svn.passwd中有类似</p>
+<pre><code>xiao:$apr1$wq1l1SCM$lAgKYtQJUzpPZPgvQXTnX1
+</code></pre>
+<p>的片段，xiao是用户名，后面的是加密后的密码</p>
+<h2 id="4-修改SVN访问权限"><a href="#4-修改SVN访问权限" class="headerlink" title="4.修改SVN访问权限"></a>4.修改SVN访问权限</h2><p>编辑 &#x2F;etc&#x2F;apache2&#x2F;dav_svn.authz<br>如果想开放所有权限，那么可以直接</p>
+<pre><code>[/]
+* = rw
+</code></pre>
+<p>表示用户都有读写权限</p>
+<h2 id="5-重启apache"><a href="#5-重启apache" class="headerlink" title="5.重启apache"></a>5.重启apache</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo /etc/init.d/apache2 restart</span><br></pre></td></tr></table></figure>
+
+<p>访问<a target="_blank" rel="noopener" href="http://127.0.0.1/svn/test/%E5%8F%AF%E6%9F%A5%E7%9C%8B%E7%BB%93%E6%9E%9C">http://127.0.0.1/svn/test/可查看结果</a></p>
+<h1 id="补充说明："><a href="#补充说明：" class="headerlink" title="补充说明："></a>补充说明：</h1><h2 id="1-整合SVN出错"><a href="#1-整合SVN出错" class="headerlink" title="1.整合SVN出错"></a>1.整合SVN出错</h2><p>出现错误：</p>
+<pre><code>Invalid command &#39;AuthzSVNAccessFile&#39;, perhaps misspelled or defined by a module not included in the server configuration
+Action &#39;configtest&#39; failed.
+</code></pre>
+<p>原因：没有导入auth模块<br>解决方法：<br>在&#x2F;etc&#x2F;apache2&#x2F;mods-enabled&#x2F;dav_svn.load中加入</p>
+<pre><code>LoadModule authz_svn_module /usr/lib/apache2/modules/mod_authz_svn.so
+</code></pre>
+<h2 id="2-访问仓库列表"><a href="#2-访问仓库列表" class="headerlink" title="2.访问仓库列表"></a>2.访问仓库列表</h2><p>如果希望访问所有的仓库列表，可以修改&#x2F;etc&#x2F;apache2&#x2F;mods-available&#x2F;dav_svn.conf如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Location</span> /<span class="attr">svn</span>/&gt;</span></span><br><span class="line">    DAV svn</span><br><span class="line">    SVNParentPath /home/svn</span><br><span class="line">    SVNListParentPath On</span><br><span class="line">    AuthType Basic</span><br><span class="line">    AuthName &quot;Subversion Repository&quot;</span><br><span class="line">    AuthUserFile /etc/subversion/dav_svn.passwd</span><br><span class="line">    AuthzSVNAccessFile /etc/subversion/dav_svn.authz</span><br><span class="line">    Require valid-user</span><br><span class="line"><span class="tag">&lt;/<span class="name">Location</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>注意上面的变化，%lt;Location &#x2F;svn&#x2F;&gt;添加了尾部斜线，SVNListParentPath On是新添加的。<br>重启apache后访问<a target="_blank" rel="noopener" href="http://127.0.0.1/svn/%EF%BC%88%E7%BB%93%E5%B0%BE%E6%9C%89%E4%B8%AA%E2%80%99/'%EF%BC%89%E5%8F%AF%E4%BB%A5%E7%9C%8B%E5%88%B0%E7%BB%93%E6%9E%9C">http://127.0.0.1/svn/（结尾有个’/&#39;）可以看到结果</a></p>
+<h2 id="3-权限控制说明"><a href="#3-权限控制说明" class="headerlink" title="3.权限控制说明"></a>3.权限控制说明</h2><p>&#x2F;etc&#x2F;apache2&#x2F;dav_svn.authz 权限控制的一个示例</p>
+<pre><code>[groups] #用来分组用户
+group1 = xiao, xe
+group2 = user1, user2
+ 
+[test:/] #仓库名称，[/]表示所有仓库
+@group1 = rw #表示group1组的用户（xiao, xe）对test具有读写权限
+@group2 = r  #表示group2组的用户（user1, user2）对test只具有读权限，没有写的权限
+* = #表示所有用户都没有权限，即既不能读，也不能写
+ 
+[test2:/]
+* = rw #表示所有用户都具有读写权限
+</code></pre>
+<h2 id="4-权限错误"><a href="#4-权限错误" class="headerlink" title="4.权限错误"></a>4.权限错误</h2><p>出现</p>
+<pre><code>Can’t open directory ‘/home/svn’: Permission denied
+</code></pre>
+<p>或者</p>
+<pre><code>403 forbidden
+</code></pre>
+<p>错误的话，表示apache（通常账户是www-data）没有权限文档到svn所在目录的权限，此时需要检查&#x2F;home&#x2F;svn及其子文件夹的权限，比如</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chown -R www-data /home/svn</span><br></pre></td></tr></table></figure>
+
+<p>然后再访问<a target="_blank" rel="noopener" href="http://127.0.0.1/svn/test/%E6%9F%A5%E7%9C%8B%E7%BB%93%E6%9E%9C">http://127.0.0.1/svn/test/查看结果</a></p>
+<h2 id="5-重启apache的时候如果出现"><a href="#5-重启apache的时候如果出现" class="headerlink" title="5.重启apache的时候如果出现"></a>5.重启apache的时候如果出现</h2><pre><code>Permission denied: make_sock: could not bind to address 0.0.0.0:80
+</code></pre>
+<p>等字样，记得加sudo</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2013/03/15/computer/2013-03-15-Linux-svn/" data-id="cluh013z5000538wb0soagcin" data-title="linux 搭建SVN服务器" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/computer/" rel="tag">computer</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2013/04/01/computer/2013-04-01-Linux-command-cat/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          命令记录-cat
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2013/03/15/talk/2013-03-15-talk-time/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">闲话历法与时间</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chrome/">chrome</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/computer/">computer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/fe/">fe</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/introspection/">introspection</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/math/">math</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/physics/">physics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/product/">product</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/software/">software</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/talk/">talk</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c51/" rel="tag">c51</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/computer/" rel="tag">computer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fe/" rel="tag">fe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/introspection/" rel="tag">introspection</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/" rel="tag">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memo/" rel="tag">memo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/product/" rel="tag">product</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rx/" rel="tag">rx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/" rel="tag">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/talk/" rel="tag">talk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/volley/" rel="tag">volley</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/c51/" style="font-size: 11.25px;">c51</a> <a href="/tags/chrome/" style="font-size: 11.25px;">chrome</a> <a href="/tags/computer/" style="font-size: 17.5px;">computer</a> <a href="/tags/fe/" style="font-size: 13.75px;">fe</a> <a href="/tags/introspection/" style="font-size: 10px;">introspection</a> <a href="/tags/java/" style="font-size: 13.75px;">java</a> <a href="/tags/javascript/" style="font-size: 18.75px;">javascript</a> <a href="/tags/math/" style="font-size: 10px;">math</a> <a href="/tags/memo/" style="font-size: 10px;">memo</a> <a href="/tags/product/" style="font-size: 15px;">product</a> <a href="/tags/rx/" style="font-size: 10px;">rx</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/talk/" style="font-size: 16.25px;">talk</a> <a href="/tags/volley/" style="font-size: 11.25px;">volley</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">三月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/04/">四月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/">《其实你不懂进化论》简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/">单元测试的艺术-第三版 简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/">网民的故事分析-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/01/talk/2021-12-01-talk-book-user-stories-applied/">用户故事与敏捷方法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/03/talk/2021-11-03-talk-logic-1/">不令人讨厌的分析逻辑</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 xesam<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

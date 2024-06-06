@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Numpy Array | XiaoPingYuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="numpy 一维数组与 python 列表类似，略。本文主要讨论多维数组的处理。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Numpy Array">
+<meta property="og:url" content="https://xesam.github.io/2020/01/04/computer/2020-01-04-numpy-array/index.html">
+<meta property="og:site_name" content="XiaoPingYuan">
+<meta property="og:description" content="numpy 一维数组与 python 列表类似，略。本文主要讨论多维数组的处理。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-01-04T00:00:00.000Z">
+<meta property="article:modified_time" content="2024-04-01T13:40:44.000Z">
+<meta property="article:author" content="xesam">
+<meta property="article:tag" content="computer">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="XiaoPingYuan" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">XiaoPingYuan</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Just Do IT</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://xesam.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-computer/2020-01-04-numpy-array" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/01/04/computer/2020-01-04-numpy-array/" class="article-date">
+  <time class="dt-published" datetime="2020-01-04T00:00:00.000Z" itemprop="datePublished">2020-01-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/computer/">computer</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Numpy Array
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>numpy 一维数组与 python 列表类似，略。本文主要讨论多维数组的处理。</p>
+<span id="more"></span>
+
+<h3 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">1</span>]: <span class="keyword">from</span> numpy <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">In [<span class="number">2</span>]: a = arange(<span class="number">12</span>).reshape(<span class="number">3</span>,<span class="number">2</span>,<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">3</span>]: a</span><br><span class="line">Out[<span class="number">3</span>]:</span><br><span class="line">array([[[ <span class="number">0</span>,  <span class="number">1</span>],</span><br><span class="line">        [ <span class="number">2</span>,  <span class="number">3</span>]],</span><br><span class="line"></span><br><span class="line">       [[ <span class="number">4</span>,  <span class="number">5</span>],</span><br><span class="line">        [ <span class="number">6</span>,  <span class="number">7</span>]],</span><br><span class="line"></span><br><span class="line">       [[ <span class="number">8</span>,  <span class="number">9</span>],</span><br><span class="line">        [<span class="number">10</span>, <span class="number">11</span>]]])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>此时，np 数组与 python list 的区别如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">5</span>]: a[<span class="number">0</span>][<span class="number">1</span>][<span class="number">1</span>] == a[<span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>]</span><br><span class="line">Out[<span class="number">5</span>]: <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+
+<p>这两种语法是等价的，但是 python list 是不支持后一种的。</p>
+<h3 id="切片"><a href="#切片" class="headerlink" title="切片"></a>切片</h3><p>以下是对比，注意 shape 的变化：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">9</span>]: a[<span class="number">0</span>:<span class="number">3</span>][<span class="number">1</span>]</span><br><span class="line">Out[<span class="number">9</span>]:</span><br><span class="line">array([[<span class="number">4</span>, <span class="number">5</span>],</span><br><span class="line">       [<span class="number">6</span>, <span class="number">7</span>]])</span><br><span class="line"></span><br><span class="line">In [<span class="number">13</span>]: a[<span class="number">0</span>:<span class="number">3</span>][<span class="number">1</span>].shape</span><br><span class="line">Out[<span class="number">13</span>]: (<span class="number">2</span>, <span class="number">2</span>) <span class="comment"># 先沿着0轴切片，后索引</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">10</span>]: a[<span class="number">0</span>:<span class="number">3</span>, <span class="number">1</span>]</span><br><span class="line">Out[<span class="number">10</span>]:</span><br><span class="line">array([[ <span class="number">2</span>,  <span class="number">3</span>],</span><br><span class="line">       [ <span class="number">6</span>,  <span class="number">7</span>],</span><br><span class="line">       [<span class="number">10</span>, <span class="number">11</span>]])</span><br><span class="line"></span><br><span class="line">In [<span class="number">14</span>]: a[<span class="number">0</span>:<span class="number">3</span>, <span class="number">1</span>].shape</span><br><span class="line">Out[<span class="number">14</span>]: (<span class="number">3</span>, <span class="number">2</span>) <span class="comment"># 原本的1轴被消除了</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">11</span>]: a[<span class="number">0</span>:<span class="number">3</span>, <span class="number">1</span>:]</span><br><span class="line">Out[<span class="number">11</span>]:</span><br><span class="line">array([[[ <span class="number">2</span>,  <span class="number">3</span>]],</span><br><span class="line"></span><br><span class="line">       [[ <span class="number">6</span>,  <span class="number">7</span>]],</span><br><span class="line"></span><br><span class="line">       [[<span class="number">10</span>, <span class="number">11</span>]]])</span><br><span class="line"></span><br><span class="line">In [<span class="number">15</span>]: a[<span class="number">0</span>:<span class="number">3</span>,<span class="number">1</span>:].shape</span><br><span class="line">Out[<span class="number">15</span>]: (<span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>) <span class="comment"># 切片保留所有轴</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="组合-分割"><a href="#组合-分割" class="headerlink" title="组合&amp;分割"></a>组合&amp;分割</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">7</span>]: b = arange(<span class="number">12</span>, <span class="number">24</span>).reshape(<span class="number">3</span>,<span class="number">2</span>,<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">8</span>]: b</span><br><span class="line">Out[<span class="number">8</span>]:</span><br><span class="line">array([[[<span class="number">12</span>, <span class="number">13</span>],</span><br><span class="line">        [<span class="number">14</span>, <span class="number">15</span>]],</span><br><span class="line"></span><br><span class="line">       [[<span class="number">16</span>, <span class="number">17</span>],</span><br><span class="line">        [<span class="number">18</span>, <span class="number">19</span>]],</span><br><span class="line"></span><br><span class="line">       [[<span class="number">20</span>, <span class="number">21</span>],</span><br><span class="line">        [<span class="number">22</span>, <span class="number">23</span>]]])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>两个主要函数：stack 以及 concatenate。</p>
+<p>stack 用于堆叠</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">33</span>]: stack((a, b))</span><br><span class="line">Out[<span class="number">33</span>]:</span><br><span class="line">array([[[[ <span class="number">0</span>,  <span class="number">1</span>],</span><br><span class="line">         [ <span class="number">2</span>,  <span class="number">3</span>]],</span><br><span class="line"></span><br><span class="line">        [[ <span class="number">4</span>,  <span class="number">5</span>],</span><br><span class="line">         [ <span class="number">6</span>,  <span class="number">7</span>]],</span><br><span class="line"></span><br><span class="line">        [[ <span class="number">8</span>,  <span class="number">9</span>],</span><br><span class="line">         [<span class="number">10</span>, <span class="number">11</span>]]],</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">       [[[<span class="number">12</span>, <span class="number">13</span>],</span><br><span class="line">         [<span class="number">14</span>, <span class="number">15</span>]],</span><br><span class="line"></span><br><span class="line">        [[<span class="number">16</span>, <span class="number">17</span>],</span><br><span class="line">         [<span class="number">18</span>, <span class="number">19</span>]],</span><br><span class="line"></span><br><span class="line">        [[<span class="number">20</span>, <span class="number">21</span>],</span><br><span class="line">         [<span class="number">22</span>, <span class="number">23</span>]]]])</span><br><span class="line"></span><br><span class="line">In [<span class="number">34</span>]: stack((a, b)).shape</span><br><span class="line">Out[<span class="number">34</span>]: (<span class="number">2</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">2</span>) <span class="comment"># 默认沿着 axis = 0 堆叠</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">40</span>]: stack((a, b), axis=<span class="number">1</span>)</span><br><span class="line">Out[<span class="number">40</span>]:</span><br><span class="line">array([[[[ <span class="number">0</span>,  <span class="number">1</span>],</span><br><span class="line">         [ <span class="number">2</span>,  <span class="number">3</span>]],</span><br><span class="line"></span><br><span class="line">        [[<span class="number">12</span>, <span class="number">13</span>],</span><br><span class="line">         [<span class="number">14</span>, <span class="number">15</span>]]],</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">       [[[ <span class="number">4</span>,  <span class="number">5</span>],</span><br><span class="line">         [ <span class="number">6</span>,  <span class="number">7</span>]],</span><br><span class="line"></span><br><span class="line">        [[<span class="number">16</span>, <span class="number">17</span>],</span><br><span class="line">         [<span class="number">18</span>, <span class="number">19</span>]]],</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">       [[[ <span class="number">8</span>,  <span class="number">9</span>],</span><br><span class="line">         [<span class="number">10</span>, <span class="number">11</span>]],</span><br><span class="line"></span><br><span class="line">        [[<span class="number">20</span>, <span class="number">21</span>],</span><br><span class="line">         [<span class="number">22</span>, <span class="number">23</span>]]]])</span><br><span class="line"></span><br><span class="line">In [<span class="number">37</span>]: stack((a, b), axis=<span class="number">1</span>).shape</span><br><span class="line">Out[<span class="number">37</span>]: (<span class="number">3</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>) <span class="comment"># 沿着 axis = 1 堆叠</span></span><br></pre></td></tr></table></figure>
+
+<p>concatenate 用于连接</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">46</span>]: concatenate((a,b))</span><br><span class="line">Out[<span class="number">46</span>]:</span><br><span class="line">array([[[ <span class="number">0</span>,  <span class="number">1</span>],</span><br><span class="line">        [ <span class="number">2</span>,  <span class="number">3</span>]],</span><br><span class="line"></span><br><span class="line">       [[ <span class="number">4</span>,  <span class="number">5</span>],</span><br><span class="line">        [ <span class="number">6</span>,  <span class="number">7</span>]],</span><br><span class="line"></span><br><span class="line">       [[ <span class="number">8</span>,  <span class="number">9</span>],</span><br><span class="line">        [<span class="number">10</span>, <span class="number">11</span>]],</span><br><span class="line"></span><br><span class="line">       [[<span class="number">12</span>, <span class="number">13</span>],</span><br><span class="line">        [<span class="number">14</span>, <span class="number">15</span>]],</span><br><span class="line"></span><br><span class="line">       [[<span class="number">16</span>, <span class="number">17</span>],</span><br><span class="line">        [<span class="number">18</span>, <span class="number">19</span>]],</span><br><span class="line"></span><br><span class="line">       [[<span class="number">20</span>, <span class="number">21</span>],</span><br><span class="line">        [<span class="number">22</span>, <span class="number">23</span>]]])</span><br><span class="line"></span><br><span class="line">In [<span class="number">53</span>]: a.shape</span><br><span class="line">Out[<span class="number">53</span>]: (<span class="number">3</span>, <span class="number">2</span>, <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">54</span>]: b.shape</span><br><span class="line">Out[<span class="number">54</span>]: (<span class="number">3</span>, <span class="number">2</span>, <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">47</span>]: concatenate((a,b)).shape</span><br><span class="line">Out[<span class="number">47</span>]: (<span class="number">6</span>, <span class="number">2</span>, <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">48</span>]: concatenate((a,b), axis=<span class="number">1</span>)</span><br><span class="line">Out[<span class="number">48</span>]:</span><br><span class="line">array([[[ <span class="number">0</span>,  <span class="number">1</span>],</span><br><span class="line">        [ <span class="number">2</span>,  <span class="number">3</span>],</span><br><span class="line">        [<span class="number">12</span>, <span class="number">13</span>],</span><br><span class="line">        [<span class="number">14</span>, <span class="number">15</span>]],</span><br><span class="line"></span><br><span class="line">       [[ <span class="number">4</span>,  <span class="number">5</span>],</span><br><span class="line">        [ <span class="number">6</span>,  <span class="number">7</span>],</span><br><span class="line">        [<span class="number">16</span>, <span class="number">17</span>],</span><br><span class="line">        [<span class="number">18</span>, <span class="number">19</span>]],</span><br><span class="line"></span><br><span class="line">       [[ <span class="number">8</span>,  <span class="number">9</span>],</span><br><span class="line">        [<span class="number">10</span>, <span class="number">11</span>],</span><br><span class="line">        [<span class="number">20</span>, <span class="number">21</span>],</span><br><span class="line">        [<span class="number">22</span>, <span class="number">23</span>]]])</span><br><span class="line"></span><br><span class="line">In [<span class="number">53</span>]: a.shape</span><br><span class="line">Out[<span class="number">53</span>]: (<span class="number">3</span>, <span class="number">2</span>, <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">54</span>]: b.shape</span><br><span class="line">Out[<span class="number">54</span>]: (<span class="number">3</span>, <span class="number">2</span>, <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">49</span>]: concatenate((a,b), axis=<span class="number">1</span>).shape</span><br><span class="line">Out[<span class="number">49</span>]: (<span class="number">3</span>, <span class="number">4</span>, <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<p>连接与堆叠的区别简单理解就是：连接增加了形状，堆叠增加了维度。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">55</span>]: concatenate((a,b), axis=<span class="number">3</span>)</span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line">AxisError                                 Traceback (most recent call last)</span><br><span class="line">&lt;ipython-<span class="built_in">input</span>-<span class="number">55</span>-ec2463892184&gt; <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">----&gt; <span class="number">1</span> concatenate((a,b), axis=<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">AxisError: axis <span class="number">3</span> <span class="keyword">is</span> out of bounds <span class="keyword">for</span> array of dimension <span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，axis&#x3D;3 不存在，因此 concatenate 会包报错，所以，可以增加一个维度，再进行 concatenate 操作：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">57</span>]: concatenate((a[...,newaxis],b[...,newaxis]), axis=<span class="number">3</span>)</span><br><span class="line">Out[<span class="number">57</span>]:</span><br><span class="line">array([[[[ <span class="number">0</span>, <span class="number">12</span>],</span><br><span class="line">         [ <span class="number">1</span>, <span class="number">13</span>]],</span><br><span class="line"></span><br><span class="line">        [[ <span class="number">2</span>, <span class="number">14</span>],</span><br><span class="line">         [ <span class="number">3</span>, <span class="number">15</span>]]],</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">       [[[ <span class="number">4</span>, <span class="number">16</span>],</span><br><span class="line">         [ <span class="number">5</span>, <span class="number">17</span>]],</span><br><span class="line"></span><br><span class="line">        [[ <span class="number">6</span>, <span class="number">18</span>],</span><br><span class="line">         [ <span class="number">7</span>, <span class="number">19</span>]]],</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">       [[[ <span class="number">8</span>, <span class="number">20</span>],</span><br><span class="line">         [ <span class="number">9</span>, <span class="number">21</span>]],</span><br><span class="line"></span><br><span class="line">        [[<span class="number">10</span>, <span class="number">22</span>],</span><br><span class="line">         [<span class="number">11</span>, <span class="number">23</span>]]]])</span><br><span class="line"></span><br><span class="line">In [<span class="number">58</span>]: concatenate((a[...,newaxis],b[...,newaxis]), axis=<span class="number">3</span>).shape</span><br><span class="line">Out[<span class="number">58</span>]: (<span class="number">3</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<p>concatenate 有几个快捷方法:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vstack(tup) : concatenate(tup, axis = <span class="number">0</span>)</span><br><span class="line">hstack(tup) : concatenate(tup, axis = <span class="number">1</span>)</span><br><span class="line">dstack(tup) : concatenate(tup, axis = <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+<p>如果 tup 中数组维度不够，则 hstack 或者 dstack 会自动增加维度。</p>
+<p>分割就是 concatenate 的逆操作</p>
+<pre><code>split  &lt;——&gt; concatenate
+</code></pre>
+<p>split 同样有几个快捷函数：</p>
+<pre><code>vsplit(ary, indices_or_sections) : split(ary, indices_or_sections, axis=0)
+hsplit(ary, indices_or_sections) : split(ary, indices_or_sections, axis=1)
+dsplit(ary, indices_or_sections) : split(ary, indices_or_sections, axis=2)
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2020/01/04/computer/2020-01-04-numpy-array/" data-id="cluh013zq001u38wb7rglhqo1" data-title="Numpy Array" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/computer/" rel="tag">computer</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/03/04/computer/2020-03-04-numpy-broadcasting/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          Numpy Broadcasting 机制
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/12/02/product/2019-12-02-ue-del/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">产品中的基础删除操作</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chrome/">chrome</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/computer/">computer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/fe/">fe</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/introspection/">introspection</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/math/">math</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/physics/">physics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/product/">product</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/software/">software</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/talk/">talk</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c51/" rel="tag">c51</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/computer/" rel="tag">computer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fe/" rel="tag">fe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/introspection/" rel="tag">introspection</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/" rel="tag">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memo/" rel="tag">memo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/product/" rel="tag">product</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rx/" rel="tag">rx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/" rel="tag">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/talk/" rel="tag">talk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/volley/" rel="tag">volley</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/c51/" style="font-size: 11.25px;">c51</a> <a href="/tags/chrome/" style="font-size: 11.25px;">chrome</a> <a href="/tags/computer/" style="font-size: 17.5px;">computer</a> <a href="/tags/fe/" style="font-size: 13.75px;">fe</a> <a href="/tags/introspection/" style="font-size: 10px;">introspection</a> <a href="/tags/java/" style="font-size: 13.75px;">java</a> <a href="/tags/javascript/" style="font-size: 18.75px;">javascript</a> <a href="/tags/math/" style="font-size: 10px;">math</a> <a href="/tags/memo/" style="font-size: 10px;">memo</a> <a href="/tags/product/" style="font-size: 15px;">product</a> <a href="/tags/rx/" style="font-size: 10px;">rx</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/talk/" style="font-size: 16.25px;">talk</a> <a href="/tags/volley/" style="font-size: 11.25px;">volley</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">三月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/04/">四月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/">《其实你不懂进化论》简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/">单元测试的艺术-第三版 简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/">网民的故事分析-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/01/talk/2021-12-01-talk-book-user-stories-applied/">用户故事与敏捷方法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/03/talk/2021-11-03-talk-logic-1/">不令人讨厌的分析逻辑</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 xesam<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

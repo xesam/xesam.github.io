@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>XiaoPingYuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="XiaoPingYuan">
+<meta property="og:url" content="https://xesam.github.io/page/8/index.html">
+<meta property="og:site_name" content="XiaoPingYuan">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="xesam">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="XiaoPingYuan" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">XiaoPingYuan</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Just Do IT</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://xesam.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-android/2016/2016-07-07-Android-why-not-SoftReference" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2016/07/07/android/2016/2016-07-07-Android-why-not-SoftReference/" class="article-date">
+  <time class="dt-published" datetime="2016-07-07T10:20:04.000Z" itemprop="datePublished">2016-07-07</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2016/07/07/android/2016/2016-07-07-Android-why-not-SoftReference/">Android 为什么不要SoftReference了</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>关于 SoftReference 在缓存中的使用问题，Android 在官方文档 <a target="_blank" rel="noopener" href="https://developer.android.com/reference/java/lang/ref/SoftReference.html">SoftReference</a>，明确指出 </p>
+<pre><code>Avoid Soft References for Caching
+</code></pre>
+<p>而给出的原因是：</p>
+<pre><code>The runtime doesn&#39;t have enough information on which references to clear and which to keep. 
+Most fatally, it doesn&#39;t know what to do when given the choice between clearing a soft reference and growing the heap.
+</code></pre>
+<p>即：</p>
+<pre><code>Runtime 没有足够的信息来判别应该清除哪个 SoftReference(持有的对象)，
+更无法判定当 App 要求更多内存的时候，是应该清除 SoftReference，还是增大 App 的Heap。
+ 
+</code></pre>
+<p>听着是不是很合理，但是这个根本说不过去啊。</p>
+<p>因为在正常的 JVM 中，只要不会触发 OOM（达到系统内存上限或者到达 JVM 设定的内存上限），JVM 就应该毫不留情的增大 Heap 来维持应用的正常运行。<br>而没有必要考虑是先清理 SoftReference，还是增大 Heap 这种无聊的问题。</p>
+<p>Android Runtime与 JVM 不一样的是：用户 App 通常没有权限来设定自己的最大可用内存，这个是由系统全权把握， 单个 App 使用的最大内存容量是固定的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Runtime.getRuntime().maxMemory()</span><br></pre></td></tr></table></figure>
+
+<p>其他就是跟 JVM 差不多了，Android 在启动每一个 App 的时候，也并不是一开始就给每个 App 分配固定的上限内存，也是按需动态分配，所以，这应该不是技术问题。</p>
+<p>我个人觉得，这只是用户体验上的取舍问题，Android 与 PC 系统最大的区别就是：<br>通常情况下，PC 系统不会杀死任何一个用户应用来运行另一个应用，而 Android 可能在任意时刻杀掉哪些优先级比较低的 App 来释放内存，从而给优先级高的 App 提供资源。</p>
+<p>在 Android 上面，App 的优先级通常是用户的交互行为赋予的。<br>当一个 App 被用户调到前台，Android 会尽量满足这个 App 的一切非特权要求，如果此 App 占用的内存比较大，<br>那么，会挤压其他后台运行 App 的生存空间，使得 Android 能够缓存的应用数目减少，同时减缓应用被再次调起的速度；<br>另一方面，如果后台 App 占用的内存比较大，那么自身被杀死的几率也会相应增大。<br>考虑到这些情况，在有内存需求的情况下，如果 Android Runtime 总是一味增大对应 App 的 Heap，那么，最终损害的只是用户的整体体验，这他妈就很尴尬了。</p>
+<p>因此，Android 对 SoftReference 这个“墙头草”采取了比较激进的措施，即尽可能的多的找机会来清除它们，结果就是还不如使用 WeakReference 呢，起码效果和语义都是可预期的。<br>同时，Android Runtime 也将内存控制的一部分措施让渡给开发者，这里面就包括 SoftReference。<br>开发者可以采取各自的策略来处理类似的内存问题，换句话说，就是用“开发者智能”替换“运行时策略”。如果开发者置之不理，那么结果就是要么是没有缓存，要么是内存暴涨。<br>Android 官方推荐的是 <a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/util/LruCache.html">LruCache</a>来进行缓存。</p>
+<h1 id="SoftReference-与-LruCache"><a href="#SoftReference-与-LruCache" class="headerlink" title="SoftReference 与 LruCache"></a>SoftReference 与 LruCache</h1><p>LruCache 虽然挺有用，但是有些问题还是需要了解的。</p>
+<ol>
+<li>LruCache 需要设置容量大小，不同的机型可用内存不一样，因此，不同手机上这个大小使应该动态调整的，自古“一刀切”都是没有好结果的。</li>
+<li>LruCache 是面向开发者的，也就是只有明确使用 LruCache，缓存策略才有效。如果在 LruCache 之外想缓存或者分配大对象，没有办法自动来释放 LruCache 的空间以容纳新的对象。<br>在这一点上，SoftReference 是符合预期的，因为 SoftReference 是被 Runtime 控制的，可以在全局进程来动态调整回收。</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2016/07/07/android/2016/2016-07-07-Android-why-not-SoftReference/" data-id="cluh0142x00gv38wbhzuh61mc" data-title="Android 为什么不要SoftReference了" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-android/2016/2016-07-07-volley-drawback-2" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2016/07/07/android/2016/2016-07-07-volley-drawback-2/" class="article-date">
+  <time class="dt-published" datetime="2016-07-07T05:46:04.000Z" itemprop="datePublished">2016-07-07</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2016/07/07/android/2016/2016-07-07-volley-drawback-2/">Volley缺陷</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="1-解析-内部直接使用-Memory-buffers-来缓存响应"><a href="#1-解析-内部直接使用-Memory-buffers-来缓存响应" class="headerlink" title="1. 解析 内部直接使用 Memory buffers 来缓存响应"></a>1. 解析 内部直接使用 Memory buffers 来缓存响应</h4><p>在 BasicNetwork 实现中，从服务器获取到 Entity 之后，会将 Entity 转换成 byte 数组，缓存在 ByteArrayPool 中。<br>本来 ByteArrayPool 的出发点是为了减少虚拟机在堆上动态分配内存的开销。但是，如果响应本身就比较大（比如一张大图），这个时候就会有问题了。<br>一次性向 ByteArrayPool 申请较大内存，不仅引起内存占用量上升，甚至可能引起 OOM 错误。</p>
+<h4 id="2-内部依赖-Apache-HttpClient"><a href="#2-内部依赖-Apache-HttpClient" class="headerlink" title="2. 内部依赖 Apache HttpClient"></a>2. 内部依赖 Apache HttpClient</h4><p>从 Android 6 开始，Apache HttpClient 被废弃了，这就导致如果想要使用 Volley，要么将 Compile SDK 修改为 23 以下，要么使用</p>
+<pre><code class="gradle">    android &#123;
+        useLibrary &#39;org.apache.http.legacy&#39;
+    &#125;
+</code></pre>
+<p>来增加 HttpClient 支持。</p>
+<h4 id="3-粗暴的-Retry-Policy"><a href="#3-粗暴的-Retry-Policy" class="headerlink" title="3. 粗暴的 Retry Policy"></a>3. 粗暴的 Retry Policy</h4><p>默认超时事件 2.5s，基本算是鸡肋的配置，因为除了 wifi 环境，没可能在 2.5s 之内拿到响应，所以每次都得重新设置。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2016/07/07/android/2016/2016-07-07-volley-drawback-2/" data-id="cluh0142y00gy38wbaqnbhyjm" data-title="Volley缺陷" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/volley/" rel="tag">volley</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-android/2016/2016-07-06-Android-NDK-SWIG" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2016/07/06/android/2016/2016-07-06-Android-NDK-SWIG/" class="article-date">
+  <time class="dt-published" datetime="2016-07-05T17:00:00.000Z" itemprop="datePublished">2016-07-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2016/07/06/android/2016/2016-07-06-Android-NDK-SWIG/">Android NDK与SWIG</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>本文主要是《Android C++ 高级编程——使用 NDK》的笔记。<br>国内专门讲 NDK 的书籍寥寥无几，这本貌似是唯一一本翻译的，当然，国外还是有好几本关注 NDK 的书籍，但是都没有中文译本而已。</p>
+<p>因为偷懒，实践的时候从网上拷贝的代码，结果某些作者太不靠谱，抄写的代码都是错的，坑死我了。</p>
+<h2 id="SWIG-基础"><a href="#SWIG-基础" class="headerlink" title="SWIG 基础"></a>SWIG 基础</h2><p>可以参考：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="http://www.ibm.com/developerworks/cn/aix/library/au-swig/">开发人员 SWIG 快速入门</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.swig.org/">swig 官网</a></li>
+</ol>
+<h2 id="在-Android-中的使用"><a href="#在-Android-中的使用" class="headerlink" title="在 Android 中的使用"></a>在 Android 中的使用</h2><p>ubuntu 14.04 + eclipse </p>
+<p>在 jni 文件夹中定义接口文件，SWIG 会基于此接口文件来生成相应的集成代码：</p>
+<p>下面是接口文件 Unix.i：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">%</span><span class="language-bash">module Unix</span></span><br><span class="line"></span><br><span class="line">/* unistd.h 是 C 和 C++ 中提供对 POSIX API 支持的头文件 */</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">%</span><span class="language-bash">&#123;</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">include &lt;unistd.h&gt;</span>	</span><br><span class="line"><span class="meta prompt_">%</span><span class="language-bash">&#125;</span></span><br><span class="line"></span><br><span class="line">typedef unsigned int uid_t;</span><br><span class="line"></span><br><span class="line">extern uid_t getuid(void);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这个时候可以直接调用 swig 来生成集成代码，</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">swig -java -package dev.xesam.ndk -outdir dev/xesam/ndk Unix.i</span><br></pre></td></tr></table></figure>
+
+<p>注意：outdir 一定要事先就存在</p>
+<p>不过为了方便，还是直接与 eclipse 整合比较好。在 jni 文件夹定义一个 swig.mk，将 swig 处理单独出来，swig.mk 内容如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">定义包名，对应 -package 参数</span></span><br><span class="line">ifndef MY_SWIG_PACKAGE</span><br><span class="line"><span class="meta prompt_">	$</span><span class="language-bash">(error MY_SWIG_PACKAGE is not defined.)</span></span><br><span class="line">endif</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">定义输出目录，对应 -outdir 参数</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">subst 表示替换，即用 <span class="string">&quot;/&quot;</span> 替换 包名中的 <span class="string">&quot;.&quot;</span></span></span><br><span class="line">MY_SWIG_OUTDIR :=$(NDK_PROJECT_PATH)/src/$(subst .,/,$(MY_SWIG_PACKAGE))</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">定义生成文件类型，这里默认是 c</span></span><br><span class="line">ifndef MY_SWIG_TYPE</span><br><span class="line">	MY_SWIG_TYPE := c</span><br><span class="line">endif</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">如果目标源文件是 c++，那么在执行 swig 命令的时候就需要加上 −c++ 参数</span></span><br><span class="line">ifeq ($(MY_SWIG_TYPE),cxx)</span><br><span class="line">	MY_SWIG_MODE := −c++</span><br><span class="line">else</span><br><span class="line">	MY_SWIG_MODE :=</span><br><span class="line">endif</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将生成的 .c 文件加入编译文件中</span></span><br><span class="line">LOCAL_SRC_FILES += $(foreach MY_SWIG_INTERFACE,$(MY_SWIG_INTERFACES),$(basename $(MY_SWIG_INTERFACE))_wrap.$(MY_SWIG_TYPE))</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">定义 target，每个待生成的 XXX_wrap.c 源文件都依赖与之对应的 XXX.i 接口文件</span> </span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">由于 outdir 一定要存在，所以先创建 outdir 目录结构</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">$&lt; 表示第一个依赖文件，也就是对应的 XXX.i 接口文件</span> </span><br><span class="line"><span class="meta prompt_">%</span><span class="language-bash">_wrap.$(MY_SWIG_TYPE) : %.i</span></span><br><span class="line"><span class="meta prompt_">	$</span><span class="language-bash">(call host-mkdir, $(MY_SWIG_OUTDIR))</span></span><br><span class="line">	swig \</span><br><span class="line">	-java \</span><br><span class="line"><span class="meta prompt_">	$</span><span class="language-bash">(MY_SWIG_MODE) \</span></span><br><span class="line"><span class="language-bash">	-package $(MY_SWIG_PACKAGE) \</span></span><br><span class="line"><span class="language-bash">	-outdir $(MY_SWIG_OUTDIR) \</span></span><br><span class="line"><span class="language-bash">	$&lt;</span></span><br></pre></td></tr></table></figure>
+<p>注意，按照 Makefile 的规范来写，特别是空格与 TAB 的区别。</p>
+<p>上面定义的 MY_SWIG_PACKAGE 等变量都定义在 Android.mk 中，将 swig.mk 加入到 Android.mk 即可。Android.mk 内容如下；</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">LOCAL_PATH := $(call my-dir)</span><br><span class="line"></span><br><span class="line">include $(CLEAR_VARS) # 清除除了 LOCAL_PATH 之外的 LOCAL_* 变量</span><br><span class="line"></span><br><span class="line">LOCAL_MODULE    := hello-ndk # 设定一个唯一的名称</span><br><span class="line"></span><br><span class="line">MY_SWIG_PACKAGE := dev.xesam.ndk</span><br><span class="line">MY_SWIG_INTERFACES := Unix.i</span><br><span class="line">MY_SWIG_TYPE := c</span><br><span class="line"></span><br><span class="line">include $(LOCAL_PATH)/swig.mk</span><br><span class="line"></span><br><span class="line">include $(BUILD_SHARED_LIBRARY)</span><br></pre></td></tr></table></figure>
+
+<p>定义完毕之后，工程大致结构如下：</p>
+<pre><code>project_dir
+    |--src
+    |--jni
+        |--Android.mk
+        |--Application.mk
+        |--swig.mk
+        |--Unix.i
+    
+</code></pre>
+<p>在项目根目录运行 </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ndk-build</span><br></pre></td></tr></table></figure>
+<p>输入大致如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p  ./src/dev/xesam/ndk</span><br><span class="line">swig \</span><br><span class="line">	-java \</span><br><span class="line">	 \</span><br><span class="line">	-package dev.xesam.ndk \</span><br><span class="line">	-outdir ./src/dev/xesam/ndk \</span><br><span class="line">	jni/Unix.i</span><br><span class="line">[armeabi] Compile thumb  : hello-ndk &lt;= Unix_wrap.c</span><br><span class="line">[armeabi] SharedLibrary  : libhello-ndk.so</span><br><span class="line">[armeabi] Install        : libhello-ndk.so =&gt; libs/armeabi/libhello-ndk.so</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>运行完毕之后，工程大致结构如下：</p>
+<pre><code>project_dir
+    |--src
+        |--dev
+            |--xesam
+                |--ndk
+                    |--Unix.java
+                    |--UnixJNI.java
+    |--jni
+        |--Android.mk
+        |--Application.mk
+        |--swig.mk
+        |--Unix.i
+        |--Unix_wrap.c
+    |--libs
+        |--armeabi
+            |--libhello-ndk.so
+            
+</code></pre>
+<p>libhello-ndk.so 可以在工程代码直接使用，当然，生成的 UnixJNI.java 需要补充 loadLibrary 调用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UnixJNI</span> &#123;</span><br><span class="line">  ...</span><br><span class="line">  <span class="keyword">static</span>&#123;</span><br><span class="line">	  System.loadLibrary(<span class="string">&quot;hello-ndk&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试Activity：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> dev.xesam.ndk.Unix;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MainActivity</span> <span class="keyword">extends</span> <span class="title class_">Activity</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(Bundle savedInstanceState)</span> &#123;</span><br><span class="line">		<span class="built_in">super</span>.onCreate(savedInstanceState);</span><br><span class="line">		setContentView(R.layout.activity_main);</span><br><span class="line">		<span class="type">TextView</span> <span class="variable">tv</span> <span class="operator">=</span> (TextView) findViewById(R.id.tv);</span><br><span class="line">		tv.setText(Unix.getuid() + <span class="string">&quot;&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2016/07/06/android/2016/2016-07-06-Android-NDK-SWIG/" data-id="cluh0142w00gp38wbeldj2scs" data-title="Android NDK与SWIG" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-android/2016/2016-07-04-Android-NDK-Eclipse" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2016/07/04/android/2016/2016-07-04-Android-NDK-Eclipse/" class="article-date">
+  <time class="dt-published" datetime="2016-07-04T06:46:04.000Z" itemprop="datePublished">2016-07-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2016/07/04/android/2016/2016-07-04-Android-NDK-Eclipse/">Android NDK与Eclipse</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>AS 对 NDK 的支持一直不太好，所以基本所有关于的 NDK 的书籍都是基于 Eclipse 开发的，不过 Eclipse 已经放弃支持了，<br>AS 支持 NDK 的实验版 gradle 插件已经出来了，可以试试。<br>本文简单记录《Android.NDK.Beginner’s.Guide》的 Eclipse 配置而已。</p>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><pre><code>ubuntu: 14.04
+eclipse: Mars.2 Release (4.5.2) 安装 ADT，CDT
+</code></pre>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>添加环境变量：</p>
+<pre><code>JAVA_HOME
+ANDROID_HOME
+ANDROID_NDK
+</code></pre>
+<h2 id="javah-生成头文件"><a href="#javah-生成头文件" class="headerlink" title="javah 生成头文件"></a>javah 生成头文件</h2><p>主要使用 External Tools：</p>
+<pre><code>Run --&gt; External Tools --&gt; External Tools Configurations 
+</code></pre>
+<p>新建一个 Configuration：</p>
+<p><img src="/image/ndk-eclipse-1.png" alt="ndk-eclipse-1"></p>
+<pre><code>$&#123;system_path:javah&#125;
+</code></pre>
+<p>javah 命令的路径，前提是 javah 已经加入到 $PATH 中，不然需要指定 javah 的完整路径。</p>
+<pre><code>$&#123;project_loc&#125;/jni
+</code></pre>
+<p>生成的 *.h 文件目录，${project_loc} 表示工程目录</p>
+<pre><code>-cp &quot;$&#123;project_classpath&#125;:$&#123;env_var:ANDROID_HOME&#125;/platforms/android-23/android.jar&quot; $&#123;java_type_name&#125;
+</code></pre>
+<p>指定 classpath，javah 命令需要用到。由于 javah 是从 class 文件中生成对应的 *.h 文件，因此，src 中改动之后需要先 build 一下，javah 才能正确生成。<br>所以，最好是开启 Build Automatically。</p>
+<p>如果要生成对应的 .h 文件，先在 src 中选择要生成的 .java 源文件，然后运行</p>
+<pre><code>Run --&gt; External Tools --&gt; ndk_header(这里是刚添加的，也可以是其他的名字)
+</code></pre>
+<h2 id="ndk-build"><a href="#ndk-build" class="headerlink" title="ndk-build"></a>ndk-build</h2><p>将 ndk-build 命令集成到 eclipse 中：</p>
+<ol>
+<li><p>先将 Android 工程转成 C&#x2F;C++ 工程,</p>
+<pre><code> New --&gt; Other --&gt; C/C++ --&gt; Convert to a C/C++ Project
+</code></pre>
+</li>
+<li><p>工程上右键 Properties</p>
+<p> C&#x2F;C++ Build： 配置编译选项</p>
+<pre><code>     --&gt; Builder Settings --&gt; Build command 改为 ndk-build
+ 
+</code></pre>
+<p> <img src="/image/ndk-eclipse-2.png" alt="ndk-eclipse-2"></p>
+<pre><code>     --&gt; Behaviour --&gt; Build on resource save .每次修改保存的时候即时编译
+ 
+</code></pre>
+<p> <img src="/image/ndk-eclipse-3.png" alt="ndk-eclipse-3"></p>
+<p> C&#x2F;C++ General： 添加各种头文件</p>
+<pre><code>     --&gt; Paths and Symbols 具体位置视情况而定
+     /apps/android-sdk-linux/ndk-bundle/platforms/android-9/arch-arm/usr/include
+     /apps/android-sdk-linux/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/include
+     
+</code></pre>
+<p> <img src="/image/ndk-eclipse-4.png" alt="ndk-eclipse-4"></p>
+<p> 每种语言都加上，所以添加的时候选择 all 就行。</p>
+<p> <img src="/image/ndk-eclipse-4-2.png" alt="ndk-eclipse-4"></p>
+<p> Builders ：配置 build 顺序，将 CDT Builder 调整到 Android Package Builder 的正上方：</p>
+<p> <img src="/image/ndk-eclipse-5.png" alt="ndk-eclipse-5"></p>
+</li>
+<li><p>自动运行 javah </p>
+<p> 这个其实没必要，因为没必要每次都生成 .h 文件，就算生成了，也没有可用的实现，所以个人觉得还是手动调用比较靠谱。<br> 操作就是添加一个 Builder 放到 CDT Builder 的正上方：</p>
+<pre><code> Builders --&gt; New --&gt; Program
+ 
+</code></pre>
+<p> 所有参数配置与 “javah生成头文件的配置”一样即可，</p>
+</li>
+</ol>
+<p>一切完成之后，每次 Run 的时候，都会将最新的 so 文件打包编译打包进去。</p>
+<h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><p>上面的的  ndk-build 命令需要添加参数 </p>
+<pre><code>ndk-build NDK_DEBUG=1
+</code></pre>
+<p>Google 官方的 ADT 只更新到 23.0.7，如果你的 ndk 比较新，那么，调试的时候会出现各种乱七八糟的 bug ，比如，找不到 gdb 之类。<br>所以，先把 ADT 更新到最新，野生版本参见<a target="_blank" rel="noopener" href="https://github.com/khaledev/ADT">https://github.com/khaledev/ADT</a>。</p>
+<p>然后直接 Debug AS “Android Native Application” 就行了，也不需要像书中那般配置，因为书的配置已经过时了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2016/07/04/android/2016/2016-07-04-Android-NDK-Eclipse/" data-id="cluh0142w00gm38wb6sm4ex9w" data-title="Android NDK与Eclipse" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-android/2016/2016-06-30-Android-SoundPool" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2016/06/30/android/2016/2016-06-30-Android-SoundPool/" class="article-date">
+  <time class="dt-published" datetime="2016-06-30T00:00:00.000Z" itemprop="datePublished">2016-06-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2016/06/30/android/2016/2016-06-30-Android-SoundPool/">Android 的SoundPool</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>SoundPool 适合播放小而短促的声音，比如声效。可以同时播放多个声音，效率高。<br>MediaPlayer 适合播放大片段的声音，比如音乐。一次只能播放一个声音，新的声音会中断当前正在播放的声音。</p>
+<h2 id="简单使用"><a href="#简单使用" class="headerlink" title="简单使用"></a>简单使用</h2><p>看名字就知道，SoundPool 是一个“池”。因此，SoundPool 会先将多个的声音文件全部加载进内存中，需要播放的时候就可以立即播放。</p>
+<p>所以，大致的步骤应该是：</p>
+<ol>
+<li>创建一个池</li>
+<li>加载声音</li>
+<li>等待声音加载完成</li>
+<li>播放声音</li>
+</ol>
+<p>一个简单的例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//创建 SoundPool</span></span><br><span class="line"><span class="comment">//新版本推荐使用 SoundPool.Builder 来创建</span></span><br><span class="line"><span class="type">SoundPool</span> <span class="variable">mSoundPool</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SoundPool</span>(<span class="number">2</span>, AudioManager.STREAM_MUSIC, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//加载声音文件，load 方法有多个重载，按需使用</span></span><br><span class="line"><span class="type">int</span> <span class="variable">soundId</span> <span class="operator">=</span> mSoundPool.load(<span class="string">&quot;/storage/0/1.aac&quot;</span>, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//设置加载监听</span></span><br><span class="line">mSoundPool.setOnLoadCompleteListener(<span class="keyword">new</span> <span class="title class_">SoundPool</span>.OnLoadCompleteListener() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onLoadComplete</span><span class="params">(SoundPool soundPool, <span class="type">int</span> sampleId, <span class="type">int</span> status)</span> &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//播放声音，播放一遍，然后重复10遍，具体参数参见文件</span></span><br><span class="line"><span class="keyword">final</span> <span class="type">int</span> <span class="variable">streamId</span> <span class="operator">=</span> mSoundPool.play(soundID, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="title class_">Handler</span>().post(<span class="keyword">new</span> <span class="title class_">Runnable</span>()&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span>&#123;</span><br><span class="line">        mSoundPool.stop(streamId);</span><br><span class="line">        mSoundPool.unload(soundId);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="几点说明"><a href="#几点说明" class="headerlink" title="几点说明"></a>几点说明</h2><h3 id="soundId-与-streamId"><a href="#soundId-与-streamId" class="headerlink" title="soundId 与 streamId"></a>soundId 与 streamId</h3><p>注意上面代码的区别. SoundPool#load 加载完成返回的是 soundId， SoundPool#unload 卸载的也是 soundId。</p>
+<p>SoundPool#play 播放的也是 soundId，但是 SoundPool#play 播放返回的是 streamId，同时 SoundPool#stop 停止的是 streamId。</p>
+<p>对于同一个声音文件，每次加载 SoundPool#load 的时候，返回的 soundId 都是不同的。<br>对于同一个 soundId，每次播放 SoundPool#play(soundId) 的时候，返回的 streamId 也是不同的，因此这个不能重用。<br>因此，在这两种 ID 的处理上，需要谨慎。</p>
+<table>
+    <thead>
+    <tr>
+        <th></th><th>Sound Id</th><th>Stream Id</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>load</td><td>（√）返回 soundId</td><td>×</td>
+    </tr>
+    <tr>
+        <td>unload</td><td>（√）传入 soundId</td><td>×</td>
+    </tr>
+    <tr>
+        <td>play</td><td>（√）传入 soundId</td><td>（√）返回 streamId</td>
+    </tr>
+    <tr>
+        <td>pause</td><td>×</td><td>（√）传入 streamId</td>
+    </tr>
+    <tr>
+        <td>resume</td><td>×</td><td>（√）传入 streamId</td>
+    </tr>
+    <tr>
+        <td>stop</td><td>×</td><td>（√）传入 streamId</td>
+    </tr>
+    </tbody>
+</table>
+
+<h3 id="资源释放"><a href="#资源释放" class="headerlink" title="资源释放"></a>资源释放</h3><p>这里的释放包括两方面：</p>
+<ol>
+<li>释放 sound。即 unload(soundId)，释放已经加载的声音文件。</li>
+<li>释放 stream。即 stop(streamId)，释放每次 play 的播放流，可以起到停止声音的效果，如果只是想暂停&#x2F;恢复，可以用 pause&#x2F;resume。</li>
+</ol>
+<p>通常来说，运行过程中没必要释放sound，因为使用 SoundPool 通常是为了迅速播放小文件，如果每次都释放 sound，反而会影响效率。在程序结束的时候再统一释放即可。</p>
+<h3 id="可能问题"><a href="#可能问题" class="headerlink" title="可能问题"></a>可能问题</h3><ol>
+<li><p>play 没有声音</p>
+<p> 可能原因有：没有正确加载 sound，或者同时加载的声音数目超过上限， 或者 sound 还未 load 完毕。</p>
+<p> 因此，可以先检测是否有加载过的 soundId，如果有就直接播放，如果没有则启动加载过程，在 OnLoadCompleteListener 回调中再进行播放。</p>
+<p> 如果是因为加载的声音数目超过上限，需要先 release 资源，然后再重新 load，注意 unload 不一定会释放数目。</p>
+</li>
+<li><p>声音播放结束</p>
+<p> SDK 并没有提供方法来获知一段声音是否播放完毕</p>
+</li>
+</ol>
+<h3 id="priority-参数"><a href="#priority-参数" class="headerlink" title="priority 参数"></a>priority 参数</h3><p>SoundPool#play 中的 priority 参数，只在同时播放的流的数量超过了预先设定的最大数量时起作用，管理器将自动终止优先级低的播放流。<br>如果存在多个同样优先级的流，再进一步根据其创建事件来处理，新创建的流的优先级是最低的，将被终止或者忽略。</p>
+<p>SoundPool#load 中的 priority 参数暂时没什么用，我估计也是用来自动处理 sound 加载数目的问题的。</p>
+<h5 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h5><p><a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/media/SoundPool.html">https://developer.android.com/reference/android/media/SoundPool.html</a><br><a target="_blank" rel="noopener" href="http://blog.csdn.net/qduningning/article/details/8680575">http://blog.csdn.net/qduningning/article/details/8680575</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2016/06/30/android/2016/2016-06-30-Android-SoundPool/" data-id="cluh0142x00gs38wb9g8dgv3y" data-title="Android 的SoundPool" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-computer/2016-06-06-computer-fork-printf" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2016/06/06/computer/2016-06-06-computer-fork-printf/" class="article-date">
+  <time class="dt-published" datetime="2016-06-06T08:51:38.000Z" itemprop="datePublished">2016-06-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/computer/">computer</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2016/06/06/computer/2016-06-06-computer-fork-printf/">fork与printf</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>测试 fork 的时候，出现以下的一个情况：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> <span class="type">const</span> *argv[])</span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%s,parent:%d,current:%d\n&quot;</span>, <span class="string">&quot;start&quot;</span>, getppid(), getpid());</span><br><span class="line">	<span class="type">pid_t</span> fpid;</span><br><span class="line">	fpid = fork();</span><br><span class="line">	<span class="keyword">if</span> (fpid &lt; <span class="number">0</span>)&#123; <span class="comment">//error</span></span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;%s:%d\n&quot;</span>, <span class="string">&quot;error&quot;</span>, fpid);</span><br><span class="line">	&#125;<span class="keyword">else</span> <span class="keyword">if</span> (fpid == <span class="number">0</span>)&#123; <span class="comment">//child</span></span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;%s,parent:%d,current:%d, fpid:%d\n&quot;</span>, <span class="string">&quot;child&quot;</span>, getppid(), getpid(), fpid);</span><br><span class="line">	&#125;<span class="keyword">else</span>&#123; <span class="comment">//host</span></span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;%s,parent:%d,current:%d, fpid:%d\n&quot;</span>, <span class="string">&quot;host&quot;</span>, getppid(), getpid(), fpid);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>按理来说，结果应该是</p>
+<pre><code>start,parent:15111,current:19431
+host,parent:15111,current:19431, fpid:19432
+child,parent:19431,current:19432, fpid:0
+</code></pre>
+<p>但是在 sublime 使用 CTRL + SHIFT + B 执行的时候，结果却是：</p>
+<pre><code>start,parent:15111,current:19431
+host,parent:15111,current:19431, fpid:19432
+start,parent:15111,current:19431
+child,parent:19431,current:19432, fpid:0
+</code></pre>
+        
+          <p class="article-more-link">
+            <a href="/2016/06/06/computer/2016-06-06-computer-fork-printf/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2016/06/06/computer/2016-06-06-computer-fork-printf/" data-id="cluh013zf000s38wbcmoi5wqy" data-title="fork与printf" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/computer/" rel="tag">computer</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-javascript/2016-05-30-Javascript-Canvas-path" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2016/05/30/javascript/2016-05-30-Javascript-Canvas-path/" class="article-date">
+  <time class="dt-published" datetime="2016-05-30T04:46:04.000Z" itemprop="datePublished">2016-05-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2016/05/30/javascript/2016-05-30-Javascript-Canvas-path/">Javascript Canvas路径</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>Javascript 中的 Canvas 是基于路径的，同一时刻时能有一条路径而且肯定会有一条路径。<br>路径中可以包含很多条子路径，即 N 条子路径构成了一条路径。与路径相关的操作：</p>
+<pre><code>Context#beginPath() 用于创建一条新的路径，这也就意味着先前的路径丢失了，因为只能有一条路径。
+moveTo/lineTo/... 之类的命令用于创建子路径。
+</code></pre>
+<p>说到 beginPath，就不得不提到 closePath，两者是不是有很“紧”的联系呢？答案是几乎没有关系。<br>closePath 的意思不是结束路径，而是闭合路径，它会试图从当前路径的终点连一条子路径到起点，让当前整个路径闭合起来。<br>但是，这并不意味着它之后的路径就是新路径了！</p>
+<p>绘图指令有两种：</p>
+<ol>
+<li>保留绘图指令（retained draw command），即不产生直接效果的指令，比如 moveTo, lineTo, (Curve)To, arc, rect。</li>
+<li>直接绘图指令（direct draw command），这些指令既不需要创建新路径，也不对当前路径产生影响，比如 fill&#x2F;strokeRect, fill&#x2F;strokeText, drawImage, get&#x2F;putImageData.</li>
+</ol>
+<p>所以，关于路径的规则就是：</p>
+<ol>
+<li>如果你使用 retained draw command，则需要 beginPath</li>
+<li>如果你使用 direct draw command，则无需 beginPath</li>
+</ol>
+<h2 id="save-restore"><a href="#save-restore" class="headerlink" title="save() &amp; restore()"></a>save() &amp; restore()</h2><p>save() &amp; restore() 不会影响路径，影响的是什么？影响各种设置：</p>
+<ol>
+<li>渲染设置 : strokeStyle &#x2F; fillStyle &#x2F; globalCompositeOperation &#x2F; globalAlpha &#x2F; lineWidth &#x2F; font &#x2F; textAlign&#x2F; shadow &#x2F; …</li>
+<li>变换（transform）设置 translate&#x2F;scale&#x2F;rotate&#x2F;…</li>
+<li>区域（clip）设置</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Immediate_mode_(computer_graphics)">Immediate Mode</a><br><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Retained_mode">Retained Mode</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2016/05/30/javascript/2016-05-30-Javascript-Canvas-path/" data-id="cluh0140u006z38wb3r4nfos0" data-title="Javascript Canvas路径" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-android/2016/2016-05-20-Android-lifecycle" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2016/05/20/android/2016/2016-05-20-Android-lifecycle/" class="article-date">
+  <time class="dt-published" datetime="2016-05-20T00:00:00.000Z" itemprop="datePublished">2016-05-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2016/05/20/android/2016/2016-05-20-Android-lifecycle/">Android 生命周期监听</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><a target="_blank" rel="noopener" href="https://github.com/trello/navi">navi</a>，这个库比较好玩，实现了我早就想要的一种开发方式：让组件主动监听 Activity 以及 Fragment 的生命周期，然后注册相应的回调。</p>
+<p>在日常开发中，经常会有某些操作或者对象需要响应 Activity 以及 Fragment 的生命周期转换，这个时候要么我们得在 Activity 的生命周期方法里面主动来处理，<br>要么提供一个包装过的 Activity，让目标 Activity 继承这个包装 Activity，当然，实际上都是一样的。<br>比如，如果我们想在 OnResume 的时候开启一个定时任务，在 OnPause 的时候关闭定时器，我们会这么写：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main3Activity</span> <span class="keyword">extends</span> <span class="title class_">AppCompatActivity</span> &#123;</span><br><span class="line">    <span class="type">HandlerTimer</span> <span class="variable">handlerTimer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">HandlerTimer</span>();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(Bundle savedInstanceState)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main3);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onResume</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onResume();</span><br><span class="line">        handlerTimer.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onPause</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onPause();</span><br><span class="line">        handlerTimer.stop();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">HandlerTimer</span> <span class="keyword">extends</span> <span class="title class_">Handler</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">TAG</span> <span class="operator">=</span> getClass().getName();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="title function_">HandlerTimer</span><span class="params">()</span> &#123;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handleMessage</span><span class="params">(Message msg)</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (msg.what == <span class="number">1</span>) &#123;</span><br><span class="line">                Log.e(TAG, <span class="string">&quot;Tick&quot;</span>);</span><br><span class="line">                sendEmptyMessageDelayed(<span class="number">1</span>, <span class="number">1000</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">start</span><span class="params">()</span> &#123;</span><br><span class="line">            Log.e(TAG, <span class="string">&quot;Start&quot;</span>);</span><br><span class="line">            sendEmptyMessageDelayed(<span class="number">1</span>, <span class="number">1000</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">stop</span><span class="params">()</span> &#123;</span><br><span class="line">            Log.e(TAG, <span class="string">&quot;Stop&quot;</span>);</span><br><span class="line">            removeMessages(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样写不仅特别繁琐，还需要各种第三方代码（这里是 HandlerTimer ）暴露每一个对应的生命周期方法。<br>于是，我们的考虑就是：这些响应生命周期状态转换的工作应该交给第三方代码自己去完成，第三方代码可以主动去监听 Activity 的生命周期变化，从而做出自己认为最合适的动作。</p>
+<p>navi 就是基于这种目的而产生的。运用 navi， 上面的代码可以改写为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main2Activity</span> <span class="keyword">extends</span> <span class="title class_">NaviAppCompatActivity</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">HandlerTimer</span> <span class="variable">handlerTimer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">HandlerTimer</span>();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(Bundle savedInstanceState)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main2);</span><br><span class="line">        handlerTimer.bind(<span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">HandlerTimer</span> <span class="keyword">extends</span> <span class="title class_">Handler</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">TAG</span> <span class="operator">=</span> getClass().getName();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="title function_">HandlerTimer</span><span class="params">()</span> &#123;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handleMessage</span><span class="params">(Message msg)</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (msg.what == <span class="number">1</span>) &#123;</span><br><span class="line">                Log.e(TAG, <span class="string">&quot;Tick&quot;</span>);</span><br><span class="line">                sendEmptyMessageDelayed(<span class="number">1</span>, <span class="number">1000</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">bind</span><span class="params">(NaviAppCompatActivity activity)</span> &#123;</span><br><span class="line"></span><br><span class="line">            activity.addListener(Event.RESUME, <span class="keyword">new</span> <span class="title class_">Listener</span>&lt;Void&gt;() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">call</span><span class="params">(Void aVoid)</span> &#123;</span><br><span class="line">                    Log.e(TAG, <span class="string">&quot;Start&quot;</span>);</span><br><span class="line">                    sendEmptyMessageDelayed(<span class="number">1</span>, <span class="number">1000</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            activity.addListener(Event.PAUSE, <span class="keyword">new</span> <span class="title class_">Listener</span>&lt;Void&gt;() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">call</span><span class="params">(Void aVoid)</span> &#123;</span><br><span class="line">                    Log.e(TAG, <span class="string">&quot;Stop&quot;</span>);</span><br><span class="line">                    removeMessages(<span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>更多细节可以参考 navi 的示例与源码。</p>
+<p>需要指出的是，个人觉得这个库还不是很完善，现在只能支持 Activity 和 Fragment，而且支持方式也略具侵入性。<br>尽管如此，这种设计我还是很喜欢的，把 Activity 变为一个纯容器，模式运用会更灵活，当然，坑也更多。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2016/05/20/android/2016/2016-05-20-Android-lifecycle/" data-id="cluh0142u00gg38wb2237fr8p" data-title="Android 生命周期监听" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-android/2016/2016-05-10-Android-MockWebServer" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2016/05/10/android/2016/2016-05-10-Android-MockWebServer/" class="article-date">
+  <time class="dt-published" datetime="2016-05-10T00:00:00.000Z" itemprop="datePublished">2016-05-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2016/05/10/android/2016/2016-05-10-Android-MockWebServer/">Android 使用MockWebServer来进行单元测试</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><a target="_blank" rel="noopener" href="https://github.com/square/okhttp">MockWebServer</a> 是 square 出品的跟随 okhttp 一起发布，用来 Mock 服务器行为的库，用来做单元测试挺好。</p>
+<p>有一个单独的文档<a target="_blank" rel="noopener" href="https://github.com/square/okhttp/tree/master/mockwebserver">https://github.com/square/okhttp/tree/master/mockwebserver</a></p>
+<p>MockWebServer mock 了 http 协议栈，所以基本上可以用来调试所有的 http 请求。</p>
+<h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><p>使用也比较简单：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span> <span class="keyword">throws</span> Exception&#123;</span><br><span class="line">    <span class="comment">// 1. 创建服务器</span></span><br><span class="line">    <span class="type">MockWebServer</span> <span class="variable">server</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MockWebServer</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 添加预置的响应，响应会按照先进先出的顺序依次返回</span></span><br><span class="line">    server.enqueue(<span class="keyword">new</span> <span class="title class_">MockResponse</span>().setResponseCode(<span class="number">503</span>).setBody(<span class="string">&quot;hello, world!&quot;</span>));</span><br><span class="line">    server.enqueue(<span class="keyword">new</span> <span class="title class_">MockResponse</span>().setBody(<span class="string">&quot;i am xesam&quot;</span>));</span><br><span class="line">    server.enqueue(<span class="keyword">new</span> <span class="title class_">MockResponse</span>().setResponseCode(<span class="number">404</span>).setBody(<span class="string">&quot;not found&quot;</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 启动服务器</span></span><br><span class="line">    server.start();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4. 获取请求 url，不能使用普通的 URL，一定要使用 server.url() 返回的 URL，不然没法进入 Mock 服务器</span></span><br><span class="line">    <span class="type">HttpUrl</span> <span class="variable">baseUrl</span> <span class="operator">=</span> server.url(<span class="string">&quot;/reg1&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 5. 发送请求</span></span><br><span class="line">    HttpRequest.get(baseUrl.url()).body()</span><br><span class="line"></span><br><span class="line">    <span class="comment">// server.takeRequest() 是一个阻塞操作，直到接收到请求</span></span><br><span class="line">    <span class="type">RecordedRequest</span> <span class="variable">request1</span> <span class="operator">=</span> server.takeRequest();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 这里可以查看服务器获取的请求信息，可以查看 http 报文头之类的协议信息</span></span><br><span class="line">    assertEquals(<span class="string">&quot;/v1/chat/&quot;</span>, request1.getPath());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>MockResponse 默认是状态码 200， body 为空，但是可以定制所有的协议内容：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">MockResponse</span> <span class="variable">response</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MockResponse</span>()</span><br><span class="line">    .addHeader(<span class="string">&quot;Content-Type&quot;</span>, <span class="string">&quot;application/json; charset=utf-8&quot;</span>)</span><br><span class="line">    .addHeader(<span class="string">&quot;Cache-Control&quot;</span>, <span class="string">&quot;no-cache&quot;</span>)</span><br><span class="line">    .setBody(<span class="string">&quot;&#123;&#125;&quot;</span>);</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+<p>还可以模拟网速比较慢的情况：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.throttleBody(<span class="number">1024</span>, <span class="number">1</span>, TimeUnit.SECONDS);  <span class="comment">//每秒传递 1024 字节</span></span><br></pre></td></tr></table></figure>
+
+<p>按照最开始的描述，可以用 enqueue 来添加预置响应，其实可以做得更像服务器一些，即根据 url 来进行响应分发：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="type">Dispatcher</span> <span class="variable">dispatcher</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Dispatcher</span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> MockResponse <span class="title function_">dispatch</span><span class="params">(RecordedRequest request)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (request.getPath().equals(<span class="string">&quot;/v1/login/auth/&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">MockResponse</span>().setResponseCode(<span class="number">200</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (request.getPath().equals(<span class="string">&quot;v1/check/version/&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">MockResponse</span>().setResponseCode(<span class="number">200</span>).setBody(<span class="string">&quot;version=9&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (request.getPath().equals(<span class="string">&quot;/v1/profile/info&quot;</span>)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">MockResponse</span>().setResponseCode(<span class="number">200</span>).setBody(<span class="string">&quot;&#123;\\\&quot;info\\\&quot;:&#123;\\\&quot;name\&quot;:\&quot;Lucas Albuquerque\&quot;,\&quot;age\&quot;:\&quot;21\&quot;,\&quot;gender\&quot;:\&quot;male\&quot;&#125;&#125;&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">MockResponse</span>().setResponseCode(<span class="number">404</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">server.setDispatcher(dispatcher);</span><br></pre></td></tr></table></figure>
+
+<p>如此一来，其实就可以在通常的开发中将后台的接口提前 mock 出来，加快开发进度。</p>
+<p>这里需要注意的是不要在 UI 线程启动这个服务器,如果想在 App 里面增加 Mock 支持，最好包装在一个新线程里面。</p>
+<h2 id="异步测试"><a href="#异步测试" class="headerlink" title="异步测试"></a>异步测试</h2><p>在单元测试中，如果有异步调用，通常就比较麻烦，因为在异步回调还没回来的时候，测试已经完成了，所有这个时候就需要让进程等待或者挂起。<br>比如，使用 MockWebServer 来测试 Volley：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test1</span> <span class="keyword">extends</span> <span class="title class_">InstrumentationTestCase</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testVolley</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">MockWebServer</span> <span class="variable">server</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MockWebServer</span>();</span><br><span class="line">        server.enqueue(<span class="keyword">new</span> <span class="title class_">MockResponse</span>().setResponseCode(<span class="number">200</span>).setBody(<span class="string">&quot;hello, world!&quot;</span>));</span><br><span class="line">        server.start();</span><br><span class="line"></span><br><span class="line">        <span class="type">HttpUrl</span> <span class="variable">baseUrl</span> <span class="operator">=</span> server.url(<span class="string">&quot;/p1&quot;</span>);</span><br><span class="line">        <span class="keyword">final</span> BlockingQueue&lt;Object&gt; queue = <span class="keyword">new</span> <span class="title class_">ArrayBlockingQueue</span>&lt;&gt;(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">        Volley.newRequestQueue(getInstrumentation().getContext())</span><br><span class="line">                .add(<span class="keyword">new</span> <span class="title class_">StringRequest</span>(baseUrl.url().toString(), <span class="keyword">new</span> <span class="title class_">Response</span>.Listener&lt;String&gt;() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onResponse</span><span class="params">(String response)</span> &#123;</span><br><span class="line">                        queue.add(response);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;, <span class="keyword">new</span> <span class="title class_">Response</span>.ErrorListener() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onErrorResponse</span><span class="params">(VolleyError error)</span> &#123;</span><br><span class="line">                        queue.add(error);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;));</span><br><span class="line"></span><br><span class="line">        <span class="type">RecordedRequest</span> <span class="variable">request1</span> <span class="operator">=</span> server.takeRequest();</span><br><span class="line">        assertEquals(<span class="string">&quot;/p1&quot;</span>, request1.getPath());</span><br><span class="line"></span><br><span class="line">        <span class="type">Object</span> <span class="variable">obj</span> <span class="operator">=</span> queue.take();</span><br><span class="line">        <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> String) &#123;</span><br><span class="line">            Assert.assertEquals(<span class="string">&quot;hello, world!&quot;</span>, obj.toString());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        server.shutdown();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的例子中使用一个 BlockingQueue 来等待 Volley 的请求结束，然后验证结果。</p>
+<p>当然，也可以用锁，但是其实都挺麻烦。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2016/05/10/android/2016/2016-05-10-Android-MockWebServer/" data-id="cluh0142v00gj38wbdj0s2tjk" data-title="Android 使用MockWebServer来进行单元测试" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-java/2016-05-08-Java-ThreadLocal" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2016/05/08/java/2016-05-08-Java-ThreadLocal/" class="article-date">
+  <time class="dt-published" datetime="2016-05-08T05:46:04.000Z" itemprop="datePublished">2016-05-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/java/">java</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2016/05/08/java/2016-05-08-Java-ThreadLocal/">ThreadLocal设计意图</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>核心原理</p>
+<ol>
+<li>ThreadLocal 处理的是线程的专属对象，各个线程的对象都是独立的。</li>
+<li>ThreadLocal 用来辅助平衡效率与资源分配。</li>
+<li>ThreadLocal 不是同步机制，也不解决共享对象的多线程竞态条件问题。</li>
+</ol>
+<h2 id="基本设计"><a href="#基本设计" class="headerlink" title="基本设计"></a>基本设计</h2><p>首先看一个熟悉的场景：排队买票。</p>
+<p>从理论上看，针对“排队买票”这个场景，我们可以有以下几种方案设计：</p>
+<p>第一种. 固定设置一个售票窗口，每新来一个购票者就排在队伍的最后面。如图：</p>
+<p><img src="/image/java_threadlocal_1.png" alt="1"></p>
+<p>第二种. 动态设置售票窗口数量，每新来一个购票者就新开一个窗口来进行接待。如图：</p>
+<p><img src="/image/java_threadlocal_2.png" alt="1"></p>
+<p>第三种. 固定设置 N 个售票窗口，每新来一个购票者就选择一个售票窗口。如图：</p>
+<p><img src="/image/java_threadlocal_3.png" alt="1"></p>
+<p>比较一下上面的三种方案，很明显现实社会中使用的是第三种，那么各自有什么优势与缺点呢？</p>
+        
+          <p class="article-more-link">
+            <a href="/2016/05/08/java/2016-05-08-Java-ThreadLocal/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2016/05/08/java/2016-05-08-Java-ThreadLocal/" data-id="cluh01413008b38wbeyrb1uyg" data-title="ThreadLocal设计意图" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/" rel="tag">java</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/7/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/9/">下一页 &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chrome/">chrome</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/computer/">computer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/fe/">fe</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/introspection/">introspection</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/math/">math</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/physics/">physics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/product/">product</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/software/">software</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/talk/">talk</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c51/" rel="tag">c51</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/computer/" rel="tag">computer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fe/" rel="tag">fe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/introspection/" rel="tag">introspection</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/" rel="tag">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memo/" rel="tag">memo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/product/" rel="tag">product</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rx/" rel="tag">rx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/" rel="tag">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/talk/" rel="tag">talk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/volley/" rel="tag">volley</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/c51/" style="font-size: 11.25px;">c51</a> <a href="/tags/chrome/" style="font-size: 11.25px;">chrome</a> <a href="/tags/computer/" style="font-size: 17.5px;">computer</a> <a href="/tags/fe/" style="font-size: 13.75px;">fe</a> <a href="/tags/introspection/" style="font-size: 10px;">introspection</a> <a href="/tags/java/" style="font-size: 13.75px;">java</a> <a href="/tags/javascript/" style="font-size: 18.75px;">javascript</a> <a href="/tags/math/" style="font-size: 10px;">math</a> <a href="/tags/memo/" style="font-size: 10px;">memo</a> <a href="/tags/product/" style="font-size: 15px;">product</a> <a href="/tags/rx/" style="font-size: 10px;">rx</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/talk/" style="font-size: 16.25px;">talk</a> <a href="/tags/volley/" style="font-size: 11.25px;">volley</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">三月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/04/">四月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/">《其实你不懂进化论》简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/">单元测试的艺术-第三版 简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/">网民的故事分析-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/01/talk/2021-12-01-talk-book-user-stories-applied/">用户故事与敏捷方法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/03/talk/2021-11-03-talk-logic-1/">不令人讨厌的分析逻辑</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 xesam<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

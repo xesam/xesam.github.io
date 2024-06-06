@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>【Javascript】JSON辅助格式化 | XiaoPingYuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="平时服务器端开发人员写好后台之后一般写一份简单的接口说明页面，类似： 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Javascript】JSON辅助格式化">
+<meta property="og:url" content="https://xesam.github.io/2013/03/12/javascript/2013-03-12-Javascript-JSON-format/index.html">
+<meta property="og:site_name" content="XiaoPingYuan">
+<meta property="og:description" content="平时服务器端开发人员写好后台之后一般写一份简单的接口说明页面，类似： 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2013-03-12T05:46:04.000Z">
+<meta property="article:modified_time" content="2024-04-01T13:40:44.040Z">
+<meta property="article:author" content="xesam">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="XiaoPingYuan" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">XiaoPingYuan</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Just Do IT</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://xesam.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-javascript/2013-03-12-Javascript-JSON-format" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2013/03/12/javascript/2013-03-12-Javascript-JSON-format/" class="article-date">
+  <time class="dt-published" datetime="2013-03-12T05:46:04.000Z" itemprop="datePublished">2013-03-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      【Javascript】JSON辅助格式化
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>平时服务器端开发人员写好后台之后一般写一份简单的接口说明页面，类似：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;test.php&quot;</span> <span class="attr">accept-charset</span>=<span class="string">&quot;utf-8&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;&quot;</span>&gt;</span>param_1<span class="tag">&lt;/<span class="name">label</span>&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;param_1&quot;</span> <span class="attr">value</span>=<span class="string">&quot;value_1&quot;</span>/&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;&quot;</span>&gt;</span>param_2<span class="tag">&lt;/<span class="name">label</span>&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;param_2&quot;</span> <span class="attr">value</span>=<span class="string">&quot;value_2&quot;</span>/&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;&quot;</span>&gt;</span>param_3<span class="tag">&lt;/<span class="name">label</span>&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;param_3&quot;</span> <span class="attr">value</span>=<span class="string">&quot;value_3&quot;</span>/&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;&quot;</span>&gt;</span>param_4<span class="tag">&lt;/<span class="name">label</span>&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;param_4&quot;</span> <span class="attr">value</span>=<span class="string">&quot;value_4&quot;</span>/&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;submit&quot;</span>/&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">由于结果是以json形式返回的，不容易一眼辨认，所以为了方便，对结果进行了简单的处理：</span><br><span class="line"></span><br><span class="line">1,由于不能控制返回结果的页面，所以直接对请求进行了拦截并用ajax方式进行重发。</span><br><span class="line">2,格式化返回的json结果，非json结果直接显示。</span><br><span class="line"></span><br><span class="line">注：ubuntu下的chromium在处理overflow的问题上貌似有点不一样，所以结果容器写得有点罗嗦。</span><br><span class="line"></span><br><span class="line">具体例子：</span><br><span class="line">```html</span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;page&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;test.php&quot;</span> <span class="attr">accept-charset</span>=<span class="string">&quot;utf-8&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;&quot;</span>&gt;</span>param_1<span class="tag">&lt;/<span class="name">label</span>&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;param_1&quot;</span> <span class="attr">value</span>=<span class="string">&quot;value_1&quot;</span>/&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;&quot;</span>&gt;</span>param_2<span class="tag">&lt;/<span class="name">label</span>&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;param_2&quot;</span> <span class="attr">value</span>=<span class="string">&quot;value_2&quot;</span>/&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;&quot;</span>&gt;</span>param_3<span class="tag">&lt;/<span class="name">label</span>&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;param_3&quot;</span> <span class="attr">value</span>=<span class="string">&quot;value_3&quot;</span>/&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;&quot;</span>&gt;</span>param_4<span class="tag">&lt;/<span class="name">label</span>&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;param_4&quot;</span> <span class="attr">value</span>=<span class="string">&quot;value_4&quot;</span>/&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;submit&quot;</span>/&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;../js/jQuery.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;../js/JSONFormat.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">显示效果：</span><br><span class="line"></span><br><span class="line">![2](/image/js_json_format.png)</span><br><span class="line"></span><br><span class="line">JSONFormat.js内容：</span><br><span class="line"></span><br><span class="line">```html</span><br><span class="line">var JSONFormat = (function()&#123;</span><br><span class="line">    var _toString = Object.prototype.toString;</span><br><span class="line"></span><br><span class="line">    function format(object, indent_count)&#123;</span><br><span class="line">        var html_fragment = &#x27;&#x27;;</span><br><span class="line">        switch(_typeof(object))&#123;</span><br><span class="line">            case &#x27;Null&#x27; :0</span><br><span class="line">                html_fragment = _format_null(object);</span><br><span class="line">                break;</span><br><span class="line">            case &#x27;Boolean&#x27; :</span><br><span class="line">                html_fragment = _format_boolean(object);</span><br><span class="line">                break;</span><br><span class="line">            case &#x27;Number&#x27; :</span><br><span class="line">                html_fragment = _format_number(object);</span><br><span class="line">                break;</span><br><span class="line">            case &#x27;String&#x27; :</span><br><span class="line">                html_fragment = _format_string(object);</span><br><span class="line">                break;</span><br><span class="line">            case &#x27;Array&#x27; :</span><br><span class="line">                html_fragment = _format_array(object, indent_count);</span><br><span class="line">                break;</span><br><span class="line">            case &#x27;Object&#x27; :</span><br><span class="line">                html_fragment = _format_object(object, indent_count);</span><br><span class="line">                break;</span><br><span class="line">        &#125;</span><br><span class="line">        return html_fragment;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    function _format_null(object)&#123;</span><br><span class="line">        return &#x27;<span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;json_null&quot;</span>&gt;</span>null<span class="tag">&lt;/<span class="name">span</span>&gt;</span>&#x27;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    function _format_boolean(object)&#123;</span><br><span class="line">        return &#x27;<span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;json_boolean&quot;</span>&gt;</span>&#x27; + object + &#x27;<span class="tag">&lt;/<span class="name">span</span>&gt;</span>&#x27;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    function _format_number(object)&#123;</span><br><span class="line">        return &#x27;<span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;json_number&quot;</span>&gt;</span>&#x27; + object + &#x27;<span class="tag">&lt;/<span class="name">span</span>&gt;</span>&#x27;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    function _format_string(object)&#123;</span><br><span class="line">        if(0 &lt;= object.search(/^http/))&#123;</span><br><span class="line">            object = &#x27;<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;&#x27; + object + &#x27;&quot;</span> <span class="attr">target</span>=<span class="string">&quot;_blank&quot;</span> <span class="attr">class</span>=<span class="string">&quot;json_link&quot;</span>&gt;</span>&#x27; + object + &#x27;<span class="tag">&lt;/<span class="name">a</span>&gt;</span>&#x27;</span><br><span class="line">        &#125;</span><br><span class="line">        return &#x27;<span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;json_string&quot;</span>&gt;</span>&quot;&#x27; + object + &#x27;&quot;<span class="tag">&lt;/<span class="name">span</span>&gt;</span>&#x27;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    function _format_array(object, indent_count)&#123;</span><br><span class="line">        var tmp_array = [];</span><br><span class="line">        for(var i = 0, size = object.length; i &lt; size; ++i)&#123;</span><br><span class="line">            tmp_array.push(indent_tab(indent_count) + format(object[i], indent_count + 1));</span><br><span class="line">        &#125;</span><br><span class="line">        return &#x27;[\n&#x27;</span><br><span class="line">            + tmp_array.join(&#x27;,\n&#x27;)</span><br><span class="line">            + &#x27;\n&#x27; + indent_tab(indent_count - 1) + &#x27;]&#x27;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    function _format_object(object, indent_count)&#123;</span><br><span class="line">        var tmp_array = [];</span><br><span class="line">        for(var key in object)&#123;</span><br><span class="line">            tmp_array.push( indent_tab(indent_count) + &#x27;<span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;json_key&quot;</span>&gt;</span>&quot;&#x27; + key + &#x27;&quot;<span class="tag">&lt;/<span class="name">span</span>&gt;</span>:&#x27; +  format(object[key], indent_count + 1));</span><br><span class="line">        &#125;</span><br><span class="line">        return &#x27;&#123;\n&#x27;</span><br><span class="line">            + tmp_array.join(&#x27;,\n&#x27;)</span><br><span class="line">            + &#x27;\n&#x27; + indent_tab(indent_count - 1) + &#x27;&#125;&#x27;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    function indent_tab(indent_count)&#123;</span><br><span class="line">        return (new Array(indent_count + 1)).join(&#x27;   &#x27;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    function _typeof(object)&#123;</span><br><span class="line">        var tf = typeof object,</span><br><span class="line">            ts = _toString.call(object);</span><br><span class="line">        return null === object ? &#x27;Null&#x27; :</span><br><span class="line">            &#x27;undefined&#x27; == tf ? &#x27;Undefined&#x27;   :</span><br><span class="line">                &#x27;boolean&#x27; == tf ? &#x27;Boolean&#x27;   :</span><br><span class="line">                    &#x27;number&#x27; == tf ? &#x27;Number&#x27;   :</span><br><span class="line">                        &#x27;string&#x27; == tf ? &#x27;String&#x27;   :</span><br><span class="line">                            &#x27;[object Function]&#x27; == ts ? &#x27;Function&#x27; :</span><br><span class="line">                                &#x27;[object Array]&#x27; == ts ? &#x27;Array&#x27; :</span><br><span class="line">                                    &#x27;[object Date]&#x27; == ts ? &#x27;Date&#x27; : &#x27;Object&#x27;;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    function loadCssString()&#123;</span><br><span class="line">        var style = document.createElement(&#x27;style&#x27;);</span><br><span class="line">        style.type = &#x27;text/css&#x27;;</span><br><span class="line">        var code = Array.prototype.slice.apply(arguments).join(&#x27;&#x27;);</span><br><span class="line">        try&#123;</span><br><span class="line">            style.appendChild(document.createTextNode(code));</span><br><span class="line">        &#125;catch(ex)&#123;</span><br><span class="line">            style.styleSheet.cssText = code;</span><br><span class="line">        &#125;</span><br><span class="line">        document.getElementsByTagName(&#x27;head&#x27;)[0].appendChild(style);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    loadCssString(</span><br><span class="line">        &#x27;.json_key&#123; color: purple;&#125;&#x27;,</span><br><span class="line">        &#x27;.json_null&#123;color: red;&#125;&#x27;,</span><br><span class="line">        &#x27;.json_string&#123; color: #077;&#125;&#x27;,</span><br><span class="line">        &#x27;.json_link&#123; color: #717171;&#125;&#x27;,</span><br><span class="line">        &#x27;.json_array_brackets&#123;&#125;&#x27;);</span><br><span class="line"></span><br><span class="line">    var _JSONFormat = function(origin_data)&#123;</span><br><span class="line">        this.data = &#x27;string&#x27; != typeof origin_data ? origin_data :</span><br><span class="line">            JSON &amp;&amp; JSON.parse ? JSON.parse(origin_data) : eval(&#x27;(&#x27; + origin_data + &#x27;)&#x27;);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    _JSONFormat.prototype = &#123;</span><br><span class="line">        constructor : JSONFormat,</span><br><span class="line">        toString : function()&#123;</span><br><span class="line">            return format(this.data, 1);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return _JSONFormat;</span><br><span class="line"></span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line">function create_result_contatiner()&#123;</span><br><span class="line">    var $result = $(&#x27;<span class="tag">&lt;<span class="name">pre</span> <span class="attr">id</span>=<span class="string">&quot;result&quot;</span> <span class="attr">style</span>=<span class="string">&quot; width: 100%; height: 100%; overflow: scroll; overflow-x: scroll; overflow-y:scroll&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">pre</span>&gt;</span>&#x27;)</span><br><span class="line">    var $result_container = $(&#x27;<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;result_container&quot;</span> <span class="attr">style</span>=<span class="string">&quot;position: fixed; top: 1%; right: 8px; width: 5%; height: 97%; margin: 0; padding: 0;  border:1px solid skyblue; background: #f8f8f8; line-height: 1.2em; font-size: 14px; cursor: pointer;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span>&#x27;);</span><br><span class="line">    $result_container.append($result);</span><br><span class="line">    $result_container.hover(function()&#123;</span><br><span class="line">        $(this).stop(true).animate(&#123;width:&#x27;50%&#x27;&#125;, &#x27;slow&#x27;);</span><br><span class="line">    &#125;, function()&#123;</span><br><span class="line">        $(this).stop(true).animate(&#123;width:&#x27;5%&#x27;&#125;, &#x27;slow&#x27;);</span><br><span class="line">    &#125;);</span><br><span class="line">    $(&#x27;body&#x27;).append($result_container);</span><br><span class="line">    return [$result_container, $result];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">(function request_intercept(args)&#123;</span><br><span class="line">    var $result_container = args[0],</span><br><span class="line">        $result = args[1];</span><br><span class="line">    $(&#x27;form *[type=&quot;submit&quot;]&#x27;).bind(&#x27;click&#x27;, function()&#123;</span><br><span class="line">        var _form = $(this).parents(&#x27;form&#x27;),</span><br><span class="line">            _action = (_form.attr(&#x27;action&#x27;) || &#x27;./&#x27;),</span><br><span class="line">            _method = (_form.attr(&#x27;method&#x27;) || &#x27;get&#x27;).toLowerCase(),</span><br><span class="line">            _params = &#123;&#125;;</span><br><span class="line">        _form.find(&#x27;input[type=&quot;text&quot;]&#x27;).each(function()&#123;</span><br><span class="line">            var item = $(this);</span><br><span class="line">            _params[item.attr(&#x27;name&#x27;)] = item.val();</span><br><span class="line">        &#125;);</span><br><span class="line">        $[&#x27;get&#x27; == _method ? &#x27;get&#x27; : &#x27;post&#x27;](_action, _params, function(response)&#123;</span><br><span class="line">            try&#123;</span><br><span class="line">                var j = new JSONFormat(JSON &amp;&amp; JSON.parse ? JSON.parse(response) : eval(&#x27;(&#x27; + response + &#x27;)&#x27;));</span><br><span class="line">                $result.html(j.toString());</span><br><span class="line">            &#125;catch (e)&#123;</span><br><span class="line">                $result.html($result.text(response).html());</span><br><span class="line">            &#125;</span><br><span class="line">            $result_container.stop(true).animate(&#123;width:&#x27;50%&#x27;&#125;, &#x27;slow&#x27;);</span><br><span class="line">        &#125;);</span><br><span class="line">        return false;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;)(create_result_contatiner());</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2013/03/12/javascript/2013-03-12-Javascript-JSON-format/" data-id="cluh0140q006i38wb5ebrbcf0" data-title="【Javascript】JSON辅助格式化" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2013/03/15/talk/2013-03-15-talk-time/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          闲话历法与时间
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2012/11/26/android/2012/2012-11-26-Android-shape/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">Android中的shape</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chrome/">chrome</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/computer/">computer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/fe/">fe</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/introspection/">introspection</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/math/">math</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/physics/">physics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/product/">product</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/software/">software</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/talk/">talk</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c51/" rel="tag">c51</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/computer/" rel="tag">computer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fe/" rel="tag">fe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/introspection/" rel="tag">introspection</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/" rel="tag">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memo/" rel="tag">memo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/product/" rel="tag">product</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rx/" rel="tag">rx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/" rel="tag">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/talk/" rel="tag">talk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/volley/" rel="tag">volley</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/c51/" style="font-size: 11.25px;">c51</a> <a href="/tags/chrome/" style="font-size: 11.25px;">chrome</a> <a href="/tags/computer/" style="font-size: 17.5px;">computer</a> <a href="/tags/fe/" style="font-size: 13.75px;">fe</a> <a href="/tags/introspection/" style="font-size: 10px;">introspection</a> <a href="/tags/java/" style="font-size: 13.75px;">java</a> <a href="/tags/javascript/" style="font-size: 18.75px;">javascript</a> <a href="/tags/math/" style="font-size: 10px;">math</a> <a href="/tags/memo/" style="font-size: 10px;">memo</a> <a href="/tags/product/" style="font-size: 15px;">product</a> <a href="/tags/rx/" style="font-size: 10px;">rx</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/talk/" style="font-size: 16.25px;">talk</a> <a href="/tags/volley/" style="font-size: 11.25px;">volley</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">三月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/04/">四月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/">《其实你不懂进化论》简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/">单元测试的艺术-第三版 简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/">网民的故事分析-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/01/talk/2021-12-01-talk-book-user-stories-applied/">用户故事与敏捷方法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/03/talk/2021-11-03-talk-logic-1/">不令人讨厌的分析逻辑</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 xesam<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

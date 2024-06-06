@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>【Javascript】Prototype源码浅析—Enumerable部分(三) | XiaoPingYuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="现在来看Enumerable剩下的方法 toArray | size | inspect inject | invoke | sortBy | eachSlice | inGroupsOf | plunk | zip  前面说过map的原理，不管原来的集合是什么，调用map之后返回的结果就是一个数组，其中数组的每一项都是经过interator处理了的，如果不提供interator那么默认使用Pro">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Javascript】Prototype源码浅析—Enumerable部分(三)">
+<meta property="og:url" content="https://xesam.github.io/2012/01/19/javascript/2012-01-19-Javascript-Prototype-Enumerable-3/index.html">
+<meta property="og:site_name" content="XiaoPingYuan">
+<meta property="og:description" content="现在来看Enumerable剩下的方法 toArray | size | inspect inject | invoke | sortBy | eachSlice | inGroupsOf | plunk | zip  前面说过map的原理，不管原来的集合是什么，调用map之后返回的结果就是一个数组，其中数组的每一项都是经过interator处理了的，如果不提供interator那么默认使用Pro">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2012-01-19T03:46:04.000Z">
+<meta property="article:modified_time" content="2024-04-01T13:40:44.035Z">
+<meta property="article:author" content="xesam">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="XiaoPingYuan" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">XiaoPingYuan</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Just Do IT</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://xesam.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-javascript/2012-01-19-Javascript-Prototype-Enumerable-3" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2012/01/19/javascript/2012-01-19-Javascript-Prototype-Enumerable-3/" class="article-date">
+  <time class="dt-published" datetime="2012-01-19T03:46:04.000Z" itemprop="datePublished">2012-01-19</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      【Javascript】Prototype源码浅析—Enumerable部分(三)
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>现在来看Enumerable剩下的方法</p>
+<pre><code>toArray | size | inspect
+inject | invoke | sortBy | eachSlice | inGroupsOf | plunk | zip
+</code></pre>
+<p>前面说过map的原理，不管原来的集合是什么，调用map之后返回的结果就是一个数组，其中数组的每一项都是经过interator处理了的，如果不提供interator那么默认使用Prototype.K，此时的作用很明显，返回的结果就是原来集合的数组形式。原来的集合中length属性为多少，返回结果数组的length就是多少。</p>
+<p>这个特殊情况被作为一个方法独立出来，叫做toArray:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">toArray</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">map</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>另一个size方法是返回上面那个数组的长度：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">size</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">length</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>至于inspect，前面在Object和Strng部分见过好几次了，这里调用Array的inspect方法[Array部分后面分析，不过inspect这个方法太熟悉了，也没必要说了]。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">inspect</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&#x27;[&#x27;</span> + <span class="variable language_">this</span>.<span class="title function_">map</span>(<span class="title class_">Object</span>.<span class="property">inspect</span>).<span class="title function_">join</span>(<span class="string">&#x27;, &#x27;</span>) + <span class="string">&#x27;]&#x27;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>另外，对于集合来说，另一个操作是分组。Enumerable中对应的方法是eachSlice 和 inGroupsOf。</p>
+<p>先抛开源码，单独来实现这个方法，需要的一个参数是每一个分组的长度（叫做number），如果最后一组长度不够，就保留最后一组的实际长度。</p>
+<p>具体实现步骤：</p>
+<ol>
+<li>检测number的值，如果number小于1，那么肯定是非法字符，直接返回原来的集合。</li>
+<li>将所操作集合转变为数组A，转变方法就是在原来的集合上面调toArray方法。</li>
+<li>数组A分组有原生的方法slice，循环调用即可。</li>
+</ol>
+<p>按照上面的步骤，可得到下面的实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Enumerable</span>.<span class="property">eachSlice</span> = <span class="keyword">function</span>(<span class="params">number</span>)&#123;</span><br><span class="line">    <span class="keyword">if</span>(number &lt; <span class="number">1</span>)&#123; <span class="comment">//第一步</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> array = <span class="variable language_">this</span>.<span class="title function_">toArray</span>();<span class="comment">//第二步</span></span><br><span class="line">    <span class="keyword">var</span> index = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">var</span> results = [];</span><br><span class="line">    <span class="keyword">while</span>(index &lt; array.<span class="property">length</span>)&#123;<span class="comment">//第三步</span></span><br><span class="line">        results.<span class="title function_">push</span>(array.<span class="title function_">slice</span>(index,index + number));</span><br><span class="line">        index += number;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> results;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+<p>对应到具体的源码实现中，index +&#x3D; number;这一步被挪到while的条件中，因此，为了保证循环从0开始，index的初始值被设为-number；另外，和其他的方法一样，eachSlice也提供了iterator, context两个参数，作用依旧不变，所以最后的结果变成：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">function</span> <span class="title function_">eachSlice</span>(<span class="params">number, iterator, context</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> index = -number, slices = [], array = <span class="variable language_">this</span>.<span class="title function_">toArray</span>();</span><br><span class="line">    <span class="keyword">if</span> (number &lt; <span class="number">1</span>) <span class="keyword">return</span> array;</span><br><span class="line">    <span class="keyword">while</span> ((index += number) &lt; array.<span class="property">length</span>)</span><br><span class="line">      slices.<span class="title function_">push</span>(array.<span class="title function_">slice</span>(index, index+number));</span><br><span class="line">    <span class="keyword">return</span> slices.<span class="title function_">collect</span>(iterator, context);   <span class="comment">//collect就是map</span></span><br><span class="line">  &#125;</span><br><span class="line"><span class="string">``</span><span class="string">``</span></span><br><span class="line"></span><br><span class="line">例子：</span><br><span class="line"></span><br><span class="line"><span class="string">``</span><span class="string">`javascript</span></span><br><span class="line"><span class="string">console.log([1,2,3,4,5].eachSlice(2));//[[1,2],[3,4],[5,6]]</span></span><br></pre></td></tr></table></figure>
+
+<p>至于inGroupsOf方法，则是对eachSlice的一个补充而已。eachSlice最后一组长度不够，就保留最后一组的实际长度，在inGroupsOf最后一组长度不够，会用指定的填充符填充(默认填充为null)。因此只要提供iterator函数就可以了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Enumerable</span>.<span class="property">inGroupsOf</span> = <span class="keyword">function</span>(<span class="params">number, fillWith</span>) &#123;</span><br><span class="line">  fillWith = <span class="keyword">typeof</span> fillWith == <span class="string">&#x27;undefined&#x27;</span> ? <span class="literal">null</span> : fillWith;<span class="comment">//源码中这里使用的是Object.isUndefined</span></span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">eachSlice</span>(number, <span class="keyword">function</span>(<span class="params">slice</span>) &#123;</span><br><span class="line">    <span class="keyword">while</span>(slice.<span class="property">length</span> &lt; number)&#123;</span><br><span class="line">        slice.<span class="title function_">push</span>(fillWith);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> slice;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面看inject，先看手册说明：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">inject</span>(accumulator, iterator[, context]) -&gt; accumulatedValue</span><br></pre></td></tr></table></figure>
+<p>根据参数 iterator 中定义的规则来累计值。首次迭代时，参数 accumulator 为初始值，迭代过程中，iterator 将处理过的值存放在 accumulator 中，并作为下次迭代的起始值，迭代完成后，返回处理过的 accumulator。</p>
+<p>这个操作其实前面也遇到过，可以单独用each来实现，看一个数组求和的例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">dir</span>([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>].<span class="title function_">inject</span>(<span class="number">0</span>,<span class="keyword">function</span>(<span class="params">sum,n</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> sum + n;</span><br><span class="line">&#125;));<span class="comment">//10</span></span><br></pre></td></tr></table></figure>
+
+<p>如果换做each实现，就是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> sum = <span class="number">0</span>;</span><br><span class="line">[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>].<span class="title function_">each</span>(<span class="keyword">function</span>(<span class="params">value</span>)&#123;</span><br><span class="line">    sum += value;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">dir</span>(sum);<span class="comment">//10</span></span><br></pre></td></tr></table></figure>
+
+<p>对比上面的实现和源码中的实现，上面的实现中有一个缺陷：sum全局变量，这是不合理的。</p>
+<p>所以变形上面的形式，抛弃那个全局变量sum，由于each方法是固定死的，没有办法再改变，所以我们在外层再包装一个方法，并将叠加部分填进去：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">fn</span>(<span class="params">accumulator,interator,context</span>)&#123;</span><br><span class="line">    [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>].<span class="title function_">each</span>(<span class="keyword">function</span>(<span class="params">value,index</span>)&#123;</span><br><span class="line">        accumulator = interator.<span class="title function_">call</span>(context,accumulator,value,index);</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">return</span> accumulator;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">dir</span>(<span class="title function_">fn</span>(<span class="number">0</span>,<span class="keyword">function</span>(<span class="params">accumulator,value,index</span>)&#123;</span><br><span class="line">    accumulator += value;</span><br><span class="line">    <span class="keyword">return</span> accumulator;</span><br><span class="line">&#125;));<span class="comment">//10</span></span><br></pre></td></tr></table></figure>
+
+<p>看上面的实现，需要注意的一点是，fn中第一个传入的是一个引用类型的变量，由于这一个实现方式：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">accumulator = interator.<span class="title function_">call</span>(context,accumulator,value,index);</span><br></pre></td></tr></table></figure>
+
+<p>那么最后返回的结果是同一个变量，是对最初传入变量的一个引用，这一点是出于性能和效率的考虑，不过有时候可能导致问题，需警惕。</p>
+<p>接下来是invoke方法，这个方法和each（map）的作用基本一致，唯一的区别是each（map）执行的是外部提供的一个方法，而invoke执行的是集合对象自身本来就存在的方法。因此，invoke的参数有且只需要有一个，就是集合对象的方法名。举个例子，我们将一个数字数组的每一项都转化为字符串：</p>
+<p>对比两种实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> array_1 = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>].<span class="title function_">map</span>(<span class="keyword">function</span>(<span class="params">value</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> value.<span class="title function_">toString</span>();</span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;array_1:&#x27;</span>,array_1);<span class="comment">//[&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;]</span></span><br><span class="line"><span class="keyword">var</span> array_2 = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>].<span class="title function_">invoke</span>(<span class="string">&#x27;toString&#x27;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;array_2:&#x27;</span>,array_2);<span class="comment">//[&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;]</span></span><br></pre></td></tr></table></figure>
+
+<p>由于少了一次闭包的消耗，因此invoke在效率上稍高，而且形式也简洁不少。</p>
+<p>具体实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">invoke</span>(<span class="params">method</span>) &#123;</span><br><span class="line">  <span class="comment">//var args = $A(arguments).slice(1); //源码实现</span></span><br><span class="line">  <span class="keyword">var</span> args  = <span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">slice</span>.<span class="title function_">call</span>(<span class="variable language_">arguments</span>,<span class="number">1</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">map</span>(<span class="keyword">function</span>(<span class="params">value</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> value[method].<span class="title function_">apply</span>(value, args);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>plunk方法比较简单，获取所有元素的同一个属性的值，并返回相应的数组。这个方法显然是针对普通对象来的，数组的话没有什么属性好取的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">pluck</span>(<span class="params">property</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> results = [];</span><br><span class="line">  <span class="variable language_">this</span>.<span class="title function_">each</span>(<span class="keyword">function</span>(<span class="params">value</span>) &#123;</span><br><span class="line">    results.<span class="title function_">push</span>(value[property]);</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> results;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>源码好理解，给个例子就行：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">&#x27;hello&#x27;</span>, <span class="string">&#x27;world&#x27;</span>, <span class="string">&#x27;my&#x27;</span>, <span class="string">&#x27;is&#x27;</span>, <span class="string">&#x27;xesam&#x27;</span>].<span class="title function_">pluck</span>(<span class="string">&#x27;length&#x27;</span>)<span class="comment">// [5, 5, 2, 3, 5]</span></span><br></pre></td></tr></table></figure>
+
+<p>另一个在其他脚本里面常见的方法是zip，这个方法不是很好理解：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">zip</span>(<span class="title class_">Sequence</span>...[, iterator = <span class="title class_">Prototype</span>.<span class="property">K</span>]) -&gt; <span class="title class_">Array</span></span><br></pre></td></tr></table></figure>
+<p>将多个（两个及以上）序列按照顺序配对合并（想像一下拉链拉上的情形）为一个包含一序列元组的数组。<br>元组由每个原始序列的具有相同索引的元素组合而成。如果指定了可选的 iterator 参数，则元组由 iterator 指定的函数生成。 </p>
+<p>我们先不考虑iterator ，来第一个实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">zip</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> array_1 = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</span><br><span class="line">    <span class="keyword">var</span> array_2 = [<span class="string">&#x27;a&#x27;</span>,<span class="string">&#x27;b&#x27;</span>,<span class="string">&#x27;c&#x27;</span>];</span><br><span class="line">    <span class="keyword">var</span> array_3 = [<span class="string">&#x27;x&#x27;</span>,<span class="string">&#x27;y&#x27;</span>,<span class="string">&#x27;z&#x27;</span>];</span><br><span class="line">    <span class="keyword">var</span> result = [array_1].<span class="title function_">concat</span>([array_2,array_3]);<span class="comment">//[[1,2,3],[&#x27;a&#x27;,&#x27;b&#x27;,&#x27;c&#x27;],[&#x27;x&#x27;,&#x27;y&#x27;,&#x27;z&#x27;]]</span></span><br><span class="line">    <span class="keyword">return</span> array_1.<span class="title function_">map</span>(<span class="keyword">function</span>(<span class="params">value,index</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> result.<span class="title function_">pluck</span>(index);</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">zip</span>());<span class="comment">//[[1,&#x27;a&#x27;,&#x27;x&#x27;],[2,&#x27;b&#x27;,&#x27;y&#x27;],[3,&#x27;c&#x27;,&#x27;z&#x27;]]</span></span><br></pre></td></tr></table></figure>
+<p>改为Enumerable方法的形式就是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">zip</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> result = [<span class="variable language_">this</span>].<span class="title function_">concat</span>(<span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">slice</span>.<span class="title function_">call</span>(<span class="variable language_">arguments</span>,<span class="number">1</span>));</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">map</span>(<span class="keyword">function</span>(<span class="params">value,index</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> result.<span class="title function_">pluck</span>(index);</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>].<span class="title function_">zip</span>([<span class="string">&#x27;a&#x27;</span>,<span class="string">&#x27;b&#x27;</span>,<span class="string">&#x27;c&#x27;</span>],[<span class="string">&#x27;x&#x27;</span>,<span class="string">&#x27;y&#x27;</span>,<span class="string">&#x27;z&#x27;</span>]));<span class="comment">////[[1,&#x27;a&#x27;,&#x27;x&#x27;],[2,&#x27;b&#x27;,&#x27;y&#x27;],[3,&#x27;c&#x27;,&#x27;z&#x27;]]</span></span><br></pre></td></tr></table></figure>
+<p>加上interator处理之后就是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">zip</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> args = <span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">slice</span>.<span class="title function_">call</span>(<span class="variable language_">arguments</span>,<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">var</span> interator = <span class="keyword">function</span>(<span class="params">x</span>)&#123; <span class="keyword">return</span> x;&#125; <span class="comment">//Prototype.K</span></span><br><span class="line">    <span class="keyword">if</span>(args[args.<span class="property">length</span> - <span class="number">1</span>].<span class="property">constructor</span> == <span class="title class_">Function</span>)&#123;</span><br><span class="line">        interator = args.<span class="title function_">pop</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> result = [<span class="variable language_">this</span>].<span class="title function_">concat</span>(<span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">slice</span>.<span class="title function_">call</span>(<span class="variable language_">arguments</span>,<span class="number">1</span>));</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">map</span>(<span class="keyword">function</span>(<span class="params">value,index</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> interator.<span class="title function_">call</span>(result.<span class="title function_">pluck</span>(index));</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2012/01/19/javascript/2012-01-19-Javascript-Prototype-Enumerable-3/" data-id="cluh0140d004u38wbgdycc36p" data-title="【Javascript】Prototype源码浅析—Enumerable部分(三)" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2012/01/31/javascript/2012-01-31-Javascript-Prototype-Hash-1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          【Javascript】Prototype源码浅析—Hash部分(一)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2012/01/17/javascript/2012-01-17-Javascript-Prototype-Enumerable-2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">【Javascript】Prototype源码浅析—Enumerable部分(二)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chrome/">chrome</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/computer/">computer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/fe/">fe</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/introspection/">introspection</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/math/">math</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/physics/">physics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/product/">product</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/software/">software</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/talk/">talk</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c51/" rel="tag">c51</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/computer/" rel="tag">computer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fe/" rel="tag">fe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/introspection/" rel="tag">introspection</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/" rel="tag">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memo/" rel="tag">memo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/product/" rel="tag">product</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rx/" rel="tag">rx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/" rel="tag">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/talk/" rel="tag">talk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/volley/" rel="tag">volley</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/c51/" style="font-size: 11.25px;">c51</a> <a href="/tags/chrome/" style="font-size: 11.25px;">chrome</a> <a href="/tags/computer/" style="font-size: 17.5px;">computer</a> <a href="/tags/fe/" style="font-size: 13.75px;">fe</a> <a href="/tags/introspection/" style="font-size: 10px;">introspection</a> <a href="/tags/java/" style="font-size: 13.75px;">java</a> <a href="/tags/javascript/" style="font-size: 18.75px;">javascript</a> <a href="/tags/math/" style="font-size: 10px;">math</a> <a href="/tags/memo/" style="font-size: 10px;">memo</a> <a href="/tags/product/" style="font-size: 15px;">product</a> <a href="/tags/rx/" style="font-size: 10px;">rx</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/talk/" style="font-size: 16.25px;">talk</a> <a href="/tags/volley/" style="font-size: 11.25px;">volley</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">三月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/04/">四月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/">《其实你不懂进化论》简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/">单元测试的艺术-第三版 简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/">网民的故事分析-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/01/talk/2021-12-01-talk-book-user-stories-applied/">用户故事与敏捷方法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/03/talk/2021-11-03-talk-logic-1/">不令人讨厌的分析逻辑</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 xesam<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

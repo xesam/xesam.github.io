@@ -1,0 +1,125 @@
+@startuml pages
+
+autonumber
+
+participant "页面A" as pageA
+participant "页面B" as pageB
+
+activate pageA
+pageA -> pageA:onLoad
+pageA -> pageA:onShow
+pageA -> pageA:onReady
+pageA -> pageB:navigateTo
+pageA -> pageA:onHide
+
+activate pageB
+pageB -> pageB:onLoad
+pageB -> pageB:onShow
+pageB -> pageB:onReady
+pageB -> pageA:navigateBack
+pageB -> pageB:onUnload
+
+deactivate pageB
+pageA -> pageA:onShow
+pageA -> pageB:redirectTo
+pageA -> pageA:onUnload
+
+deactivate pageA
+activate pageB
+pageB -> pageB:onLoad
+pageB -> pageB:onShow
+pageB -> pageB:onReady
+
+@enduml
+
+
+
+@startuml launch_relaunch
+
+autonumber
+
+participant "应用" as App
+participant "页面A" as pageA
+participant "页面B" as pageB
+
+activate App
+-> App:冷启动小程序 
+App -> App:onLaunch
+App -> App:onShow
+App -> pageA:打开启动页面
+
+activate pageA
+pageA -> pageA:onLoad
+pageA -> pageA:onShow
+pageA -> pageA:onReady
+-> App:reLaunch 页面A
+pageA -> pageA:onUnload
+
+deactivate pageA
+
+App -> App:关闭所有页面
+App -> pageA:打开页面A
+
+activate pageA
+pageA -> pageA:onLoad
+pageA -> pageA:onShow
+pageA -> pageA:onReady
+-> App:reLaunch 页面B
+pageA -> pageA:onUnload
+
+deactivate pageA
+
+App -> App:关闭所有页面
+App -> pageB:打开页面B
+activate pageB
+pageB -> pageB:onLoad
+pageB -> pageB:onShow
+pageB -> pageB:onReady
+
+@enduml
+
+
+
+
+@startuml back_front
+
+autonumber
+
+participant "应用" as App
+participant "页面A" as pageA
+participant "页面B" as pageB
+
+activate App
+-> App:冷启动小程序
+App -> App:onLaunch
+App -> App:onShow
+App -> pageA:打开启动页面
+
+activate pageA
+pageA -> pageA:onLoad
+pageA -> pageA:onShow
+pageA -> pageA:onReady
+-> App:退到后台
+pageA -> pageA:onHide
+
+App -> App:onHide
+
+-> App:回到小程序的页面A
+App -> App:onShow
+pageA -> pageA:onShow
+
+-> App:退到后台
+pageA -> pageA:onHide
+
+App -> App:onHide
+
+-> App:回到小程序的页面B
+App -> App:onShow
+pageA -> pageA:onUnload
+deactivate pageA
+activate pageB
+pageB -> pageB:onLoad
+pageB -> pageB:onShow
+pageB -> pageB:onReady
+
+@enduml

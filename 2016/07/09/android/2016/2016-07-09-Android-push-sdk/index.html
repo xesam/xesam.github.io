@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Android 第三方推送SDK集成简述 | XiaoPingYuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="由于我们 Android 应用的推送（Push）效果一直不是很理想，所以前段时间调研了现在国内市场上几种推送集成方案，大致包括：  个推推送 极光推送 阿里云推送 友盟推送。  不过鉴于混乱的 Android 局面来说， 各个推送效果都不算很好，也都是难兄难弟。 前言就实现来说，iOS 的推送机制就很好，系统统一管理推送，然后分发给对应的应用，各个应用自己处理来自系统的推送消息。这样既不用考虑应用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 第三方推送SDK集成简述">
+<meta property="og:url" content="https://xesam.github.io/2016/07/09/android/2016/2016-07-09-Android-push-sdk/index.html">
+<meta property="og:site_name" content="XiaoPingYuan">
+<meta property="og:description" content="由于我们 Android 应用的推送（Push）效果一直不是很理想，所以前段时间调研了现在国内市场上几种推送集成方案，大致包括：  个推推送 极光推送 阿里云推送 友盟推送。  不过鉴于混乱的 Android 局面来说， 各个推送效果都不算很好，也都是难兄难弟。 前言就实现来说，iOS 的推送机制就很好，系统统一管理推送，然后分发给对应的应用，各个应用自己处理来自系统的推送消息。这样既不用考虑应用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xesam.github.io/image/android_push.png">
+<meta property="article:published_time" content="2016-07-09T10:20:04.000Z">
+<meta property="article:modified_time" content="2024-04-01T13:40:43.939Z">
+<meta property="article:author" content="xesam">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xesam.github.io/image/android_push.png">
+  
+    <link rel="alternate" href="/atom.xml" title="XiaoPingYuan" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">XiaoPingYuan</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Just Do IT</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://xesam.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-android/2016/2016-07-09-Android-push-sdk" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2016/07/09/android/2016/2016-07-09-Android-push-sdk/" class="article-date">
+  <time class="dt-published" datetime="2016-07-09T10:20:04.000Z" itemprop="datePublished">2016-07-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Android 第三方推送SDK集成简述
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>由于我们 Android 应用的推送（Push）效果一直不是很理想，所以前段时间调研了现在国内市场上几种推送集成方案，大致包括：</p>
+<ol>
+<li>个推推送</li>
+<li>极光推送</li>
+<li>阿里云推送</li>
+<li>友盟推送。</li>
+</ol>
+<p>不过鉴于混乱的 Android 局面来说， 各个推送效果都不算很好，也都是难兄难弟。</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>就实现来说，iOS 的推送机制就很好，系统统一管理推送，然后分发给对应的应用，各个应用自己处理来自系统的推送消息。<br>这样既不用考虑应用进程的保活问题，也不用考虑无休止的兼容问题。</p>
+<p>虽然小米或者华为之列有自己的系统推送，通知栏推送效果还好，至于透传推送，效果就呵呵了。<br>我们暂且不论效果，他们各自的不兼容不仅没有给开发者减压，还给 App 增加了压力。</p>
+<p>举个例子，如果我针对 MIUI 包含 MIUI 的系统推送，并在小米应用市场上架，这样小米手机的用户推送就棒棒哒。</p>
+<p>不过华为手机怎么办，那就集成华为的系统推送呗，然后在华为应用市场上架。</p>
+<p>三星手机怎么办，一样啊，集成三星系统 SDK，在三星应用市场上架。</p>
+<p>至于其他的应用市场，都用第三方 Push SDK 吧，毕竟要优先照顾主流手机厂商用户。</p>
+<p>那么问题来了，如果各个应用市场相互抓包怎么办，比如一个应用市场抓取了小米应用市场的 APK， MIUI 用户下载了怎么办，或者 MIUI 用户从百度应用市场下载怎么办，这就尴尬了。<br>除非我在一个 APK 里面集成所有的第三方厂商的系统推送，然后还得外送一个第三方 Push SDK，不然就没法预防各种情况。所以最终还是只用第三方 Push SDK 简单。</p>
+<p>国内太监 Android 应用的一部分保活需求，就来自推送，这样不但让系统背了锅，也恶心了自己，更恶心了用户。</p>
+<h2 id="集成指南"><a href="#集成指南" class="headerlink" title="集成指南"></a>集成指南</h2><p>为了在各个 Push SDK 之间无缝切换，所以肯定会对 Push 层进行封装，另一个常见的需求是：</p>
+<pre><code>当 Push 消息到达的时候，如果用户在接收消息界面，那就直接更新界面，如果用户不在接收消息界面，那就弹出通知栏提示。
+</code></pre>
+<p>所以，针对这样的现状与需求，大致的结构如下：</p>
+<p><img src="/image/android_push.png" alt="android_push"></p>
+<p>过程描述：</p>
+<ol>
+<li>App 注册对应的 BroadcastReceiver，并定义不同的优先级，用以接收推送消息。</li>
+<li>第三方 Push SDk 接收到推送消息，解析之后，发送一个优先级系统广播。</li>
+<li>Android 系统将广播将投递给对应的 App。</li>
+<li>App 组件的 BroadcastReceiver 按照预定义的优先级来接收消息广播，如图，广播会一层层穿透各个组件的 BroadcastReceiver。<br>如果广播在传递过程中，被某个组件拦截并消费了，就停止传播，如果被最后一个 BroadcastReceiver，就进行收尾操作。<br>比如，如果当前的 Activity 接收了广播，弹出一个对话框，然后告知系统广播已经被消费即可；<br>如果没有任何 Activity 消费广播，最后一个 BroadcastReceiver 就可以接收广播，然后弹出一个通知栏消息，这样就满足需求了。</li>
+</ol>
+<p>集成过程中的几个问题：</p>
+<p>第一个问题，由于第三方推送过来的消息数据通常都格式不一，所以就需要将接收到的推送消息进行一道抽象，将第三方的数据包装成我们的语义对象。<br>这样屏蔽细节，也不扯什么设计模式了，反正在计算机工程应用方面，就是分层，分层，再分层。</p>
+<p>第二个问题，第三方推送面向开发者的接收方式也不一样，比如个推是要求开发者继承一个 BroadcastReceiver 来接收消息，但是友盟要求开发者实现一个 PushHandler 来接收消息。<br>为了统一处理，我个人建议使用 BroadcastReceiver 的接收方式，因为在最终的处理流程中，依旧逃不过 BroadcastReceiver 的使用。</p>
+<p>因此，整个设计中涉及到两种 BroadcastReceiver，第一种是用来统一接收第三方 Push 消息的，第二种是用来子在应用中处理接收到的消息的。</p>
+<p>示例代码如下：</p>
+<p>定义抽象数据消息：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//每个消息都会有类型</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Msg</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> type;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">MsgType</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">TYPE_USER_REPLY</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//示例 用户回复</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserReply</span> <span class="keyword">extends</span> <span class="title class_">Msg</span> <span class="keyword">implements</span> <span class="title class_">Parcelable</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String title;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">long</span> time;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//实现 Parcelable</span></span><br><span class="line">...</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>定义接收第三方 Push 消息的 BroadcastReceiver，我称之为“标准” Push 接收器：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PushMsgBroadcastReceiver</span> <span class="keyword">extends</span> <span class="title class_">BroadcastReceiver</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">ACTION_RECEIVE_MSG</span> <span class="operator">=</span> <span class="string">&quot;dev.xesam.push.action.msg&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">EXTRA_RECEIVE_MSG</span> <span class="operator">=</span> <span class="string">&quot;dev.xesam.push.extra.msg&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">onReceive</span><span class="params">(Context context, Intent intent)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">message</span> <span class="operator">=</span> intent.getStringExtra(EXTRA_RECEIVE_MSG);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> Msg <span class="title function_">parsePushMsg</span><span class="params">(String message)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> ...</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">dispatchPushMsg</span><span class="params">(String message )</span>&#123;</span><br><span class="line">        <span class="type">Msg</span> <span class="variable">msg</span> <span class="operator">=</span> parsePushMsg(message);</span><br><span class="line">        <span class="keyword">if</span>(msg.type == MsgType.TYPE_USER_REPLY)&#123;</span><br><span class="line">            <span class="comment">//投递消息到相应的应用内 PushHandleReceiver</span></span><br><span class="line">            <span class="type">Intent</span> <span class="variable">intent</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Intent</span>();</span><br><span class="line">            intent.setAction(PushHandleReceiver.ACTION_RECEIVE_MSG);</span><br><span class="line">            intent.putExtra(PushHandleReceiver.EXTRA_RECEIVE_MSG, message);</span><br><span class="line">            <span class="comment">//注意，这里发送的是优先级广播</span></span><br><span class="line">            context.sendOrderedBroadcast(intent, <span class="literal">null</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span> ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>个推本身就是用的 BroadcastReceiver，直接使用即可。至于友盟的推送,可以将 Push 消息转发到我们定义的 PushMsgBroadcastReceiver 上，其他的 sdk 可以类似处理：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UmengHandler</span> <span class="keyword">extends</span> <span class="title class_">UmengMessageHandler</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">dealWithCustomMessage</span><span class="params">(Context context, UMessage msg)</span> &#123;</span><br><span class="line">        <span class="comment">//将友盟的推送转化为广播的形式</span></span><br><span class="line">        <span class="type">Intent</span> <span class="variable">intent</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Intent</span>();</span><br><span class="line">        intent.setAction(PushMsgBroadcastReceiver.ACTION_RECEIVE_MSG);</span><br><span class="line">        intent.putExtra(PushMsgBroadcastReceiver.EXTRA_RECEIVE_MSG, message);</span><br><span class="line">        context.sendBroadcast(intent);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>定义应用内各个组件用来处理消息的 BroadcastReceiver ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PushHandleReceiver</span> <span class="keyword">extends</span> <span class="title class_">BroadcastReceiver</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">ACTION_RECEIVE_MSG</span> <span class="operator">=</span> <span class="string">&quot;dev.xesam.app.action.msg&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">EXTRA_RECEIVE_MSG</span> <span class="operator">=</span> <span class="string">&quot;dev.xesam.app.extra.msg&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">onReceive</span><span class="params">(Context context, Intent intent)</span> &#123;</span><br><span class="line">        <span class="type">Msg</span> <span class="variable">msg</span> <span class="operator">=</span> intent.getParcelableExtra(EXTRA_RECEIVE_MSG);</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">consumed</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">if</span>(msg.type == MsgType.TYPE_USER_REPLY)&#123;</span><br><span class="line">            consumed = onReceiveUserReply((UserReply) msg);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//如果广播被消耗，停止广播</span></span><br><span class="line">        <span class="keyword">if</span>(consumed)&#123;</span><br><span class="line">            abortBroadcast();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">onReceiveUserReply</span><span class="params">(UserReply userReply)</span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在上图的设计中，会有一个优先级最低，用来“兜底”的 BroadcastReceiver，用来在没人处理广播的情况下，将广播内容发送到通知栏消息。<br>我们可以将这个 BroadcastReceiver 注册到 AndroidManifest， 这样即使在用户没有启动的时候也可以接收并处理广播。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LastHandleReceiver</span> <span class="keyword">extends</span> <span class="title class_">PushHandleReceiver</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">onReceiveUserReply</span><span class="params">(UserReply userReply)</span>&#123;</span><br><span class="line">        <span class="comment">//这里将 UserReply 发送到通知栏</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果我们想在某个 Activity 处理广播，拦截即可，这样就可以在对应界面弹出一个对话框，而不会弹出通知栏：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">userActivity</span> <span class="keyword">extends</span> <span class="title class_">Activity</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> PushHandleReceiver mUserHandleReceiver <span class="keyword">new</span> <span class="title class_">PushHandleReceiver</span>() &#123;</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">onReceiveUserReply</span><span class="params">(UserReply userReply)</span>&#123;</span><br><span class="line">            showDialog(userReply);</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onResume</span><span class="params">()</span>&#123;</span><br><span class="line">        IntentFilter intentFilter=<span class="keyword">new</span> <span class="title class_">IntentFilter</span>();</span><br><span class="line">        intentFilter.addAction(PushConstant.INTENT_ACTION_PUSH_DEMISE_REMINDER);</span><br><span class="line">        intentFilter.addAction(PushConstant.INTENT_ACTION_PUSH_FEED);</span><br><span class="line">        <span class="comment">//优先级较高</span></span><br><span class="line">        intentFilter.setPriority(<span class="number">99</span>);</span><br><span class="line">        context.registerReceiver(mUserHandleReceiver, intentFilter);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onPause</span><span class="params">()</span>&#123;</span><br><span class="line">        context.unregisterReceiver(mUserHandleReceiver);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">showDialog</span><span class="params">(UserReply)</span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><ol>
+<li>第三方通常的接收消息里面通常不仅仅是你的应用消息，还有 SDK 自身的 push id 什么的，这个需要区分处理。</li>
+<li>SDK 自身的 push id 获取时机各不相同，需要区分对待，如果你自己的后台想知道 push id，处理方式与上图类似。</li>
+<li>由于通知栏随时可能出现，所以面临的一个问题是点击通知栏之后怎么办。<br>这一个“回退栈”的交互问题，我个人偏好的是，点击通知栏之后直接打开 MainActivity， 在 OnNewIntent 回调中根据点击通知消息携带的 Intent 再来跳转到对应的界面，<br>就像微信一样，这样既可以避免回退之后直接退出应用的尴尬，也可以避免繁琐的应用栈判断，各自爱好，唯与产品经理 PK 而已。</li>
+</ol>
+<p>以上只是一种设计方式，其他设计方式欢迎讨论。</p>
+<h6 id="Q群：315658668"><a href="#Q群：315658668" class="headerlink" title="Q群：315658668"></a>Q群：315658668</h6>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2016/07/09/android/2016/2016-07-09-Android-push-sdk/" data-id="cluh0142z00h138wb2a2gdvxo" data-title="Android 第三方推送SDK集成简述" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/08/02/android/2016/2016-08-02-Android-code-stye/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          Android 编写可维护的Android代码
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/07/07/android/2016/2016-07-07-Android-why-not-SoftReference/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">Android 为什么不要SoftReference了</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chrome/">chrome</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/computer/">computer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/fe/">fe</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/introspection/">introspection</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/math/">math</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/physics/">physics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/product/">product</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/software/">software</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/talk/">talk</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c51/" rel="tag">c51</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/computer/" rel="tag">computer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fe/" rel="tag">fe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/introspection/" rel="tag">introspection</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/" rel="tag">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memo/" rel="tag">memo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/product/" rel="tag">product</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rx/" rel="tag">rx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/" rel="tag">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/talk/" rel="tag">talk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/volley/" rel="tag">volley</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/c51/" style="font-size: 11.25px;">c51</a> <a href="/tags/chrome/" style="font-size: 11.25px;">chrome</a> <a href="/tags/computer/" style="font-size: 17.5px;">computer</a> <a href="/tags/fe/" style="font-size: 13.75px;">fe</a> <a href="/tags/introspection/" style="font-size: 10px;">introspection</a> <a href="/tags/java/" style="font-size: 13.75px;">java</a> <a href="/tags/javascript/" style="font-size: 18.75px;">javascript</a> <a href="/tags/math/" style="font-size: 10px;">math</a> <a href="/tags/memo/" style="font-size: 10px;">memo</a> <a href="/tags/product/" style="font-size: 15px;">product</a> <a href="/tags/rx/" style="font-size: 10px;">rx</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/talk/" style="font-size: 16.25px;">talk</a> <a href="/tags/volley/" style="font-size: 11.25px;">volley</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">三月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/04/">四月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/">《其实你不懂进化论》简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/">单元测试的艺术-第三版 简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/">网民的故事分析-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/01/talk/2021-12-01-talk-book-user-stories-applied/">用户故事与敏捷方法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/03/talk/2021-11-03-talk-logic-1/">不令人讨厌的分析逻辑</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 xesam<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

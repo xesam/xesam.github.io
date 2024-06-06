@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>XiaoPingYuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="XiaoPingYuan">
+<meta property="og:url" content="https://xesam.github.io/page/15/index.html">
+<meta property="og:site_name" content="XiaoPingYuan">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="xesam">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="XiaoPingYuan" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">XiaoPingYuan</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Just Do IT</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://xesam.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-android/2014/2014-11-14-Android-Service-dialog" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2014/11/14/android/2014/2014-11-14-Android-Service-dialog/" class="article-date">
+  <time class="dt-published" datetime="2014-11-14T04:46:04.000Z" itemprop="datePublished">2014-11-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2014/11/14/android/2014/2014-11-14-Android-Service-dialog/">Android 从service调用dialog</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="需要权限"><a href="#需要权限" class="headerlink" title="需要权限"></a>需要权限</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">&quot;android.permission.SYSTEM_ALERT_WINDOW&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Dialog</span> <span class="variable">dialog</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AlertDialog</span>.Builder(ctx).create();</span><br><span class="line">dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);</span><br><span class="line">dialog.show();</span><br></pre></td></tr></table></figure>
+
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>当activity不在前台的时候，部分手机（比如小米2s，系统4.1.1）不支持直接弹出dialog，之后在显示activity之后，才会看到dialog。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2014/11/14/android/2014/2014-11-14-Android-Service-dialog/" data-id="cluh0142300df38wba1jh99u6" data-title="Android 从service调用dialog" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-javascript/2014-07-12-Chrome-extend" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2014/07/12/javascript/2014-07-12-Chrome-extend/" class="article-date">
+  <time class="dt-published" datetime="2014-07-12T05:46:04.000Z" itemprop="datePublished">2014-07-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/chrome/">chrome</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2014/07/12/javascript/2014-07-12-Chrome-extend/">【Chrome】几个扩展程序</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="一，下载网易公开课"><a href="#一，下载网易公开课" class="headerlink" title="一，下载网易公开课"></a>一，下载网易公开课</h2><p>网易公开课虽然提供了下载链接，但是下载之后的文件名并不正确，需要下载后手动修改文件名，非常不方便。所以本扩展的目标就是在下载的时候将视频名称正确对应上去。</p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>拦截原网页上的下载链接，在获取正确的文件名称后直接调用chrome的download接口来下载视频文件。</p>
+<h3 id="使用步骤"><a href="#使用步骤" class="headerlink" title="使用步骤"></a>使用步骤</h3><ol>
+<li>下载并载入扩展，下载地址：<a target="_blank" rel="noopener" href="https://github.com/xesam/chrome_plugins">https://github.com/xesam/chrome_plugins</a></li>
+</ol>
+<h2 id="二，查看Android离线文档"><a href="#二，查看Android离线文档" class="headerlink" title="二，查看Android离线文档"></a>二，查看Android离线文档</h2><p>解决Android官网被墙后离线文档查看不是很方便的问题。</p>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>因为虽然是离线文档，但是实际上在连接网络的情况下，离线页面还是会去google的网站上下载一部分资源，典型的就是会下载实现搜索功能的js。现在的问题是，google被和谐了，当打开离线文档的时候，页面会被加载中的资源阻塞，以至于浏览器在很长时间内都是一片空白，除非每次都手动点击浏览器的停止按钮，强制浏览器结束资源载入，才能看到文档的其他内容。</p>
+<p>所以为了更方便的查看离线文档，可以采用几种方法：</p>
+<p>1.查看的时候断开机器网络，这个不是很可取。<br>2.用脚本替换掉所有文档中不可加载的js和css等资源，网上貌似有现成的脚本可以达到这个目的。问题就是Android离线文档有600多M，每次更新都得进行处理，而且在可以访问google的环境下，搜索功能依旧不可用。<br>3.鉴于以上的问题，我写了个简单的chrome插件，可以在查看离线文档的时候选择是否屏蔽google的资源请求，在屏蔽google资源请求的情况下不会阻塞页面，从而避免修改实际页面的缺陷。</p>
+<h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><ol>
+<li>载入chrome插件文件夹</li>
+<li>点击插件图标可以切换是否屏蔽google资源请求。默认是关闭，开启的时候图标会有“ON”字样。</li>
+<li>切换到“ON”模式，打开离线文档即可。</li>
+</ol>
+<p>插件地址：<a target="_blank" rel="noopener" href="https://github.com/xesam/android_offline_doc_plugin">https://github.com/xesam/android_offline_doc_plugin</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2014/07/12/javascript/2014-07-12-Chrome-extend/" data-id="cluh0140r006l38wbbw3heca4" data-title="【Chrome】几个扩展程序" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-android/2014/2014-01-15-Android-OnCheckedChangeListener的bug" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2014/01/15/android/2014/2014-01-15-Android-OnCheckedChangeListener%E7%9A%84bug/" class="article-date">
+  <time class="dt-published" datetime="2014-01-15T04:46:04.000Z" itemprop="datePublished">2014-01-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2014/01/15/android/2014/2014-01-15-Android-OnCheckedChangeListener%E7%9A%84bug/">Android OnCheckedChangeListener的bug</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>RadioGroup.OnCheckedChangeListener 被回调两次</p>
+<p>今天又碰到了，貌似还没有被修复，顺便贴出来。</p>
+<p>原android Issue地址：<a target="_blank" rel="noopener" href="https://code.google.com/p/android/issues/detail?id=4785">RadioGroup.OnCheckedChangeListener is called twice when the selection is cleared</a></p>
+<h2 id="具体表现"><a href="#具体表现" class="headerlink" title="具体表现"></a>具体表现</h2><p>RadioGroup中包含有若干个RadioButton,当在代码中调用RadioGroup.check(id)方法动态设置被选中的RadioButton的时候，RadioGroup.OnCheckedChangeListener(RadioGroup group, int checkedId)会被调用多次。</p>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><p>假设当前选择的是RadioButtonA,调用RadioGroup.check(RadioButtonBid)之后，RadioGroup.OnCheckedChangeListener(RadioGroup group, int checkedId)的调用情况如下：</p>
+<p>第一次：checkedId 为 RadioButtonAId</p>
+<p>第二次：checkedId 为 RadioButtonBId</p>
+<p>第三次：checkedId 为 RadioButtonBId</p>
+<h2 id="测试代码"><a href="#测试代码" class="headerlink" title="测试代码"></a>测试代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MainActivity</span> <span class="keyword">extends</span> <span class="title class_">Activity</span> <span class="keyword">implements</span> <span class="title class_">CompoundButton</span>.OnCheckedChangeListener,</span><br><span class="line">RadioGroup.OnCheckedChangeListener&#123;</span><br><span class="line"></span><br><span class="line">	RadioGroup mRadioGroup;</span><br><span class="line">	RadioButton radio_0;</span><br><span class="line">	RadioButton radio_1;</span><br><span class="line">	RadioButton radio_2;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(Bundle savedInstanceState)</span> &#123;</span><br><span class="line">		<span class="built_in">super</span>.onCreate(savedInstanceState);</span><br><span class="line">		setContentView(R.layout.activity_main);</span><br><span class="line"></span><br><span class="line">		mRadioGroup = (RadioGroup) findViewById(R.id.group);</span><br><span class="line">		radio_0 = (RadioButton) findViewById(R.id.radio_0);</span><br><span class="line">		radio_1 = (RadioButton) findViewById(R.id.radio_1);</span><br><span class="line">		radio_2 = (RadioButton) findViewById(R.id.radio_2);</span><br><span class="line"></span><br><span class="line">		mRadioGroup.setOnCheckedChangeListener(<span class="built_in">this</span>);</span><br><span class="line">		radio_0.setOnCheckedChangeListener(<span class="built_in">this</span>);</span><br><span class="line">		radio_1.setOnCheckedChangeListener(<span class="built_in">this</span>);</span><br><span class="line">		radio_2.setOnCheckedChangeListener(<span class="built_in">this</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doTestClick</span><span class="params">(View view)</span> &#123;</span><br><span class="line">		<span class="keyword">switch</span> (view.getId()) &#123;</span><br><span class="line">		<span class="keyword">case</span> R.id.check_radio_0:</span><br><span class="line">			mRadioGroup.check(R.id.radio_0);</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> R.id.check_radio_1:</span><br><span class="line">			mRadioGroup.check(R.id.radio_1);</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> R.id.check_radio_2:</span><br><span class="line">			mRadioGroup.check(R.id.radio_2);</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">default</span>:</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onCheckedChanged</span><span class="params">(RadioGroup group, <span class="type">int</span> checkedId)</span> &#123;</span><br><span class="line">		Log.i(<span class="string">&quot;mRadioGroup onCheckedChanged&quot;</span>, <span class="string">&quot;checkedId:&quot;</span> + checkedId);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onCheckedChanged</span><span class="params">(CompoundButton buttonView, <span class="type">boolean</span> isChecked)</span> &#123;</span><br><span class="line">		<span class="keyword">switch</span> (buttonView.getId()) &#123;</span><br><span class="line">		<span class="keyword">case</span> R.id.radio_0:</span><br><span class="line">			Log.i(<span class="string">&quot;radio_0 onCheckedChanged&quot;</span>, <span class="string">&quot;isChecked:&quot;</span> + isChecked);</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> R.id.radio_1:</span><br><span class="line">			Log.i(<span class="string">&quot;radio_1 onCheckedChanged&quot;</span>, <span class="string">&quot;isChecked:&quot;</span> + isChecked);</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> R.id.radio_2:</span><br><span class="line">			Log.i(<span class="string">&quot;radio_2 onCheckedChanged&quot;</span>, <span class="string">&quot;isChecked:&quot;</span> + isChecked);</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">default</span>:</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">LinearLayout</span> <span class="attr">xmlns:android</span>=<span class="string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:tools</span>=<span class="string">&quot;http://schemas.android.com/tools&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:orientation</span>=<span class="string">&quot;vertical&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:context</span>=<span class="string">&quot;.MainActivity&quot;</span> &gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">LinearLayout</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:orientation</span>=<span class="string">&quot;vertical&quot;</span> &gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">Button</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:id</span>=<span class="string">&quot;@+id/check_radio_0&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:onClick</span>=<span class="string">&quot;doTestClick&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:text</span>=<span class="string">&quot;check_radio_0&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">Button</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:id</span>=<span class="string">&quot;@+id/check_radio_1&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:onClick</span>=<span class="string">&quot;doTestClick&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:text</span>=<span class="string">&quot;check_radio_1&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">Button</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:id</span>=<span class="string">&quot;@+id/check_radio_2&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:onClick</span>=<span class="string">&quot;doTestClick&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:text</span>=<span class="string">&quot;check_radio_2&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">RadioGroup</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">&quot;@+id/group&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:orientation</span>=<span class="string">&quot;vertical&quot;</span> &gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">RadioButton</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:id</span>=<span class="string">&quot;@+id/radio_0&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:text</span>=<span class="string">&quot;0&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">RadioButton</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:id</span>=<span class="string">&quot;@+id/radio_1&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:text</span>=<span class="string">&quot;1&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">RadioButton</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:id</span>=<span class="string">&quot;@+id/radio_2&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:text</span>=<span class="string">&quot;2&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">RadioGroup</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="产生原因"><a href="#产生原因" class="headerlink" title="产生原因"></a>产生原因</h2><p>RadioGroup check简化如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">check</span><span class="params">(<span class="type">int</span> newid)</span> &#123;</span><br><span class="line">	setCheckedStateForView(mCheckedId, <span class="literal">false</span>); <span class="comment">//这里取消原来选择的RadioButton</span></span><br><span class="line">	setCheckedStateForView(newid, <span class="literal">true</span>);<span class="comment">//设置当前选中的RadioButton为激活状态</span></span><br><span class="line">	setCheckedId(newid);<span class="comment">//触发OnCheckedChangeListener</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>RadioGroup setCheckedStateForView简化如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">setCheckedStateForView</span><span class="params">(<span class="type">int</span> viewId, <span class="type">boolean</span> checked)</span> &#123;</span><br><span class="line">	<span class="type">RadioButton</span> <span class="variable">childRadioButton</span> <span class="operator">=</span> (RadioButton)findViewById(viewId);</span><br><span class="line">	childRadioButton.setChecked(checked);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>RadioGroup setCheckedId简化如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">setCheckedId</span><span class="params">(<span class="type">int</span> id)</span> &#123;</span><br><span class="line">	mCheckedId = id;<span class="comment">//保存当前选择的RadioButton</span></span><br><span class="line">	mOnCheckedChangeListener.onCheckedChanged(<span class="built_in">this</span>, mCheckedId);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同时RadioGroup内部有一个check状态跟踪器，简化一下如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">CheckedStateTracker</span> <span class="keyword">implements</span> <span class="title class_">CompoundButton</span>.OnCheckedChangeListener &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onCheckedChanged</span><span class="params">(CompoundButton childRadioButton, <span class="type">boolean</span> isChecked)</span> &#123;</span><br><span class="line">	    <span class="type">int</span> <span class="variable">childRadioButtonId</span> <span class="operator">=</span> childRadioButton.getId();</span><br><span class="line">	    setCheckedId(id);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当每一个RadioButton被添加到RadioGroup的时候，就给每一个RadioButton设置一个checked状态监听</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">childRadioButton.mOnCheckedChangeWidgetListener = mCheckedStateTracker;</span><br></pre></td></tr></table></figure>
+
+<p>所以每当RadioButton的check状态发生变化，都会触发check状态跟踪器。</p>
+<p>RadioButton的setChecked(boolean)简化如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setChecked</span><span class="params">(<span class="type">boolean</span> checked)</span> &#123;</span><br><span class="line">	mOnCheckedChangeListener.onCheckedChanged(<span class="built_in">this</span>, mChecked); <span class="comment">//触发RadioButton各自的监听</span></span><br><span class="line">	mOnCheckedChangeWidgetListener.onCheckedChanged(<span class="built_in">this</span>, mChecked);<span class="comment">//触发check状态跟踪器</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>所以结合开头的例子，调用RadioGroup.check(RadioButtonBid)之后发生的情况如下：</p>
+<pre><code>1.RadioGroup.setCheckedStateForView(RadioButtonAid, false);
+    --&gt; RaidoButton.mOnCheckedChangeWidgetListener.onCheckedChanged(RadioButtonA, false) 
+        --&gt; RadioGroup.setCheckedId(RadioButtonAId) 
+            --&gt; RadioGroup.mOnCheckedChangeListener.onCheckedChanged(RadioGroup, RadioButtonAId);
+
+2.RadioGroup.setCheckedStateForView(RadioButtonBid, true);
+    --&gt; RaidoButton.mOnCheckedChangeWidgetListener.onCheckedChanged(RadioButtonB, true) 
+        --&gt; RadioGroup.setCheckedId(RadioButtonBId) 
+            --&gt; RadioGroup.mOnCheckedChangeListener.onCheckedChanged(RadioGroup, RadioButtonBId);
+
+3.RadioGroup.setCheckedId(RadioButtonBId) 
+    --&gt; RadioGroup.mOnCheckedChangeListener.onCheckedChanged(RadioGroup, RadioButtonBId);
+</code></pre>
+<p>按照Android官方文档的API说明：</p>
+<pre><code>public abstract void onCheckedChanged (RadioGroup group, int checkedId)
+Parameters
+    group	the group in which the checked radio button has changed
+checkedId	the unique identifier of the newly checked radio button
+</code></pre>
+<p>那个checkedId的参数在实现上是名不副实的。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2014/01/15/android/2014/2014-01-15-Android-OnCheckedChangeListener%E7%9A%84bug/" data-id="cluh0142100d638wb8lhmhyik" data-title="Android OnCheckedChangeListener的bug" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-android/2013/2013-12-25-Android-ListView-getViewTypeCount-getItemViewType" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2013/12/25/android/2013/2013-12-25-Android-ListView-getViewTypeCount-getItemViewType/" class="article-date">
+  <time class="dt-published" datetime="2013-12-25T04:46:04.000Z" itemprop="datePublished">2013-12-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2013/12/25/android/2013/2013-12-25-Android-ListView-getViewTypeCount-getItemViewType/">ListView的getViewTypeCount与getItemViewType</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>对于Listiew来说，getViewTypeCount 和getItemViewType主要用于为不同的列表项目提供不同的视图view，<br>主要用法在有人已经在<a target="_blank" rel="noopener" href="http://www.cnblogs.com/xiaowenji/archive/2010/12/08/1900579.html">《ListView 和 Adapter 的基础》</a>中描述得比较清楚了，<br>但是文章有一点没说，就是下面这三行：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">TYPE_ITEM</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">TYPE_SEPARATOR</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">TYPE_MAX_COUNT</span> <span class="operator">=</span> TYPE_SEPARATOR + <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这三行是非常重要的，因为TYPE_ITEM和TYPE_SEPARATOR的值最后是被当作一个数组的索引来使用的。</p>
+<p>我们已经知道ListView的隐藏列表行开始被显示的时候，行View是被缓存在RecycleBin中的，那么RecycleBin缓存的顺序是什么样的呢？以上面的代码为例，大致过程如下（简化过程，并不代表实际有这些类）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mRecycler[RecycleBin]</span><br><span class="line"><span class="number">1.</span>mRecycler.setViewTypeCount(mAdapter.getViewTypeCount()); </span><br><span class="line">    --&gt; <span class="type">int</span>[] mRecycler.viewCache = <span class="keyword">new</span> <span class="title class_">View</span>[TYPE_MAX_COUNT] </span><br><span class="line">        --&gt; <span class="type">int</span>[] mRecycler.viewCache = <span class="keyword">new</span> <span class="title class_">View</span>[<span class="number">2</span>];</span><br><span class="line"><span class="number">2.</span>mRecycler.addScrapView(child1); </span><br><span class="line">    --&gt; mRecycler.viewCache[child.viewType] = child1.view </span><br><span class="line">        --&gt; mRecycler.viewCache[TYPE_ITEM] = child1.view </span><br><span class="line">            --&gt; mRecycler.viewCache[<span class="number">0</span>] = child1.view</span><br><span class="line"><span class="number">3.</span>mRecycler.addScrapView(child2); </span><br><span class="line">    --&gt; mRecycler.viewCache[child.viewType] = child2.view </span><br><span class="line">        --&gt; mRecycler.viewCache[TYPE_SEPARATOR] = child2.view </span><br><span class="line">            --&gt; mRecycler.viewCache[<span class="number">1</span>] = child2.view</span><br></pre></td></tr></table></figure>
+
+<p>可以发现，一旦ITEM_N的定义不符合数组的规范，那么溢出是非常常见的。我一开始犯的错误就是TYPE_1和TYPE_2…TYPE_N都是随意定义的，<br>结果报的错误居然是数组溢出，查看了ListView源码之后才发现原来具体的执行过程，以前实在是忽略了。。。。</p>
+<p>所以综合看来，google这么做实在是有些不好理解，为什么不直接使用map来存储呢？那样就容易理解得多。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2013/12/25/android/2013/2013-12-25-Android-ListView-getViewTypeCount-getItemViewType/" data-id="cluh0142100d338wb8sna8sml" data-title="ListView的getViewTypeCount与getItemViewType" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-java/2013-12-11-Java-weather-query" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2013/12/11/java/2013-12-11-Java-weather-query/" class="article-date">
+  <time class="dt-published" datetime="2013-12-11T05:46:04.000Z" itemprop="datePublished">2013-12-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2013/12/11/java/2013-12-11-Java-weather-query/">国内天气预报查询测试</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>一，天气综合查询</p>
+<p>1.直接使用中国天气网官方APP接口，不过需要申请key：</p>
+<p><a target="_blank" rel="noopener" href="http://smart.weather.com.cn/wzfw/smart/weatherapi.shtml">http://smart.weather.com.cn/wzfw/smart/weatherapi.shtml</a></p>
+<p>2.个人写的解析mobile站json测试接口，不需要key</p>
+<p>测试项目 <a target="_blank" rel="noopener" href="https://github.com/xesam/weather">https://github.com/xesam/weather</a></p>
+<p>二，空气质量查询</p>
+<p>1.PM2.5开放查询接口，也需要申请key：</p>
+<p><a target="_blank" rel="noopener" href="http://www.pm25.in/api_doc">http://www.pm25.in/api_doc</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2013/12/11/java/2013-12-11-Java-weather-query/" data-id="cluh0140z007m38wb2i196w3z" data-title="国内天气预报查询测试" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-android/2013/2013-08-20-Android-LIstView-HeaderView" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2013/08/20/android/2013/2013-08-20-Android-LIstView-HeaderView/" class="article-date">
+  <time class="dt-published" datetime="2013-08-20T05:46:04.000Z" itemprop="datePublished">2013-08-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2013/08/20/android/2013/2013-08-20-Android-LIstView-HeaderView/">LIstView的HeaderView</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="一，添加HeaderView之后尺寸布局被忽略。"><a href="#一，添加HeaderView之后尺寸布局被忽略。" class="headerlink" title="一，添加HeaderView之后尺寸布局被忽略。"></a>一，添加HeaderView之后尺寸布局被忽略。</h2><p>通常添加头部的方法是 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">LayoutInflater</span> <span class="variable">lif</span> <span class="operator">=</span> (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);</span><br><span class="line"><span class="type">View</span> <span class="variable">headerView</span> <span class="operator">=</span> lif.inflate(R.layout.header, <span class="literal">null</span>);</span><br><span class="line">mListView.addHeaderView(headerView);</span><br></pre></td></tr></table></figure>
+
+<p>原因： </p>
+<p>lif.inflate(R.layout.header, null)丢失了XML布局中根View的LayoutParam，应该使用的是 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lif.inflate(R.layout.header, mListView, <span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="二，添加HeaderView之后导致OnItemClickListener的position移位"><a href="#二，添加HeaderView之后导致OnItemClickListener的position移位" class="headerlink" title="二，添加HeaderView之后导致OnItemClickListener的position移位"></a>二，添加HeaderView之后导致OnItemClickListener的position移位</h2><p>OnItemClickListener接口的方法： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">onItemClick</span><span class="params">(AdapterView&lt;?&gt; parent, View view, <span class="type">int</span> position, <span class="type">long</span> id)</span></span><br></pre></td></tr></table></figure>
+
+<p>position通常是从0开始的，但是添加了HeaderView之后，position也会将HeaderView的数目计算进去。 </p>
+<p>几个解决办法： </p>
+<p>1,手动计算真实的position位置： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">final</span> <span class="variable">headerCount</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">mListView.setOnItemClickListener(<span class="keyword">new</span> <span class="title class_">OnItemClickListener</span>() &#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onItemClick</span><span class="params">(AdapterView&lt;?&gt; parent, View view,</span></span><br><span class="line"><span class="params">			<span class="type">int</span> position, <span class="type">long</span> id)</span> &#123;</span><br><span class="line">		<span class="type">Item</span> <span class="variable">item</span> <span class="operator">=</span> myAdapter.getItem(position - headerCount);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>2,其实上面的步骤ListView已经为我们提供了，所以可以改写为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mListView.setOnItemClickListener(<span class="keyword">new</span> <span class="title class_">OnItemClickListener</span>() &#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onItemClick</span><span class="params">(AdapterView&lt;?&gt; parent, View view,</span></span><br><span class="line"><span class="params">			<span class="type">int</span> position, <span class="type">long</span> id)</span> &#123;</span><br><span class="line">		<span class="type">Item</span> <span class="variable">item</span> <span class="operator">=</span> parent.getAdapter().getItem(position);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>原因在源码中有比较清晰的解释： </p>
+<p>当有headerView被添加时，实际传递给ListView的adapter被包装，parent.getAdapter()返回真实被 ListView 使用的 Adapter（HeaderViewListAdapter），HeaderViewListAdapter的getItem(int)方法处理了position的问题。 </p>
+<h2 id="三，LayoutInflater的infalte"><a href="#三，LayoutInflater的infalte" class="headerlink" title="三，LayoutInflater的infalte()"></a>三，LayoutInflater的infalte()</h2><p>用来呼应第一个问题。LayoutInflater的作用很简单，就是将XML的布局文件“翻译”成相应的View对象，而且出于性能的考虑，LayoutInflater只能处理编译后的XML文件，而不能处理通常明文编码的XML文件。<br>最常用的一个方法： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">View <span class="title function_">inflate</span><span class="params">(<span class="type">int</span> resource, ViewGroup root, <span class="type">boolean</span> attachToRoot)</span></span><br></pre></td></tr></table></figure>
+
+<p>其中： </p>
+<pre><code>resource是布局文件ID 
+root是父ViewGroup对象， 
+attachToRoot是是否将“翻译”出来的View添加到上面的root中 
+</code></pre>
+<p>root和attachToRoot是共同作用的： </p>
+<ol>
+<li>有root，同时attachToRoot为false，那么inflate()返回的就是“翻译”得到的view </li>
+<li>有root，同时attachToRoot为true，那么inflate()就是将“翻译”得到的view添加到root后，然后返回root </li>
+<li>无root，同时attachToRoot为false，那么inflate()返回的就是“翻译”得到的view。 </li>
+<li>无root，同时attachToRoot为true，报错。</li>
+</ol>
+<p>另外，root还有一个重要的作用就是为“翻译”得到的view添加合适的LayoutParam，并且如果并不想将得到的View添加到root的话，传递何种root是并没有要求的，比如： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">View</span> <span class="variable">view</span> <span class="operator">=</span> mLayoutInflater.inflate(R.layout.header, <span class="keyword">new</span> <span class="title class_">ListView</span>(mContext), <span class="literal">false</span>);</span><br><span class="line"><span class="type">View</span> <span class="variable">view</span> <span class="operator">=</span> mLayoutInflater.inflate(R.layout.header, <span class="keyword">new</span> <span class="title class_">LinearLayout</span>(mContext), <span class="literal">false</span>);</span><br><span class="line"><span class="type">View</span> <span class="variable">view</span> <span class="operator">=</span> mLayoutInflater.inflate(R.layout.header, <span class="keyword">new</span> <span class="title class_">RelativeLayout</span>(mContext), <span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+
+<p>上面得到的View，除了view的LayoutParam分别为AbsListView.LayoutParams，LinearLayout.LayoutParams，RelativeLayout.LayoutParams之外，内容都一致。 </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2013/08/20/android/2013/2013-08-20-Android-LIstView-HeaderView/" data-id="cluh0142000cx38wbg1caev14" data-title="LIstView的HeaderView" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-android/2013/2013-08-05-Android-EditText-input" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2013/08/05/android/2013/2013-08-05-Android-EditText-input/" class="article-date">
+  <time class="dt-published" datetime="2013-08-05T04:46:04.000Z" itemprop="datePublished">2013-08-05</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2013/08/05/android/2013/2013-08-05-Android-EditText-input/">EditText--输入法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="1-默认显示输入法的数字键盘-但是同时允许输入文本"><a href="#1-默认显示输入法的数字键盘-但是同时允许输入文本" class="headerlink" title="1. 默认显示输入法的数字键盘,但是同时允许输入文本."></a>1. 默认显示输入法的数字键盘,但是同时允许输入文本.</h2><p>初始化的时候调用setRawInputType来设置输入法类型<br>EditText editText &#x3D; (EditText) findViewById(R.id.x_edit_id);<br>edit.setRawInputType(EditorInfo.TYPE_CLASS_NUMBER);</p>
+<h2 id="2-上接-1-动态修改默认的输入法类型"><a href="#2-上接-1-动态修改默认的输入法类型" class="headerlink" title="2. 上接(1), 动态修改默认的输入法类型"></a>2. 上接(1), 动态修改默认的输入法类型</h2><p>修改方式参考(1),但是动态修改的之后需要重启一下InputMethodManager<br>示例: </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="type">EditText</span> <span class="variable">editText</span> <span class="operator">=</span> (EditText) findViewById(R.id.x_edit_1);</span><br><span class="line"></span><br><span class="line">findViewById(R.id.x_show_number).setOnClickListener(<span class="keyword">new</span> <span class="title class_">OnClickListener</span>() &#123;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onClick</span><span class="params">(View v)</span> &#123;</span><br><span class="line">		editText.setRawInputType(EditorInfo.TYPE_CLASS_NUMBER);</span><br><span class="line">		InputMethodManager inputMethodManager=(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);</span><br><span class="line">        <span class="keyword">if</span> (inputMethodManager != <span class="literal">null</span>)&#123;</span><br><span class="line">        	inputMethodManager.restartInput(editText);</span><br><span class="line">        &#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">findViewById(R.id.x_show_text).setOnClickListener(<span class="keyword">new</span> <span class="title class_">OnClickListener</span>() &#123;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onClick</span><span class="params">(View v)</span> &#123;</span><br><span class="line">		editText.setRawInputType(EditorInfo.TYPE_CLASS_TEXT);</span><br><span class="line">		InputMethodManager inputMethodManager=(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);</span><br><span class="line">        <span class="keyword">if</span> (inputMethodManager != <span class="literal">null</span>)&#123;</span><br><span class="line">        	inputMethodManager.restartInput(editText);</span><br><span class="line">        &#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-setRawInputType与setInputType的区别"><a href="#3-setRawInputType与setInputType的区别" class="headerlink" title="3.setRawInputType与setInputType的区别"></a>3.setRawInputType与setInputType的区别</h2><p>setRawInputType只是修改输入法类型,不做其他的改动.  setInputType除了修改输入法类型外,还会修改KeyListener.<br>换句话说,就是setRawInputType修改输入法的类型,setInputType修改输入框的类型.</p>
+<p>输入法面板的显示由输入法类型类型控制,内容的过滤由KeyListener控制.所以设置下面的调用是不同的: </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">edit.setRawInputType(EditorInfo.TYPE_CLASS_NUMBER)</span><br></pre></td></tr></table></figure>
+
+<p>只是设置输入法类型为数字类型,于是输入法面板会弹出数字面板.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setInputType(EditorInfo.TYPE_CLASS_NUMBER)</span><br></pre></td></tr></table></figure>
+
+<p>除了设置输入法类型为数字类型,同时会将非数字的输入全部过滤掉,因此只能输入纯数字.</p>
+<h2 id="4-设置输入法面板类型"><a href="#4-设置输入法面板类型" class="headerlink" title="4.设置输入法面板类型"></a>4.设置输入法面板类型</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">EditText</span> <span class="variable">editText</span> <span class="operator">=</span> (EditText) findViewById(R.id.x_edit_id);</span><br><span class="line">editText.setRawInputType(Configuration.KEYBOARD_12KEY);</span><br></pre></td></tr></table></figure>
+
+<p>但是各输入法实现不是很标准,所以使用也不是非常可靠. </p>
+<pre><code>KEYBOARD_12KEY:设备有一个12键的物理键盘,就是以前功能机的那种数字键盘. 
+KEYBOARD_NOKEYS):设备有一个没有物理键盘. 
+KEYBOARD_QWERTY):设备有一个QWERTY键的物理键盘,比如Moto里程碑系列. 
+KEYBOARD_UNDEFINED):未定义 
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2013/08/05/android/2013/2013-08-05-Android-EditText-input/" data-id="cluh0142000d038wb6zi24h8h" data-title="EditText--输入法" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-android/2013/2013-07-30-Android-dialog-Dim" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2013/07/30/android/2013/2013-07-30-Android-dialog-Dim/" class="article-date">
+  <time class="dt-published" datetime="2013-07-30T04:46:04.000Z" itemprop="datePublished">2013-07-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2013/07/30/android/2013/2013-07-30-Android-dialog-Dim/">Android 自定义对话框--模拟Dim</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>Android 在弹出 Dialog 的时候,默认在 dialog 背后会产生办透明的模糊效果(backgroundDim).这个dim层可以调整模糊值:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">&quot;android:backgroundDimEnabled&quot;</span>&gt;</span>true<span class="tag">&lt;/<span class="name">item</span>&gt;</span><span class="comment">&lt;!-- 开启背景模糊 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">&quot;android:backgroundDimAmount&quot;</span>&gt;</span>0.5<span class="tag">&lt;/<span class="name">item</span>&gt;</span><span class="comment">&lt;!-- 背景模糊值 --&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>现在的问题是要改变此dim层的颜色,我没有找到修改这个dim color 的方法,因此只能弄点偏门了.</p>
+<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法:"></a>解决办法:</h2><p>将对话框覆盖整个activity,然后自定义背景.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MockDimDialog</span> <span class="keyword">extends</span> <span class="title class_">Dialog</span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> <span class="title function_">MockDimDialog</span><span class="params">(Context context)</span> &#123;</span><br><span class="line">		<span class="built_in">super</span>(context, R.style.MockDimDialog);</span><br><span class="line">		setContentView(R.layout.sample_segment_dialog);</span><br><span class="line">		WindowManager.<span class="type">LayoutParams</span> <span class="variable">wlp</span> <span class="operator">=</span> getWindow().getAttributes();</span><br><span class="line">		wlp.width = WindowManager.LayoutParams.MATCH_PARENT;</span><br><span class="line">		wlp.height = WindowManager.LayoutParams.MATCH_PARENT;</span><br><span class="line">		<span class="comment">//下面两行用来保留status bar,不然就全屏了</span></span><br><span class="line">		wlp.gravity = Gravity.TOP;</span><br><span class="line">		wlp.y = <span class="number">1</span>;</span><br><span class="line">		getWindow().setAttributes(wlp);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>样式:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">&quot;MockDimDialog&quot;</span> <span class="attr">parent</span>=<span class="string">&quot;android:Theme.Dialog&quot;</span>&gt;</span><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">&quot;android:windowNoTitle&quot;</span>&gt;</span>true<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">&quot;android:backgroundDimEnabled&quot;</span>&gt;</span>false<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">&quot;android:windowBackground&quot;</span>&gt;</span>@color/dim<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;dim&quot;</span>&gt;</span>#55ff6600<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>自定义的dialog view:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&lt;LinearLayout xmlns:android=<span class="string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="line">    xmlns:tools=<span class="string">&quot;http://schemas.android.com/tools&quot;</span></span><br><span class="line">    android:layout_width=<span class="string">&quot;match_parent&quot;</span></span><br><span class="line">    android:layout_height=<span class="string">&quot;match_parent&quot;</span></span><br><span class="line">    android:gravity=<span class="string">&quot;center&quot;</span></span><br><span class="line">    android:orientation=<span class="string">&quot;vertical&quot;</span> &gt;</span><br><span class="line"></span><br><span class="line">    &lt;ProgressBar</span><br><span class="line">        style=<span class="string">&quot;@android:style/Widget.ProgressBar&quot;</span></span><br><span class="line">        android:layout_width=<span class="string">&quot;wrap_content&quot;</span></span><br><span class="line">        android:layout_height=<span class="string">&quot;wrap_content&quot;</span> /&gt;</span><br><span class="line"></span><br><span class="line">    &lt;TextView</span><br><span class="line">        android:layout_width=<span class="string">&quot;wrap_content&quot;</span></span><br><span class="line">        android:layout_height=<span class="string">&quot;wrap_content&quot;</span></span><br><span class="line">        android:layout_marginTop=<span class="string">&quot;4dip&quot;</span></span><br><span class="line">        android:textSize=<span class="string">&quot;20dip&quot;</span></span><br><span class="line">        android:textColor=<span class="string">&quot;#707070&quot;</span></span><br><span class="line">        android:text=<span class="string">&quot;Loading...&quot;</span> /&gt;</span><br><span class="line"></span><br><span class="line">&lt;/LinearLayout&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="显示效果"><a href="#显示效果" class="headerlink" title="显示效果:"></a>显示效果:</h2><p><img src="http://static.oschina.net/uploads/space/2013/0730/095642_ZMnX_93688.png" alt="1"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2013/07/30/android/2013/2013-07-30-Android-dialog-Dim/" data-id="cluh0141z00cu38wbhb3p0ksa" data-title="Android 自定义对话框--模拟Dim" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-android/2013/2013-07-11-Android-ADT-template" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2013/07/11/android/2013/2013-07-11-Android-ADT-template/" class="article-date">
+  <time class="dt-published" datetime="2013-07-11T04:46:04.000Z" itemprop="datePublished">2013-07-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2013/07/11/android/2013/2013-07-11-Android-ADT-template/">Android 自定义ADT模板</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>ADT模板就是在Eclipse中使用向导新建Android工程或者Android组件的时候使用的模板。ADT模板的特点：</p>
+<ol>
+<li>可以通过简单的可视化配置[后面称之为UI parameters]来生成Android代码和资源样本</li>
+<li>集成到Eclipse ADT中</li>
+<li>FreeMarker驱动</li>
+</ol>
+<h2 id="Android的默认模板"><a href="#Android的默认模板" class="headerlink" title="Android的默认模板"></a>Android的默认模板</h2><p>SDK下载完成之后，一般自带了一部分模板，模板的位置为：</p>
+<pre><code>$your_android_sdk_dir/tools/templates
+</code></pre>
+<p>模板的类型有： </p>
+<ol>
+<li>Android Application Templates<br>这个模板是使用Eclipse的新建Android工程向导[包括Android project，lib project和test project]时使用的模板类型 </li>
+<li>Android Activity Templates<br>这个显然就是使用Eclipse的新建Android Activity向导时使用的模板类型 </li>
+<li>Android Object Templates<br>这个就是创建其他一些android组件向导时使用的一些模板[File -&gt; New -&gt; Other -&gt; Android&#x2F;Android Object 可以打开此类向导]</li>
+</ol>
+<h2 id="Activity示例"><a href="#Activity示例" class="headerlink" title="Activity示例"></a>Activity示例</h2><p>打开新建Android Activity向导，ADT插件首先就会列出一些可选模板让我们选择，如下：</p>
+<p><img src="http://static.oschina.net/uploads/space/2013/0711/104913_6mBB_93688.png" alt="1"></p>
+<p>我们再打开 $your_android_sdk_dir&#x2F;tools&#x2F;templates&#x2F;activities 文件夹，会发现正好和向导的选择一一对应，不过要指出的是，模板文件夹的名字并不是模板的名字，这里只是恰好一样而已。<br>至于其他的Application Templates和Object Templates的基本情况都是一样的。</p>
+<h2 id="模板的工作流程"><a href="#模板的工作流程" class="headerlink" title="模板的工作流程"></a>模板的工作流程</h2><p><img src="http://static.oschina.net/uploads/space/2013/0711/103344_TJJ9_93688.png" alt="2"></p>
+<h2 id="模板的具体构成"><a href="#模板的具体构成" class="headerlink" title="模板的具体构成"></a>模板的具体构成</h2><p>下面结合Activity模板来稍微说明下。开始之前，除了必要的Eclipse + ADT plugin + Android SDK，我们需要一个辅助工具——FreeMarker IDE<br>FreeMarker IDE是个eclipse的插件，安装过程在FreeMarker的官网有介绍。 </p>
+<p>官方提供的模板就是最好的资料，为了避免破坏原有的模板，我们新建一个模板工程：<br>File -&gt; New -&gt;  Project -&gt; General&#x2F;Project:<br>把新工程Xe_CustomActivity建立在了SDK的templates里面，然后将BlankActivity文件夹中的内容拷贝到新工程里面，这样就可以在eclipse里面直接使用了。 </p>
+<p><img src="http://static.oschina.net/uploads/space/2013/0711/103605_lhLb_93688.png" alt="3"></p>
+<p>我们重复一下上面的使用向导创建Activity的步骤，会发现有两个BlankActivity，其中一个是SDK自带的，一个是我们刚才创建的，这里再次表明文件夹的名字和模板名字是两码事。 </p>
+<p><img src="http://static.oschina.net/uploads/space/2013/0711/104934_zf4y_93688.png" alt="4"></p>
+<p>我们查看一下新工程的大致目录结构： </p>
+<pre><code>project_name:
+...root
+......AndroidManifest.xml.ftl
+......res
+.........layout
+............*.ftl/*.*
+......src
+.........app_package
+............*.ftl/*.*
+...template.xml
+...recipe.xml.ftl
+...globals.xml.ftl
+...*.png
+</code></pre>
+<p>附带说明：.ftl表示FreeMarker模板语言</p>
+<h2 id="文件说明"><a href="#文件说明" class="headerlink" title="文件说明"></a>文件说明</h2><p>template.xml</p>
+<p>可以说是模板的模板，定义了模板的流 程框架 基本结构：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">template</span></span></span><br><span class="line"><span class="tag">    <span class="attr">format</span>=<span class="string">&quot;3&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">revision</span>=<span class="string">&quot;2&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">name</span>=<span class="string">&quot;Blank Activity&quot;</span> &lt;!<span class="attr">--</span> <span class="attr">在向导中显示的模板名称</span> <span class="attr">--</span>&gt;</span></span><br><span class="line">    description=&quot;Creates a new blank activity, with an action bar and optional navigational elements such as tabs or horizontal swipe.&quot;&gt;</span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span> <span class="attr">name</span>=<span class="string">&quot;android-support-v4&quot;</span> <span class="attr">revision</span>=<span class="string">&quot;8&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">category</span> <span class="attr">value</span>=<span class="string">&quot;Activities&quot;</span> /&gt;</span> <span class="comment">&lt;!-- 模板类型 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">parameter</span></span></span><br><span class="line"><span class="tag">        <span class="attr">id</span>=<span class="string">&quot;activityClass&quot;</span> &lt;!<span class="attr">--</span> <span class="attr">参数名</span>，<span class="attr">在ftl文件中可以用</span>$&#123;<span class="attr">activityClass</span>&#125;<span class="attr">获取参数值</span> <span class="attr">--</span>&gt;</span></span><br><span class="line">        name=&quot;Activity Name&quot; <span class="comment">&lt;!-- UI 界面输入框前的提示标签值 --&gt;</span></span><br><span class="line">        type=&quot;string&quot; <span class="comment">&lt;!-- 参数值类型 --&gt;</span></span><br><span class="line">        constraints=&quot;class|unique|nonempty&quot; <span class="comment">&lt;!-- 参数值约束条件，这里的约束是必须是类名，唯一，非空 --&gt;</span></span><br><span class="line">        suggest=&quot;$&#123;layoutToActivity(layoutName)&#125;&quot; <span class="comment">&lt;!-- 自动提示，比如输入layout的值可以自动生成activityClass --&gt;</span></span><br><span class="line">        default=&quot;MainActivity&quot; <span class="comment">&lt;!--默认值 --&gt;</span></span><br><span class="line">        help=&quot;The name of the activity class to create&quot; /&gt; <span class="comment">&lt;!-- 向导对话框底部的帮助性文字 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">thumbs</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">thumb</span>&gt;</span>template_blank_activity.png<span class="tag">&lt;/<span class="name">thumb</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">thumb</span> <span class="attr">navType</span>=<span class="string">&quot;none&quot;</span>&gt;</span>template_blank_activity.png<span class="tag">&lt;/<span class="name">thumb</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">thumb</span> <span class="attr">navType</span>=<span class="string">&quot;tabs&quot;</span>&gt;</span>template_blank_activity_tabs.png<span class="tag">&lt;/<span class="name">thumb</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">thumb</span> <span class="attr">navType</span>=<span class="string">&quot;tabs_pager&quot;</span>&gt;</span>template_blank_activity_tabs_pager.png<span class="tag">&lt;/<span class="name">thumb</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">thumb</span> <span class="attr">navType</span>=<span class="string">&quot;pager_strip&quot;</span>&gt;</span>template_blank_activity_pager.png<span class="tag">&lt;/<span class="name">thumb</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">thumb</span> <span class="attr">navType</span>=<span class="string">&quot;dropdown&quot;</span>&gt;</span>template_blank_activity_dropdown.png<span class="tag">&lt;/<span class="name">thumb</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">thumbs</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">globals</span> <span class="attr">file</span>=<span class="string">&quot;globals.xml.ftl&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">execute</span> <span class="attr">file</span>=<span class="string">&quot;recipe.xml.ftl&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="几个重要的节点："><a href="#几个重要的节点：" class="headerlink" title="几个重要的节点："></a>几个重要的节点：</h2><p>category节点：表示模板的类型，可选的值包括三种：</p>
+<ol>
+<li>Applications表示Android Application Templates</li>
+<li>Activities表示Android Activities Templates</li>
+<li>UI Component表示Android Object Templates中那些带有试图的UI组件模板，所以类似Service这种没有界面的组件模板中就没有这个节点了。</li>
+</ol>
+<h4 id="parameter节点：定义了图形配置界面的用户输入参数项。"><a href="#parameter节点：定义了图形配置界面的用户输入参数项。" class="headerlink" title="parameter节点：定义了图形配置界面的用户输入参数项。"></a>parameter节点：定义了图形配置界面的用户输入参数项。</h4><p>参数类型由parameter节点的type属性定义，常见的类型有：<br>string——表现为输入框<br>boolean——表现为勾选框<br>enum——表现为下拉选择框</p>
+<h4 id="thumbs节点：定义了静态预览图。"><a href="#thumbs节点：定义了静态预览图。" class="headerlink" title="thumbs节点：定义了静态预览图。"></a>thumbs节点：定义了静态预览图。</h4><p>对照Activity向导可以很容易的知道各个节点的意思：</p>
+<p><img src="http://static.oschina.net/uploads/space/2013/0711/103850_AVId_93688.png" alt="6"></p>
+<p><globals file="globals.xml.ftl" />就是将工程定义的全局变量包含进来。</p>
+<p><execute file="recipe.xml.ftl" />表示开始执行模板渲染。</p>
+<p>因此，template.xml的结构和作用可以描述为：</p>
+<p><img src="http://static.oschina.net/uploads/space/2013/0711/104259_jGWX_93688.png" alt="7"></p>
+<h4 id="globals-xml-ftl"><a href="#globals-xml-ftl" class="headerlink" title="globals.xml.ftl"></a>globals.xml.ftl</h4><p>这个文件的目的只有一个，就是提供全局变量[Global Values]，简单示例：</p>
+<pre><code>&lt;global id=&quot;resOut&quot; value=&quot;res&quot; /&gt;
+&lt;global id=&quot;menuName&quot; value=&quot;$&#123;classToResource(activityClass)&#125;&quot; /&gt;
+</code></pre>
+<p>其他文件中的引用方式就是${resOut}以及${menuName}等等 </p>
+<h4 id="recipe-xml-ftl"><a href="#recipe-xml-ftl" class="headerlink" title="recipe.xml.ftl"></a>recipe.xml.ftl</h4><p>菜单模板，名字挺形象的，定义流程执行的步骤，一个典型的recipe.xml.ftl文件：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">recipe</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">merge</span> <span class="attr">from</span>=<span class="string">&quot;AndroidManifest.xml.ftl&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">copy</span> <span class="attr">from</span>=<span class="string">&quot;res/values-v14/styles_ics.xml&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">to</span>=<span class="string">&quot;res/values-v14/styles.xml&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">instantiate</span> <span class="attr">from</span>=<span class="string">&quot;res/menu/main.xml.ftl&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">to</span>=<span class="string">&quot;res/menu/$&#123;menuName&#125;.xml&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">open</span> <span class="attr">file</span>=<span class="string">&quot;res/layout/$&#123;layoutName&#125;.xml&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">recipe</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到recipe.xml.ftl使用了许多变量[后文称之为模板变量]，那么这些变量来自那些地方呢？主要来自两个方面： </p>
+<ol>
+<li>UI Parameters </li>
+<li>Global Values</li>
+</ol>
+<h2 id="模板变量数据流向"><a href="#模板变量数据流向" class="headerlink" title="模板变量数据流向"></a>模板变量数据流向</h2><p><img src="http://static.oschina.net/uploads/space/2013/0711/104451_SudQ_93688.png" alt="8"></p>
+<h2 id="定制化自己的ADT模板，简单上手"><a href="#定制化自己的ADT模板，简单上手" class="headerlink" title="定制化自己的ADT模板，简单上手"></a>定制化自己的ADT模板，简单上手</h2><ol>
+<li>我们将所有的模板帮助提示都改成中文，在template.xml文件中，主要是修改description的属性值：</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">parameter</span></span></span><br><span class="line"><span class="tag">    <span class="attr">id</span>=<span class="string">&quot;activityClass&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">name</span>=<span class="string">&quot;Activity名称&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">type</span>=<span class="string">&quot;string&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">constraints</span>=<span class="string">&quot;class|unique|nonempty&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">suggest</span>=<span class="string">&quot;$&#123;layoutToActivity(layoutName)&#125;&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">default</span>=<span class="string">&quot;MainActivity&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">help</span>=<span class="string">&quot;Activity的类名&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>一般我不会直接使用android默认的titlebar，而会自己定义一个TextView来定制title,因此我希望在向导中添加一个Page Title配置项，在template.xml添加下面的内容：</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">parameter</span></span></span><br><span class="line"><span class="tag">    <span class="attr">id</span>=<span class="string">&quot;pageTitle&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">name</span>=<span class="string">&quot;My Page Title&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">type</span>=<span class="string">&quot;string&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">constraints</span>=<span class="string">&quot;nonempty&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">default</span>=<span class="string">&quot;默认标题&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">suggest</span>=<span class="string">&quot;$&#123;activityClass&#125;_page_title&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">help</span>=<span class="string">&quot;自定义页面的标题&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="http://static.oschina.net/uploads/space/2013/0711/110152_2RiN_93688.png" alt="9"></p>
+<p>在默认的activity布局文件[可以是root&#x2F;res&#x2F;layout&#x2F;activity_simple.xml.ftl]中添加一个TextView </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">	<span class="attr">android:background</span>=<span class="string">&quot;#ff5500&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:text</span>=<span class="string">&quot;$&#123;pageTitle&#125;&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>3.app中会引用其他的一些库，这些库通常也会带有很多activity布局文件，为了和自己的布局文件去分开，所以我通常在自己的布局文件前面添加一个前缀，可以这么修改： </p>
+<pre><code>1. 定义一个前缀全局变量 
+2. 分别在template.xml和recipe.xml.ftl修改相应的名称
+</code></pre>
+<h4 id="globals-xml-ftl-1"><a href="#globals-xml-ftl-1" class="headerlink" title="globals.xml.ftl"></a>globals.xml.ftl</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">global</span> <span class="attr">id</span>=<span class="string">&quot;xe_prefix&quot;</span> <span class="attr">value</span>=<span class="string">&quot;xe&quot;</span> /&gt;</span></span><br><span class="line">recipe.xml.ftl： </span><br><span class="line"><span class="tag">&lt;<span class="name">instantiate</span> <span class="attr">from</span>=<span class="string">&quot;res/menu/main.xml.ftl&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">to</span>=<span class="string">&quot;$&#123;resOut&#125;/menu/$&#123;xe_prefix&#125;_$&#123;menuName&#125;.xml&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">instantiate</span> <span class="attr">from</span>=<span class="string">&quot;res/layout/activity_simple.xml.ftl&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">to</span>=<span class="string">&quot;$&#123;resOut&#125;/layout/$&#123;xe_prefix&#125;_$&#123;layoutName&#125;.xml&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>root&#x2F;src&#x2F;app_package&#x2F;SimpleActivity.java.ftl: </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(Bundle savedInstanceState)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>.onCreate(savedInstanceState);</span><br><span class="line">    setContentView(R.layout.$&#123;xe_prefix&#125;_$&#123;layoutName&#125;);</span><br><span class="line">    &lt;#<span class="keyword">if</span> parentActivityClass != <span class="string">&quot;&quot;</span>&gt;</span><br><span class="line">    <span class="comment">// Show the Up button in the action bar.</span></span><br><span class="line">    setupActionBar();</span><br><span class="line">    &lt;/#<span class="keyword">if</span>&gt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>附录</p>
+<ol>
+<li>classToResource等方法定义在ADT插件中，具体源码：<br><a target="_blank" rel="noopener" href="https://android.googlesource.com/platform/sdk/+/7dd444ea0125e50a5e88604afb6de43e80b7c270/eclipse/plugins/com.android.ide.eclipse.adt/src/com/android/ide/eclipse/adt">https://android.googlesource.com/platform/sdk/+/7dd444ea0125e50a5e88604afb6de43e80b7c270/eclipse/plugins/com.android.ide.eclipse.adt/src/com/android/ide/eclipse/adt </a></li>
+<li>FreeMarker参考 <a target="_blank" rel="noopener" href="http://freemarker.org/index.html">http://freemarker.org/index.html</a> ，<br>中文文档： <a target="_blank" rel="noopener" href="http://jaist.dl.sourceforge.net/project/freemarker/chinese-manual/FreeMarker_Manual_zh_CN.pdf">http://jaist.dl.sourceforge.net/project/freemarker/chinese-manual/FreeMarker_Manual_zh_CN.pdf</a><br>参考 <a target="_blank" rel="noopener" href="http://es.droidcon.com/wp-content/uploads/2012/12/Custom-Android-Code-Templates.pdf">《Custom Android Code Templates》</a></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2013/07/11/android/2013/2013-07-11-Android-ADT-template/" data-id="cluh0141z00cr38wb6nn9g8z9" data-title="Android 自定义ADT模板" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-android/2013/2013-06-03-Android-meta-data" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2013/06/03/android/2013/2013-06-03-Android-meta-data/" class="article-date">
+  <time class="dt-published" datetime="2013-06-03T04:46:04.000Z" itemprop="datePublished">2013-06-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android/">android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2013/06/03/android/2013/2013-06-03-Android-meta-data/">Android meta-data小结</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>meta-data就像其名一样，主要用来定义一些组件相关的配置值。</p>
+<p>按照官方定义，metadata是一组供父组件使用的名值对（name-value pair），因此相应的meta-data元素应该定义在相应的组件中。<br>即如果想在activity中使用metadata，那么meta-data必须定义在AndroidManifest.xml的activity声明中。</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>所有的名值对被包装成Bundle供组件使用，因此使用方式同Bundle。metadata普通值由value属性给出，资源ID由resource属性给出。比如我们定义资源:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;x_key&quot;</span>&gt;</span>resource key<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>&#x2F;&#x2F;R</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> ic_launcher=<span class="number">0x7f020000</span>;</span><br></pre></td></tr></table></figure>
+
+<p>定义metadata</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta-data</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:name</span>=<span class="string">&quot;com.xesam.key_1&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:value</span>=<span class="string">&quot;x_key&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta-data</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:name</span>=<span class="string">&quot;com.xesam.key_2&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:value</span>=<span class="string">&quot;@string/x_key&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta-data</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:name</span>=<span class="string">&quot;com.xesam.img&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:resource</span>=<span class="string">&quot;@drawable/ic_launcher&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>那么有：</p>
+<pre><code>metadata.getString(&quot;com.xesam.key_1&quot;) ==&gt; &quot;x_key&quot;
+metadata.getString(&quot;com.xesam.key_2&quot;) ==&gt; &quot;resource key&quot;
+metadata.getInt(&quot;com.xesam.img&quot;)      ==&gt; 0x7f020000
+</code></pre>
+<p>由于resource指向资源ID，因此用metadata可以定义一些稍微复杂的值。 </p>
+<p>比如要定义一副图片，则可以用这个，然后在代码中用getInt()取出图片的ID：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">imageId</span> <span class="operator">=</span> meta.getInt(<span class="string">&quot;com.xesam.img&quot;</span>);</span><br><span class="line">((ImageView) findViewById(R.id.img)).setImageResource(imageId);</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用问题"><a href="#使用问题" class="headerlink" title="使用问题"></a>使用问题</h3><p>形如：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta-data</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:name</span>=<span class="string">&quot;com.xesam.key_1&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:value</span>=<span class="string">&quot;000&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>类似这样的值如果使用bundle.getString()的话是不起作用的，因为Bundle中使用的是形如： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> (String) o;</span><br></pre></td></tr></table></figure>
+
+<p>的代码获取一个StringValue值的，但是在将metadata包装成bundle的时候，”000”被解析成整数0，<br>因此bundle.getString(“com.xesam.key_1”)返回的是(String)0，显然，java是不允许这样的，因此最后得到的是null。 话说android为什么不是用String.valueOf()或者obj.toString()呢？<br>为了避免这种情况：<br>1，可以在形如000的字符串前面放个\0空字符，强迫android按照字符串解析000。<br>2，在资源文件中指定需要的值，然后在metadata的value中引用此值。</p>
+<p>示例代码</p>
+<p>附：</p>
+<p>&#x2F;&#x2F;在Activity应用<meta-data>元素。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ActivityInfo</span> <span class="variable">info</span> <span class="operator">=</span> <span class="built_in">this</span>.getPackageManager()</span><br><span class="line">        .getActivityInfo(getComponentName(),PackageManager.GET_META_DATA);</span><br><span class="line">info.metaData.getString(<span class="string">&quot;meta_name&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//在application应用&lt;meta-data&gt;元素。</span></span><br><span class="line"><span class="type">ApplicationInfo</span> <span class="variable">appInfo</span> <span class="operator">=</span> <span class="built_in">this</span>.getPackageManager()</span><br><span class="line">        .getApplicationInfo(getPackageName(),PackageManager.GET_META_DATA);</span><br><span class="line">appInfo.metaData.getString(<span class="string">&quot;meta_name&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//在service应用&lt;meta-data&gt;元素。</span></span><br><span class="line"><span class="type">ComponentName</span> <span class="variable">cn</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ComponentName</span>(<span class="built_in">this</span>, MetaDataService.class);</span><br><span class="line"><span class="type">ServiceInfo</span> <span class="variable">info</span> <span class="operator">=</span> <span class="built_in">this</span>.getPackageManager().getServiceInfo(cn, PackageManager.GET_META_DATA);</span><br><span class="line">info.metaData.getString(<span class="string">&quot;meta_name&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//在receiver应用&lt;meta-data&gt;元素。</span></span><br><span class="line"><span class="type">ComponentName</span> <span class="variable">cn</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ComponentName</span>(context, MetaDataReceiver.class);</span><br><span class="line"><span class="type">ActivityInfo</span> <span class="variable">info</span> <span class="operator">=</span> context.getPackageManager().getReceiverInfo(cn, PackageManager.GET_META_DATA);</span><br><span class="line">info.metaData.getString(<span class="string">&quot;meta_name&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>meta-data官方地址 <a target="_blank" rel="noopener" href="http://developer.android.com/reference/android/os/Bundle.html">http://developer.android.com/reference/android/os/Bundle.html</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://xesam.github.io/2013/06/03/android/2013/2013-06-03-Android-meta-data/" data-id="cluh0141y00co38wbcxu2gctu" data-title="Android meta-data小结" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/14/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><a class="page-number" href="/page/17/">17</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/16/">下一页 &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/chrome/">chrome</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/computer/">computer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/fe/">fe</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/introspection/">introspection</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/math/">math</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/physics/">physics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/product/">product</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/software/">software</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/talk/">talk</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c51/" rel="tag">c51</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/computer/" rel="tag">computer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fe/" rel="tag">fe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/introspection/" rel="tag">introspection</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/math/" rel="tag">math</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memo/" rel="tag">memo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/product/" rel="tag">product</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rx/" rel="tag">rx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/" rel="tag">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/talk/" rel="tag">talk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/volley/" rel="tag">volley</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/c51/" style="font-size: 11.25px;">c51</a> <a href="/tags/chrome/" style="font-size: 11.25px;">chrome</a> <a href="/tags/computer/" style="font-size: 17.5px;">computer</a> <a href="/tags/fe/" style="font-size: 13.75px;">fe</a> <a href="/tags/introspection/" style="font-size: 10px;">introspection</a> <a href="/tags/java/" style="font-size: 13.75px;">java</a> <a href="/tags/javascript/" style="font-size: 18.75px;">javascript</a> <a href="/tags/math/" style="font-size: 10px;">math</a> <a href="/tags/memo/" style="font-size: 10px;">memo</a> <a href="/tags/product/" style="font-size: 15px;">product</a> <a href="/tags/rx/" style="font-size: 10px;">rx</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/talk/" style="font-size: 16.25px;">talk</a> <a href="/tags/volley/" style="font-size: 11.25px;">volley</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">三月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/04/">四月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/">《其实你不懂进化论》简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/04/computer/2022-03-04-test-the-art-of-unit-testing/">单元测试的艺术-第三版 简记</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/">网民的故事分析-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/01/talk/2021-12-01-talk-book-user-stories-applied/">用户故事与敏捷方法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/03/talk/2021-11-03-talk-logic-1/">不令人讨厌的分析逻辑</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 xesam<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
