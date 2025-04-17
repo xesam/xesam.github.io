@@ -14,3 +14,4 @@ public/
 .deploy*/
 .deploy_git
 _multiconfig.yml
+pnpm-lock.yaml
