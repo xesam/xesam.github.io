@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      远程调用 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">远程调用</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/talk/" title="talk">
+                    <b>#</b> talk
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/talk/" title="talk">
+                    #talk
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>首先，定义一下本文中的几个概念：</p>
+<pre><code>远程调用：跨进程的方法调用
+客户进程：发起方法调用的进程
+服务进程：实际实现方法的进程
+</code></pre>
+<p>如果需要设计一个“远程调用”的机制，我们需要考虑以下几个问题：</p>
+<ol>
+<li>客户进程如何发起方法调用</li>
+<li>服务进程如何知道要调用的方法名，如何接收方法参数</li>
+<li>客户进程与服务进程如何通信</li>
+</ol>
+<p>基础模式如下：</p>
+<p><img src="/image/sf_remote_1.png" alt="1"></p>
+<span id="more"></span>
+
+<h2 id="HTTP"><a href="#HTTP" class="headerlink" title="HTTP"></a>HTTP</h2><p>如果按照这里的定义，HTTP 访问本质上也是一个远程调用。针对 HTTP 协议规范，我们看看它的实现原理：</p>
+<ol>
+<li><p>用户在浏览器地址栏输入“<a target="_blank" rel="noopener" href="http://www.chelaile.net.cn/index.html%E2%80%9D%EF%BC%8C%E7%84%B6%E5%90%8E%E6%89%93%E5%BC%80%E4%B8%80%E4%B8%AA%E7%BD%91%E9%A1%B5">http://www.chelaile.net.cn/index.html”，然后打开一个网页</a></p>
+</li>
+<li><p>浏览器内部发起http请求</p>
+</li>
+</ol>
+<p>即：</p>
+<pre><code>GET /index.html HTTP/1.1
+Host: www.chelaile.net.cn
+</code></pre>
+<p>代码表示如下：</p>
+<pre><code>browser.open(&quot;http://www.chelaile.net.cn/index.html&quot;);
+
+browser.parse(&quot;http://www.chelaile.net.cn/index.html&quot;);
+
+data = browser.marshalling(&#123;
+    Host : www.chelaile.net.cn,
+    method : get,
+    page : /index.html
+&#125;);
+
+browser.send(data)
+</code></pre>
+<ol start="3">
+<li><p>浏览器通过 TCP 协议将 data 发往服务器</p>
+</li>
+<li><p>服务器接收 data</p>
+</li>
+</ol>
+<p>即：</p>
+<pre><code>server.receive(data);
+
+server.unmarshalling(data); //得到&#123;
+                                        Host : www.chelaile.net.cn,
+                                        method : get,
+                                        page : /index.html
+                                    &#125;
+
+server.get(&quot;/index.html&quot;);
+    
+</code></pre>
+<p>所以，远程调用的核心过程就是：</p>
+<ol>
+<li>客户进程与服务进程协商编组格式，即“协议”</li>
+<li>客户进程将“调用”本身所需的所有数据按照“协议”进行编组</li>
+<li>客户进程将编组后的数据发送给服务进程</li>
+<li>服务进程收到数据之后按照“协议”进行反编组</li>
+<li>服务进程根据反编组后的数据进行相应的方法调用</li>
+</ol>
+<p>通常来说，第3步属于底层通信细节，是“协议”独立的。所以，使用Socket即可。图形表示如下：</p>
+<p><img src="/image/sf_remote_2.png" alt="2"></p>
+<h2 id="RPC"><a href="#RPC" class="headerlink" title="RPC"></a>RPC</h2><p>RPC 的 5 个部分：</p>
+<ol>
+<li>Client</li>
+<li>Client-stub</li>
+<li>RPCRuntime</li>
+<li>Server-stub</li>
+<li>Server</li>
+</ol>
+<p>对应表示即：</p>
+<p><img src="/image/sf_remote_3.png" alt="3"></p>
+<h2 id="RMI"><a href="#RMI" class="headerlink" title="RMI"></a>RMI</h2><p>RPC 更接近于“远程调用”协议，而 RMI 就是特定的 java “远程调用”实现了。由于 java 不能进行动态类或者方法定义，所以一切调用都是基于接口来进行。</p>
+<p>一个简单的例子如下：</p>
+<ol>
+<li>约定服务接口</li>
+</ol>
+<pre><code class="language-java">
+        public interface IHelloService extends Remote &#123;
+            public String sayHello() throws RemoteException;
+        &#125;
+</code></pre>
+<ol start="2">
+<li>实现服务</li>
+</ol>
+<pre><code class="language-java">
+        public class HelloServiceImpl extends UnicastRemoteObject implements IHelloService &#123;
+            protected HelloServiceImpl() throws RemoteException &#123;
+            &#125;
+        
+            protected HelloServiceImpl(int port) throws RemoteException &#123;
+                super(port);
+            &#125;
+        
+            protected HelloServiceImpl(int port, RMIClientSocketFactory csf, RMIServerSocketFactory ssf) throws RemoteException &#123;
+                super(port, csf, ssf);
+            &#125;
+        
+            @Override
+            public String sayHello() throws RemoteException &#123;
+                return &quot;this is ServiceImpl&quot;;
+            &#125;
+        &#125;
+</code></pre>
+<ol start="3">
+<li>注册服务</li>
+</ol>
+<pre><code class="language-java">
+        public class HelloServer &#123;
+            public static void main(String[] args) &#123;
+                try &#123;
+                    IHelloService service = new HelloServiceImpl();
+                    LocateRegistry.createRegistry(20000);
+                    Naming.bind(&quot;rmi://localhost:20000/Hello&quot;, service);
+                &#125; catch (AlreadyBoundException | MalformedURLException | RemoteException e) &#123;
+                    e.printStackTrace();
+                &#125;
+                System.out.println(&quot;bind success&quot;);
+            &#125;
+        &#125;
+</code></pre>
+<ol start="4">
+<li>客户端查找服务并调用</li>
+</ol>
+<pre><code class="language-java">
+        public class HelloClient &#123;
+            public static void main(String[] args) &#123;
+                try &#123;
+                    IHelloService helloService = (IHelloService) Naming.lookup(&quot;rmi://localhost:20000/Hello&quot;);
+                    String resp = helloService.sayHello();
+                    System.out.println(resp);
+                &#125; catch (NotBoundException | MalformedURLException | RemoteException e) &#123;
+                    e.printStackTrace();
+                &#125;
+            &#125;
+        &#125;
+    
+        //output 
+        this is ServiceImpl
+</code></pre>
+<p>上面的代码中并没有具体的“编组”或者 stub 相关的代码，因为 RMI 处理了这些细节，从而在更高的层面来对外提供接口。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2016/02/23/android/2016/2016-02-23-Android-AndroidStduio-error/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/talk/" title="talk">
+                        <b>#</b> talk
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/talk/" title="talk">
+                        #talk
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2016/02/29/android/2016/2016-02-29-Android-signature/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP"><span class="toc-text">HTTP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RPC"><span class="toc-text">RPC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RMI"><span class="toc-text">RMI</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

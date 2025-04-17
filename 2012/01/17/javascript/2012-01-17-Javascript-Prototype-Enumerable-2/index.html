@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      【Javascript】Prototype源码浅析—Enumerable部分(二) 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">【Javascript】Prototype源码浅析—Enumerable部分(二)</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/javascript/" title="javascript">
+                    <b>#</b> javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/javascript/" title="javascript">
+                    #javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>剩下的方法太多，于是分作两部分。</p>
+<p>亮点就是$break和$continue，以及grep方法的思想。</p>
+<p>前面each方法中掉了一个方面没有说，就是源码中的$break和$continue。<br>这两个变量是预定义的，其作用相当于普通循环里面的break和continue语句的作用。<br>出于效率的考虑，在某些操作中并不需要完全遍历一个集合（不局限于一个数组），所以break和continue还是很必要的。</p>
+<p>对于一个循环来说，对比下面几种退出循环的方式：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> array_1 = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</span><br><span class="line"><span class="keyword">var</span> array_2 = [<span class="string">&#x27;a&#x27;</span>,<span class="string">&#x27;b&#x27;</span>,<span class="string">&#x27;c&#x27;</span>];</span><br><span class="line">(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>, len = array_1.<span class="property">length</span>; i &lt; len; i++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> j = <span class="number">0</span>, len_j = array_1.<span class="property">length</span>; i &lt; len_j; j++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="string">&#x27;c&#x27;</span> === array_2[j])&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(array_2[j]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)();<span class="comment">//a,b,a,b,a,b</span></span><br><span class="line">(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>, len = array_1.<span class="property">length</span>; i &lt; len; i++)&#123;</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">var</span> j = <span class="number">0</span>, len_j = array_1.<span class="property">length</span>; i &lt; len_j; j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(<span class="string">&#x27;c&#x27;</span> === array_2[j])&#123;</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>();</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="variable language_">console</span>.<span class="title function_">log</span>(array_2[j]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">catch</span>(e)&#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;退出一层循环&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)();<span class="comment">//a,b,&#x27;退出一层循环&#x27;,a,b,&#x27;退出一层循环&#x27;,a,b,&#x27;退出一层循环&#x27;</span></span><br><span class="line">(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>, len = array_1.<span class="property">length</span>; i &lt; len; i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">var</span> j = <span class="number">0</span>, len_j = array_1.<span class="property">length</span>; i &lt; len_j; j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(<span class="string">&#x27;c&#x27;</span> === array_2[j])&#123;</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>();</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="variable language_">console</span>.<span class="title function_">log</span>(array_2[j]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;<span class="keyword">catch</span>(e)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;退出一层循环&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)();<span class="comment">//a,b,&#x27;退出一层循环&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>当我们把错误捕获放在相应的循环层面时，就可以中断相应的循环。<br>可以实现break和break label的作用（goto）。这样的一个应用需求就是可以把中断挪到外部去，恰好符合Enumerable处的需求。</p>
+<p>回到Enumerable上来，由于each（each &#x3D; function(iterator, context){}）方法的本质就是一个循环，对于其第一个参数iterator,并不包含循环，<br>因此直接调用break语句会报语法错误，于是Prototype源码中采用上面的第二种方法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Enumerable</span>.<span class="property">each</span> = <span class="keyword">function</span>(<span class="params">iterator, context</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> index = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">_each</span>(<span class="keyword">function</span>(<span class="params">value</span>)&#123;</span><br><span class="line">            iterator.<span class="title function_">call</span>(context, value, index++);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;<span class="keyword">catch</span>(e)&#123;</span><br><span class="line">        <span class="keyword">if</span>(e != $break)&#123;</span><br><span class="line">            <span class="keyword">throw</span> e;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>一旦iterator执行中抛出一个$break，那么循环就中断。如果不是$break，那么就抛出相应错误，程序也稳定点。<br>这里的$break的定义并没有特殊要求，可以按照自己的喜好随便更改，不过意义不大。</p>
+<p>Enumerable中的某些方法在一些现代浏览器里面已经实现了（参见chrome原生方法之数组），下面是一张对比图：</p>
+<p><img src="/image/javascript_prototype_js_enumerable_1.png" alt="1"></p>
+<p>在实现这些方法时，可以借用原生方法，从而提高效率。不过源码中并没有借用原生的部分，大概是因为Enumerable除了混入Array部分外，还需要混入其他的对象中。</p>
+<p>看上面的图示明显可以看得出，each和map 的重要性，map其实本质还是each，只不过each是依次处理集合的每一项，map是在each的基础上，还把处理后的结果返回来。在Enumerable内部，map是collect方法的一个别名，另一个别名是select，其内部全部使用的是collect这个名字。</p>
+<p>检测：all | any | include</p>
+<p>这三个方法不涉及对原集合的处理，返回值均是boolean类型。</p>
+<p>all : 若 Enumerable 中的元素全部等价于 true，则返回 true，否则返回 false</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">all</span>(<span class="params">iterator, context</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> result = <span class="literal">true</span>;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="title function_">each</span>(<span class="keyword">function</span>(<span class="params">value, index</span>) &#123;</span><br><span class="line">    result = result &amp;&amp; !!iterator.<span class="title function_">call</span>(context, value, index);</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>　　对于all方法来说，里面的两个参数都不是必须的，所以，内部提供了一个函数，以代替没有实参时的iterator，直接返回原值，名字叫做Prototype.K。Prototype.K的定义在库的开头，是一个返回参数值的函数Prototype.K &#x3D; function(x){return x;}。另外，在all方法中，只要有一个项的处理结果为false，整个过程就可以放弃（break）了，于是用到了本文开头的中断循环的方法。最后的形式就是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Prototype</span>.<span class="property">K</span> = <span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;;</span><br><span class="line"><span class="title class_">Enumerable</span>.<span class="property">all</span> = <span class="keyword">function</span>(<span class="params">iterator, context</span>) &#123;</span><br><span class="line">  iterator = iterator || <span class="title class_">Prototype</span>.<span class="property">K</span>;</span><br><span class="line">  <span class="keyword">var</span> result = <span class="literal">true</span>;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="title function_">each</span>(<span class="keyword">function</span>(<span class="params">value, index</span>) &#123;</span><br><span class="line">    result = result &amp;&amp; !!iterator.<span class="title function_">call</span>(context, value, index);</span><br><span class="line">    <span class="keyword">if</span> (!result) <span class="keyword">throw</span> $break;</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后返回的result是一个boolean型，偏离一下all，我们改一下result：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">collect</span>(<span class="params">iterator, context</span>) &#123;</span><br><span class="line">  iterator = iterator || <span class="title class_">Prototype</span>.<span class="property">K</span>;</span><br><span class="line">  <span class="keyword">var</span> results = [];</span><br><span class="line">  <span class="variable language_">this</span>.<span class="title function_">each</span>(<span class="keyword">function</span>(<span class="params">value, index</span>) &#123;</span><br><span class="line">    results.<span class="title function_">push</span>(iterator.<span class="title function_">call</span>(context, value, index));</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> results;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此时results是一个数组，我们不中断处理过程，保存所有的结果并返回，恩，这就是collect方法，或者叫做map方法。</p>
+<p>any：若 Enumerable 中的元素有一个或多个等价于 true，则返回 true，否则返回 false，其原理和all差不多，all是发现false就收工，any是发现true就收工。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">any</span>(<span class="params">iterator, context</span>) &#123;</span><br><span class="line">  iterator = iterator || <span class="title class_">Prototype</span>.<span class="property">K</span>;</span><br><span class="line">  <span class="keyword">var</span> result = <span class="literal">false</span>;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="title function_">each</span>(<span class="keyword">function</span>(<span class="params">value, index</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (result = !!iterator.<span class="title function_">call</span>(context, value, index))</span><br><span class="line">      <span class="keyword">throw</span> $break;</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>include：判断 Enumerable 中是否存在指定的对象，基于 &#x3D;&#x3D; 操作符进行比较</p>
+<p>这个方法有一步优化，就是调用了indexOf方法，对于数组来说，indexOf返回-1就不可以知道相应元素不存在了，如果集合没有indexOf方法，就只能查找比对了。这里的查找和没有任何算法，一个个遍历而已，如果要改写也容易，不过平时应用不多，因此估计也没有花这个精力去优化这个。所以如果结果为true的时候效率比结果为false的时候要高一些，看运气了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">include</span>(<span class="params">object</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="title class_">Object</span>.<span class="title function_">isFunction</span>(<span class="variable language_">this</span>.<span class="property">indexOf</span>))<span class="comment">//这个判定函数应该很熟悉了</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="title function_">indexOf</span>(object) != -<span class="number">1</span>) <span class="keyword">return</span> <span class="literal">true</span>;<span class="comment">//有indexOf就直接调用</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> found = <span class="literal">false</span>;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="title function_">each</span>(<span class="keyword">function</span>(<span class="params">value</span>) &#123;<span class="comment">//这里的效率问题</span></span><br><span class="line">    <span class="keyword">if</span> (value == object) &#123;</span><br><span class="line">      found = <span class="literal">true</span>;</span><br><span class="line">      <span class="keyword">throw</span> $break;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> found;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面是一组过滤数据的方法：</p>
+<p>返回单个元素：max | min | detect</p>
+<p>返回一个数组：grep | findAll | reject | partition </p>
+<p>其中max和min并不局限于数字的比较，字符的比较一样可以。</p>
+<p>max(iterator, context)依旧可以带有两个参数，可以先用iterator处理之后再来比较值，这样的好处就是不必局限于特定的数据类型，比如，对象数组按照一定规则取最大值：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">dir</span>([&#123;value : <span class="number">3</span>&#125;,&#123;value : <span class="number">1</span>&#125;,&#123;value : <span class="number">2</span>&#125;].<span class="title function_">max</span>(<span class="keyword">function</span>(<span class="params">item</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> item.<span class="property">value</span>;</span><br><span class="line">&#125;));<span class="comment">//3</span></span><br></pre></td></tr></table></figure>
+<p>因此源码的实现方式可以想象，直接比较的时候，实现方式可以如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">max</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> result;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="title function_">each</span>(<span class="keyword">function</span>(<span class="params">value</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (result == <span class="literal">null</span> || value &gt;= result) <span class="comment">//result==null是第一次比较</span></span><br><span class="line">      result = value;</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>扩展之后，value要进一步变为value &#x3D; (iterator处理后的返回值):</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">max</span>(<span class="params">iterator, context</span>) &#123;</span><br><span class="line">  iterator = iterator || <span class="title class_">Prototype</span>.<span class="property">K</span>;</span><br><span class="line">  <span class="keyword">var</span> result;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="title function_">each</span>(<span class="keyword">function</span>(<span class="params">value, index</span>) &#123;</span><br><span class="line">    value = iterator.<span class="title function_">call</span>(context, value, index);</span><br><span class="line">    <span class="keyword">if</span> (result == <span class="literal">null</span> || value &gt;= result)</span><br><span class="line">      result = value;</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>min的原理也一样。</p>
+<p>detect和any的原理和接近，any是找到一个true就返回true，detect是找到一个true就返回满足true条件的那个值。源码就不贴了。</p>
+<p>grep 这个很眼熟啊，一个unix&#x2F;linux工具，其作用也很眼熟——就是返回所有和指定的正则表达式匹配的元素。</p>
+<p>只不过unix&#x2F;linux只能处理字符串，这里扩展了范围，但是基本形式还是没有变。如果集合的每一项都是字符串，那么实现起来回事这样：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Enumerable</span>.<span class="property">grep</span> = <span class="keyword">function</span>(<span class="params">filter</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">typeof</span> filter == <span class="string">&#x27;string&#x27;</span>)&#123;</span><br><span class="line">        filter = <span class="keyword">new</span> <span class="title class_">RegExp</span>(filter);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> results = [];</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">each</span>(<span class="keyword">function</span>(<span class="params">value,index</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(value.<span class="title function_">match</span>(filter))&#123;</span><br><span class="line">            results.<span class="title function_">push</span>(value);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">return</span> results;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>但是有一现在要处理的集合可能并都是字符串，为了达到更广泛的应用，首先要考虑的就是调用形式。看上面的实现，注意这么一句：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(value.<span class="title function_">match</span>(filter))</span><br></pre></td></tr></table></figure>
+<p>其中value是个字符串，match是String的方法，现在要扩展所支持的类型，要么给每一个value都加上match方法，要么转换形式。显然第一种巨响太大，作者转换了思路：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (filter.<span class="title function_">match</span>(value))</span><br></pre></td></tr></table></figure>
+<p>这么一来，不论value为何值，只要filter有对应的match方法即可，上面对于RegExp对象，是没有match方法的，于是在源码中，作者扩展了RegExp对象：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">RegExp</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">match</span> = <span class="title class_">RegExp</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">test</span>;</span><br></pre></td></tr></table></figure>
+<p>注意上面的match和String的match有本质区别。</p>
+<p>这么一来，如果value是对象，我们的filter只需要提供相应的检测对象的match方法即可。于是就有：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">grep</span>(<span class="params">filter, iterator, context</span>) &#123;</span><br><span class="line">  iterator = iterator || <span class="title class_">Prototype</span>.<span class="property">K</span>;</span><br><span class="line">  <span class="keyword">var</span> results = [];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (<span class="title class_">Object</span>.<span class="title function_">isString</span>(filter))</span><br><span class="line">    filter = <span class="keyword">new</span> <span class="title class_">RegExp</span>(<span class="title class_">RegExp</span>.<span class="built_in">escape</span>(filter));</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">this</span>.<span class="title function_">each</span>(<span class="keyword">function</span>(<span class="params">value, index</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (filter.<span class="title function_">match</span>(value))<span class="comment">//原生filter是没有match方法的。</span></span><br><span class="line">      results.<span class="title function_">push</span>(iterator.<span class="title function_">call</span>(context, value, index));</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> results;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对于匹配的结果，可以处理之后再返回，这就是iterator参数的作用。<br>不同于max方法，grep是进行主要操作时候再用iterator来处理结果，max是用iterator处理源数据之后再来进行主要操作。因为grep中的filter代替了max中iterator的作用。</p>
+<p>至于findAll，是grep的加强版，看过grep，findAll就很简单了。reject就是findAll的双子版本，作用正好相反。partition就是findAll + reject,组合亲子版本。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2012/01/16/javascript/2012-01-16-Javascript-Prototype-Enumerable-1/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/javascript/" title="javascript">
+                        <b>#</b> javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/javascript/" title="javascript">
+                        #javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2012/01/19/javascript/2012-01-19-Javascript-Prototype-Enumerable-3/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

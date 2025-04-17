@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      conda 常用 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">conda 常用</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/computer/" title="computer">
+                    <b>#</b> computer
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/computer/" title="computer">
+                    #computer
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>conda是一款软件管理软件，相当于应用商店，在使用 Python 的过程中，可以用来管理 Python 版本。</p>
+<h2 id="常用的命令"><a href="#常用的命令" class="headerlink" title="常用的命令"></a>常用的命令</h2><h3 id="1-查看安装了哪些包"><a href="#1-查看安装了哪些包" class="headerlink" title="1. 查看安装了哪些包"></a>1. 查看安装了哪些包</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda list</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-查看当前存在哪些虚拟环境"><a href="#2-查看当前存在哪些虚拟环境" class="headerlink" title="2. 查看当前存在哪些虚拟环境"></a>2. 查看当前存在哪些虚拟环境</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda <span class="built_in">env</span> list </span><br><span class="line">conda info -e</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-检查更新当前conda"><a href="#3-检查更新当前conda" class="headerlink" title="3. 检查更新当前conda"></a>3. 检查更新当前conda</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda update conda</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-创建虚拟环境"><a href="#4-创建虚拟环境" class="headerlink" title="4. 创建虚拟环境"></a>4. 创建虚拟环境</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda create -n your_env_name</span><br><span class="line">conda create -n your_env_name python==x.x <span class="comment">#指定 python 版本</span></span><br></pre></td></tr></table></figure>
+
+<p>create 命令创建 python 版本为 x.x，名字为 your_env_name 的虚拟环境。your_env_name 文件可以在 conda 安装目录的 envs 文件下找到。</p>
+<h3 id="5-激活或者切换虚拟环境"><a href="#5-激活或者切换虚拟环境" class="headerlink" title="5. 激活或者切换虚拟环境"></a>5. 激活或者切换虚拟环境</h3><p>打开命令行，输入 python –version 检查当前 python 版本。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Linux:  <span class="built_in">source</span> activate your_env_nam</span><br><span class="line">Windows: activate your_env_name</span><br><span class="line">Mac:  conda activate your_env_name</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-在虚拟环境中安装额外的包"><a href="#6-在虚拟环境中安装额外的包" class="headerlink" title="6. 在虚拟环境中安装额外的包"></a>6. 在虚拟环境中安装额外的包</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda install -n your_env_name [package]</span><br><span class="line">conda install -n your_env_name [package=x.y.z] <span class="comment"># 指定 package 版本</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="7-关闭虚拟环境-即从当前环境退出返回使用PATH环境中的默认python版本"><a href="#7-关闭虚拟环境-即从当前环境退出返回使用PATH环境中的默认python版本" class="headerlink" title="7. 关闭虚拟环境(即从当前环境退出返回使用PATH环境中的默认python版本)"></a>7. 关闭虚拟环境(即从当前环境退出返回使用PATH环境中的默认python版本)</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deactivate env_name</span><br></pre></td></tr></table></figure>
+
+<p>或者<code>activate root</code>切回root环境，Linux下：source deactivate </p>
+<h3 id="8-删除虚拟环境"><a href="#8-删除虚拟环境" class="headerlink" title="8. 删除虚拟环境"></a>8. 删除虚拟环境</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda <span class="built_in">env</span> remove -n your_env_name</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-删除环境中的某个包"><a href="#9-删除环境中的某个包" class="headerlink" title="9. 删除环境中的某个包"></a>9. 删除环境中的某个包</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda remove --name <span class="variable">$your_env_name</span>  <span class="variable">$package_name</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="10-重命名环境名称"><a href="#10-重命名环境名称" class="headerlink" title="10. 重命名环境名称"></a>10. 重命名环境名称</h3><p>在 Conda 4.14 版本之前，是没有直接内置命令的，只能删除原环境然后重新创建。从 Conda 4.14 版本开始，你可以使用以下命令来改变环境名称：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda rename -n old_env_name new_env_name</span><br></pre></td></tr></table></figure>
+
+<p><em>虽然这个命令在内部的实现方式有点尴尬，但是起码算是直接支持了。</em></p>
+<h2 id="镜像配置"><a href="#镜像配置" class="headerlink" title="镜像配置"></a>镜像配置</h2><h2 id="查看-conda-的配置："><a href="#查看-conda-的配置：" class="headerlink" title="查看 conda 的配置："></a>查看 conda 的配置：</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda config --show</span><br></pre></td></tr></table></figure>
+
+<p>查看或者直接查看 channels：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda config --show channels</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加镜像"><a href="#添加镜像" class="headerlink" title="添加镜像"></a>添加镜像</h3><p>比如添加中科大的源：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda config --add channels https://mirrors.ustc.edu.cn/anaconda/pkgs/free/</span><br><span class="line">conda config --set show_channel_urls yes</span><br></pre></td></tr></table></figure>
+
+<p><em>conda config –set show_channel_urls yes的意思是从channel中安装包时显示channel的 url，这样在搜索或者安装的时候可知来源</em></p>
+<h3 id="移除镜像"><a href="#移除镜像" class="headerlink" title="移除镜像"></a>移除镜像</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda config --remove channels defaults</span><br><span class="line">conda config --remove channels https://mirrors.ustc.edu.cn/anaconda/pkgs/free/</span><br></pre></td></tr></table></figure>
+
+<h2 id="Jupyter"><a href="#Jupyter" class="headerlink" title="Jupyter"></a>Jupyter</h2><p>如果 conda 环境不出现在 jupyter 选项中，可以按照如下方法处理：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nb_conda_kernels</span><br></pre></td></tr></table></figure>
+
+<p> should be installed in the environment from which you run Jupyter Notebook or JupyterLab. This might be your base conda environment, but it need not be. For instance, if the environment notebook_env contains the notebook package, then you would run</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install -n notebook_env nb_conda_kernels</span><br></pre></td></tr></table></figure>
+
+<p>Any other environments you wish to access in your notebooks must have an appropriate kernel package installed. For instance, to access a Python environment, it must have the ipykernel package; e.g.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install -n python_env ipykernel</span><br></pre></td></tr></table></figure>
+
+<p>To utilize an R environment, it must have the r-irkernel package; e.g.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install -n r_env r-irkernel</span><br></pre></td></tr></table></figure>
+
+<p>For other languages, their corresponding kernels must be installed.</p>
+<p>参考</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/39604271/conda-environments-not-showing-up-in-jupyter-notebook">https://stackoverflow.com/questions/39604271/conda-environments-not-showing-up-in-jupyter-notebook</a></li>
+</ol>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2016/03/01/computer/2016-03-01-Linux-assemble-error/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/computer/" title="computer">
+                        <b>#</b> computer
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/computer/" title="computer">
+                        #computer
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2016/03/03/computer/2016-03-04-python-venv/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="toc-text">常用的命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%9F%A5%E7%9C%8B%E5%AE%89%E8%A3%85%E4%BA%86%E5%93%AA%E4%BA%9B%E5%8C%85"><span class="toc-text">1. 查看安装了哪些包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%9F%A5%E7%9C%8B%E5%BD%93%E5%89%8D%E5%AD%98%E5%9C%A8%E5%93%AA%E4%BA%9B%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83"><span class="toc-text">2. 查看当前存在哪些虚拟环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%A3%80%E6%9F%A5%E6%9B%B4%E6%96%B0%E5%BD%93%E5%89%8Dconda"><span class="toc-text">3. 检查更新当前conda</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%88%9B%E5%BB%BA%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83"><span class="toc-text">4. 创建虚拟环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E6%BF%80%E6%B4%BB%E6%88%96%E8%80%85%E5%88%87%E6%8D%A2%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83"><span class="toc-text">5. 激活或者切换虚拟环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E5%9C%A8%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83%E4%B8%AD%E5%AE%89%E8%A3%85%E9%A2%9D%E5%A4%96%E7%9A%84%E5%8C%85"><span class="toc-text">6. 在虚拟环境中安装额外的包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E5%85%B3%E9%97%AD%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83-%E5%8D%B3%E4%BB%8E%E5%BD%93%E5%89%8D%E7%8E%AF%E5%A2%83%E9%80%80%E5%87%BA%E8%BF%94%E5%9B%9E%E4%BD%BF%E7%94%A8PATH%E7%8E%AF%E5%A2%83%E4%B8%AD%E7%9A%84%E9%BB%98%E8%AE%A4python%E7%89%88%E6%9C%AC"><span class="toc-text">7. 关闭虚拟环境(即从当前环境退出返回使用PATH环境中的默认python版本)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-%E5%88%A0%E9%99%A4%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83"><span class="toc-text">8. 删除虚拟环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-%E5%88%A0%E9%99%A4%E7%8E%AF%E5%A2%83%E4%B8%AD%E7%9A%84%E6%9F%90%E4%B8%AA%E5%8C%85"><span class="toc-text">9. 删除环境中的某个包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-%E9%87%8D%E5%91%BD%E5%90%8D%E7%8E%AF%E5%A2%83%E5%90%8D%E7%A7%B0"><span class="toc-text">10. 重命名环境名称</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE"><span class="toc-text">镜像配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B-conda-%E7%9A%84%E9%85%8D%E7%BD%AE%EF%BC%9A"><span class="toc-text">查看 conda 的配置：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E9%95%9C%E5%83%8F"><span class="toc-text">添加镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%BB%E9%99%A4%E9%95%9C%E5%83%8F"><span class="toc-text">移除镜像</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Jupyter"><span class="toc-text">Jupyter</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

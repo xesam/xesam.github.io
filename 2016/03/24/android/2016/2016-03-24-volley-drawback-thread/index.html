@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Volley线程池的问题 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Volley线程池的问题</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/android/" title="android">
+                    <b>#</b> android
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/volley/" title="volley">
+                    #volley
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>Volley 中有一个专门负责处理网络请求的线程池。<br>虽说是线程池，但是实际上是一个默认长度为 4 的线程数组，然后使用一个 BlockingQueue 来保存请求列表，是一个典型的生产-消费者模式应用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">DEFAULT_NETWORK_THREAD_POOL_SIZE = <span class="number">4</span>;</span><br><span class="line">NetworkDispatcher[] mDispatchers = <span class="keyword">new</span> <span class="title class_">NetworkDispatcher</span>[DEFAULT_NETWORK_THREAD_POOL_SIZE];</span><br><span class="line"></span><br><span class="line"><span class="comment">// Create network dispatchers (and corresponding threads) up to the pool size.</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; mDispatchers.length; i++) &#123;</span><br><span class="line">    <span class="type">NetworkDispatcher</span> <span class="variable">networkDispatcher</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NetworkDispatcher</span>(mNetworkQueue, mNetwork,</span><br><span class="line">            mCache, mDelivery);</span><br><span class="line">    mDispatchers[i] = networkDispatcher;</span><br><span class="line">    networkDispatcher.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我阅读源码的一个问题是：为什么不直接使用 java 并发包里面的 Executor 来处理线程池的问题？<br>这个问题并没有官方的正式回复，所以，也没有一个具体的答案。所以我只能对比一下两种实现方式的优缺点，来谈一下自己的看法。</p>
+<p>首先需要明确的就是：Volley 的设计意图是适用于“小而频繁”的网络请求场景。</p>
+<h2 id="使用线程数组的优点"><a href="#使用线程数组的优点" class="headerlink" title="使用线程数组的优点"></a>使用线程数组的优点</h2><ol>
+<li>这样实现的代码比较简单，可以有完全的控制，可以比较方便的对任务线程进行定制。</li>
+<li>由于一开始就保证会有 4 个（默认数量）线程贯穿整个生命周期，因此免除了动态创建或者回收线程的开销。<br>如果对应用的网络请求有一个比较好的评估，那么具体的线程数量还可以再斟酌。</li>
+</ol>
+<p>其他，我找不到比较好的理由，因为，相同的功能使用 Executor 也完全可以实现。</p>
+<h2 id="使用线程数组的缺点"><a href="#使用线程数组的缺点" class="headerlink" title="使用线程数组的缺点"></a>使用线程数组的缺点</h2><p>我们在使用过程中，通常是在 app 启动的时候进行 Volley 请求队列初始化，在应用结束的时候销毁 Volley 请求队列。那么，在使用的生命周期过程中，可能出现下面几个问题：</p>
+<ol>
+<li>当请求数量持续超负荷的时候，无法自动调整线程数量。由于使用的数组形式，并且也没有提供动态容量控制机制，无法根据实际情况伸缩应对。<br>这个时候就有可能导致请求的超预期延迟，特别是在网络状况不是很好（会触发 retry 机制，占用线程资源）而用户刷新比较频繁的场景下，表现会比较突出。</li>
+<li>如果某个线程由于某种异常被终止，将无法再次恢复，这个问题在 Volley 中并没有处理过。<br>一个极端情况是，如果默认的线程全部死掉，那么网络请求将崩溃。</li>
+</ol>
+<p>另外，Volley 内置了对网络图片的请求处理，但是需要注意的是，<br>如果图片比较大或者比较多的情况下，需要在主要的 Volley 业务请求队列之外，重新开一个新的图片请求队列来处理,不然，极有可能阻塞了正常的业务请求。<br>其实个人觉得，Volley 没必要增加对图片的处理，既没有处理好，又不够强大。还是使用专业的 Glide 或者 Fresco 来处理。</p>
+<p>可能这些情况比较极端，但是都是可能出现问题的地方。所以，个人觉得，Volley 还是有很大的改进空间的。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2016/03/23/math/2016-03-23-math-gcd-lcm/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/android/" title="android">
+                        <b>#</b> android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/volley/" title="volley">
+                        #volley
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2016/03/27/android/2016/2016-03-31-Android-quick-demo/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E7%BA%BF%E7%A8%8B%E6%95%B0%E7%BB%84%E7%9A%84%E4%BC%98%E7%82%B9"><span class="toc-text">使用线程数组的优点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E7%BA%BF%E7%A8%8B%E6%95%B0%E7%BB%84%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="toc-text">使用线程数组的缺点</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Android 前后台切换监听 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Android 前后台切换监听</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/android/" title="android">
+                    <b>#</b> android
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/android/" title="android">
+                    #android
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>Android 本身并有提供这样的监听，所以就只能走偏门了。</p>
+<p>首先，需要定义一下，什么叫“前台”，什么叫“后台”。本文定义如下：</p>
+<p>前台</p>
+<pre><code>Activity 处在 FOREGROUND 优先级
+</code></pre>
+<p>后台</p>
+<pre><code>App进程没有停止，除去在“前台”的所有情况
+</code></pre>
+<p>所以，退到后台的方式太多了，大致有：</p>
+<ol>
+<li>按Home键</li>
+<li>按“最近任务”键</li>
+<li>从通知栏启动其他应用</li>
+<li>从应用内部启动其他应用</li>
+<li>关掉屏幕</li>
+</ol>
+<p>既然是监听变化，所以肯定是在相关生命周期的回调中来进行处理。ActivityA 启动 ActivityB 的生命周期方法调用顺序如下：</p>
+<pre><code>ActivityA#onPause -&gt; ActivityB#onStart -&gt; ActivityB#onResume -&gt; ActivityA#onStop
+</code></pre>
+<p>从 ActivityB 回退到 ActivityA 的生命周期方法调用顺序如下：</p>
+<pre><code>ActivityB#onPause -&gt; ActivityA#onStart -&gt; ActivityA#onResume -&gt; ActivityB#onStop -&gt; ActivityB#onDestroy
+</code></pre>
+<p>一个思路就是通过统计当前活动的 Activity 数目来计算。</p>
+<p>在 Activity#onStart 中来检测前一个状态是否是“后台”，如果是，则触发“切换到前台”事件，并将活动 Activity 数目加1。<br>在 Activity#onStop 中并将活动 Activity 数目减1。如果活动的 Activity 数目等于0，<br>就认为当前应用处于“后台”状态， 并触发“切换到后台”事件。</p>
+<p>所以，一个初步方案大致是，实现一个基类 BaseActivity，并重写以下 onStart 和 onStop 回调方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">compatStartCount</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="variable">isCompatForeground</span> <span class="operator">=</span> <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onStart</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>.onStart();</span><br><span class="line">    compatStartCount++;</span><br><span class="line">    <span class="keyword">if</span> (!isCompatForeground) &#123;</span><br><span class="line">        isCompatForeground = <span class="literal">true</span>;</span><br><span class="line">        onBackgroundToForeground(activity);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onStop</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>.onStop();</span><br><span class="line">    compatStartCount--;</span><br><span class="line">    <span class="keyword">if</span> (compatStartCount == <span class="number">0</span>) &#123;</span><br><span class="line">        isCompatForeground = <span class="literal">false</span>;</span><br><span class="line">        onForegroundToBackground(activity);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="开始趟坑"><a href="#开始趟坑" class="headerlink" title="开始趟坑"></a>开始趟坑</h2><ol>
+<li><p>在关掉&#x2F;点亮屏幕的情况下，android3 之前不会触发 onStart 和 onStop 回调。只会触发 onPause 和 onStop。所以以上代码失效。<br>按理来说，这应该是 Android 的含糊之处，onStop 的触发时机定义如下：</p>
+<pre><code> Called when you are no longer visible to the user
+</code></pre>
+</li>
+</ol>
+<p>按理来说，屏幕关闭的时候也符合条件，但是 android3 之前并未按照如此定义而来。所以需要 hack 一下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="variable">isCompatLockStop</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isStandard</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.HONEYCOMB;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isInteractive</span><span class="params">(Context context)</span> &#123;</span><br><span class="line">    <span class="type">PowerManager</span> <span class="variable">pm</span> <span class="operator">=</span> (PowerManager) context.getSystemService(Context.POWER_SERVICE);</span><br><span class="line">    <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= VERSION_CODES.KITKAT_WATCH) &#123;</span><br><span class="line">        <span class="keyword">return</span> pm.isInteractive();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> pm.isScreenOn();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onResume</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>.onResume();</span><br><span class="line">    <span class="keyword">if</span> (isStandard()) &#123;</span><br><span class="line">        <span class="comment">//np</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (isCompatLockStop) &#123;</span><br><span class="line">            isCompatLockStop = <span class="literal">false</span>;</span><br><span class="line">            onStart();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onPause</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>.onPause();</span><br><span class="line">    <span class="keyword">if</span> (isStandard()) &#123;</span><br><span class="line">        <span class="comment">//np</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!isInteractive(activity)) &#123; <span class="comment">//锁屏触发</span></span><br><span class="line">            isCompatLockStop = <span class="literal">true</span>;</span><br><span class="line">            onStop();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于 android3 之前的系统，我们在 onPause 中处理 锁屏问题，如果 onPause 被触发的时候，手机处于 “非交互” 状态，就认为是按下了电源键（或者其他锁屏方式），触发“后台”状态。<br>在 onResume 中判断如果是从锁屏界面恢复，则回到“前台”状态。</p>
+<p>存在问题：点亮屏幕的时候就被认为回到“前台”状态，这个暂未找到好的方法避免。</p>
+<ol start="2">
+<li>快速锁屏&#x2F;点亮的情况下，会多次触发生命周期回调。</li>
+</ol>
+<p>这个问题在 nexus 5 （Android 6.0） 上稳定重现，重现步骤：关掉屏幕后快速点亮再快速关闭。本来预期的表现应该是：</p>
+<pre><code>onPause
+onStop
+</code></pre>
+<p>但是实际的表现如下：</p>
+<pre><code>onPause
+onStop
+onStart
+onResume
+onPause
+onStop
+</code></pre>
+<p>所以，最终结果就是：</p>
+<pre><code>前台 -&gt; 后台
+后台 -&gt; 前台 
+前台 -&gt; 后台
+</code></pre>
+<p>多了一个周期。</p>
+<p>这个问题我还没有解决。尝试过解决办法有：</p>
+<p>1.在 onStart 中判断 inKeyguardRestrictedInputMode 状态：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">inKeyguardRestrictedInputMode</span><span class="params">(Context context)</span> &#123;</span><br><span class="line">    <span class="type">KeyguardManager</span> <span class="variable">keyguardManager</span> <span class="operator">=</span> (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);</span><br><span class="line">    <span class="keyword">return</span> keyguardManager.inKeyguardRestrictedInputMode();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在锁屏状态下就不触发计数。但是这个判断根本不可信，在快速切换的情况下，在非锁屏情况下返回 true 的几率也比较大。</p>
+<ol start="2">
+<li>网上有一种判断应用是否在前台的方法</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isAppOnForeground</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">ActivityManager</span> <span class="variable">activityManager</span> <span class="operator">=</span> (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE); </span><br><span class="line">    <span class="type">String</span> <span class="variable">packageName</span> <span class="operator">=</span> getApplicationContext().getPackageName(); </span><br><span class="line">    </span><br><span class="line">    List&lt;ActivityManager.RunningAppProcessInfo&gt; appProcesses = activityManager </span><br><span class="line">        .getRunningAppProcesses(); </span><br><span class="line">    <span class="keyword">if</span> (appProcesses == <span class="literal">null</span>) </span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>; </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) &#123; </span><br><span class="line">      <span class="comment">// The name of the process that this object is associated with. </span></span><br><span class="line">      <span class="keyword">if</span> (appProcess.processName.equals(packageName) </span><br><span class="line">          &amp;&amp; appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) &#123; </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>; </span><br><span class="line">      &#125; </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>; </span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<p>但是这种测试方法并不靠谱，比如在魅族手机上，锁屏状态下也是返回 true。</p>
+<ol start="3">
+<li>监听 ACTION_USER_PRESENT， ACTION_SCREEN_ON， ACTION_SCREEN_OFF 等事件。</li>
+</ol>
+<p>回调事件比较晚，在生命周期中已经跑完好几圈之后，广播才接收到。而且在各个生命周期内无法判断是否因为锁屏导致的周期变化。</p>
+<p>顺便说一下， ACTION_USER_PRESENT 和 ACTION_SCREEN_ON 存在下面几种情况:</p>
+<ol>
+<li>只触发 ACTION_SCREEN_ON</li>
+<li>先触发 ACTION_SCREEN_ON，再触发 ACTION_USER_PRESENT （电源键，然后解锁）</li>
+<li>先触发 ACTION_USER_PRESENT，再触发 ACTION_SCREEN_ON （指纹解锁）</li>
+</ol>
+<p>这样的话，无法通过简单的计数来判断，需要加入 hashCode 来处理。</p>
+<p>所以最终这种快速切换的情况被我忽略了，因为无非就是多了一个周期而已。</p>
+<h2 id="不完美实现"><a href="#不完美实现" class="headerlink" title="不完美实现"></a>不完美实现</h2><p>对于 API&gt;&#x3D;14 的系统上，可以直接增加 ActivityLifecycleCallbacks 监听，这样可以省去定义 BaseActivity 的步骤，减少侵入性。</p>
+<p>所以在 API&gt;&#x3D;14 的系统上，直接使用 ActivityLifecycleCallbacks， 如果需要兼容 2.3，那么还是需要抽象出 BaseActivity。</p>
+<p>演示代码地址 ： <a target="_blank" rel="noopener" href="https://github.com/xesam/AppMonitor">https://github.com/xesam/AppMonitor</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2016/03/05/computer/2016-03-04-python-package/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/android/" title="android">
+                        <b>#</b> android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/android/" title="android">
+                        #android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2016/03/20/android/2016/2016-03-20-Android-Service-lifecycle/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E8%B6%9F%E5%9D%91"><span class="toc-text">开始趟坑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E5%AE%8C%E7%BE%8E%E5%AE%9E%E7%8E%B0"><span class="toc-text">不完美实现</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

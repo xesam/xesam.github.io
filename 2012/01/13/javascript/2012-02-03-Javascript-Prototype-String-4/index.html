@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      【Javascript】Prototype源码浅析—String部分(四)之补充 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">【Javascript】Prototype源码浅析—String部分(四)之补充</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/javascript/" title="javascript">
+                    <b>#</b> javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/javascript/" title="javascript">
+                    #javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <pre><code>interpolate ： 将字符串看作一个模板，并使用 object 的属性填充它。
+sub ： 将字符串中前指定个个与 pattern 指定的模式匹配的子串用 replacement 替换
+scan ： 遍历字符串中与参数 pattern 指定的模式匹配的所有子串。返回原始字符串本身。 
+truncate ： 将字符串截短为指定的长度（包含后缀部分）， 并添加一个后缀。 
+gsub ：将字符串中所有与 pattern 指定的模式匹配的值全部用 replacement 替换掉
+</code></pre>
+<p>上面的方法中，最重要的一个方法是 gsub，具体说明参见《浅析Prototype的模板类–Template》</p>
+<p>sub除了可以限定次数外，其他与gsub完全一致。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">sub</span>(<span class="params">pattern, replacement, count</span>) &#123;</span><br><span class="line">    replacement = <span class="title function_">prepareReplacement</span>(replacement);</span><br><span class="line">    count = <span class="title class_">Object</span>.<span class="title function_">isUndefined</span>(count) ? <span class="number">1</span> : count;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">gsub</span>(pattern, <span class="keyword">function</span>(<span class="params">match</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (--count &lt; <span class="number">0</span>) <span class="keyword">return</span> match[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_">replacement</span>(match);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>scan 也是一样的，不过scan最后返回的是字符串本身而已。</p>
+<p>interpolate 是将字符串当做模板来用，核心还是gsub</p>
+<p>truncate 是唯一有点区别的（我现在依稀感觉我分错类了）。</p>
+<p>以字符串’fuck the gfw’为例，truncate 的执行’fuck the gfw’.truncate(10,’****’)的步骤是：</p>
+<ol>
+<li>获得前面10 - ‘****’.length个字符 ‘fuck t’</li>
+<li>拼上后缀’<strong><strong>‘，得到 ‘fuck t</strong></strong>‘，长度为10.</li>
+</ol>
+<p>处理很简单，源码也简单：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">truncate</span>(<span class="params">length, truncation</span>) &#123;</span><br><span class="line">    length = length || <span class="number">30</span>;<span class="comment">//默认长度30</span></span><br><span class="line">    truncation = <span class="title class_">Object</span>.<span class="title function_">isUndefined</span>(truncation) ? <span class="string">&#x27;...&#x27;</span> : truncation;<span class="comment">//默认后缀...</span></span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">length</span> &gt; length ?</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">slice</span>(<span class="number">0</span>, length - truncation.<span class="property">length</span>) + truncation : <span class="title class_">String</span>(<span class="variable language_">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>另：Prototype的一个方便之处就是随时可以抽取有用的代码作为单独的部分或者收为自己用。下面是单独提出来的模板方法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Template</span>(<span class="params">template, pattern</span>)&#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">template</span> = template;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">pattern</span>  = pattern || <span class="regexp">/(^|.|\r|\n)(#\&#123;(.*?)\&#125;)/</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">Template</span>.<span class="property"><span class="keyword">prototype</span></span> = (<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">evaluate</span>(<span class="params">obj</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> gsub.<span class="title function_">call</span>(<span class="variable language_">this</span>,<span class="keyword">function</span>(<span class="params">match</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(obj == <span class="literal">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> match[<span class="number">0</span>] + <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">var</span> before = match[<span class="number">1</span>] || <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">            <span class="keyword">if</span>(before == <span class="string">&#x27;\\&#x27;</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> match[<span class="number">2</span>];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">var</span> ctx = obj;</span><br><span class="line">            <span class="keyword">var</span> expr = match[<span class="number">3</span>];</span><br><span class="line">            <span class="keyword">var</span> pattern = <span class="regexp">/^([^.[]+|\[((?:.*?[^\\])?)\])(\.|\[|$)/</span>;</span><br><span class="line"></span><br><span class="line">            match = pattern.<span class="title function_">exec</span>(expr);</span><br><span class="line">            <span class="keyword">if</span> (match == <span class="literal">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> before;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">while</span> (match != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">var</span> comp = match[<span class="number">1</span>].<span class="title function_">search</span>(<span class="regexp">/^\[/</span>) != -<span class="number">1</span> ? match[<span class="number">2</span>].<span class="title function_">replace</span>(<span class="regexp">/\\\\]/g</span>, <span class="string">&#x27;]&#x27;</span>) : match[<span class="number">1</span>];</span><br><span class="line">                ctx = ctx[comp];</span><br><span class="line">                <span class="keyword">if</span> (<span class="literal">null</span> == ctx || <span class="string">&#x27;&#x27;</span> == match[<span class="number">3</span>]) <span class="keyword">break</span>;</span><br><span class="line">                expr = expr.<span class="title function_">substring</span>(<span class="string">&#x27;[&#x27;</span> == match[<span class="number">3</span>] ? match[<span class="number">1</span>].<span class="property">length</span> : match[<span class="number">0</span>].<span class="property">length</span>);</span><br><span class="line">                match = pattern.<span class="title function_">exec</span>(expr);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> before + (ctx === <span class="literal">null</span> ? <span class="string">&#x27;&#x27;</span> : <span class="title class_">String</span>(ctx));</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">gsub</span>(<span class="params">replacement</span>)&#123;</span><br><span class="line">        <span class="keyword">var</span> pattern = <span class="variable language_">this</span>.<span class="property">pattern</span>;</span><br><span class="line">        <span class="keyword">var</span> result  = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">        <span class="keyword">var</span> match   = <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">var</span> source  = <span class="variable language_">this</span>.<span class="property">template</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!(pattern.<span class="property">length</span> || pattern.<span class="property">source</span>)) &#123;</span><br><span class="line">            replacement = <span class="title function_">replacement</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line">            <span class="keyword">return</span> replacement + source.<span class="title function_">split</span>(<span class="string">&#x27;&#x27;</span>).<span class="title function_">join</span>(replacement) + replacement;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> (source.<span class="property">length</span> &gt; <span class="number">0</span>) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (match = source.<span class="title function_">match</span>(pattern)) &#123;</span><br><span class="line">                result += source.<span class="title function_">slice</span>(<span class="number">0</span>, match.<span class="property">index</span>);</span><br><span class="line">                result += <span class="title function_">replacement</span>(match) === <span class="literal">null</span> ? <span class="string">&#x27;&#x27;</span> : <span class="title class_">String</span>(<span class="title function_">replacement</span>(match));</span><br><span class="line">                source  = source.<span class="title function_">slice</span>(match.<span class="property">index</span> + match[<span class="number">0</span>].<span class="property">length</span>);</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                result += source;</span><br><span class="line">                source = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        constructor : <span class="title class_">Template</span>,</span><br><span class="line">        evaluate : evaluate</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+
+<p>使用：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> template = <span class="keyword">new</span> <span class="title class_">Template</span>(<span class="string">&#x27;my age is : #&#123;name.age&#125;&#x27;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(template.<span class="title function_">evaluate</span>(&#123;name : &#123;age : <span class="number">24</span>&#125;&#125;));<span class="comment">//my age is : 24</span></span><br></pre></td></tr></table></figure>
+
+<p>String部分（完）</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2012/01/12/javascript/2012-01-12-Javascript-url-params/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/javascript/" title="javascript">
+                        <b>#</b> javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/javascript/" title="javascript">
+                        #javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2012/01/13/javascript/2012-01-12-Javascript-Prototype-String-3-HTML/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

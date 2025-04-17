@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Android 使用MockWebServer来进行单元测试 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Android 使用MockWebServer来进行单元测试</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/android/" title="android">
+                    <b>#</b> android
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/android/" title="android">
+                    #android
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p><a target="_blank" rel="noopener" href="https://github.com/square/okhttp">MockWebServer</a> 是 square 出品的跟随 okhttp 一起发布，用来 Mock 服务器行为的库，用来做单元测试挺好。</p>
+<p>有一个单独的文档<a target="_blank" rel="noopener" href="https://github.com/square/okhttp/tree/master/mockwebserver">https://github.com/square/okhttp/tree/master/mockwebserver</a></p>
+<p>MockWebServer mock 了 http 协议栈，所以基本上可以用来调试所有的 http 请求。</p>
+<h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><p>使用也比较简单：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span> <span class="keyword">throws</span> Exception&#123;</span><br><span class="line">    <span class="comment">// 1. 创建服务器</span></span><br><span class="line">    <span class="type">MockWebServer</span> <span class="variable">server</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MockWebServer</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 添加预置的响应，响应会按照先进先出的顺序依次返回</span></span><br><span class="line">    server.enqueue(<span class="keyword">new</span> <span class="title class_">MockResponse</span>().setResponseCode(<span class="number">503</span>).setBody(<span class="string">&quot;hello, world!&quot;</span>));</span><br><span class="line">    server.enqueue(<span class="keyword">new</span> <span class="title class_">MockResponse</span>().setBody(<span class="string">&quot;i am xesam&quot;</span>));</span><br><span class="line">    server.enqueue(<span class="keyword">new</span> <span class="title class_">MockResponse</span>().setResponseCode(<span class="number">404</span>).setBody(<span class="string">&quot;not found&quot;</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 启动服务器</span></span><br><span class="line">    server.start();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4. 获取请求 url，不能使用普通的 URL，一定要使用 server.url() 返回的 URL，不然没法进入 Mock 服务器</span></span><br><span class="line">    <span class="type">HttpUrl</span> <span class="variable">baseUrl</span> <span class="operator">=</span> server.url(<span class="string">&quot;/reg1&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 5. 发送请求</span></span><br><span class="line">    HttpRequest.get(baseUrl.url()).body()</span><br><span class="line"></span><br><span class="line">    <span class="comment">// server.takeRequest() 是一个阻塞操作，直到接收到请求</span></span><br><span class="line">    <span class="type">RecordedRequest</span> <span class="variable">request1</span> <span class="operator">=</span> server.takeRequest();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 这里可以查看服务器获取的请求信息，可以查看 http 报文头之类的协议信息</span></span><br><span class="line">    assertEquals(<span class="string">&quot;/v1/chat/&quot;</span>, request1.getPath());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>MockResponse 默认是状态码 200， body 为空，但是可以定制所有的协议内容：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">MockResponse</span> <span class="variable">response</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MockResponse</span>()</span><br><span class="line">    .addHeader(<span class="string">&quot;Content-Type&quot;</span>, <span class="string">&quot;application/json; charset=utf-8&quot;</span>)</span><br><span class="line">    .addHeader(<span class="string">&quot;Cache-Control&quot;</span>, <span class="string">&quot;no-cache&quot;</span>)</span><br><span class="line">    .setBody(<span class="string">&quot;&#123;&#125;&quot;</span>);</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+<p>还可以模拟网速比较慢的情况：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.throttleBody(<span class="number">1024</span>, <span class="number">1</span>, TimeUnit.SECONDS);  <span class="comment">//每秒传递 1024 字节</span></span><br></pre></td></tr></table></figure>
+
+<p>按照最开始的描述，可以用 enqueue 来添加预置响应，其实可以做得更像服务器一些，即根据 url 来进行响应分发：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="type">Dispatcher</span> <span class="variable">dispatcher</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Dispatcher</span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> MockResponse <span class="title function_">dispatch</span><span class="params">(RecordedRequest request)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (request.getPath().equals(<span class="string">&quot;/v1/login/auth/&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">MockResponse</span>().setResponseCode(<span class="number">200</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (request.getPath().equals(<span class="string">&quot;v1/check/version/&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">MockResponse</span>().setResponseCode(<span class="number">200</span>).setBody(<span class="string">&quot;version=9&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (request.getPath().equals(<span class="string">&quot;/v1/profile/info&quot;</span>)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">MockResponse</span>().setResponseCode(<span class="number">200</span>).setBody(<span class="string">&quot;&#123;\\\&quot;info\\\&quot;:&#123;\\\&quot;name\&quot;:\&quot;Lucas Albuquerque\&quot;,\&quot;age\&quot;:\&quot;21\&quot;,\&quot;gender\&quot;:\&quot;male\&quot;&#125;&#125;&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">MockResponse</span>().setResponseCode(<span class="number">404</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">server.setDispatcher(dispatcher);</span><br></pre></td></tr></table></figure>
+
+<p>如此一来，其实就可以在通常的开发中将后台的接口提前 mock 出来，加快开发进度。</p>
+<p>这里需要注意的是不要在 UI 线程启动这个服务器,如果想在 App 里面增加 Mock 支持，最好包装在一个新线程里面。</p>
+<h2 id="异步测试"><a href="#异步测试" class="headerlink" title="异步测试"></a>异步测试</h2><p>在单元测试中，如果有异步调用，通常就比较麻烦，因为在异步回调还没回来的时候，测试已经完成了，所有这个时候就需要让进程等待或者挂起。<br>比如，使用 MockWebServer 来测试 Volley：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test1</span> <span class="keyword">extends</span> <span class="title class_">InstrumentationTestCase</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testVolley</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">MockWebServer</span> <span class="variable">server</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MockWebServer</span>();</span><br><span class="line">        server.enqueue(<span class="keyword">new</span> <span class="title class_">MockResponse</span>().setResponseCode(<span class="number">200</span>).setBody(<span class="string">&quot;hello, world!&quot;</span>));</span><br><span class="line">        server.start();</span><br><span class="line"></span><br><span class="line">        <span class="type">HttpUrl</span> <span class="variable">baseUrl</span> <span class="operator">=</span> server.url(<span class="string">&quot;/p1&quot;</span>);</span><br><span class="line">        <span class="keyword">final</span> BlockingQueue&lt;Object&gt; queue = <span class="keyword">new</span> <span class="title class_">ArrayBlockingQueue</span>&lt;&gt;(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">        Volley.newRequestQueue(getInstrumentation().getContext())</span><br><span class="line">                .add(<span class="keyword">new</span> <span class="title class_">StringRequest</span>(baseUrl.url().toString(), <span class="keyword">new</span> <span class="title class_">Response</span>.Listener&lt;String&gt;() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onResponse</span><span class="params">(String response)</span> &#123;</span><br><span class="line">                        queue.add(response);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;, <span class="keyword">new</span> <span class="title class_">Response</span>.ErrorListener() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onErrorResponse</span><span class="params">(VolleyError error)</span> &#123;</span><br><span class="line">                        queue.add(error);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;));</span><br><span class="line"></span><br><span class="line">        <span class="type">RecordedRequest</span> <span class="variable">request1</span> <span class="operator">=</span> server.takeRequest();</span><br><span class="line">        assertEquals(<span class="string">&quot;/p1&quot;</span>, request1.getPath());</span><br><span class="line"></span><br><span class="line">        <span class="type">Object</span> <span class="variable">obj</span> <span class="operator">=</span> queue.take();</span><br><span class="line">        <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> String) &#123;</span><br><span class="line">            Assert.assertEquals(<span class="string">&quot;hello, world!&quot;</span>, obj.toString());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        server.shutdown();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的例子中使用一个 BlockingQueue 来等待 Volley 的请求结束，然后验证结果。</p>
+<p>当然，也可以用锁，但是其实都挺麻烦。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2016/05/08/java/2016-05-08-Java-ThreadLocal/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/android/" title="android">
+                        <b>#</b> android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/android/" title="android">
+                        #android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2016/05/20/android/2016/2016-05-20-Android-lifecycle/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="toc-text">基本使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%82%E6%AD%A5%E6%B5%8B%E8%AF%95"><span class="toc-text">异步测试</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

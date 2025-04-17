@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Android 触屏事件流 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Android 触屏事件流</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/android/" title="android">
+                    <b>#</b> android
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/android/" title="android">
+                    #android
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>本文请忽略，初学 Android 时的幼稚记录而已。</p>
+<p>一次触屏事件分为三个动作</p>
+<ol>
+<li>ACTION_DOWN</li>
+<li>ACTION_MOVE</li>
+<li>ACTION_UP</li>
+</ol>
+<p>其中 ACTION_DOWN 和 ACTION_UP 在一次触屏事件中只会触发一次，ACTION_MOVE 可能触发任意次（包括0次）。</p>
+<p>主要响应触屏的组件有两种，一种是可以包含子元素的（ViewGroup比如LinearLayout），另一种是不能包含子元素的View（最底层的View比如Button）。</p>
+<p>当一个触屏事件产生时，正两者的响应方法有一个主要的区别就是LinearLayout有onInterceptTouchEvent方法，而Button没有onInterceptTouchEvent方法。</p>
+<p>ViewGroup（比如LinearLayout）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">boolean</span> <span class="title function_">dispatchTouchEvent</span><span class="params">(MotionEvent event)</span></span><br><span class="line"><span class="type">boolean</span> <span class="title function_">onInterceptTouchEvent</span><span class="params">(MotionEvent event)</span></span><br><span class="line"><span class="type">boolean</span> <span class="title function_">onTouchEvent</span><span class="params">(MotionEvent event)</span></span><br></pre></td></tr></table></figure>
+
+<p>View（比如Button）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">boolean</span> <span class="title function_">dispatchTouchEvent</span><span class="params">(MotionEvent event)</span></span><br><span class="line"><span class="type">boolean</span> <span class="title function_">onTouchEvent</span><span class="params">(MotionEvent event)</span></span><br></pre></td></tr></table></figure>
+
+<p>总的来说，dispatchTouchEvent 决定处不处理，onInterceptTouchEvent 决定谁来处理，onTouchEvent 决定怎么处理。<br>所以对于Button来谁，没有小弟，自然不存在决定谁来处理的问题，故没有onInterceptTouchEvent方法</p>
+<p>下面具体说一下这三个函数的主要作用：</p>
+<h3 id="dispatchTouchEvent"><a href="#dispatchTouchEvent" class="headerlink" title="dispatchTouchEvent"></a>dispatchTouchEvent</h3><p>dispatchTouchEvent 决定处不处理，看名字就知道是事件分发，初看我还以为是分发到子元素呢，原来不是直接到子元素。其实更好的理解是这是一个过滤方法。<br>此方法的主要作用是决定相应事件的类型。</p>
+<p>假如dispatchTouchEvent 返回 false，那么在响应了 ACTION_DOWN 之后，后续的 ACTION_MOVE 和 ACTION_UP 均忽略，因此ACTION_MOVE和ACTION_UP永远不会有得到处理的机会。<br>假如dispatchTouchEvent 返回 true，那么后续的 ACTION_MOVE 和 ACTION_UP 均被接受，可以被其他方法响应。</p>
+<p>特别注意，如果在这一步的dispatchTouchEvent中没有调用super.dispatchTouchEvent(event),那么事件就到此为止，被终结了。<br>此时此刻只有dispatchTouchEvent会响应事件，另外两个方法根本没有机会来响应事件。并且，事件不会传递到子元素中。</p>
+<h3 id="onInterceptTouchEvent"><a href="#onInterceptTouchEvent" class="headerlink" title="onInterceptTouchEvent"></a>onInterceptTouchEvent</h3><p>onInterceptTouchEvent，主要决定谁来处理（即是否拦截事件）。</p>
+<p>只要在dispatchTouchEvent中调用了super.dispatchTouchEvent(event)那么，事件(event)会被交给onInterceptTouchEvent去处理。<br>注意，这里事件(event)是否会调用onInterceptTouchEvent与dispatchTouchEvent的返回值是true还是false无关。<br>再次强调，dispatchTouchEvent只决定处理什么，并不能指定谁来调用。</p>
+<p>假如onInterceptTouchEvent返回false，将事件(event)交自己的子元素处理（此时事件流是从外到内，从父元素到子元素）。</p>
+<p>假如onInterceptTouchEvent返回true，将事件(event)交给自己的onTouchEvent来处理,并且如果有后续的 ACTION_MOVE 和 ACTION_UP（前一步dispatchTouchEvent中返回true）的话，将不再调用onInterceptTouchEvent，直接将事件传递给自己的onTouchEvent来处理。</p>
+<h3 id="onTouchEvent"><a href="#onTouchEvent" class="headerlink" title="onTouchEvent"></a>onTouchEvent</h3><p>注意上一步，在 onInterceptTouchEvent 返回true的情况下，onTouchEvent 将获得事件并进行具体的处理。</p>
+<p>假如 onTouchEvent 返回 false，将事件(event)交父元素处理，（注意在这一步，事件流反向了，此时事件流是从内到外，从子元素到父元素）。<br>假如 onTouchEvent 返回 true，本次事件(event)就到此为止，被终结了。</p>
+<p>对照上面的说法，下面给出实例说明：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyLinearLayout1</span> <span class="keyword">extends</span> <span class="title class_">LinearLayout</span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="type">String</span> <span class="variable">TAG</span> <span class="operator">=</span> <span class="string">&quot;第一层MyLinearLayout&quot;</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> <span class="title function_">MyLinearLayout1</span><span class="params">(Context context)</span> &#123;</span><br><span class="line">		<span class="built_in">super</span>(context);</span><br><span class="line">		<span class="built_in">this</span>.setBackgroundColor(Color.WHITE);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setTagString</span><span class="params">(String tag)</span>&#123;</span><br><span class="line">		TAG = tag;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">dispatchTouchEvent</span><span class="params">(MotionEvent event)</span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(MotionEvent.ACTION_DOWN == event.getAction())&#123;</span><br><span class="line">			Log.v(TAG + <span class="string">&quot;dispatchTouchEvent:&quot;</span>, <span class="string">&quot;ACTION_DOWN&quot;</span>);</span><br><span class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span>(MotionEvent.ACTION_MOVE == event.getAction())&#123;</span><br><span class="line">			Log.v(TAG + <span class="string">&quot;dispatchTouchEvent:&quot;</span>, <span class="string">&quot;ACTION_MOVE&quot;</span>);</span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">			Log.v(TAG + <span class="string">&quot;dispatchTouchEvent:&quot;</span>, <span class="string">&quot;ACTION_UP&quot;</span>);</span><br><span class="line">		&#125; <span class="comment">//super.dispatchTouchEvent(event); return true;</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">onInterceptTouchEvent</span><span class="params">(MotionEvent event)</span>&#123;<span class="built_in">super</span>.onInterceptTouchEvent</span><br><span class="line"></span><br><span class="line">		<span class="title function_">if</span><span class="params">(MotionEvent.ACTION_DOWN == event.getAction()</span>)&#123;</span><br><span class="line">			Log.v(TAG + <span class="string">&quot;onInterceptTouchEvent:&quot;</span>, <span class="string">&quot;ACTION_DOWN&quot;</span>);</span><br><span class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span>(MotionEvent.ACTION_MOVE == event.getAction())&#123;</span><br><span class="line">			Log.v(TAG + <span class="string">&quot;onInterceptTouchEvent:&quot;</span>, <span class="string">&quot;ACTION_MOVE&quot;</span>);</span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">			Log.v(TAG + <span class="string">&quot;onInterceptTouchEvent:&quot;</span>, <span class="string">&quot;ACTION_UP&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">onTouchEvent</span><span class="params">(MotionEvent event)</span>&#123;<span class="built_in">super</span>.onTouchEvent(event)</span><br><span class="line">		<span class="keyword">if</span>(MotionEvent.ACTION_DOWN == event.getAction())&#123;</span><br><span class="line">			Log.v(TAG + <span class="string">&quot;onTouchEvent:&quot;</span>, <span class="string">&quot;ACTION_DOWN&quot;</span>);</span><br><span class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span>(MotionEvent.ACTION_MOVE == event.getAction())&#123;</span><br><span class="line">			Log.v(TAG + <span class="string">&quot;onTouchEvent:&quot;</span>, <span class="string">&quot;ACTION_MOVE&quot;</span>);</span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">			Log.v(TAG + <span class="string">&quot;onTouchEvent:&quot;</span>, <span class="string">&quot;ACTION_UP&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此时没有调用super.dispatchTouchEvent(event)，所以事件没有机会得到其他的处理。</p>
+<p>打印信息：</p>
+<pre><code>第一层MyLinearLayoutdispatchTouchEvent:(460): ACTION_DOWN
+第一层MyLinearLayoutdispatchTouchEvent:(460): ACTION_UP
+如果将上面boolean dispatchTouchEvent(MotionEvent event)的返回值修改为false，那么按照前面说的，MyLinearLayout1在响应了ACTION_DOWN之后，不会再响应本次触屏操作的其他事件。所以此时的打印结果是：
+第一层MyLinearLayoutdispatchTouchEvent:(460): ACTION_DOWN
+</code></pre>
+<p>可以看到，ACTION_UP没有被响应，因为本事件被忽略了。</p>
+<p>现在，将super.dispatchTouchEvent(event)的注释去掉，注意，现在的boolean dispatchTouchEvent(MotionEvent event)变成下面这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">dispatchTouchEvent</span><span class="params">(MotionEvent event)</span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(MotionEvent.ACTION_DOWN == event.getAction())&#123;</span><br><span class="line">			Log.v(TAG + <span class="string">&quot;dispatchTouchEvent:&quot;</span>, <span class="string">&quot;ACTION_DOWN&quot;</span>);</span><br><span class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span>(MotionEvent.ACTION_MOVE == event.getAction())&#123;</span><br><span class="line">			Log.v(TAG + <span class="string">&quot;dispatchTouchEvent:&quot;</span>, <span class="string">&quot;ACTION_MOVE&quot;</span>);</span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">			Log.v(TAG + <span class="string">&quot;dispatchTouchEvent:&quot;</span>, <span class="string">&quot;ACTION_UP&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">super</span>.dispatchTouchEvent(event);<span class="comment">//去掉注释了</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>打印信息：</p>
+<pre><code>第一层MyLinearLayout ACTION_DOWN:(783): ACTION_DOWN
+第一层MyLinearLayout onInterceptTouchEvent:(783): ACTION_DOWN
+第一层MyLinearLayout onTouchEvent:(783): ACTION_DOWN
+第一层MyLinearLayout dispatchTouchEvent:(783): ACTION_UP
+第一层MyLinearLayout onTouchEvent:(783): ACTION_UP
+</code></pre>
+<p>具体顺序为下：</p>
+<pre><code>ACTION_DOWN：ACTION_DOWN——&gt;onInterceptTouchEvent——&gt;onTouchEvent
+ACTION_UP：ACTION_DOWN——&gt;onTouchEvent
+</code></pre>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2012/07/23/talk/2012-07-23-talk-HTML5-WHATWG-W3C/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/android/" title="android">
+                        <b>#</b> android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/android/" title="android">
+                        #android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2012/10/09/javascript/2012-10-09-Javascript-parseInt/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#dispatchTouchEvent"><span class="toc-text">dispatchTouchEvent</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#onInterceptTouchEvent"><span class="toc-text">onInterceptTouchEvent</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#onTouchEvent"><span class="toc-text">onTouchEvent</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

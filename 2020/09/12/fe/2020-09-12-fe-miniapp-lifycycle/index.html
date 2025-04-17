@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      小程序生命周期 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">小程序生命周期</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/fe/" title="fe">
+                    <b>#</b> fe
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/fe/" title="fe">
+                    #fe
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>微信小程序大致可以认为是“微信 - App - Page”这样的三层结构，微信是 App 的宿主，App 是 Page 的宿主，宿主的状态会影响旗下子元素不同生命周期方法的调用。微信自身维护 Android、iOS等操作系统要求的生命周期方法，至于微信怎么定义小程序的生命周期，那全都是微信说了算。</p>
+<span id="more"></span>
+<h4 id="小程序-Page-间的跳转"><a href="#小程序-Page-间的跳转" class="headerlink" title="小程序 Page 间的跳转"></a>小程序 Page 间的跳转</h4><p>Page 间的跳转，是先 unLoad 了旧的 Page，再创建新的Page，这样有个问题就是，旧的 Page 没有了，新的 Page 还没创建，Page 与 Page 间就会有一段时间的空白。Page 生命周期方法挺少的，应该也是微信团队综合考虑之后的精简方案，毕竟简单稳定：</p>
+<p><img src="/assets/miniapp/lifecycle-page-navigate.svg" alt="1"></p>
+<h4 id="小程序的启动与-reLaunch-方法"><a href="#小程序的启动与-reLaunch-方法" class="headerlink" title="小程序的启动与 reLaunch 方法"></a>小程序的启动与 reLaunch 方法</h4><p>个人觉得这个 reLaunch 方法名字取得不是很贴切，因为 onLaunch 是 App 的一个生命周期方法，但是 reLaunch 却与 App 毫无关系。单纯从名字看，难道不应该是先销毁 App，然后重建 App，再打开指定 Page 吗？当然，实际并不是这样的：</p>
+<p><img src="/assets/miniapp/lifecycle-launch-relaunch.svg" alt="2"></p>
+<h4 id="小程序退到后台与恢复"><a href="#小程序退到后台与恢复" class="headerlink" title="小程序退到后台与恢复"></a>小程序退到后台与恢复</h4><p>在微信里面，小程序退到后台的途径比较少：</p>
+<ol>
+<li>关闭小程序。</li>
+<li>操作系统的“返回Home”或者 “切换应用程序” 操作。</li>
+</ol>
+<p>在这些情况下，并不会触发 Page 的 onUnload 生命周期方法，如果一直留在后台，那么“是否会触发 onUnload？”以及“何时触发 onUnload？”都是不确定的。</p>
+<p>至于恢复小程序的方式，就非常多了，看看小程序开发文档里面的场景值就知道了。不过大致可以分为两类：</p>
+<ol>
+<li>直接把小程序调回到前台。</li>
+<li>先把小程序调回到前台，然后打开指定页面。</li>
+</ol>
+<p>第一种方式遵循文档的描述，就是普通的 hide &#x2F; show。但是第二种的具体机制没有文档阐述，不过初步看可以认为行为与 reLaunch 类似，同时，并不管新打开的指定页面是不是与原本的页面相同：</p>
+<p><img src="/assets/miniapp/lifecycle-back-frant.svg" alt="3"></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2020/04/01/software/2020-04-01-device-manage/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/fe/" title="fe">
+                        <b>#</b> fe
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/fe/" title="fe">
+                        #fe
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2020/09/13/fe/2020-09-13-fe-miniapp-hook/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%8F%E7%A8%8B%E5%BA%8F-Page-%E9%97%B4%E7%9A%84%E8%B7%B3%E8%BD%AC"><span class="toc-text">小程序 Page 间的跳转</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%90%AF%E5%8A%A8%E4%B8%8E-reLaunch-%E6%96%B9%E6%B3%95"><span class="toc-text">小程序的启动与 reLaunch 方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%8F%E7%A8%8B%E5%BA%8F%E9%80%80%E5%88%B0%E5%90%8E%E5%8F%B0%E4%B8%8E%E6%81%A2%E5%A4%8D"><span class="toc-text">小程序退到后台与恢复</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      【Javascript】Sizzle引擎--原生getElementsByClassName对选择结果的影响（jQuery） 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">【Javascript】Sizzle引擎--原生getElementsByClassName对选择结果的影响（jQuery）</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/javascript/" title="javascript">
+                    <b>#</b> javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/javascript/" title="javascript">
+                    #javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>个人觉得这个例子虽然可能不具有实际意义，但是可以很好的理解Sizzle选择的过程</p>
+<h2 id="实例说明"><a href="#实例说明" class="headerlink" title="实例说明"></a>实例说明</h2><p>先看一个例子：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;Content-Type&quot;</span> <span class="attr">content</span>=<span class="string">&quot;text/html; charset=utf-8&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;tab&quot;</span> <span class="attr">id</span>=<span class="string">&quot;a1&quot;</span>&gt;</span>1<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;tab&quot;</span> <span class="attr">id</span>=<span class="string">&quot;a2&quot;</span>&gt;</span>2<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;tab&quot;</span> <span class="attr">id</span>=<span class="string">&quot;a3&quot;</span>&gt;</span>3<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;../sizzle.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;.tab:not(:first)&#x27;</span>));  </span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;p:not(:first)&#x27;</span>));      </span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;p.tab:not(:first)&#x27;</span>));  </span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>看上面三个结果的三个表达式，估计很多人会觉得结果肯定是一样的，不错，除去IE6&#x2F;7&#x2F;8，结果应该都是一样的，结果（一）：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;.tab:not(:first)&#x27;</span>));  <span class="comment">//[#a2,#a3]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;p:not(:first)&#x27;</span>));     <span class="comment">//[#a2,#a3]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;p.tab:not(:first)&#x27;</span>)); <span class="comment">//[#a2,#a3]</span></span><br></pre></td></tr></table></figure>
+
+<p>但是在IE6&#x2F;7&#x2F;8下面，结果（二）：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;.tab:not(:first)&#x27;</span>));  <span class="comment">//[#a1,#a2，#a3]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;p:not(:first)&#x27;</span>));     <span class="comment">//[#a2,#a3]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;p.tab:not(:first)&#x27;</span>)); <span class="comment">//[#a2,#a3]</span></span><br></pre></td></tr></table></figure>
+<p>其实不仅是IE6&#x2F;7&#x2F;8，任何不支持 getElementsByClassName 方法的浏览器结果都是结果（二）这样。</p>
+<h3 id="结果分析"><a href="#结果分析" class="headerlink" title="结果分析"></a>结果分析</h3><p>在结果（一）的过程中，</p>
+<p>‘.tab:not(:first)’选择流程是：</p>
+<ol>
+<li>document.getElementsByClassName(‘.tab’)获得结果集[#a1,#a2,#a3];</li>
+<li>过滤:not(:first)，获得结果集[#a2,#a3];</li>
+</ol>
+<p>‘p:not(:first)’选择流程是：</p>
+<ol>
+<li>document.getElementsByTagName(‘p’)获得结果集[#a1,#a2,#a3];</li>
+<li>过滤:not(:first)，获得结果集[#a2,#a3];</li>
+</ol>
+<p>‘p.tab:not(:first)’选择流程是：</p>
+<ol>
+<li>document.getElementsByClassName(‘.tab’)获得结果集[#a1,#a2,#a3];</li>
+<li>过滤p，获得结果集[#a1,#a2,#a3];</li>
+<li>过滤:not(:first)，获得结果集[#a2,#a3];</li>
+</ol>
+<p>在结果（二）的过程中：</p>
+<p>‘.tab:not(:first)’选择流程是：</p>
+<ol>
+<li>document.getElementsByTagName(‘*’)获得结果集[html,head,body,#a1,#a2,#a3,script,script]</li>
+<li>过滤:not(:first)，获得结果集[head,body,#a1,#a2,#a3,script,script]</li>
+<li>过滤.tab，获得结果集[#a1,#a2,#a3]</li>
+</ol>
+<p>‘p:not(:first)’选择流程是：</p>
+<ol>
+<li>document.getElementsByTagName(‘p’)获得结果集[#a1,#a2,#a3];</li>
+<li>过滤:not(:first)，获得结果集[#a2,#a3];</li>
+</ol>
+<p>‘p.tab:not(:first)’选择流程是：</p>
+<ol>
+<li>document.getElementsByTagName(‘p’)获得结果集[#a1,#a2,#a3];</li>
+<li>过滤:not(:first)，获得结果集[#a2,#a3];</li>
+<li>过滤.tab，获得结果集[#a2,#a3]</li>
+</ol>
+<p>可以看到，在不含class的选择符中，两种情况过程是一样的，当含有class的时候，会优先去寻找含有class的元素，从而直接影响了后面过滤步骤的候选集。</p>
+<h3 id="原因分析"><a href="#原因分析" class="headerlink" title="原因分析"></a>原因分析</h3><p>至于产生的原因，我们回到代码层面来解释：</p>
+<h4 id="第一个影响因素"><a href="#第一个影响因素" class="headerlink" title="第一个影响因素"></a>第一个影响因素</h4><p>先看Sizzle.find部分</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> ( i = <span class="number">0</span>, len = <span class="title class_">Expr</span>.<span class="property">order</span>.<span class="property">length</span>; i &lt; len; i++ ) &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Expr</span>.<span class="property">order</span>: [ <span class="string">&quot;ID&quot;</span>, <span class="string">&quot;NAME&quot;</span>, <span class="string">&quot;TAG&quot;</span> ];</span><br></pre></td></tr></table></figure>
+
+<p>最初的查找的时候，匹配type的是有一个优先级的 ID–&gt;NAME–&gt;TAG ,对于支持 getElementsByClassName 的浏览器，Sizzle 源码进行了一个处理：</p>
+<p>在1296行：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Expr</span>.<span class="property">order</span>.<span class="title function_">splice</span>(<span class="number">1</span>, <span class="number">0</span>, <span class="string">&quot;CLASS&quot;</span>);</span><br><span class="line">    <span class="title class_">Expr</span>.<span class="property">find</span>.<span class="property">CLASS</span> = <span class="keyword">function</span>(<span class="params"> match, context, isXML </span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> ( <span class="keyword">typeof</span> context.<span class="property">getElementsByClassName</span> !== <span class="string">&quot;undefined&quot;</span> &amp;&amp; !isXML ) &#123;</span><br><span class="line">            <span class="keyword">return</span> context.<span class="title function_">getElementsByClassName</span>(match[<span class="number">1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br></pre></td></tr></table></figure>
+<p>于是在支持getElementsByClassName的浏览器中，Sizzle.find的实现变成</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> ( i = <span class="number">0</span>, len = <span class="title class_">Expr</span>.<span class="property">order</span>.<span class="property">length</span>; i &lt; len; i++ ) &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Expr</span>.<span class="property">order</span>: [ <span class="string">&quot;ID&quot;</span>,<span class="string">&quot;CLASS&quot;</span> <span class="string">&quot;NAME&quot;</span>, <span class="string">&quot;TAG&quot;</span> ];</span><br></pre></td></tr></table></figure>
+
+<p>而且CLASS的优先级仅次于ID。</p>
+<p>所以.tab:not(:first)在过滤的第一步，不同浏览器的候选集就已经发生了差异。</p>
+<h4 id="第二个影响因素"><a href="#第二个影响因素" class="headerlink" title="第二个影响因素"></a>第二个影响因素</h4><p>再看Sizzle.filter部分</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> ( type <span class="keyword">in</span> <span class="title class_">Expr</span>.<span class="property">filter</span> ) &#123;&#125;</span><br><span class="line"><span class="title class_">Expr</span>.<span class="property">filter</span>=&#123;</span><br><span class="line">        <span class="attr">CLASS</span>: <span class="keyword">function</span>(<span class="params"> match, curLoop, inplace, result, not, isXML </span>) &#123;&#125;,</span><br><span class="line">        <span class="attr">ID</span>: <span class="keyword">function</span>(<span class="params"> match </span>) &#123;&#125;,</span><br><span class="line">        <span class="attr">TAG</span>: <span class="keyword">function</span>(<span class="params"> match, curLoop </span>) &#123;&#125;,</span><br><span class="line">        <span class="attr">CHILD</span>: <span class="keyword">function</span>(<span class="params"> match </span>) &#123;&#125;,</span><br><span class="line">        <span class="attr">ATTR</span>: <span class="keyword">function</span>(<span class="params"> match, curLoop, inplace, result, not, isXML </span>) &#123;&#125;,</span><br><span class="line">        <span class="attr">PSEUDO</span>: <span class="keyword">function</span>(<span class="params"> match, curLoop, inplace, result, not </span>) &#123;&#125;</span><br><span class="line">        <span class="attr">POS</span>: <span class="keyword">function</span>(<span class="params"> match </span>) &#123;&#125;</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure>
+
+<p>这里与 Sizzle.find 的一个显著不同是这里用的 for..in 循环，没有确定的顺序【优先级】，因此并不能保证先过滤什么类型。</p>
+<p>所以.tab:not(:first)在先过滤了:not(:first)，然后再过滤.tab，所以结果和想想的不一致。</p>
+<h4 id="第三个影响因素"><a href="#第三个影响因素" class="headerlink" title="第三个影响因素"></a>第三个影响因素</h4><p>这个涉及到filter的实现，对于含有not的表达式，候选集合会被筛选一遍。</p>
+<p>.tab:not(:first)在not部分集合改变，直接去除了第一个元素。</p>
+<p>.tab:first 就没有改变，因为first是在POS匹配中处理的。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>如果我们把Sizzle.filter的实现改成和Sizzle.find一致，变成如下形式：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> ( i = <span class="number">0</span>, len = <span class="title class_">Expr</span>.<span class="property">filterOrder</span>.<span class="property">length</span>; i &lt; len; i++ ) &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Expr</span>.<span class="property">filterOrder</span>: [ <span class="string">&quot;ID&quot;</span>,<span class="string">&quot;CLASS&quot;</span> <span class="string">&quot;NAME&quot;</span>, <span class="string">&quot;TAG&quot;</span> ,<span class="string">&quot;ATTR&quot;</span>,<span class="string">&quot;CHILD&quot;</span>,<span class="string">&quot;PSEUDO&quot;</span>,<span class="string">&quot;POS&quot;</span>];</span><br></pre></td></tr></table></figure>
+
+<p>那么我们就可以保证选择的结果和预期的一致。不过这种牵一发而动全身的事情，显然是不适合的。</p>
+<p>另外一个方法就是避免使用这种有歧义的选择符，将:not(:first)作为集合的一个方法调用，而不直接写到选择表达式里面。</p>
+<p>另外，如果知道DOM的结构，处理方式就很多了，比如加tag限制，层级限制等等</p>
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>这种问题并不是出现在没个类似的选择表达式中，具体的情况可以查看Sizzle源码的filter部分。</p>
+<p>filter部分比较麻烦，有什么错误之处，欢迎交流。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2012/02/18/javascript/2012-02-18-Javascript-Sizzle-4/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/javascript/" title="javascript">
+                        <b>#</b> javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/javascript/" title="javascript">
+                        #javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2012/02/25/javascript/2012-02-25-Javascript-Sizzle-5/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B%E8%AF%B4%E6%98%8E"><span class="toc-text">实例说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C%E5%88%86%E6%9E%90"><span class="toc-text">结果分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E5%9B%A0%E5%88%86%E6%9E%90"><span class="toc-text">原因分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%BD%B1%E5%93%8D%E5%9B%A0%E7%B4%A0"><span class="toc-text">第一个影响因素</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E4%B8%AA%E5%BD%B1%E5%93%8D%E5%9B%A0%E7%B4%A0"><span class="toc-text">第二个影响因素</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E4%B8%AA%E5%BD%B1%E5%93%8D%E5%9B%A0%E7%B4%A0"><span class="toc-text">第三个影响因素</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">解决方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%B4%E6%98%8E"><span class="toc-text">说明</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      【Javascript】Prototype源码浅析—Enumerable部分(三) 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">【Javascript】Prototype源码浅析—Enumerable部分(三)</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/javascript/" title="javascript">
+                    <b>#</b> javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/javascript/" title="javascript">
+                    #javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>现在来看Enumerable剩下的方法</p>
+<pre><code>toArray | size | inspect
+inject | invoke | sortBy | eachSlice | inGroupsOf | plunk | zip
+</code></pre>
+<p>前面说过map的原理，不管原来的集合是什么，调用map之后返回的结果就是一个数组，其中数组的每一项都是经过interator处理了的，如果不提供interator那么默认使用Prototype.K，此时的作用很明显，返回的结果就是原来集合的数组形式。原来的集合中length属性为多少，返回结果数组的length就是多少。</p>
+<p>这个特殊情况被作为一个方法独立出来，叫做toArray:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">toArray</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">map</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>另一个size方法是返回上面那个数组的长度：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">size</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">length</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>至于inspect，前面在Object和Strng部分见过好几次了，这里调用Array的inspect方法[Array部分后面分析，不过inspect这个方法太熟悉了，也没必要说了]。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">inspect</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&#x27;[&#x27;</span> + <span class="variable language_">this</span>.<span class="title function_">map</span>(<span class="title class_">Object</span>.<span class="property">inspect</span>).<span class="title function_">join</span>(<span class="string">&#x27;, &#x27;</span>) + <span class="string">&#x27;]&#x27;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>另外，对于集合来说，另一个操作是分组。Enumerable中对应的方法是eachSlice 和 inGroupsOf。</p>
+<p>先抛开源码，单独来实现这个方法，需要的一个参数是每一个分组的长度（叫做number），如果最后一组长度不够，就保留最后一组的实际长度。</p>
+<p>具体实现步骤：</p>
+<ol>
+<li>检测number的值，如果number小于1，那么肯定是非法字符，直接返回原来的集合。</li>
+<li>将所操作集合转变为数组A，转变方法就是在原来的集合上面调toArray方法。</li>
+<li>数组A分组有原生的方法slice，循环调用即可。</li>
+</ol>
+<p>按照上面的步骤，可得到下面的实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Enumerable</span>.<span class="property">eachSlice</span> = <span class="keyword">function</span>(<span class="params">number</span>)&#123;</span><br><span class="line">    <span class="keyword">if</span>(number &lt; <span class="number">1</span>)&#123; <span class="comment">//第一步</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> array = <span class="variable language_">this</span>.<span class="title function_">toArray</span>();<span class="comment">//第二步</span></span><br><span class="line">    <span class="keyword">var</span> index = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">var</span> results = [];</span><br><span class="line">    <span class="keyword">while</span>(index &lt; array.<span class="property">length</span>)&#123;<span class="comment">//第三步</span></span><br><span class="line">        results.<span class="title function_">push</span>(array.<span class="title function_">slice</span>(index,index + number));</span><br><span class="line">        index += number;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> results;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+<p>对应到具体的源码实现中，index +&#x3D; number;这一步被挪到while的条件中，因此，为了保证循环从0开始，index的初始值被设为-number；另外，和其他的方法一样，eachSlice也提供了iterator, context两个参数，作用依旧不变，所以最后的结果变成：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">function</span> <span class="title function_">eachSlice</span>(<span class="params">number, iterator, context</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> index = -number, slices = [], array = <span class="variable language_">this</span>.<span class="title function_">toArray</span>();</span><br><span class="line">    <span class="keyword">if</span> (number &lt; <span class="number">1</span>) <span class="keyword">return</span> array;</span><br><span class="line">    <span class="keyword">while</span> ((index += number) &lt; array.<span class="property">length</span>)</span><br><span class="line">      slices.<span class="title function_">push</span>(array.<span class="title function_">slice</span>(index, index+number));</span><br><span class="line">    <span class="keyword">return</span> slices.<span class="title function_">collect</span>(iterator, context);   <span class="comment">//collect就是map</span></span><br><span class="line">  &#125;</span><br><span class="line"><span class="string">``</span><span class="string">``</span></span><br><span class="line"></span><br><span class="line">例子：</span><br><span class="line"></span><br><span class="line"><span class="string">``</span><span class="string">`javascript</span></span><br><span class="line"><span class="string">console.log([1,2,3,4,5].eachSlice(2));//[[1,2],[3,4],[5,6]]</span></span><br></pre></td></tr></table></figure>
+
+<p>至于inGroupsOf方法，则是对eachSlice的一个补充而已。eachSlice最后一组长度不够，就保留最后一组的实际长度，在inGroupsOf最后一组长度不够，会用指定的填充符填充(默认填充为null)。因此只要提供iterator函数就可以了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Enumerable</span>.<span class="property">inGroupsOf</span> = <span class="keyword">function</span>(<span class="params">number, fillWith</span>) &#123;</span><br><span class="line">  fillWith = <span class="keyword">typeof</span> fillWith == <span class="string">&#x27;undefined&#x27;</span> ? <span class="literal">null</span> : fillWith;<span class="comment">//源码中这里使用的是Object.isUndefined</span></span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">eachSlice</span>(number, <span class="keyword">function</span>(<span class="params">slice</span>) &#123;</span><br><span class="line">    <span class="keyword">while</span>(slice.<span class="property">length</span> &lt; number)&#123;</span><br><span class="line">        slice.<span class="title function_">push</span>(fillWith);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> slice;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面看inject，先看手册说明：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">inject</span>(accumulator, iterator[, context]) -&gt; accumulatedValue</span><br></pre></td></tr></table></figure>
+<p>根据参数 iterator 中定义的规则来累计值。首次迭代时，参数 accumulator 为初始值，迭代过程中，iterator 将处理过的值存放在 accumulator 中，并作为下次迭代的起始值，迭代完成后，返回处理过的 accumulator。</p>
+<p>这个操作其实前面也遇到过，可以单独用each来实现，看一个数组求和的例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">dir</span>([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>].<span class="title function_">inject</span>(<span class="number">0</span>,<span class="keyword">function</span>(<span class="params">sum,n</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> sum + n;</span><br><span class="line">&#125;));<span class="comment">//10</span></span><br></pre></td></tr></table></figure>
+
+<p>如果换做each实现，就是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> sum = <span class="number">0</span>;</span><br><span class="line">[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>].<span class="title function_">each</span>(<span class="keyword">function</span>(<span class="params">value</span>)&#123;</span><br><span class="line">    sum += value;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">dir</span>(sum);<span class="comment">//10</span></span><br></pre></td></tr></table></figure>
+
+<p>对比上面的实现和源码中的实现，上面的实现中有一个缺陷：sum全局变量，这是不合理的。</p>
+<p>所以变形上面的形式，抛弃那个全局变量sum，由于each方法是固定死的，没有办法再改变，所以我们在外层再包装一个方法，并将叠加部分填进去：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">fn</span>(<span class="params">accumulator,interator,context</span>)&#123;</span><br><span class="line">    [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>].<span class="title function_">each</span>(<span class="keyword">function</span>(<span class="params">value,index</span>)&#123;</span><br><span class="line">        accumulator = interator.<span class="title function_">call</span>(context,accumulator,value,index);</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">return</span> accumulator;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">dir</span>(<span class="title function_">fn</span>(<span class="number">0</span>,<span class="keyword">function</span>(<span class="params">accumulator,value,index</span>)&#123;</span><br><span class="line">    accumulator += value;</span><br><span class="line">    <span class="keyword">return</span> accumulator;</span><br><span class="line">&#125;));<span class="comment">//10</span></span><br></pre></td></tr></table></figure>
+
+<p>看上面的实现，需要注意的一点是，fn中第一个传入的是一个引用类型的变量，由于这一个实现方式：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">accumulator = interator.<span class="title function_">call</span>(context,accumulator,value,index);</span><br></pre></td></tr></table></figure>
+
+<p>那么最后返回的结果是同一个变量，是对最初传入变量的一个引用，这一点是出于性能和效率的考虑，不过有时候可能导致问题，需警惕。</p>
+<p>接下来是invoke方法，这个方法和each（map）的作用基本一致，唯一的区别是each（map）执行的是外部提供的一个方法，而invoke执行的是集合对象自身本来就存在的方法。因此，invoke的参数有且只需要有一个，就是集合对象的方法名。举个例子，我们将一个数字数组的每一项都转化为字符串：</p>
+<p>对比两种实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> array_1 = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>].<span class="title function_">map</span>(<span class="keyword">function</span>(<span class="params">value</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> value.<span class="title function_">toString</span>();</span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;array_1:&#x27;</span>,array_1);<span class="comment">//[&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;]</span></span><br><span class="line"><span class="keyword">var</span> array_2 = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>].<span class="title function_">invoke</span>(<span class="string">&#x27;toString&#x27;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;array_2:&#x27;</span>,array_2);<span class="comment">//[&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;]</span></span><br></pre></td></tr></table></figure>
+
+<p>由于少了一次闭包的消耗，因此invoke在效率上稍高，而且形式也简洁不少。</p>
+<p>具体实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">invoke</span>(<span class="params">method</span>) &#123;</span><br><span class="line">  <span class="comment">//var args = $A(arguments).slice(1); //源码实现</span></span><br><span class="line">  <span class="keyword">var</span> args  = <span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">slice</span>.<span class="title function_">call</span>(<span class="variable language_">arguments</span>,<span class="number">1</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">map</span>(<span class="keyword">function</span>(<span class="params">value</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> value[method].<span class="title function_">apply</span>(value, args);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>plunk方法比较简单，获取所有元素的同一个属性的值，并返回相应的数组。这个方法显然是针对普通对象来的，数组的话没有什么属性好取的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">pluck</span>(<span class="params">property</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> results = [];</span><br><span class="line">  <span class="variable language_">this</span>.<span class="title function_">each</span>(<span class="keyword">function</span>(<span class="params">value</span>) &#123;</span><br><span class="line">    results.<span class="title function_">push</span>(value[property]);</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> results;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>源码好理解，给个例子就行：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">&#x27;hello&#x27;</span>, <span class="string">&#x27;world&#x27;</span>, <span class="string">&#x27;my&#x27;</span>, <span class="string">&#x27;is&#x27;</span>, <span class="string">&#x27;xesam&#x27;</span>].<span class="title function_">pluck</span>(<span class="string">&#x27;length&#x27;</span>)<span class="comment">// [5, 5, 2, 3, 5]</span></span><br></pre></td></tr></table></figure>
+
+<p>另一个在其他脚本里面常见的方法是zip，这个方法不是很好理解：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">zip</span>(<span class="title class_">Sequence</span>...[, iterator = <span class="title class_">Prototype</span>.<span class="property">K</span>]) -&gt; <span class="title class_">Array</span></span><br></pre></td></tr></table></figure>
+<p>将多个（两个及以上）序列按照顺序配对合并（想像一下拉链拉上的情形）为一个包含一序列元组的数组。<br>元组由每个原始序列的具有相同索引的元素组合而成。如果指定了可选的 iterator 参数，则元组由 iterator 指定的函数生成。 </p>
+<p>我们先不考虑iterator ，来第一个实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">zip</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> array_1 = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</span><br><span class="line">    <span class="keyword">var</span> array_2 = [<span class="string">&#x27;a&#x27;</span>,<span class="string">&#x27;b&#x27;</span>,<span class="string">&#x27;c&#x27;</span>];</span><br><span class="line">    <span class="keyword">var</span> array_3 = [<span class="string">&#x27;x&#x27;</span>,<span class="string">&#x27;y&#x27;</span>,<span class="string">&#x27;z&#x27;</span>];</span><br><span class="line">    <span class="keyword">var</span> result = [array_1].<span class="title function_">concat</span>([array_2,array_3]);<span class="comment">//[[1,2,3],[&#x27;a&#x27;,&#x27;b&#x27;,&#x27;c&#x27;],[&#x27;x&#x27;,&#x27;y&#x27;,&#x27;z&#x27;]]</span></span><br><span class="line">    <span class="keyword">return</span> array_1.<span class="title function_">map</span>(<span class="keyword">function</span>(<span class="params">value,index</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> result.<span class="title function_">pluck</span>(index);</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">zip</span>());<span class="comment">//[[1,&#x27;a&#x27;,&#x27;x&#x27;],[2,&#x27;b&#x27;,&#x27;y&#x27;],[3,&#x27;c&#x27;,&#x27;z&#x27;]]</span></span><br></pre></td></tr></table></figure>
+<p>改为Enumerable方法的形式就是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">zip</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> result = [<span class="variable language_">this</span>].<span class="title function_">concat</span>(<span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">slice</span>.<span class="title function_">call</span>(<span class="variable language_">arguments</span>,<span class="number">1</span>));</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">map</span>(<span class="keyword">function</span>(<span class="params">value,index</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> result.<span class="title function_">pluck</span>(index);</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>].<span class="title function_">zip</span>([<span class="string">&#x27;a&#x27;</span>,<span class="string">&#x27;b&#x27;</span>,<span class="string">&#x27;c&#x27;</span>],[<span class="string">&#x27;x&#x27;</span>,<span class="string">&#x27;y&#x27;</span>,<span class="string">&#x27;z&#x27;</span>]));<span class="comment">////[[1,&#x27;a&#x27;,&#x27;x&#x27;],[2,&#x27;b&#x27;,&#x27;y&#x27;],[3,&#x27;c&#x27;,&#x27;z&#x27;]]</span></span><br></pre></td></tr></table></figure>
+<p>加上interator处理之后就是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">zip</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> args = <span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">slice</span>.<span class="title function_">call</span>(<span class="variable language_">arguments</span>,<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">var</span> interator = <span class="keyword">function</span>(<span class="params">x</span>)&#123; <span class="keyword">return</span> x;&#125; <span class="comment">//Prototype.K</span></span><br><span class="line">    <span class="keyword">if</span>(args[args.<span class="property">length</span> - <span class="number">1</span>].<span class="property">constructor</span> == <span class="title class_">Function</span>)&#123;</span><br><span class="line">        interator = args.<span class="title function_">pop</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> result = [<span class="variable language_">this</span>].<span class="title function_">concat</span>(<span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">slice</span>.<span class="title function_">call</span>(<span class="variable language_">arguments</span>,<span class="number">1</span>));</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">map</span>(<span class="keyword">function</span>(<span class="params">value,index</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> interator.<span class="title function_">call</span>(result.<span class="title function_">pluck</span>(index));</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2012/01/17/javascript/2012-01-17-Javascript-Prototype-Enumerable-2/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/javascript/" title="javascript">
+                        <b>#</b> javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/javascript/" title="javascript">
+                        #javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2012/01/31/javascript/2012-01-31-Javascript-Prototype-Hash-1/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

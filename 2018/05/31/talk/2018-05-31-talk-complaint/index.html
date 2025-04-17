@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      不吐不快-碎碎念 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">不吐不快-碎碎念</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/talk/" title="talk">
+                    <b>#</b> talk
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/talk/" title="talk">
+                    #talk
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>纯吐槽，请忽略。</p>
+<span id="more"></span>
+
+<p>最近一直在帮忙做 code review，感慨现在部分程序员的态度真是不敢恭维。</p>
+<p>贴代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Function&lt;String, Integer&gt; getTimeNo = ts -&gt; &#123;</span><br><span class="line">    <span class="type">Integer</span> <span class="variable">timeNo</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (StringUtils.isBlank(ts))</span><br><span class="line">        <span class="keyword">return</span> timeNo;</span><br><span class="line">    <span class="type">String</span> <span class="variable">hour</span> <span class="operator">=</span> ts.split(<span class="string">&quot;:|：&quot;</span>)[<span class="number">0</span>].trim();</span><br><span class="line">    <span class="type">String</span> <span class="variable">minute</span> <span class="operator">=</span> ts.split(<span class="string">&quot;:|：&quot;</span>)[<span class="number">1</span>].trim();</span><br><span class="line">    <span class="keyword">if</span> (hour.startsWith(<span class="string">&quot;0&quot;</span>)) &#123;</span><br><span class="line">        timeNo += Integer.parseInt(hour.substring(<span class="number">1</span>, <span class="number">2</span>)) * <span class="number">4</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        timeNo += Integer.parseInt(hour) * <span class="number">4</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (minute.startsWith(<span class="string">&quot;0&quot;</span>)) &#123;</span><br><span class="line">        timeNo += (Integer.parseInt(minute.substring(<span class="number">1</span>, <span class="number">2</span>)) / <span class="number">15</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        timeNo += (Integer.parseInt(minute) / <span class="number">15</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> timeNo;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<!-- more -->
+
+<p>这段代码的意图是将一天按 15 分钟划分成一个连续的片段集，即 1 个小时被划分成 4 段，全天的划分结果类似[0:00 - 0:14, 0:15 - 0:29,…,23:45 - 23:59]，然后输入一个 time 字符串（格式为 02:23 表示 2 分 23 秒），获取这个 time 字符串对应到哪个 15 分钟片段内，然后返回片段的索引。</p>
+<p>就这么一个简单的需求，看看上面的代码犯了多少错误。</p>
+<p>第一、如何解析 time 字符串，获取小时和时间</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">hour</span> <span class="operator">=</span> ts.split(<span class="string">&quot;:|：&quot;</span>)[<span class="number">0</span>].trim();</span><br><span class="line"><span class="type">String</span> <span class="variable">minute</span> <span class="operator">=</span> ts.split(<span class="string">&quot;:|：&quot;</span>)[<span class="number">1</span>].trim();</span><br></pre></td></tr></table></figure>
+
+<p>犯下的错误：</p>
+<ol>
+<li><p>是否有必要区分半角和圆角。没有必要，因为字段是前后端约定的，如果在约定格式上还需要做兼容，就说明相关的前端开发人员需要好好反思。如果容许前端乱传，那这么点兼容实在远远不够。</p>
+</li>
+<li><p>如果不信任前端，那 split 也可能出问题，而且出了问题就异常，这是一个风险点。</p>
+</li>
+<li><p>想象力太丰富。这了既然用了 java8 的特性，就应该多了解一点，直接用 LocalTime.parse 就搞定了所有的解析过程。</p>
+</li>
+</ol>
+<p>第二、解析数字字符串</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (hour.startsWith(<span class="string">&quot;0&quot;</span>)) &#123;</span><br><span class="line">    timeNo += Integer.parseInt(hour.substring(<span class="number">1</span>, <span class="number">2</span>)) * <span class="number">4</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    timeNo += Integer.parseInt(hour) * <span class="number">4</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>犯下的错误：</p>
+<ol>
+<li>不得不说，这对 java 的理解也太敷衍了，前面有没有 0 对 Integer.parseInt 一点影响都没有，这个 if 纯粹是多此一举。</li>
+<li>上文中既然连半角和全角的情况都考虑了，那为何在这里又这么信任前端的数据，如果前端传一个 25:00，那么最后得到的时间就是错误的，却无法被发现。  </li>
+<li>Integer.parseInt 的异常没有处理，一旦出错就会导致程序崩溃，简直初级！</li>
+<li>与第 2 条同样的疑问，如果前端传过来的是 0:12 这样字段，那 substring(1,2) 就毫不留情的抛出 StringIndexOutOfBoundsException 异常，又是一个坑。不如直接使用 substring(1)，何必画蛇添足去指定第 2 个参数。</li>
+</ol>
+<p>那这段代码应该怎么写？</p>
+<p>其实这里用 Function 就已经很坑爹了，这个逻辑完全应该是一个独立的方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">getTimeIndex</span><span class="params">(String timeStr)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    <span class="type">LocalTime</span> <span class="variable">time</span> <span class="operator">=</span> LocalTime.parse(timeStr);</span><br><span class="line">    <span class="keyword">return</span> time.getHour() * <span class="number">4</span> + time.getMinute()/<span class="number">15</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>当然，整体还有改进的方法，就看具体的需求和度了。比如 15 这个魔数不应该要、15 应该是一个参数变量、以及异常应该怎么处理，是不是需要提供默认值，等等。不过本文只是一个纯粹的吐槽，不是关于重构的主题。</p>
+<p>深深的忧虑。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2018/02/18/talk/2018-02-18-pay-for-knowledge/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/talk/" title="talk">
+                        <b>#</b> talk
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/talk/" title="talk">
+                        #talk
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2018/06/01/computer/2018-06-01-keil-1/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

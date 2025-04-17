@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      使用Axure创建Tabs效果 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">使用Axure创建Tabs效果</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/product/" title="product">
+                    <b>#</b> product
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/product/" title="product">
+                    #product
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>平时我都是用 Axure 做布局演示，但每次都重复创建一些组件也挺麻烦的，所以就创建了一个元件库。<br>很多操作以前用过，但是多年不用就忘记了，于是在这记录一篇比较典型的创建 Tab 头组件操作，以作备忘。</p>
+<span id="more"></span>
+
+<h2 id="大致效果"><a href="#大致效果" class="headerlink" title="大致效果"></a>大致效果</h2><ol>
+<li>支持配置 Tab 个数。</li>
+<li>支持左右滑动。</li>
+<li>支持点击选中。</li>
+</ol>
+<p><img src="/assets/product/axure/axure-tabs.png" alt="1"></p>
+<h2 id="中继器的使用"><a href="#中继器的使用" class="headerlink" title="中继器的使用"></a>中继器的使用</h2><p>“中继器”的英文名叫“Repeater”，相当于 Axure 提供的一个简单的数据库，更准确叫一个二维表。<br>通过交互设置给中继器指定渲染方式，就可以实现批量渲染数据的效果了。同时中继器还支持增删改查，可以较为方便的实现“数据驱动页面”的模式。</p>
+<p><img src="/assets/product/axure/axure-tab-1.png" alt="1"></p>
+<p>如果中继器只保留一行多列，也可以实现“局部变量”的效果，这样就避免去设置和维护全局变量了。</p>
+<h2 id="构建布局"><a href="#构建布局" class="headerlink" title="构建布局"></a>构建布局</h2><p>布局要处理的几个问题：</p>
+<ol>
+<li>如何实现滑动？</li>
+</ol>
+<p>答：使用动态面板，然后使用“移动”交互来移动面板内的内容，布局结构：</p>
+<p><img src="/assets/product/axure/axure-tab-2.png" alt="1"></p>
+<p>同时设置移动边界，避免内容移出界：</p>
+<p><img src="/assets/product/axure/axure-tab-2-0.png" alt="1"></p>
+<ol start="2">
+<li>如何让内容作为一个整体进行移动？</li>
+</ol>
+<p>答：a.将中继器打包成一个“组”；b.把中继器放入一个新的动态面板中，自然就称为一个整体了。<br>相较之下，打包成“组”比较方便，毕竟不用手动处理尺寸问题。</p>
+<h2 id="添加交互"><a href="#添加交互" class="headerlink" title="添加交互"></a>添加交互</h2><p>第一步、被选中的 Tab 显示“选中”效果。</p>
+<p>这里没有使用“选中”交互，而是直接根据中继器对应 item 的“状态”字段来设置文字（富文本），如果需要更复杂的样式效果，可以使用动态面板来实现。</p>
+<p><img src="/assets/product/axure/axure-tab-3.png" alt="1"></p>
+<p>第二步、点击 Tab 进行选中切换。</p>
+<p>先选出所有的 item，将所有 Tab 的“状态”改为“未选中”，然后将被点击元件的“状态”更新为“选中”。</p>
+<p><img src="/assets/product/axure/axure-tab-4.png" alt="1"></p>
+<h2 id="todo"><a href="#todo" class="headerlink" title="todo"></a>todo</h2><p>如果还需要把被点击 Tab 移动到最合适的地方（比如视图中心），也可以在点击事件中再添加“移动”交互，不过这个判断写起来比较麻烦，不要判断边界问题，但是逻辑都一样。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2021/10/01/product/2021-10-01-weixin-account/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/product/" title="product">
+                        <b>#</b> product
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/product/" title="product">
+                        #product
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2021/11/01/talk/2021-11-01-talk-layman-terms/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%A7%E8%87%B4%E6%95%88%E6%9E%9C"><span class="toc-text">大致效果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%AD%E7%BB%A7%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-text">中继器的使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E5%B8%83%E5%B1%80"><span class="toc-text">构建布局</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E4%BA%A4%E4%BA%92"><span class="toc-text">添加交互</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#todo"><span class="toc-text">todo</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      【Javascript】向后兼容的DOM事件绑定 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">【Javascript】向后兼容的DOM事件绑定</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/javascript/" title="javascript">
+                    <b>#</b> javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/javascript/" title="javascript">
+                    #javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="主要内容"><a href="#主要内容" class="headerlink" title="主要内容"></a>主要内容</h2><p>addEventListener绑定方式的问题：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">addEventListener</span>( <span class="string">&#x27;click&#x27;</span>,</span><br><span class="line">    <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="title function_">alert</span>(<span class="string">&#x27;body clicked&#x27;</span>);</span><br><span class="line">    &#125;,<span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+<p>以及第二个参数为object的优势：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">handleEvent</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">            <span class="title function_">alert</span>(<span class="string">&#x27;body clicked&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+<p>原文废话太多，我只翻译了主要部分。原文地址：<a target="_blank" rel="noopener" href="http://peter.michaux.ca/articles/our-backwards-dom-event-libraries">原文</a> 具体细节，请自行查看</p>
+<p>先简短的看一下各个浏览器提供的DOM元素事件绑定接口：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//IE使用element.attachEvent：</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">attachEvent</span>(</span><br><span class="line">    <span class="string">&#x27;onclick&#x27;</span>,</span><br><span class="line">    <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="title function_">alert</span>(<span class="string">&#x27;body clicked&#x27;</span>);</span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//其他浏览器使用element.addEventListener：</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">addEventListener</span>(</span><br><span class="line">    <span class="string">&#x27;click&#x27;</span>,</span><br><span class="line">    <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="title function_">alert</span>(<span class="string">&#x27;body clicked&#x27;</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+
+<p>一般来说上面的第二个参数都是传入一个函数句柄，但是大多数javascript程序员并不知道第二个参数可以传入一对象obj【DOM2接口 <a target="_blank" rel="noopener" href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-EventListener">http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-EventListener</a> 】，如此一来，当event执行的时候，会隐式的调用obj的handleEvent方法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">addEventListener</span>(</span><br><span class="line">    <span class="string">&#x27;click&#x27;</span>,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">handleEvent</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">            <span class="title function_">alert</span>(<span class="string">&#x27;body clicked&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+<p>这么做的一个重要方面是 obj 的 handleEvent 只有在执行的时候才需要去访问【有点类似延迟绑定的效果】。同时，如果在两次event事件间隔中，handleEvent发生了改变，那么产生的效果会跟着改变。这样一个好处就是不用remove事件而直接切换事件。</p>
+<p>看下面的例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, obj, <span class="literal">false</span>);</span><br><span class="line"><span class="comment">// click body will error in some browsers because</span></span><br><span class="line"><span class="comment">// 现在还没有事件</span></span><br><span class="line">obj.<span class="property">handleEvent</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;<span class="title function_">alert</span>(<span class="string">&#x27;alpha&#x27;</span>);&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 单击弹出alpha</span></span><br><span class="line">obj.<span class="property">handleEvent</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;<span class="title function_">alert</span>(<span class="string">&#x27;beta&#x27;</span>);&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 单击弹出&quot;beta&quot;</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">removeEventListener</span>(<span class="string">&#x27;click&#x27;</span>, obj, <span class="literal">false</span>);</span><br><span class="line"><span class="comment">//单击什么都没有了</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>【注意，这个用法存在一定的兼容性问题。不过我现在只面向手机浏览器，所以请自行测试】</p>
+<h3 id="跨浏览器的事件绑定"><a href="#跨浏览器的事件绑定" class="headerlink" title="跨浏览器的事件绑定"></a>跨浏览器的事件绑定</h3><p>对于事件绑定，各种库都会处理兼容问题，统一API，大都类似：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">LIB_addEventListener</span>(</span><br><span class="line">    <span class="variable language_">document</span>.<span class="property">body</span>, </span><br><span class="line">    <span class="string">&#x27;click&#x27;</span>, </span><br><span class="line">    <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="title function_">alert</span>(<span class="string">&#x27;body clicked&#x27;</span>);</span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>个人实现的一个：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//一个封装</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">LIB_addEventListener</span>(<span class="params">el,type,fn</span>)&#123;</span><br><span class="line">    el.<span class="title function_">addEventListener</span>(type,fn,<span class="literal">false</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">ViewObject</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">data</span> = <span class="string">&#x27;alpha&#x27;</span>;</span><br><span class="line">    <span class="title function_">LIB_addEventListener</span>(<span class="variable language_">document</span>.<span class="property">body</span>,<span class="string">&#x27;click&#x27;</span>,<span class="variable language_">this</span>.<span class="property">handleClick</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">ViewObject</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">handleClick</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">data</span>);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> test = <span class="keyword">new</span> <span class="title class_">ViewObject</span>();<span class="comment">//单击弹出undefined</span></span><br></pre></td></tr></table></figure>
+
+<p>我们期望弹出‘alpha’，但是 this 指向 window，弹出的是 undefined；</p>
+<p>解决方式，有的库添加了第四个参数，用来制定上下文：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">LIB_addEventListener</span>(<span class="params">el,type,fn,obj</span>)&#123;</span><br><span class="line">    el.<span class="title function_">addEventListener</span>(type,fn.<span class="title function_">bind</span>(obj),<span class="literal">false</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">ViewObject</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">data</span> = <span class="string">&#x27;alpha&#x27;</span>;</span><br><span class="line">    <span class="title function_">LIB_addEventListener</span>(<span class="variable language_">document</span>.<span class="property">body</span>,<span class="string">&#x27;click&#x27;</span>,<span class="variable language_">this</span>.<span class="property">handleClick</span>,<span class="variable language_">this</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">ViewObject</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">handleClick</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">data</span>);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> test = <span class="keyword">new</span> <span class="title class_">ViewObject</span>();</span><br></pre></td></tr></table></figure>
+<p>此时我们弹出来‘alpha’</p>
+<p>这种方式的问题：listener在绑定的时候就已经固定了，于是问题就又来了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">LIB_addEventListener</span>(<span class="params">el,type,fn,obj</span>)&#123;</span><br><span class="line">    el.<span class="title function_">addEventListener</span>(type,fn.<span class="title function_">bind</span>(obj),<span class="literal">false</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">ViewObject</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">data</span> = <span class="string">&#x27;alpha&#x27;</span>;</span><br><span class="line">    <span class="title function_">LIB_addEventListener</span>(<span class="variable language_">document</span>.<span class="property">body</span>,<span class="string">&#x27;click&#x27;</span>,<span class="variable language_">this</span>.<span class="property">handleClick</span>,<span class="variable language_">this</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">ViewObject</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">handleClick</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">data</span>);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> test = <span class="keyword">new</span> <span class="title class_">ViewObject</span>();</span><br><span class="line">test.<span class="property">handleClick</span> = <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;new fn&#x27;</span>);<span class="comment">//单击弹出的依旧是alpha。我们希望的是new fn</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>采用obj的绑定形式：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">LIB_addEventListener</span>(<span class="params">el,type,obj</span>)&#123;</span><br><span class="line">    el.<span class="title function_">addEventListener</span>(type,obj,<span class="literal">false</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">ViewObject</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">data</span> = <span class="string">&#x27;alpha&#x27;</span>;</span><br><span class="line">    <span class="title function_">LIB_addEventListener</span>(<span class="variable language_">document</span>.<span class="property">body</span>, <span class="string">&#x27;click&#x27;</span>, <span class="variable language_">this</span>);</span><br><span class="line">    <span class="title function_">LIB_addEventListener</span>(<span class="variable language_">document</span>.<span class="property">body</span>, <span class="string">&#x27;mousemove&#x27;</span>, <span class="variable language_">this</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">ViewObject</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">handleEvent</span> = <span class="keyword">function</span>(<span class="params">e</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="string">&#x27;click&#x27;</span> == e.<span class="property">type</span>)&#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">data</span>)</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;not click&#x27;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> test = <span class="keyword">new</span> <span class="title class_">ViewObject</span>();</span><br></pre></td></tr></table></figure>
+<p>上面的例子我改了一下，但是可以说明问题。这样的灵活性也高一些。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2012/03/10/javascript/2012-03-10-Javascript-html5sql.js/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/javascript/" title="javascript">
+                        <b>#</b> javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/javascript/" title="javascript">
+                        #javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2012/04/26/javascript/2012-04-26-Javascript-native+hubrid/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E5%86%85%E5%AE%B9"><span class="toc-text">主要内容</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B7%A8%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9A%84%E4%BA%8B%E4%BB%B6%E7%BB%91%E5%AE%9A"><span class="toc-text">跨浏览器的事件绑定</span></a></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

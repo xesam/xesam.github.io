@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      linux 搭建SVN服务器 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">linux 搭建SVN服务器</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/computer/" title="computer">
+                    <b>#</b> computer
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/computer/" title="computer">
+                    #computer
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="1-安装Subversion"><a href="#1-安装Subversion" class="headerlink" title="1.安装Subversion"></a>1.安装Subversion</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install subversion</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-创建仓库"><a href="#2-创建仓库" class="headerlink" title="2.创建仓库"></a>2.创建仓库</h2><p>假定我们仓库的父目录为&#x2F;home&#x2F;svn</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /home/svn</span><br><span class="line">sudo svnadmin create /home/svn/test</span><br></pre></td></tr></table></figure>
+<p>可以看到&#x2F;home&#x2F;svn目录下面有一个test文件夹，里面有conf，db，format，hooks，locks，README.txt几个文件</p>
+<h2 id="3-启动svn服务器"><a href="#3-启动svn服务器" class="headerlink" title="3.启动svn服务器"></a>3.启动svn服务器</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo svnserve -d -r /home/svn</span><br></pre></td></tr></table></figure>
+<p>4.测试svn服务器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn co file://localhost/home/svn/test</span><br></pre></td></tr></table></figure>
+<p>输出：Checked out revision 0</p>
+<p>说明安装成功</p>
+<h1 id="浏览器访问"><a href="#浏览器访问" class="headerlink" title="浏览器访问"></a>浏览器访问</h1><p>如果要通过浏览器访问的，则需要与apache配合：</p>
+<h2 id="1-安装apache"><a href="#1-安装apache" class="headerlink" title="1.安装apache"></a>1.安装apache</h2><p>如果没有安装apache，需要先安装apache以及libapache2-svn</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install apache libapache2-svn</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-整合SVN"><a href="#2-整合SVN" class="headerlink" title="2.整合SVN"></a>2.整合SVN</h2><p>修改&#x2F;etc&#x2F;apache2&#x2F;mods-available&#x2F;dav_svn.conf</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Location</span> /<span class="attr">svn</span>&gt;</span></span><br><span class="line">    DAV svn</span><br><span class="line">    SVNParentPath /home/svn</span><br><span class="line">    AuthType Basic</span><br><span class="line">    AuthName &quot;Subversion Repository&quot;</span><br><span class="line">    AuthUserFile /etc/subversion/dav_svn.passwd</span><br><span class="line">    AuthzSVNAccessFile /etc/subversion/dav_svn.authz</span><br><span class="line">    Require valid-user</span><br><span class="line"><span class="tag">&lt;/<span class="name">Location</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>说明：</p>
+<pre><code>1. SVNParentPath表示的所有库的父级目录，SVNParentPath与SVNPath只能启用一个。SVNPath只能创建一个仓库，SVNParentPath则可以创建多个，由于通常不会只有一个仓库，所以通常都会选择SVNParentPath
+2. AuthUserFile 是svn的用户配置文件，位置可以自定义，文件也需要自己创建，不过得保证apache有访问权限
+3. AuthzSVNAccessFile 是svn的权限控制文件，其他同AuthUserFile
+</code></pre>
+<h2 id="3-添加SVN用户"><a href="#3-添加SVN用户" class="headerlink" title="3.添加SVN用户"></a>3.添加SVN用户</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo htpasswd -c /etc/subversion2/dav_svn.passwd username</span><br></pre></td></tr></table></figure>
+<p>回车之后需要输入两次密码。<br>据说 -c 参数创建文件会覆盖原有的信息，但是经过测试，并没有覆盖原有的用户信息，所以，执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo htpasswd -c /etc/subversion2/dav_svn.passwd user1</span><br><span class="line">sudo htpasswd -c /etc/subversion2/dav_svn.passwd user2</span><br></pre></td></tr></table></figure>
+<p>dav_svn.passwd文件中依旧会有user1和user2两个用户信息，没有冲突。</p>
+<p>另外，&#x2F;etc&#x2F;subversion2&#x2F;dav_svn.passwd文件需要与第2步中自定义的文件位置一致</p>
+<p>完成之后可以看到dav_svn.passwd中有类似</p>
+<pre><code>xiao:$apr1$wq1l1SCM$lAgKYtQJUzpPZPgvQXTnX1
+</code></pre>
+<p>的片段，xiao是用户名，后面的是加密后的密码</p>
+<h2 id="4-修改SVN访问权限"><a href="#4-修改SVN访问权限" class="headerlink" title="4.修改SVN访问权限"></a>4.修改SVN访问权限</h2><p>编辑 &#x2F;etc&#x2F;apache2&#x2F;dav_svn.authz<br>如果想开放所有权限，那么可以直接</p>
+<pre><code>[/]
+* = rw
+</code></pre>
+<p>表示用户都有读写权限</p>
+<h2 id="5-重启apache"><a href="#5-重启apache" class="headerlink" title="5.重启apache"></a>5.重启apache</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo /etc/init.d/apache2 restart</span><br></pre></td></tr></table></figure>
+
+<p>访问<a target="_blank" rel="noopener" href="http://127.0.0.1/svn/test/%E5%8F%AF%E6%9F%A5%E7%9C%8B%E7%BB%93%E6%9E%9C">http://127.0.0.1/svn/test/可查看结果</a></p>
+<h1 id="补充说明："><a href="#补充说明：" class="headerlink" title="补充说明："></a>补充说明：</h1><h2 id="1-整合SVN出错"><a href="#1-整合SVN出错" class="headerlink" title="1.整合SVN出错"></a>1.整合SVN出错</h2><p>出现错误：</p>
+<pre><code>Invalid command &#39;AuthzSVNAccessFile&#39;, perhaps misspelled or defined by a module not included in the server configuration
+Action &#39;configtest&#39; failed.
+</code></pre>
+<p>原因：没有导入auth模块<br>解决方法：<br>在&#x2F;etc&#x2F;apache2&#x2F;mods-enabled&#x2F;dav_svn.load中加入</p>
+<pre><code>LoadModule authz_svn_module /usr/lib/apache2/modules/mod_authz_svn.so
+</code></pre>
+<h2 id="2-访问仓库列表"><a href="#2-访问仓库列表" class="headerlink" title="2.访问仓库列表"></a>2.访问仓库列表</h2><p>如果希望访问所有的仓库列表，可以修改&#x2F;etc&#x2F;apache2&#x2F;mods-available&#x2F;dav_svn.conf如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Location</span> /<span class="attr">svn</span>/&gt;</span></span><br><span class="line">    DAV svn</span><br><span class="line">    SVNParentPath /home/svn</span><br><span class="line">    SVNListParentPath On</span><br><span class="line">    AuthType Basic</span><br><span class="line">    AuthName &quot;Subversion Repository&quot;</span><br><span class="line">    AuthUserFile /etc/subversion/dav_svn.passwd</span><br><span class="line">    AuthzSVNAccessFile /etc/subversion/dav_svn.authz</span><br><span class="line">    Require valid-user</span><br><span class="line"><span class="tag">&lt;/<span class="name">Location</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>注意上面的变化，%lt;Location &#x2F;svn&#x2F;&gt;添加了尾部斜线，SVNListParentPath On是新添加的。<br>重启apache后访问<a target="_blank" rel="noopener" href="http://127.0.0.1/svn/%EF%BC%88%E7%BB%93%E5%B0%BE%E6%9C%89%E4%B8%AA%E2%80%99/'%EF%BC%89%E5%8F%AF%E4%BB%A5%E7%9C%8B%E5%88%B0%E7%BB%93%E6%9E%9C">http://127.0.0.1/svn/（结尾有个’/&#39;）可以看到结果</a></p>
+<h2 id="3-权限控制说明"><a href="#3-权限控制说明" class="headerlink" title="3.权限控制说明"></a>3.权限控制说明</h2><p>&#x2F;etc&#x2F;apache2&#x2F;dav_svn.authz 权限控制的一个示例</p>
+<pre><code>[groups] #用来分组用户
+group1 = xiao, xe
+group2 = user1, user2
+ 
+[test:/] #仓库名称，[/]表示所有仓库
+@group1 = rw #表示group1组的用户（xiao, xe）对test具有读写权限
+@group2 = r  #表示group2组的用户（user1, user2）对test只具有读权限，没有写的权限
+* = #表示所有用户都没有权限，即既不能读，也不能写
+ 
+[test2:/]
+* = rw #表示所有用户都具有读写权限
+</code></pre>
+<h2 id="4-权限错误"><a href="#4-权限错误" class="headerlink" title="4.权限错误"></a>4.权限错误</h2><p>出现</p>
+<pre><code>Can’t open directory ‘/home/svn’: Permission denied
+</code></pre>
+<p>或者</p>
+<pre><code>403 forbidden
+</code></pre>
+<p>错误的话，表示apache（通常账户是www-data）没有权限文档到svn所在目录的权限，此时需要检查&#x2F;home&#x2F;svn及其子文件夹的权限，比如</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chown -R www-data /home/svn</span><br></pre></td></tr></table></figure>
+
+<p>然后再访问<a target="_blank" rel="noopener" href="http://127.0.0.1/svn/test/%E6%9F%A5%E7%9C%8B%E7%BB%93%E6%9E%9C">http://127.0.0.1/svn/test/查看结果</a></p>
+<h2 id="5-重启apache的时候如果出现"><a href="#5-重启apache的时候如果出现" class="headerlink" title="5.重启apache的时候如果出现"></a>5.重启apache的时候如果出现</h2><pre><code>Permission denied: make_sock: could not bind to address 0.0.0.0:80
+</code></pre>
+<p>等字样，记得加sudo</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2013/03/12/javascript/2013-03-12-Javascript-JSON-format/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/computer/" title="computer">
+                        <b>#</b> computer
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/computer/" title="computer">
+                        #computer
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2013/03/15/talk/2013-03-15-talk-time/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%AE%89%E8%A3%85Subversion"><span class="toc-text">1.安装Subversion</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%88%9B%E5%BB%BA%E4%BB%93%E5%BA%93"><span class="toc-text">2.创建仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%90%AF%E5%8A%A8svn%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-text">3.启动svn服务器</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E8%AE%BF%E9%97%AE"><span class="toc-text">浏览器访问</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%AE%89%E8%A3%85apache"><span class="toc-text">1.安装apache</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%95%B4%E5%90%88SVN"><span class="toc-text">2.整合SVN</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%B7%BB%E5%8A%A0SVN%E7%94%A8%E6%88%B7"><span class="toc-text">3.添加SVN用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E4%BF%AE%E6%94%B9SVN%E8%AE%BF%E9%97%AE%E6%9D%83%E9%99%90"><span class="toc-text">4.修改SVN访问权限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E9%87%8D%E5%90%AFapache"><span class="toc-text">5.重启apache</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A1%A5%E5%85%85%E8%AF%B4%E6%98%8E%EF%BC%9A"><span class="toc-text">补充说明：</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%95%B4%E5%90%88SVN%E5%87%BA%E9%94%99"><span class="toc-text">1.整合SVN出错</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%AE%BF%E9%97%AE%E4%BB%93%E5%BA%93%E5%88%97%E8%A1%A8"><span class="toc-text">2.访问仓库列表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6%E8%AF%B4%E6%98%8E"><span class="toc-text">3.权限控制说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%9D%83%E9%99%90%E9%94%99%E8%AF%AF"><span class="toc-text">4.权限错误</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E9%87%8D%E5%90%AFapache%E7%9A%84%E6%97%B6%E5%80%99%E5%A6%82%E6%9E%9C%E5%87%BA%E7%8E%B0"><span class="toc-text">5.重启apache的时候如果出现</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

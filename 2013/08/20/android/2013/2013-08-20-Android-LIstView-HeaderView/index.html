@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      LIstView的HeaderView 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">LIstView的HeaderView</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/android/" title="android">
+                    <b>#</b> android
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/android/" title="android">
+                    #android
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="一，添加HeaderView之后尺寸布局被忽略。"><a href="#一，添加HeaderView之后尺寸布局被忽略。" class="headerlink" title="一，添加HeaderView之后尺寸布局被忽略。"></a>一，添加HeaderView之后尺寸布局被忽略。</h2><p>通常添加头部的方法是 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">LayoutInflater</span> <span class="variable">lif</span> <span class="operator">=</span> (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);</span><br><span class="line"><span class="type">View</span> <span class="variable">headerView</span> <span class="operator">=</span> lif.inflate(R.layout.header, <span class="literal">null</span>);</span><br><span class="line">mListView.addHeaderView(headerView);</span><br></pre></td></tr></table></figure>
+
+<p>原因： </p>
+<p>lif.inflate(R.layout.header, null)丢失了XML布局中根View的LayoutParam，应该使用的是 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lif.inflate(R.layout.header, mListView, <span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="二，添加HeaderView之后导致OnItemClickListener的position移位"><a href="#二，添加HeaderView之后导致OnItemClickListener的position移位" class="headerlink" title="二，添加HeaderView之后导致OnItemClickListener的position移位"></a>二，添加HeaderView之后导致OnItemClickListener的position移位</h2><p>OnItemClickListener接口的方法： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">onItemClick</span><span class="params">(AdapterView&lt;?&gt; parent, View view, <span class="type">int</span> position, <span class="type">long</span> id)</span></span><br></pre></td></tr></table></figure>
+
+<p>position通常是从0开始的，但是添加了HeaderView之后，position也会将HeaderView的数目计算进去。 </p>
+<p>几个解决办法： </p>
+<p>1,手动计算真实的position位置： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">final</span> <span class="variable">headerCount</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">mListView.setOnItemClickListener(<span class="keyword">new</span> <span class="title class_">OnItemClickListener</span>() &#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onItemClick</span><span class="params">(AdapterView&lt;?&gt; parent, View view,</span></span><br><span class="line"><span class="params">			<span class="type">int</span> position, <span class="type">long</span> id)</span> &#123;</span><br><span class="line">		<span class="type">Item</span> <span class="variable">item</span> <span class="operator">=</span> myAdapter.getItem(position - headerCount);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>2,其实上面的步骤ListView已经为我们提供了，所以可以改写为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mListView.setOnItemClickListener(<span class="keyword">new</span> <span class="title class_">OnItemClickListener</span>() &#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onItemClick</span><span class="params">(AdapterView&lt;?&gt; parent, View view,</span></span><br><span class="line"><span class="params">			<span class="type">int</span> position, <span class="type">long</span> id)</span> &#123;</span><br><span class="line">		<span class="type">Item</span> <span class="variable">item</span> <span class="operator">=</span> parent.getAdapter().getItem(position);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>原因在源码中有比较清晰的解释： </p>
+<p>当有headerView被添加时，实际传递给ListView的adapter被包装，parent.getAdapter()返回真实被 ListView 使用的 Adapter（HeaderViewListAdapter），HeaderViewListAdapter的getItem(int)方法处理了position的问题。 </p>
+<h2 id="三，LayoutInflater的infalte"><a href="#三，LayoutInflater的infalte" class="headerlink" title="三，LayoutInflater的infalte()"></a>三，LayoutInflater的infalte()</h2><p>用来呼应第一个问题。LayoutInflater的作用很简单，就是将XML的布局文件“翻译”成相应的View对象，而且出于性能的考虑，LayoutInflater只能处理编译后的XML文件，而不能处理通常明文编码的XML文件。<br>最常用的一个方法： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">View <span class="title function_">inflate</span><span class="params">(<span class="type">int</span> resource, ViewGroup root, <span class="type">boolean</span> attachToRoot)</span></span><br></pre></td></tr></table></figure>
+
+<p>其中： </p>
+<pre><code>resource是布局文件ID 
+root是父ViewGroup对象， 
+attachToRoot是是否将“翻译”出来的View添加到上面的root中 
+</code></pre>
+<p>root和attachToRoot是共同作用的： </p>
+<ol>
+<li>有root，同时attachToRoot为false，那么inflate()返回的就是“翻译”得到的view </li>
+<li>有root，同时attachToRoot为true，那么inflate()就是将“翻译”得到的view添加到root后，然后返回root </li>
+<li>无root，同时attachToRoot为false，那么inflate()返回的就是“翻译”得到的view。 </li>
+<li>无root，同时attachToRoot为true，报错。</li>
+</ol>
+<p>另外，root还有一个重要的作用就是为“翻译”得到的view添加合适的LayoutParam，并且如果并不想将得到的View添加到root的话，传递何种root是并没有要求的，比如： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">View</span> <span class="variable">view</span> <span class="operator">=</span> mLayoutInflater.inflate(R.layout.header, <span class="keyword">new</span> <span class="title class_">ListView</span>(mContext), <span class="literal">false</span>);</span><br><span class="line"><span class="type">View</span> <span class="variable">view</span> <span class="operator">=</span> mLayoutInflater.inflate(R.layout.header, <span class="keyword">new</span> <span class="title class_">LinearLayout</span>(mContext), <span class="literal">false</span>);</span><br><span class="line"><span class="type">View</span> <span class="variable">view</span> <span class="operator">=</span> mLayoutInflater.inflate(R.layout.header, <span class="keyword">new</span> <span class="title class_">RelativeLayout</span>(mContext), <span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+
+<p>上面得到的View，除了view的LayoutParam分别为AbsListView.LayoutParams，LinearLayout.LayoutParams，RelativeLayout.LayoutParams之外，内容都一致。 </p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2013/08/05/android/2013/2013-08-05-Android-EditText-input/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/android/" title="android">
+                        <b>#</b> android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/android/" title="android">
+                        #android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2013/12/11/java/2013-12-11-Java-weather-query/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%EF%BC%8C%E6%B7%BB%E5%8A%A0HeaderView%E4%B9%8B%E5%90%8E%E5%B0%BA%E5%AF%B8%E5%B8%83%E5%B1%80%E8%A2%AB%E5%BF%BD%E7%95%A5%E3%80%82"><span class="toc-text">一，添加HeaderView之后尺寸布局被忽略。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%EF%BC%8C%E6%B7%BB%E5%8A%A0HeaderView%E4%B9%8B%E5%90%8E%E5%AF%BC%E8%87%B4OnItemClickListener%E7%9A%84position%E7%A7%BB%E4%BD%8D"><span class="toc-text">二，添加HeaderView之后导致OnItemClickListener的position移位</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%EF%BC%8CLayoutInflater%E7%9A%84infalte"><span class="toc-text">三，LayoutInflater的infalte()</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

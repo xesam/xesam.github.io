@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      【Javascript】Prototype源码浅析—Hash部分(一) 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">【Javascript】Prototype源码浅析—Hash部分(一)</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/javascript/" title="javascript">
+                    <b>#</b> javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/javascript/" title="javascript">
+                    #javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="Hash"><a href="#Hash" class="headerlink" title="Hash"></a>Hash</h2><p>Hash是Prototype作者扩展出来的一个数据类型。<br>本质上他就是一个普通的javascript对象（注：不要纠结什么javascript变量都是对象，这里说new Object()那种），然后在这个对象上面扩展出来一些其他的方法。</p>
+<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><p>基本的原理的代码说明就是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Hash</span>(<span class="params">object</span>)&#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">_object</span> = object;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">Hash</span>.<span class="property"><span class="keyword">prototype</span></span> = &#123;</span><br><span class="line">    constructor : <span class="title class_">Hash</span>,</span><br><span class="line">    method_1 : <span class="keyword">function</span>(<span class="params"></span>)&#123;<span class="comment">//this._object&#125;,</span></span><br><span class="line">    method_2 : <span class="keyword">function</span>(<span class="params"></span>)&#123;<span class="comment">//this._object&#125;</span></span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> hash_1 = <span class="keyword">new</span> <span class="title class_">Hash</span>(&#123;name : <span class="string">&#x27;xesam&#x27;</span>&#125;);</span><br></pre></td></tr></table></figure>
+<p>不过在源码中肯定不是这样的咯，创建类的形式就不是这样，因此我们换成Paototype中创建类的形式（注：Prototype源码浅析——Class部分(一)之类）：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Hash</span> = <span class="title class_">Class</span>.<span class="title function_">create</span>(<span class="title class_">Enumerable</span>, (<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">function</span> <span class="title function_">initialize</span>(<span class="params"></span>) &#123;</span><br><span class="line">            <span class="comment">//this._object</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            initialize : initialize</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)())</span><br></pre></td></tr></table></figure>
+<p>Hash里面也混入了Enumerable对象，借此给Hash增加更多的方法。</p>
+<p>（在这里我们有个区别可以留意一下：尽管Hash和Array都混入了Enumerable，但是与Array不同的是，Array是js原生的一个数据类型，只能用extend的方式，Hash是作者自己创建的一个数据类型，因此,Hash采用的方式是Class.create的方式。）</p>
+<p>既然混入了Enumerable对象，那么肯定有一个_each方法，对于Hash对象，_each方法的iterator参数的参数是一个pair，这个pair比较特别一点<br>既是一个数组[key,pair]，也是一个对象：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    key   : key,</span><br><span class="line">    value : value</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因此pair[0]和pair.key的结果是一致的。</p>
+<p>基本操作：</p>
+<p>看下创建类时的initialize方法，每一个hash对象内部都维护着一个内部的对象，变量名叫做_object，因此原则上不能通过直接操作实例的属性来读取或者设置实例的属性。所以作者提供了单独的方法，现在有三个基本的方法：get,set,unset。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">set</span>(<span class="params">key, value</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">_object</span>[key] = value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">get</span>(<span class="params">key</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">_object</span>[key] !== <span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>[key])</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">_object</span>[key];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">unset</span>(<span class="params">key</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> value = <span class="variable language_">this</span>.<span class="property">_object</span>[key];</span><br><span class="line">  <span class="keyword">delete</span> <span class="variable language_">this</span>.<span class="property">_object</span>[key];</span><br><span class="line">  <span class="keyword">return</span> value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>（注：Prototype的类很基础，封装基本没有，因此虽然内部维护了一个_object变量，但是并不是真正意义上的私有变量，访问hash的某个属性可以用上面的get,set,unset，也可以直接修改_object对象：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hash.<span class="title function_">set</span>(<span class="string">&#x27;name&#x27;</span>,<span class="string">&#x27;new name&#x27;</span>)</span><br><span class="line"></span><br><span class="line">hash.<span class="property">_object</span>.<span class="property">name</span> = <span class="string">&#x27;new name&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>上面操作没区别，靠自觉而已。）</p>
+<p>复制hash：</p>
+<p>第一：<br>克隆当前hash对象(hash)——clone。克隆内部的对象（_object）——toObject.</p>
+<p>toObject调用的是Object.clone方法，现在回顾一个下Object.clone方法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">clone</span>(<span class="params">object</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">extend</span>(&#123; &#125;, object);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>就是把this._object复制到一个空对象里面，然后返回。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">clone</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Hash</span>(<span class="variable language_">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在看一看创建Hash类的时候的initialize函数，先前忽略了this._object的初始化过程：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">initialize</span>(<span class="params">object</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">_object</span> = <span class="title class_">Object</span>.<span class="title function_">isHash</span>(object) ? object.<span class="title function_">toObject</span>() : <span class="title class_">Object</span>.<span class="title function_">clone</span>(object);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看看实现：如果object是一个普通对象，那么直接调用Object.clone方法。如果object是一个Hash实例，那么调用object.toObject，注意object.toObject的本质。间接调用的还是Object.clone方法，不过最终返回的类型是Hash类型，享有Hash的各种方法。</p>
+<p>取得Hash对象的keys和values数组</p>
+<p>方法名就是keys和values。这里使用的是父对象的一个方法——plunk（注：plunk是Enumerable中定义的一个方法Prototype源码浅析——Enumerable部分(三)）：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">keys</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">pluck</span>(<span class="string">&#x27;key&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">values</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">pluck</span>(<span class="string">&#x27;value&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>与plunk关系最密切的一个方法是each，回去看下each，each函数的iterator的参数是pair，是一个对象。</p>
+<p>更新（合并）一个Hash实例：</p>
+<p>这样的操作有两种：</p>
+<pre><code>一种是破坏性的update（会修改原始对象）
+一种是非破坏性的merge（不会修改原始对象的）
+</code></pre>
+<p>update使用的是inject方法（注：Prototype源码浅析——Enumerable部分(三)），第一个参数是this（当前Hash实例），因此当前对象会被修改。</p>
+<p>merge使用的也是update方法，不过先执行了一次clone操作，因此原始的Hash实例被保留下来了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">merge</span>(<span class="params">object</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">clone</span>().<span class="title function_">update</span>(object);<span class="comment">//先拷贝了内部变量_object</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">update</span>(<span class="params">object</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Hash</span>(object).<span class="title function_">inject</span>(<span class="variable language_">this</span>, <span class="keyword">function</span>(<span class="params">result, pair</span>) &#123;</span><br><span class="line">    result.<span class="title function_">set</span>(pair.<span class="property">key</span>, pair.<span class="property">value</span>);</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式转换：</p>
+<p>toQueryPair 和 toQueryString</p>
+<p>toQueryPair是一个内部使用的方法，主要作用是检测value的值。如果value没为undefined，那么只保留key值，如果value值为null，那么保留“key&#x3D;”形式否则转换为key&#x3D;encodeURIComponent(value)的形式。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">toQueryPair</span>(<span class="params">key, value</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="title class_">Object</span>.<span class="title function_">isUndefined</span>(value)) <span class="keyword">return</span> key;</span><br><span class="line">  <span class="keyword">return</span> key + <span class="string">&#x27;=&#x27;</span> + <span class="built_in">encodeURIComponent</span>(<span class="title class_">String</span>.<span class="title function_">interpret</span>(value));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>toQueryString主要涉及到一个处理values是数组的情况，values为数组就使用concat展开，values为字符串就直接push，然后再展开。</p>
+<p>这里和Object.toQueryString方法是一样的，应该是可以相互代替的。<br>这里回头去看Object里面的Str方法，那个清楚了，这个就不在话下了（注：Prototype源码浅析——Object部分(三)之有关JSON）。</p>
+<p>inspect就没什么好说的了。很常见了。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2012/01/19/javascript/2012-01-19-Javascript-Prototype-Enumerable-3/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/javascript/" title="javascript">
+                        <b>#</b> javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/javascript/" title="javascript">
+                        #javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2012/02/01/javascript/2012-02-01-Javascript-Chrome-sort/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Hash"><span class="toc-text">Hash</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="toc-text">基本原理</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

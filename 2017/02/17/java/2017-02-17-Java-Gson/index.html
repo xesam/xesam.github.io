@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Gson解析复杂数据 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Gson解析复杂数据</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/java/" title="java">
+                    <b>#</b> java
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/java/" title="java">
+                    #java
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>本文主要关注所解析的 JSON 对象与已定义的 java 对象结构不匹配的情况，解决方案就是使用 JsonDeserializer 来自定义从 JSON 对象到 Java 对象的映射。</p>
+<h2 id="一个简单的例子"><a href="#一个简单的例子" class="headerlink" title="一个简单的例子"></a>一个简单的例子</h2><p>有如下 JSON 对象，表示一本书的基本信息，本书有两个作者。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&#x27;title&#x27;</span>:    <span class="string">&#x27;Java Puzzlers: Traps, Pitfalls, and Corner Cases&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;isbn-10&#x27;</span>:  <span class="string">&#x27;032133678X&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;isbn-13&#x27;</span>:  <span class="string">&#x27;978-0321336781&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;authors&#x27;</span>:  [<span class="string">&#x27;Joshua Bloch&#x27;</span>, <span class="string">&#x27;Neal Gafter&#x27;</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个 JSON 对象包含 4 个字段，其中有一个是数组，这些字段表征了一本书的基本信息。<br>如果我们直接使用 Gson 来解析：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Book</span> <span class="variable">book</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Gson</span>().fromJson(jsonString, Book.class);</span><br></pre></td></tr></table></figure>
+
+<p>会发现 ‘isbn-10’ 这种字段表示在 Java 中是不合法的，因为 Java 的变量名中是不允许含有 ‘-‘ 符号的。<br>对于这个例子，我们可以使用 Gson 的 @SerializedName 注解来处理，不过注解也仅限于此，遇到后文的场景，注解就无能为力了。<br>这个时候，就是 JsonDeserializer 派上用场的时候。</p>
+<span id="more"></span>
+
+<p>假如 Book 类定义如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Book</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> String[] authors;</span><br><span class="line">  <span class="keyword">private</span> String isbn10;</span><br><span class="line">  <span class="keyword">private</span> String isbn13;</span><br><span class="line">  <span class="keyword">private</span> String title;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 其他方法省略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个 Book 也定义有 4 个字段，与 JSON 对象的结构基本类似。为了将 JSON 对象解析为 Java 对象，我们需要自定义一个 JsonDeserializer 然后注册到 GsonBuilder 上，<br>并使用 GsonBuilder 来获取解析用的 Gson 对象。</p>
+<p>因此， 我们先创建一个 BookDeserializer，这个 BookDeserializer 负责将 Book 对应的 JSON 对象解析为 Java 对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BookDeserializer</span> <span class="keyword">implements</span> <span class="title class_">JsonDeserializer</span>&lt;Book&gt; &#123;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> Book <span class="title function_">deserialize</span><span class="params">(<span class="keyword">final</span> JsonElement jsonElement, <span class="keyword">final</span> Type typeOfT, <span class="keyword">final</span> JsonDeserializationContext context)</span></span><br><span class="line">      <span class="keyword">throws</span> JsonParseException &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//todo 解析字段</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> <span class="type">Book</span> <span class="variable">book</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Book</span>();</span><br><span class="line">    book.setTitle(title);</span><br><span class="line">    book.setIsbn10(isbn10);</span><br><span class="line">    book.setIsbn13(isbn13);</span><br><span class="line">    book.setAuthors(authors);</span><br><span class="line">    <span class="keyword">return</span> book;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在实现具体的解析之前，我们先来了解一下涉及到的各个类的含义。JsonDeserializer 需要一个 Type，也就是要得到的对象类型，这里当然就是 Book，<br>同时 deserialize() 方法返回的就是 Book 对象。<br>Gson 解析 Json 对象并在内部表示为 JsonElement，一个 JsonElement 可以是如下的任何一种：</p>
+<ol>
+<li>JsonPrimitive ：Java 基本类型的包装类，以及 String</li>
+<li>JsonObject：类比 Js 中 Object 的表示，或者 Java 中的 Map&lt;String, JsonElement&gt;，一个键值对结构。</li>
+<li>JsonArray：JsonElement 组成的数组，注意：这里是 JsonElement，说明这个数组是混合类型的。</li>
+<li>JsonNull：值为 null</li>
+</ol>
+<p>开始解析（其实这个解析很直观的，Json 里面是什么类型，就按照上面的类型进行对照解析即可），所以， 我们先将 JsonElement 转换为 JsonObject：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// jsonElement 是 deserialize() 的参数</span></span><br><span class="line"><span class="keyword">final</span> <span class="type">JsonObject</span> <span class="variable">jsonObject</span> <span class="operator">=</span> jsonElement.getAsJsonObject();</span><br></pre></td></tr></table></figure>
+<p>对照 JSON 定义，然后获取 JsonObject 中的 title。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="type">JsonObject</span> <span class="variable">jsonObject</span> <span class="operator">=</span> jsonElement.getAsJsonObject();</span><br><span class="line"><span class="type">JsonElement</span> <span class="variable">titleElement</span> <span class="operator">=</span> jsonObject.get(<span class="string">&quot;title&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>我们知道 titleElement 具体是一个字符串（字符串属于 JsonPrimitive），因为可以直接转换：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="type">JsonObject</span> <span class="variable">jsonObject</span> <span class="operator">=</span> jsonElement.getAsJsonObject();</span><br><span class="line"><span class="type">JsonElement</span> <span class="variable">titleElement</span> <span class="operator">=</span> jsonObject.get(<span class="string">&quot;title&quot;</span>)</span><br><span class="line"><span class="keyword">final</span> <span class="type">String</span> <span class="variable">title</span> <span class="operator">=</span> jsonTitle.getAsString();</span><br></pre></td></tr></table></figure>
+
+<p>此时我们得到了 title 值，其他类似：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BookDeserializer</span> <span class="keyword">implements</span> <span class="title class_">JsonDeserializer</span>&lt;Book&gt; &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Book <span class="title function_">deserialize</span><span class="params">(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext)</span> <span class="keyword">throws</span> JsonParseException &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> <span class="type">JsonObject</span> <span class="variable">jsonObject</span> <span class="operator">=</span> jsonElement.getAsJsonObject();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> <span class="type">JsonElement</span> <span class="variable">jsonTitle</span> <span class="operator">=</span> jsonObject.get(<span class="string">&quot;title&quot;</span>);</span><br><span class="line">        <span class="keyword">final</span> <span class="type">String</span> <span class="variable">title</span> <span class="operator">=</span> jsonTitle.getAsString();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> <span class="type">String</span> <span class="variable">isbn10</span> <span class="operator">=</span> jsonObject.get(<span class="string">&quot;isbn-10&quot;</span>).getAsString();</span><br><span class="line">        <span class="keyword">final</span> <span class="type">String</span> <span class="variable">isbn13</span> <span class="operator">=</span> jsonObject.get(<span class="string">&quot;isbn-13&quot;</span>).getAsString();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> <span class="type">JsonArray</span> <span class="variable">jsonAuthorsArray</span> <span class="operator">=</span> jsonObject.get(<span class="string">&quot;authors&quot;</span>).getAsJsonArray();</span><br><span class="line">        <span class="keyword">final</span> String[] authors = <span class="keyword">new</span> <span class="title class_">String</span>[jsonAuthorsArray.size()];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; authors.length; i++) &#123;</span><br><span class="line">            <span class="keyword">final</span> <span class="type">JsonElement</span> <span class="variable">jsonAuthor</span> <span class="operator">=</span> jsonAuthorsArray.get(i);</span><br><span class="line">            authors[i] = jsonAuthor.getAsString();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> <span class="type">Book</span> <span class="variable">book</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Book</span>();</span><br><span class="line">        book.setTitle(title);</span><br><span class="line">        book.setIsbn10(isbn10);</span><br><span class="line">        book.setIsbn13(isbn13);</span><br><span class="line">        book.setAuthors(authors);</span><br><span class="line">        <span class="keyword">return</span> book;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>整体还是很直观的，我们测试一下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">GsonBuilder</span> <span class="variable">gsonBuilder</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GsonBuilder</span>();</span><br><span class="line">    gsonBuilder.registerTypeAdapter(Book.class, <span class="keyword">new</span> <span class="title class_">BookDeserializer</span>());</span><br><span class="line">    <span class="type">Gson</span> <span class="variable">gson</span> <span class="operator">=</span> gsonBuilder.create();</span><br><span class="line"></span><br><span class="line">    <span class="type">Book</span> <span class="variable">book</span> <span class="operator">=</span> gson.fromJson(<span class="string">&quot;&#123;\&quot;title\&quot;:\&quot;Java Puzzlers: Traps, Pitfalls, and Corner Cases\&quot;,\&quot;isbn-10\&quot;:\&quot;032133678X\&quot;,\&quot;isbn-13\&quot;:\&quot;978-0321336781\&quot;,\&quot;authors\&quot;:[\&quot;Joshua Bloch\&quot;,\&quot;Neal Gafter\&quot;]&#125;&quot;</span>, Book.class);</span><br><span class="line">    System.out.println(book);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Book&#123;authors=[Joshua Bloch, Neal Gafter], isbn10=&#x27;032133678X&#x27;, isbn13=&#x27;978-0321336781&#x27;, title=&#x27;Java Puzzlers: Traps, Pitfalls, and Corner Cases&#x27;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面，我们使用 GsonBuilder 来注册 BookDeserializer，并创建 Gson 对象。此处得到的 Gson 对象，在遇到需要解析 Book 的时候，就会使用 BookDeserializer 来解析。<br>比如我们使用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gson.fromJson(data, Book.class);</span><br></pre></td></tr></table></figure>
+
+<p>解析的时候，大致流程如下：</p>
+<ol>
+<li>Gson 将输入字符串解析为 JsonElement，同时，这一步也会校验 JSON 的合法性。</li>
+<li>找到对应的 JsonDeserializer 来解析这个 JsonElement，这里就找到了 BookDeserializer。</li>
+<li>传入必要的参数并执行 deserialize()，本例中就是在 deserialize() 将一个 JsonElement 转换为 Book 对象。</li>
+<li>将 deserialize() 的解析结果返回给 fromJson() 的调用者。</li>
+</ol>
+<h2 id="对象嵌套"><a href="#对象嵌套" class="headerlink" title="对象嵌套"></a>对象嵌套</h2><p>在上面的例子中，一本书的作者都只用了一个名字来表示，但是实际情况中，一个作者可能有很多本书，每个作者实际上还有个唯一的 id 来进行区分。结构如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&#x27;title&#x27;</span>: <span class="string">&#x27;Java Puzzlers: Traps, Pitfalls, and Corner Cases&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;isbn&#x27;</span>: <span class="string">&#x27;032133678X&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;authors&#x27;</span>:[</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">&#x27;id&#x27;</span>: <span class="number">1</span>,</span><br><span class="line">      <span class="string">&#x27;name&#x27;</span>: <span class="string">&#x27;Joshua Bloch&#x27;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">&#x27;id&#x27;</span>: <span class="number">2</span>,</span><br><span class="line">      <span class="string">&#x27;name&#x27;</span>: <span class="string">&#x27;Neal Gafter&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时我们不仅有个 Book 类，还有一个 Author 类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Author</span>&#123;</span><br><span class="line">    <span class="type">long</span> id;</span><br><span class="line">    String name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么问题来了，谁来负责解析这个 authors？有几个选择：</p>
+<ol>
+<li>我们可以更新 BookDeserializer，同时在其中解析 authors 字段。这种方案耦合了 Book 与 Author 的解析，并不推荐。</li>
+<li>我们可以使用默认的 Gson 实现，在本例中，Author 类与 author 的 JSON 字符串是一一对应的，因此，这种实现完全没问题。</li>
+<li>我们还可以实现一个 AuthorDeserializer 来处理 author 字符串的解析问题。</li>
+</ol>
+<p>这里我们使用第二种方式，这种方式的改动最小：</p>
+<p>JsonDeserializer 的 deserialize() 方法提供了一个 JsonDeserializationContext 对象，这个对象基于 Gson 的默认机制，<br>我们可以选择性的将某些对象的反序列化工作委托给这个JsonDeserializationContext。JsonDeserializationContext 会解析 JsonElement 并返回对应的对象实例:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Author</span> <span class="variable">author</span> <span class="operator">=</span> jsonDeserializationContext.deserialize(jsonElement, Author.class);</span><br></pre></td></tr></table></figure>
+
+<p>如上例所示，当遇到有 Author 类的解析需求时，jsonDeserializationContext 会去查找用来解析 Author 的 JsonDeserializer，<br>如果有自定义的 JsonDeserializer 被注册过，那么就用自定义的 JsonDeserializer 来解析 Author，<br>如果没有找到自定义的 JsonDeserializer，那就按照 Gson 的默认机制来解析 Author。<br>下面的代码中，我们没有自定义 Author 的 JsonDeserializer，所以 Gson 会自己来处理 authors：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.reflect.Type;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.google.gson.JsonArray;</span><br><span class="line"><span class="keyword">import</span> com.google.gson.JsonDeserializationContext;</span><br><span class="line"><span class="keyword">import</span> com.google.gson.JsonDeserializer;</span><br><span class="line"><span class="keyword">import</span> com.google.gson.JsonElement;</span><br><span class="line"><span class="keyword">import</span> com.google.gson.JsonObject;</span><br><span class="line"><span class="keyword">import</span> com.google.gson.JsonParseException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BookDeserializer</span> <span class="keyword">implements</span> <span class="title class_">JsonDeserializer</span>&lt;Book&gt; &#123;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> Book <span class="title function_">deserialize</span><span class="params">(<span class="keyword">final</span> JsonElement json, <span class="keyword">final</span> Type typeOfT, <span class="keyword">final</span> JsonDeserializationContext context)</span></span><br><span class="line">      <span class="keyword">throws</span> JsonParseException &#123;</span><br><span class="line">   <span class="keyword">final</span> <span class="type">JsonObject</span> <span class="variable">jsonObject</span> <span class="operator">=</span> json.getAsJsonObject();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> <span class="type">String</span> <span class="variable">title</span> <span class="operator">=</span> jsonObject.get(<span class="string">&quot;title&quot;</span>).getAsString();</span><br><span class="line">    <span class="keyword">final</span> <span class="type">String</span> <span class="variable">isbn10</span> <span class="operator">=</span> jsonObject.get(<span class="string">&quot;isbn-10&quot;</span>).getAsString();</span><br><span class="line">    <span class="keyword">final</span> <span class="type">String</span> <span class="variable">isbn13</span> <span class="operator">=</span> jsonObject.get(<span class="string">&quot;isbn-13&quot;</span>).getAsString();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 委托给 Gson 的 context 来处理</span></span><br><span class="line">    Author[] authors = context.deserialize(jsonObject.get(<span class="string">&quot;authors&quot;</span>), Author[].class);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> <span class="type">Book</span> <span class="variable">book</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Book</span>();</span><br><span class="line">    book.setTitle(title);</span><br><span class="line">    book.setIsbn10(isbn10);</span><br><span class="line">    book.setIsbn13(isbn13);</span><br><span class="line">    book.setAuthors(authors);</span><br><span class="line">    <span class="keyword">return</span> book;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>除了上面的方式，我们同样可以自定义一个 ArthurDeserialiser 来解析 Author：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.reflect.Type;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.google.gson.JsonDeserializationContext;</span><br><span class="line"><span class="keyword">import</span> com.google.gson.JsonDeserializer;</span><br><span class="line"><span class="keyword">import</span> com.google.gson.JsonElement;</span><br><span class="line"><span class="keyword">import</span> com.google.gson.JsonObject;</span><br><span class="line"><span class="keyword">import</span> com.google.gson.JsonParseException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AuthorDeserializer</span> <span class="keyword">implements</span> <span class="title class_">JsonDeserializer</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> Author <span class="title function_">deserialize</span><span class="params">(<span class="keyword">final</span> JsonElement json, <span class="keyword">final</span> Type typeOfT, <span class="keyword">final</span> JsonDeserializationContext context)</span></span><br><span class="line">      <span class="keyword">throws</span> JsonParseException &#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="type">JsonObject</span> <span class="variable">jsonObject</span> <span class="operator">=</span> json.getAsJsonObject();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> <span class="type">Author</span> <span class="variable">author</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Author</span>();</span><br><span class="line">    author.setId(jsonObject.get(<span class="string">&quot;id&quot;</span>).getAsInt());</span><br><span class="line">    author.setName(jsonObject.get(<span class="string">&quot;name&quot;</span>).getAsString());</span><br><span class="line">    <span class="keyword">return</span> author;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为了使用 ArthurDeserialiser，同样要用到 GsonBuilder：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.io.Reader;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.google.gson.Gson;</span><br><span class="line"><span class="keyword">import</span> com.google.gson.GsonBuilder;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(<span class="keyword">final</span> String[] args)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="comment">// Configure GSON</span></span><br><span class="line">    <span class="keyword">final</span> <span class="type">GsonBuilder</span> <span class="variable">gsonBuilder</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GsonBuilder</span>();</span><br><span class="line">    gsonBuilder.registerTypeAdapter(Book.class, <span class="keyword">new</span> <span class="title class_">BookDeserializer</span>());</span><br><span class="line">    gsonBuilder.registerTypeAdapter(Author.class, <span class="keyword">new</span> <span class="title class_">AuthorDeserializer</span>());</span><br><span class="line">    <span class="keyword">final</span> <span class="type">Gson</span> <span class="variable">gson</span> <span class="operator">=</span> gsonBuilder.create();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Read the JSON data</span></span><br><span class="line">    <span class="keyword">try</span> (<span class="type">Reader</span> <span class="variable">reader</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(Main.class.getResourceAsStream(<span class="string">&quot;/part2/sample.json&quot;</span>), <span class="string">&quot;UTF-8&quot;</span>)) &#123;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Parse JSON to Java</span></span><br><span class="line">      <span class="keyword">final</span> <span class="type">Book</span> <span class="variable">book</span> <span class="operator">=</span> gson.fromJson(reader, Book.class);</span><br><span class="line">      System.out.println(book);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>相比委托的方式，自定义 AuthorDeserializer 就根本不需要修改 BookDeserializer 任何代码，Gson 帮你处理了所有的问题。</p>
+<h2 id="对象引用"><a href="#对象引用" class="headerlink" title="对象引用"></a>对象引用</h2><p>考虑下面的 json 文本：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&#x27;authors&#x27;</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">&#x27;id&#x27;</span>: <span class="number">1</span>,</span><br><span class="line">      <span class="string">&#x27;name&#x27;</span>: <span class="string">&#x27;Joshua Bloch&#x27;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">&#x27;id&#x27;</span>: <span class="number">2</span>,</span><br><span class="line">      <span class="string">&#x27;name&#x27;</span>: <span class="string">&#x27;Neal Gafter&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  <span class="string">&#x27;books&#x27;</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">&#x27;title&#x27;</span>: <span class="string">&#x27;Java Puzzlers: Traps, Pitfalls, and Corner Cases&#x27;</span>,</span><br><span class="line">      <span class="string">&#x27;isbn&#x27;</span>: <span class="string">&#x27;032133678X&#x27;</span>,</span><br><span class="line">      <span class="string">&#x27;authors&#x27;</span>:[<span class="number">1</span>, <span class="number">2</span>]</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">&#x27;title&#x27;</span>: <span class="string">&#x27;Effective Java (2nd Edition)&#x27;</span>,</span><br><span class="line">      <span class="string">&#x27;isbn&#x27;</span>: <span class="string">&#x27;0321356683&#x27;</span>,</span><br><span class="line">      <span class="string">&#x27;authors&#x27;</span>:[<span class="number">1</span>]</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个 JSON 对象包含两个 book，两个 author，每本书都通过 author 的 id 关联到 author。<br>因此，每个 book 的 author 值都只是一个 id 而已。这种表示形式在网络响应里面非常常见，通过共用对象减少重复定义来减小响应的大小。</p>
+<p>这又给解析 JSON 带来新的挑战，我们需要将 book 和 author 对象组合在一起，但是在解析 JSON文本的时候，<br>Gson 是以类似树遍历的路径来解析的，在解析到 book 的时候，我们只能看到 author 的 id，<br>此时具体的 author 信息却在另一个分支上，在当前的 JsonDeserializationContext 中无法找到所需要的 author。</p>
+<p>有几种方法可以处理这个问题：</p>
+<ol>
+<li>第一个方案，分两段解析。第一段：按照 json 的结构将 json 文本解析成对应的 java 对象，此时，每个 book 对象都包含一个 id 的数组。<br>第二段：直接在得到的 java 对象中，将 author 对象关联到 book 对象。<br>这种方式的有点就是提供了最大的扩展性，不过缺点也是非常明显的，这种方式需要额外的一组辅助 java 类来表示对应的 json 文本结构，最后在转换为满足应用需求的 java 对象（即我们定义的 model）。<br>在本例中，我们的 model 只有两个类： Book 与 Author。但如果使用分段解析的方式，我们还需要额外定义一个辅助 Book 类。<br>在本例中还说得过去，对于那些也有几十上百的 model 来说，那就相当复杂了。</li>
+<li>另一个方案是向 BookDeserialiser 传递所有的 author 集合，当 BookDeserialiser 在解析到 Author 属性的时候，直接通过 id 从 author 集合中取得对应的 Author 对象。这样就省略了中间步骤以及额外的对象定义。<br>这种方式看起来甚好，不过这要求 BookDeserialiser 和 AuthorDeserialiser 共享同一个对象集合。<br>当获取 author 的时候，BookDeserialiser 需要去访问这个共享对象，而不是像我们先前那样直接从 JsonDeserializationContext 中得到。<br>这样就导致了好几处的改动，包括 BookDeserialiser，AuthorDeserialiser 以及 main() 方法。</li>
+<li>第三种方案是 AuthorDeserialiser 缓存解析得到的 author 集合，当后面需要通过 id 得到具体 Author 对象的时候，直接返回缓存值。<br>这个方案的好处是通过 JsonDeserializationContext 来实现对象的获取，并且对其他部分都是透明的。<br>缺点就是增加了 AuthorDeserialiser 的复杂度，需要修改 AuthorDeserialiser 来处理缓存。</li>
+</ol>
+<p>上述方案都有利有弊，可以针对不同的情况，权衡使用。后文以第三种方案来实现，以避免过多的改动。</p>
+<h2 id="Observation"><a href="#Observation" class="headerlink" title="Observation"></a>Observation</h2><p>原理上讲，相较于后两种方案，第一种方案提供了更直观的关注点分离，获得中间结果之后，我们可以在外层的 Data 类中实现最后的装配。<br>不过第一种方案的改动太大，这一点前面也说过。我们的目标是做到影响面最小，这也是选用第三种方案的主要原因。</p>
+<p>JSON 对象包含两个数组，因此我们需要一个新的类来反映这种结。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Data</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> Author[] authors;</span><br><span class="line">  <span class="keyword">private</span> Book[] books;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这两个属性的顺序决定了两者的解析顺序，不过在我们的实现中，解析顺序无关紧要，随便哪个属性先解析都可以，具体见后文。</p>
+<p>先修改 AuthorDeserialiser 来支持缓存 author 集合：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.reflect.Type;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.google.gson.JsonDeserializationContext;</span><br><span class="line"><span class="keyword">import</span> com.google.gson.JsonDeserializer;</span><br><span class="line"><span class="keyword">import</span> com.google.gson.JsonElement;</span><br><span class="line"><span class="keyword">import</span> com.google.gson.JsonObject;</span><br><span class="line"><span class="keyword">import</span> com.google.gson.JsonParseException;</span><br><span class="line"><span class="keyword">import</span> com.google.gson.JsonPrimitive;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AuthorDeserializer</span> <span class="keyword">implements</span> <span class="title class_">JsonDeserializer</span>&lt;Author&gt; &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> ThreadLocal&lt;Map&lt;Integer, Author&gt;&gt; cache = <span class="keyword">new</span> <span class="title class_">ThreadLocal</span>&lt;Map&lt;Integer, Author&gt;&gt;() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> Map&lt;Integer, Author&gt; <span class="title function_">initialValue</span><span class="params">()</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> Author <span class="title function_">deserialize</span><span class="params">(<span class="keyword">final</span> JsonElement json, <span class="keyword">final</span> Type typeOfT, <span class="keyword">final</span> JsonDeserializationContext context)</span></span><br><span class="line">      <span class="keyword">throws</span> JsonParseException &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Only the ID is available</span></span><br><span class="line">    <span class="keyword">if</span> (json.isJsonPrimitive()) &#123;</span><br><span class="line">      <span class="keyword">final</span> <span class="type">JsonPrimitive</span> <span class="variable">primitive</span> <span class="operator">=</span> json.getAsJsonPrimitive();</span><br><span class="line">      <span class="keyword">return</span> getOrCreate(primitive.getAsInt());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// The whole object is available</span></span><br><span class="line">    <span class="keyword">if</span> (json.isJsonObject()) &#123;</span><br><span class="line">      <span class="keyword">final</span> <span class="type">JsonObject</span> <span class="variable">jsonObject</span> <span class="operator">=</span> json.getAsJsonObject();</span><br><span class="line"></span><br><span class="line">      <span class="keyword">final</span> <span class="type">Author</span> <span class="variable">author</span> <span class="operator">=</span> getOrCreate(jsonObject.get(<span class="string">&quot;id&quot;</span>).getAsInt());</span><br><span class="line">      author.setName(jsonObject.get(<span class="string">&quot;name&quot;</span>).getAsString());</span><br><span class="line">      <span class="keyword">return</span> author;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">JsonParseException</span>(<span class="string">&quot;Unexpected JSON type: &quot;</span> + json.getClass().getSimpleName());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> Author <span class="title function_">getOrCreate</span><span class="params">(<span class="keyword">final</span> <span class="type">int</span> id)</span> &#123;</span><br><span class="line">    <span class="type">Author</span> <span class="variable">author</span> <span class="operator">=</span> cache.get().get(id);</span><br><span class="line">    <span class="keyword">if</span> (author == <span class="literal">null</span>) &#123;</span><br><span class="line">      author = <span class="keyword">new</span> <span class="title class_">Author</span>();</span><br><span class="line">      author.setId(id);</span><br><span class="line">      cache.get().put(id, author);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> author;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们来逐一看看：</p>
+<p>（1） author 集合缓存在下面的对象中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> ThreadLocal&lt;Map&lt;Integer, Author&gt;&gt; cache = <span class="keyword">new</span> <span class="title class_">ThreadLocal</span>&lt;Map&lt;Integer, Author&gt;&gt;() &#123;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">protected</span> Map&lt;Integer, Author&gt; <span class="title function_">initialValue</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>本实现使用 Map&lt;String, Object&gt; 作为缓存机制，并保存在 ThreadLocal 中，从而进行线程隔离。当然，可是使用其他更好的缓存方案，这个不关键。</p>
+<p>（2） 通过下面的方法获取 author ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Author <span class="title function_">getOrCreate</span><span class="params">(<span class="keyword">final</span> <span class="type">int</span> id)</span> &#123;</span><br><span class="line">  <span class="type">Author</span> <span class="variable">author</span> <span class="operator">=</span> cache.get().get(id);</span><br><span class="line">  <span class="keyword">if</span> (author == <span class="literal">null</span>) &#123;</span><br><span class="line">    author = <span class="keyword">new</span> <span class="title class_">Author</span>();</span><br><span class="line">    cache.get().put(id, author);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> author;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>即先通过 id 在缓存中查找 author，如果找到了，就直接为返回对应的 author，否则就根据 id 创建一个空的 author，并加入缓存中，然后返回这个新建的 author。</p>
+<p>通过这种方式，我们得以先创建一个吻合 id 的空 author 对象，等到 author 正真可用的时候，再填充缺失的信息。<br>这就是为什么在本例实现中，解析顺序并没有影响的原因，因为缓存对象是共享的。<br>我们可以先解析 book 再解析 author，如果是这种顺序，那么当 book 被解析的时候，其内部的 author 属性只是空有一个 id 的占位对象而已。<br>等到后续解析到 author 的时候，才会真正填充其他信息。</p>
+<p>（3） 为了适应新需求，我们修改了 deserialize() 方法。在这个 deserialize() 实现中，其接收的 JsonElement 可能是一个 JsonPrimitive 或者是一个 JsonObject。<br>在 BookDeserialiser 中，碰到解析 author 的时候，传递给 AuthorDeserializer#deserialize() 的就是一个 JsonPrimitive，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// BookDeserialiser 中解析 authors</span></span><br><span class="line">Author[] authors = context.deserialize(jsonObject.get(<span class="string">&quot;authors&quot;</span>), Author[].class);</span><br></pre></td></tr></table></figure>
+
+<p>BookDeserialiser 将解析任务委托给 context，context 找到 AuthorDeserializer 来解析这个 Author 数组。<br>此时，AuthorDeserializer#deserialize() 接收到的就是 BookDeserialiser 传递过来的 JsonPrimitive。</p>
+<p>另一方面，当解析到 authors 的时候，AuthorDeserializer#deserialize() 接收到的就是 JsonObject。因此，在处理的时候，先做一个类型检测，然互进行恰当的转换：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 处理 Id 的情况</span></span><br><span class="line">   <span class="keyword">if</span> (json.isJsonPrimitive()) &#123;</span><br><span class="line">     <span class="keyword">final</span> <span class="type">JsonPrimitive</span> <span class="variable">primitive</span> <span class="operator">=</span> json.getAsJsonPrimitive();</span><br><span class="line">     <span class="keyword">final</span> <span class="type">Author</span> <span class="variable">author</span> <span class="operator">=</span> getOrCreate(primitive.getAsInt());</span><br><span class="line">     <span class="keyword">return</span> author;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果传递进来的是 id， 就先将 JsonElement 转换为 JsonPrimitive 再得到 int。这个 int 就是用来获取 Author 缓存的 id 值。</p>
+<p>如果是 JsonObject，就如下转换：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// The whole object is available</span></span><br><span class="line"><span class="keyword">if</span> (json.isJsonObject()) &#123;</span><br><span class="line">  <span class="keyword">final</span> <span class="type">JsonObject</span> <span class="variable">jsonObject</span> <span class="operator">=</span> json.getAsJsonObject();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">final</span> <span class="type">Author</span> <span class="variable">author</span> <span class="operator">=</span> getOrCreate(jsonObject.get(<span class="string">&quot;id&quot;</span>).getAsInt());</span><br><span class="line">  author.setName(jsonObject.get(<span class="string">&quot;name&quot;</span>).getAsString());</span><br><span class="line">  <span class="keyword">return</span> author;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这一步在返回最终的 author 之前，完成了 author 的填充工作。</p>
+<p>如果传递进来的 JsonElement 既不是 JsonPrimitive 也不是 JsonObject，那就说明出错了，中断处理过程。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">JsonParseException</span>(<span class="string">&quot;Unexpected JSON type: &quot;</span> + json.getClass().getSimpleName());</span><br></pre></td></tr></table></figure>
+
+<p>至此， BookDeserialiser 与 main() 都不需要修改，同时也能满足我们的需求。</p>
+<p>Gson 的 desieralizer 是一个强大而灵活的设计，合理运用也可以使我们的设计灵活而容易扩展。</p>
+<p>原文地址：<a target="_blank" rel="noopener" href="http://www.javacreed.com/gson-deserialiser-example/">http://www.javacreed.com/gson-deserialiser-example/</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2017/02/07/android/2017/2017-02-07-Android-Cupboard/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/java/" title="java">
+                        <b>#</b> java
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/java/" title="java">
+                        #java
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2017/03/05/computer/2017-03-25-rx-marble-diagrams/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="toc-text">一个简单的例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E5%B5%8C%E5%A5%97"><span class="toc-text">对象嵌套</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E5%BC%95%E7%94%A8"><span class="toc-text">对象引用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Observation"><span class="toc-text">Observation</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

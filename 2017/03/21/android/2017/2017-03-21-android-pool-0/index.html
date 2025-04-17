@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Pool in Android (0) 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Pool in Android (0)</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/android/" title="android">
+                    <b>#</b> android
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/android/" title="android">
+                    #android
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>在应用开发中，在某些场景下，需要频繁重复创建某种对象来传递消息或者执行操作，在使用完之后又随即废弃。在这种情况下，会对系统性能造成一定的影响，特别是存在以下特征时：</p>
+<ol>
+<li>对象频繁创建但是只需要短暂使用</li>
+<li>对象的创建代价比较高。</li>
+</ol>
+<p>比较典型的例子比如 Android 里面的 MotionEvent， 每次触发屏幕移动事件都会产生一个新的 MotionEvent 对象，但是这个 MotionEvent 对象却只使用一次就废弃了。<br>再比如数据库连接，连接数据库是非常耗时的，如果每次查询都创建一个连接，会产生显著的响应延迟。<br>在以上类似的场景中，我们引入“对象池化”技术，特别是在移动设备这种硬件资源紧张的系统中，池化技术更是无处不在。</p>
+<p>对象池是一个保存可复用对象的容器，用户可以从池子中取得对象，对其进行操作处理，并在使用完毕之后将这个对象归还给池子，而不是任由系统销毁这个对象。我们简略区分一下，Java 对象的生命周期大致包括三个阶段：</p>
+<ol>
+<li>对象的创建</li>
+<li>对象的使用</li>
+<li>对象的销毁</li>
+</ol>
+<p>池化通过减少“对象的创建”和”对象的销毁”这两步的开销，进而降低系统负担从而减少了响应时间，是一种以空间换时间的策略。</p>
+<p>不过同时，池化也引入了新的风险，既然池中的对象是复用的，那么这些对象先前的状态如何处理。此时，又需要将池化对象分两种：</p>
+<ol>
+<li>无状态对象。这种对象可以直接复用，因为每次使用的状态都是一样的。</li>
+<li>有状态对象。这种对象在取出（或者归还）的时候，都应该先将所有的对象重置，所以你在很多对象上能看到 recycle() 方法，这个对象很大程度上有可能就使用了池化技术。</li>
+</ol>
+<h2 id="对象池的实现"><a href="#对象池的实现" class="headerlink" title="对象池的实现"></a>对象池的实现</h2><p>对象池的实现有很多，最基本的只需要实现“取出”和“归还”功能即可，一个简单的实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Pool</span>&lt;T&gt; &#123;</span><br><span class="line">  T	<span class="title function_">acquire</span><span class="params">()</span></span><br><span class="line">  <span class="type">boolean</span>	<span class="title function_">release</span><span class="params">(T instance)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">SimplePool</span>&lt;T&gt; <span class="keyword">implements</span> <span class="title class_">Pool</span>&lt;T&gt; &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> Object[] mPool;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="type">int</span> mPoolSize;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="title function_">SimplePool</span><span class="params">(<span class="type">int</span> maxPoolSize)</span> &#123;</span><br><span class="line">            mPool = <span class="keyword">new</span> <span class="title class_">Object</span>[maxPoolSize];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="meta">@SuppressWarnings(&quot;unchecked&quot;)</span></span><br><span class="line">        <span class="keyword">public</span> T <span class="title function_">acquire</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (mPoolSize &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">final</span> <span class="type">int</span> <span class="variable">lastPooledIndex</span> <span class="operator">=</span> mPoolSize - <span class="number">1</span>;</span><br><span class="line">                <span class="type">T</span> <span class="variable">instance</span> <span class="operator">=</span> (T) mPool[lastPooledIndex];</span><br><span class="line">                mPool[lastPooledIndex] = <span class="literal">null</span>;</span><br><span class="line">                mPoolSize--;</span><br><span class="line">                <span class="keyword">return</span> instance;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">release</span><span class="params">(T instance)</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (isInPool(instance)) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;Already in the pool!&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (mPoolSize &lt; mPool.length) &#123;</span><br><span class="line">                mPool[mPoolSize] = instance;</span><br><span class="line">                mPoolSize++;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">isInPool</span><span class="params">(T instance)</span> &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; mPoolSize; i++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (mPool[i] == instance) &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面其实是 Android v4 包里面的实现，整体就是用一个数组来保存复用对象，然后依次轮询。</p>
+<h2 id="什么时候不适合池化？"><a href="#什么时候不适合池化？" class="headerlink" title="什么时候不适合池化？"></a>什么时候不适合池化？</h2><ol>
+<li>过于轻量级对象不适合池化，因为创建的开销可能比在池中取出归还的消耗还低。不过这是一个很主观的标准，在 android 这种移动系统中，每一次创建对象都要在堆上进行分配，每一次销毁都要等待垃圾回收处理，就算单次创建的消耗低，次数多了一样会拖累系统。</li>
+<li>对象创建之后，每次使用都会持有较长时间，此时相比“对象的使用”的时间来说，“对象的创建”和“对象的销毁”的开销基本可以忽略了，创建一次对象也算是物超所值了。同时，长时间的持有对象能造成两种结果：1. 对象池越来越大 2. 客户无法从对象池获取到对象了，因为都在使用中。不过这同样也是一个很主观的标准，比如，线程池就是一个很好的例子。你可以对每一个用户请求都新开一个线程来处理，但是当达到负载峰值时，根本就不可能为每一个用户请求创建一个线程，因此，用户请求只能排队等候了。</li>
+<li>对象的状态难以重置，不然下一次使用的时候会引入上次使用的干扰。</li>
+</ol>
+<h2 id="池化需要注意的问题？"><a href="#池化需要注意的问题？" class="headerlink" title="池化需要注意的问题？"></a>池化需要注意的问题？</h2><ol>
+<li>对象池也是一种缓存，缓存不宜过大，需要根据具体的情况来设定合适的池大小。</li>
+<li>对象池为空的时候要有适当的处理，此时可以新建一个对象返回给客户，不能让客户无限等待。</li>
+<li>多线程控制，这个时候可以选择线程同步，不过更适合的是 ThreadLocal，直接规避多线程问题。</li>
+</ol>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2017/03/17/java/2017-03-17-cache-1/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/android/" title="android">
+                        <b>#</b> android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/android/" title="android">
+                        #android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2017/05/07/android/2017/2017-02-07-androidstudio-aar/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E6%B1%A0%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-text">对象池的实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E4%B8%8D%E9%80%82%E5%90%88%E6%B1%A0%E5%8C%96%EF%BC%9F"><span class="toc-text">什么时候不适合池化？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B1%A0%E5%8C%96%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="toc-text">池化需要注意的问题？</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

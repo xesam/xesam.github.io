@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      【Javascript】移动Native+HTML5混搭应用感受 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">【Javascript】移动Native+HTML5混搭应用感受</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/javascript/" title="javascript">
+                    <b>#</b> javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/javascript/" title="javascript">
+                    #javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>说到HTML5在移动领域的开发，最推崇的估计就是跨平台与低门槛。同时又为了有native APP一样的效果，必须兼具原生特性，Titainium与Phonegap是两个比较典型的例子。</p>
+<p>下面说的是我最近一段时间的开发感受以及尝试的几种方案：</p>
+<h2 id="第一种方案："><a href="#第一种方案：" class="headerlink" title="第一种方案："></a>第一种方案：</h2><p>我一开始用的是phonegap + jq + jq mobile,从界面到效果都是JS撑起来的，最大的感受就是UI界面延迟无法忍受，不过如果只是发布为本地网站，那么一切都可以忍受，<br>因为用户对APP和网页的要求从来都不一样,不过这就不干phonegap鸟事了。</p>
+<h4 id="phonegap的优点："><a href="#phonegap的优点：" class="headerlink" title="phonegap的优点："></a>phonegap的优点：</h4><ol>
+<li>基于JS和HTML5,没有门槛</li>
+<li>跨平台，这个是废话。</li>
+<li>无</li>
+</ol>
+<h4 id="phonegap的缺点："><a href="#phonegap的缺点：" class="headerlink" title="phonegap的缺点："></a>phonegap的缺点：</h4><ol>
+<li>UI延迟厉害</li>
+<li>兼容性，比如WEB SQL database在Android版本的问题，最后采用localstorage来模拟数据库。</li>
+<li>webview资源占用问题，以后就看apache基金会的造化了。</li>
+</ol>
+<p>一句话总结：专用浏览器</p>
+<h2 id="第二种方案："><a href="#第二种方案：" class="headerlink" title="第二种方案："></a>第二种方案：</h2><p>后来做完一个项目之后，开始采用另一个方案 Titainium。</p>
+<p>Titainium 采用 js 来编写应用，而且JS符合部分 commonJs 规范。大致原理是：</p>
+<pre><code>android或者IOS API --&gt; Titanium API--&gt; JS组装。
+</code></pre>
+<h4 id="Titanium的优点："><a href="#Titanium的优点：" class="headerlink" title="Titanium的优点："></a>Titanium的优点：</h4><ol>
+<li>JS作为一个胶水层，入门比较简单，1.8版本之后，引入了V8引擎，因此性能大幅提升。对最新的JS规范支持比较好，一些forEach方法可以调用。</li>
+<li>各种组件都是基于原生的，因此性能和UI表现可以甩phonegap几条街。</li>
+<li>部分跨平台，切换平台还是需要修改部分代码。</li>
+<li>文档全，分类很清晰。</li>
+</ol>
+<h4 id="Titanium的缺点："><a href="#Titanium的缺点：" class="headerlink" title="Titanium的缺点："></a>Titanium的缺点：</h4><ol>
+<li>大！局限于Titianium的运行机制，这个问题暂时无解。同时也是因为引入了V8的引擎，所以什么代码都不写的话，编译生成的apk文件最少都有5M。</li>
+<li>文档质量需要控制，有些文档根本就是错误的。</li>
+<li>由于是重新封装了两个平台的API，所以Titanium的API也是很多的。但是由于中间添加了新的一层，当你需要去调用某些原生特性时，那就比较麻烦了。虽然说可以自己编写module，可是Titanium没有办法紧跟Android的版本，所以有关module这一块，从搭环境开始，就比较痛苦。我遇到的一个问题：三星某些机型阉割了google map服务，所以我要改用百度的地图，百度有API，所以我决定做一个module。但是从搭建Titanium module开发环境到开始写module，一天都没有成功。官方文档只是纯粹的堆砌,貌似根本就没有考虑实际情况。本来module是非常赞的一个特性【亮点】，但是不知道基于什么考虑，被官方弱化了。难道和他们的收费政策有关?最后地图问题用的JS版本地图+webview解决。每当此时，我就越发发现IOS的好了，而且真心话，Titanium更适合IOS一些。</li>
+<li>用的人少，部分bug基本无解。</li>
+<li>资源占用比较多，我的ME722，打开十几个window就挂掉了（这个做法不明智，我只是测试），换做view,超过20个一样延迟明显，最后使用数据栈勉强可以达到要求。</li>
+</ol>
+<p>一句话总结：原型利器。</p>
+<h2 id="第三种方案："><a href="#第三种方案：" class="headerlink" title="第三种方案："></a>第三种方案：</h2><p>原生APP + web内容。自己编写一个外壳，底部tab或者头部固定，外壳定制化。</p>
+<p>为了避免庞大的jq，jqmobile或者jqmobi，我只能自己编写一个小型的库来处理,采用了jqmobile的思想，动画用CSS来实现，不过android2.2的CSS动画效果也是无法令人满意啊。<br>另外，最大的问题，外壳与内容的交互可能会比较复杂。这算是很接近phonegap的一种方案，但是相比phonegap，这种定制化能力更强，<br>有些头疼的问题（比如动态生成的页面中webview中滚动条的问题）可以采用别的方案（比如webview分割）来解决。</p>
+<p>一句话总结：愚公移山。</p>
+<p>上面是面向web开发人员的三种方案，总的来说，实现起来都比较简单,phonegap还可以很快的迁移到移动网站上。<br>但是测试工作量可以说是成倍增长，新版本周期短，升级快，bug产生的速度估计刚好抵消bug消除的速度。</p>
+<p>但是，在这个JS和HTML5在移动领域还不够强大，并且缺乏杀手级应用的现在。一句话：“要把web app做得和native app一样，是不明智的”。<br>web app 就该是 web app 的样子，native app 就该是 native app 的样子，虽然我无法明确的告诉你他们到底应该是什么样子。</p>
+<p>那么什么情况下应该用HTML5的方案，什么时候应该用原生的方案呢。</p>
+<p>还是一句话：“it depends”，如果产品可以忍受UI和click的延迟以及组件奇怪的显示，多是内容获取而不涉及过多的交互，phonegap完全胜任。<br>如果需要原生的速度和显示，并且功能比较中庸不计较体积，那么Titanium可以胜任。<br>如果介于两者之间，那么可以自己做壳。前面的“如果”都是基于一个前提“团队初期或者人手不够”，如果真正要做一个好的应用的话，至少现阶段，还是原生搞起吧。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2012/03/26/javascript/2012-03-26-Javascript-DOM-bind/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/javascript/" title="javascript">
+                        <b>#</b> javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/javascript/" title="javascript">
+                        #javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2012/05/18/javascript/2012-05-18-Javascript-mobile-swipe/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%A7%8D%E6%96%B9%E6%A1%88%EF%BC%9A"><span class="toc-text">第一种方案：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#phonegap%E7%9A%84%E4%BC%98%E7%82%B9%EF%BC%9A"><span class="toc-text">phonegap的优点：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#phonegap%E7%9A%84%E7%BC%BA%E7%82%B9%EF%BC%9A"><span class="toc-text">phonegap的缺点：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%A7%8D%E6%96%B9%E6%A1%88%EF%BC%9A"><span class="toc-text">第二种方案：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Titanium%E7%9A%84%E4%BC%98%E7%82%B9%EF%BC%9A"><span class="toc-text">Titanium的优点：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Titanium%E7%9A%84%E7%BC%BA%E7%82%B9%EF%BC%9A"><span class="toc-text">Titanium的缺点：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E7%A7%8D%E6%96%B9%E6%A1%88%EF%BC%9A"><span class="toc-text">第三种方案：</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

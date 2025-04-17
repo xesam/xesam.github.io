@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Facebook Emitter Source Code 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Facebook Emitter Source Code</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/javascript/" title="javascript">
+                    <b>#</b> javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/javascript/" title="javascript">
+                    #javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>EventEmitter 是一个事件订阅、分发库， facebook 出品，被应用在 flux 等库中，也可以独立使用。github 地址 <a target="_blank" rel="noopener" href="https://github.com/facebook/emitter">https://github.com/facebook/emitter</a>。</p>
+<span id="more"></span>
+
+<p>源码比较简单，只是有两点可以注意一下：</p>
+<p>1、生成 subscription 的 id。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//EventSubscriptionVendor</span></span><br><span class="line"><span class="title function_">addSubscription</span>(<span class="params"> eventType, subscription</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="variable language_">this</span>.<span class="property">_subscriptionsForType</span>[eventType]) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">_subscriptionsForType</span>[eventType] = [];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">const</span> key = <span class="variable language_">this</span>.<span class="property">_subscriptionsForType</span>[eventType].<span class="property">length</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">_subscriptionsForType</span>[eventType].<span class="title function_">push</span>(subscription);</span><br><span class="line">    subscription.<span class="property">eventType</span> = eventType;</span><br><span class="line">    subscription.<span class="property">key</span> = key;</span><br><span class="line">    <span class="keyword">return</span> subscription;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里使用数组长度作为 subscription 的 id，就意味着后续删除 subscription 的时候，是不能修改数组长度的，也就决定了只能讲数组元素置空，不能移除。如果我们稍稍微做个变更：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//EventSubscriptionVendor</span></span><br><span class="line"><span class="title function_">removeSubscription</span>(<span class="params">subscription: <span class="built_in">Object</span></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> eventType = subscription.<span class="property">eventType</span>;</span><br><span class="line">    <span class="keyword">const</span> key = subscription.<span class="property">key</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> subscriptionsForType = <span class="variable language_">this</span>.<span class="property">_subscriptionsForType</span>[eventType];</span><br><span class="line">    <span class="keyword">if</span> (subscriptionsForType) &#123;</span><br><span class="line">        <span class="comment">// delete subscriptionsForType[key];</span></span><br><span class="line">        subscriptionsForType.<span class="title function_">splice</span>(key, <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>使用方法如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">EventEmitter</span> = <span class="built_in">require</span>(<span class="string">&#x27;./lib/EventEmitter&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> emitter = <span class="keyword">new</span> <span class="title class_">EventEmitter</span>();</span><br><span class="line">emitter.<span class="title function_">addListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;click trigger 1&#x27;</span>);</span><br><span class="line">    emitter.<span class="title function_">addListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;click trigger 2&#x27;</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    emitter.<span class="title function_">removeCurrentListener</span>();</span><br><span class="line">    emitter.<span class="title function_">removeCurrentListener</span>();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">emitter.<span class="title function_">emit</span>(<span class="string">&#x27;click&#x27;</span>);</span><br><span class="line">emitter.<span class="title function_">emit</span>(<span class="string">&#x27;click&#x27;</span>);</span><br><span class="line">emitter.<span class="title function_">emit</span>(<span class="string">&#x27;click&#x27;</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>预期应该是 </p>
+<pre><code>click trigger 1
+click trigger 3
+click trigger 2
+</code></pre>
+<p>但实际上只能得到：</p>
+<pre><code>click trigger 1
+</code></pre>
+<p>原因就是数组长度作为 id 冲突了</p>
+<p>2、delete 的使用</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">EventEmitter</span> = <span class="built_in">require</span>(<span class="string">&#x27;./lib/EventEmitter&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> emitter = <span class="keyword">new</span> <span class="title class_">EventEmitter</span>();</span><br><span class="line">emitter.<span class="title function_">addListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;click trigger 1&#x27;</span>);</span><br><span class="line">    emitter.<span class="title function_">removeAllListeners</span>(<span class="string">&#x27;click&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line">emitter.<span class="title function_">addListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;click trigger 2&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">emitter.<span class="title function_">emit</span>(<span class="string">&#x27;click&#x27;</span>);</span><br><span class="line">emitter.<span class="title function_">emit</span>(<span class="string">&#x27;click&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// output</span></span><br><span class="line"><span class="comment">// click trigger 1</span></span><br><span class="line"><span class="comment">// click trigger 2</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>原因就是 removeAllListeners 的实现使用的是 delete，清除了键，但是没有清空键对应的值集合:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//BaseEventEmitter</span></span><br><span class="line"><span class="title function_">removeAllListeners</span>(<span class="attr">eventType</span>: ?<span class="title class_">TEvent</span>): <span class="keyword">void</span> &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">_subscriber</span>.<span class="title function_">removeAllSubscriptions</span>(eventType);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//EventSubscriptionVendor</span></span><br><span class="line"><span class="title function_">removeAllSubscriptions</span>(<span class="params">eventType: ?<span class="built_in">String</span></span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (eventType === <span class="literal">undefined</span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">_subscriptionsForType</span> = &#123;&#125;;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">delete</span> <span class="variable language_">this</span>.<span class="property">_subscriptionsForType</span>[eventType];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>再看 emit 的实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//BaseEventEmitter</span></span><br><span class="line"><span class="title function_">emit</span>(<span class="attr">eventType</span>: <span class="title class_">TEvent</span>): <span class="keyword">void</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> subscriptions = <span class="variable language_">this</span>.<span class="property">_subscriber</span>.<span class="title function_">getSubscriptionsForType</span>(eventType);</span><br><span class="line">    <span class="keyword">if</span> (subscriptions) &#123;</span><br><span class="line">        <span class="comment">//other</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>由于 emit 的一开始就获取了 eventType 所对对应的 subscriptions，因此就算在当前 event cycle 中主动调用 removeAllListeners 清除掉其余的订阅，在当前 event cycle 中也无法生效。</p>
+<p>与此对比的就是 removeCurrentListener ：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//BaseEventEmitter</span></span><br><span class="line"><span class="title function_">removeCurrentListener</span>(): <span class="keyword">void</span> &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">_subscriber</span>.<span class="title function_">removeSubscription</span>(<span class="variable language_">this</span>.<span class="property">_currentSubscription</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//EventSubscriptionVendor</span></span><br><span class="line"><span class="title function_">removeSubscription</span>(<span class="params">subscription: <span class="built_in">Object</span></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> eventType = subscription.<span class="property">eventType</span>;</span><br><span class="line">    <span class="keyword">const</span> key = subscription.<span class="property">key</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> subscriptionsForType = <span class="variable language_">this</span>.<span class="property">_subscriptionsForType</span>[eventType];</span><br><span class="line">    <span class="keyword">if</span> (subscriptionsForType) &#123;</span><br><span class="line">        <span class="keyword">delete</span> subscriptionsForType[key];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>removeCurrentListener 更进一步删除掉了 subscriptionsForType 中对应的 key，所以一次 emit 创建的 event cycle 里面哪怕保存了 subscriptions，被移除掉的 subscription 也不会再次被触发了。所以如果想实现彻底的 removeAllListeners，还是得清理掉实际的 subscription 。处理方式其实有好些，比如：</p>
+<p>（1）清理掉 subscriptions 的值集合。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//EventSubscriptionVendor</span></span><br><span class="line"><span class="title function_">removeAllSubscriptions</span>(<span class="params">eventType: ?<span class="built_in">String</span></span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (eventType === <span class="literal">undefined</span>) &#123;</span><br><span class="line">        <span class="title class_">Object</span>.<span class="title function_">values</span>(<span class="variable language_">this</span>.<span class="property">_subscriptionsForType</span>).<span class="title function_">forEach</span>(<span class="function"><span class="params">subscriptionsForType</span> =&gt;</span> &#123;</span><br><span class="line">            subscriptionsForType.<span class="title function_">forEach</span>(<span class="function"><span class="params">subscription</span> =&gt;</span> &#123;</span><br><span class="line">                <span class="variable language_">this</span>.<span class="title function_">removeSubscription</span>(subscription);</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">_subscriptionsForType</span> = &#123;&#125;;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">_subscriptionsForType</span>[eventType].<span class="title function_">forEach</span>(<span class="function"><span class="params">subscription</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="title function_">removeSubscription</span>(subscription);</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="keyword">delete</span> <span class="variable language_">this</span>.<span class="property">_subscriptionsForType</span>[eventType];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>（2）给 subscription （或者数据结构层次）设置一个取消标志，如果 subscription 被取消了，则不执行 listener，不过对数据结构改动较大，而且依旧需要遍历。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2019/06/02/computer/2019-06-02-ikbc-w200/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/javascript/" title="javascript">
+                        <b>#</b> javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/javascript/" title="javascript">
+                        #javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2019/07/02/javascript/2019-07-02-js-let-vs-const/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

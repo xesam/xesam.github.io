@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      POST简略 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">POST简略</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/java/" title="java">
+                    <b>#</b> java
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/java/" title="java">
+                    #java
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="简单描述："><a href="#简单描述：" class="headerlink" title="简单描述："></a>简单描述：</h2><p>post的数据在 request Payload 内， 因此，Request Headers 里面带有一个 boundary 属性，服务器收到 post 请求之后，通过 boundary 将参数从 Payload 中分离出来。</p>
+<p>即</p>
+<pre><code>params = body.split(boundary)
+</code></pre>
+<p>唯一需要注意的是，CRLF（回车换行符）的使用。HTTP协议对CRLF的内容分割要求还是略严的。</p>
+<h2 id="Request-Headers"><a href="#Request-Headers" class="headerlink" title="Request Headers"></a>Request Headers</h2><pre><code>Content-Type:multipart/form-data; boundary=----WebKitFormBoundarydKY7YrWhI3bdiNYz
+</code></pre>
+<h2 id="Request-Payload"><a href="#Request-Payload" class="headerlink" title="Request Payload"></a>Request Payload</h2><pre><code>--&#123;boundary&#125;
+Content-Disposition: form-data; name=&quot;&#123;name1&#125;&quot;
+
+&#123;value1&#125;
+--&#123;boundary&#125;
+Content-Disposition: form-data; name=&quot;&#123;name2&#125;&quot;
+
+&#123;value2&#125;
+--&#123;boundary&#125;
+Content-Disposition: form-data; name=&quot;&#123;file_name1&#125;&quot;; filename=&quot;xxx.png&quot;
+Content-Type: image/png
+
+0x120x12...
+
+--&#123;boundary&#125;--
+</code></pre>
+<span id="more"></span>
+
+<h2 id="示例说明"><a href="#示例说明" class="headerlink" title="示例说明"></a>示例说明</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span> <span class="attr">enctype</span>=<span class="string">&quot;multipart/form-data&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;checkbox&quot;</span> <span class="attr">name</span>=<span class="string">&quot;k1&quot;</span> <span class="attr">checked</span> <span class="attr">value</span>=<span class="string">&quot;1&quot;</span>/&gt;</span><span class="tag">&lt;<span class="name">label</span>&gt;</span>1<span class="tag">&lt;/<span class="name">label</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;checkbox&quot;</span> <span class="attr">name</span>=<span class="string">&quot;k1&quot;</span> <span class="attr">checked</span> <span class="attr">value</span>=<span class="string">&quot;2&quot;</span>/&gt;</span><span class="tag">&lt;<span class="name">label</span>&gt;</span>2<span class="tag">&lt;/<span class="name">label</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">name</span>=<span class="string">&quot;pic&quot;</span>/&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>提交格式：</p>
+<p>headers</p>
+<pre><code>Content-Type:multipart/form-data; boundary=----WebKitFormBoundarydKY7YrWhI3bdiNYz
+</code></pre>
+<p>payload:</p>
+<pre><code>------WebKitFormBoundarydKY7YrWhI3bdiNYz
+Content-Disposition: form-data; name=&quot;k1&quot;
+
+1
+------WebKitFormBoundarydKY7YrWhI3bdiNYz
+Content-Disposition: form-data; name=&quot;k2&quot;
+
+2
+------WebKitFormBoundarydKY7YrWhI3bdiNYz
+Content-Disposition: form-data; name=&quot;&#123;file_name1&#125;&quot;; filename=&quot;xxx.png&quot;
+Content-Type: image/png
+
+....(这里是图片字节).....
+
+------WebKitFormBoundarydKY7YrWhI3bdiNYz--
+</code></pre>
+<h1 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.net.HttpURLConnection;</span><br><span class="line"><span class="keyword">import</span> java.net.MalformedURLException;</span><br><span class="line"><span class="keyword">import</span> java.net.ProtocolException;</span><br><span class="line"><span class="keyword">import</span> java.net.URL;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Post</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">BOUNDARY</span> <span class="operator">=</span> <span class="string">&quot;-------1234567890987654321&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">CRLF</span> <span class="operator">=</span> <span class="string">&quot;\r\n&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, List&lt;String&gt;&gt; keyValues = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, List&lt;String&gt;&gt; pngs = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//添加字符串键值对</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">keyValue</span><span class="params">(String key, String value)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!keyValues.containsKey(key)) &#123;</span><br><span class="line">            keyValues.put(key, <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;());</span><br><span class="line">        &#125;</span><br><span class="line">        keyValues.get(key).add(value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//添加png图片</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">png</span><span class="params">(String key, String pngFilePath)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!pngs.containsKey(key)) &#123;</span><br><span class="line">            pngs.put(key, <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;());</span><br><span class="line">        &#125;</span><br><span class="line">        pngs.get(key).add(pngFilePath);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">post</span><span class="params">(String urlString)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">URL</span> <span class="variable">url</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">URL</span>(urlString);</span><br><span class="line">            <span class="type">HttpURLConnection</span> <span class="variable">connection</span> <span class="operator">=</span> (HttpURLConnection) url.openConnection();</span><br><span class="line">            connection.setConnectTimeout(<span class="number">5000</span>);</span><br><span class="line">            connection.setReadTimeout(<span class="number">10000</span>);</span><br><span class="line">            connection.setDoOutput(<span class="literal">true</span>);</span><br><span class="line">            connection.setDoInput(<span class="literal">true</span>);</span><br><span class="line">            connection.setUseCaches(<span class="literal">false</span>);</span><br><span class="line">            connection.setRequestMethod(<span class="string">&quot;POST&quot;</span>);</span><br><span class="line">            connection.setRequestProperty(<span class="string">&quot;Content-Type&quot;</span>, <span class="string">&quot;multipart/form-data; boundary=&quot;</span> + BOUNDARY);</span><br><span class="line"></span><br><span class="line">            <span class="type">OutputStream</span> <span class="variable">out</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DataOutputStream</span>(connection.getOutputStream());</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (Map.Entry&lt;String, List&lt;String&gt;&gt; kv : keyValues.entrySet()) &#123;</span><br><span class="line">                <span class="keyword">for</span> (String value : kv.getValue()) &#123;</span><br><span class="line">                    <span class="type">String</span> <span class="variable">item</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>(<span class="string">&quot;--&quot;</span>).append(BOUNDARY).append(CRLF)</span><br><span class="line">                            .append(<span class="string">&quot;Content-Disposition: form-data; name=&quot;</span>).append(kv.getKey()).append(CRLF)</span><br><span class="line">                            .append(CRLF)</span><br><span class="line">                            .append(value).append(CRLF)</span><br><span class="line">                            .toString();</span><br><span class="line">                    out.write(item.getBytes());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//添加png图片</span></span><br><span class="line">            <span class="keyword">for</span> (Map.Entry&lt;String, List&lt;String&gt;&gt; kv : pngs.entrySet()) &#123;</span><br><span class="line">                <span class="keyword">for</span> (String value : kv.getValue()) &#123;</span><br><span class="line">                    <span class="type">String</span> <span class="variable">item</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>(<span class="string">&quot;--&quot;</span>).append(BOUNDARY).append(CRLF)</span><br><span class="line">                            .append(<span class="string">&quot;Content-Disposition: form-data; name=&quot;</span>).append(kv.getKey()).append(<span class="string">&quot;;&quot;</span>).append(<span class="string">&quot;filename=&quot;</span>).append(value).append(CRLF)</span><br><span class="line">                            .append(<span class="string">&quot;Content-Type: image/png&quot;</span>).append(CRLF)</span><br><span class="line">                            .append(CRLF)</span><br><span class="line">                            .toString();</span><br><span class="line">                    out.write(item.getBytes());</span><br><span class="line"></span><br><span class="line">                    <span class="comment">//写入文件内容</span></span><br><span class="line">                    <span class="type">FileInputStream</span> <span class="variable">fileInputStream</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileInputStream</span>(value);</span><br><span class="line">                    <span class="type">byte</span>[] bytes = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">512</span>];</span><br><span class="line">                    <span class="type">int</span> count;</span><br><span class="line">                    <span class="keyword">while</span> ((count = fileInputStream.read(bytes)) != -<span class="number">1</span>) &#123;</span><br><span class="line">                        out.write(bytes, <span class="number">0</span>, count);</span><br><span class="line">                    &#125;</span><br><span class="line">                    out.write(CRLF.getBytes());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            out.write((<span class="string">&quot;--&quot;</span> + BOUNDARY + <span class="string">&quot;--&quot;</span> + CRLF).getBytes());<span class="comment">//结尾</span></span><br><span class="line"></span><br><span class="line">            out.flush();</span><br><span class="line">            out.close();</span><br><span class="line"></span><br><span class="line">            <span class="type">StringBuffer</span> <span class="variable">response</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuffer</span>();</span><br><span class="line">            <span class="type">BufferedReader</span> <span class="variable">reader</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(<span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(connection.getInputStream()));</span><br><span class="line">            String line;</span><br><span class="line">            <span class="keyword">while</span> ((line = reader.readLine()) != <span class="literal">null</span>) &#123;</span><br><span class="line">                response.append(line).append(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            reader.close();</span><br><span class="line">            <span class="keyword">return</span> response.toString();</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (MalformedURLException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ProtocolException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">Post</span> <span class="variable">post</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Post</span>();</span><br><span class="line">        post.keyValue(<span class="string">&quot;k1&quot;</span>, <span class="string">&quot;a&quot;</span>);</span><br><span class="line">        post.keyValue(<span class="string">&quot;k2&quot;</span>, <span class="string">&quot;b&quot;</span>);</span><br><span class="line">        post.png(<span class="string">&quot;pic&quot;</span>, <span class="string">&quot;/home/xe/Pictures/1.png&quot;</span>);</span><br><span class="line">        post.png(<span class="string">&quot;pic&quot;</span>, <span class="string">&quot;/home/xe/Pictures/1.png&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">response</span> <span class="operator">=</span> post.post(<span class="string">&quot;http://127.0.0.1:3000/upload&quot;</span>);</span><br><span class="line">        System.out.println(response);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2015/06/08/android/2015/2015-06-08-Android-how-to-ButterKnife/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/java/" title="java">
+                        <b>#</b> java
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/java/" title="java">
+                        #java
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2015/07/17/android/2015/2015-07-17-Android-timer/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E6%8F%8F%E8%BF%B0%EF%BC%9A"><span class="toc-text">简单描述：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Request-Headers"><span class="toc-text">Request Headers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Request-Payload"><span class="toc-text">Request Payload</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E8%AF%B4%E6%98%8E"><span class="toc-text">示例说明</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81"><span class="toc-text">示例代码</span></a>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

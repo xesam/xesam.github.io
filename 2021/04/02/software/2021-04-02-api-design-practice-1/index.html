@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      API 设计案例（一） 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">API 设计案例（一）</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/software/" title="software">
+                    <b>#</b> software
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/software/" title="software">
+                    #software
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>一个 API 的设计迭代案例…</p>
+<span id="more"></span>
+
+<h2 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h2><p>我们的某个产品用户端有个界面如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">我是一个标题</span><br></pre></td></tr></table></figure>
+
+<p>现在需要给这个标题后面增加<strong>个性化标语，<strong>加上标语之后的显示如下</strong>：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">我是一个标题（新年特别推荐）</span><br></pre></td></tr></table></figure>
+<h2 id="版本-1-0"><a href="#版本-1-0" class="headerlink" title="版本 1.0"></a>版本 1.0</h2><h3 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h3><p>于是后端就在接口数据中增加一个字段：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">item</span>:<span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>并约定字段含义：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">如果 item 为 true，就展示个性化标语。</span><br></pre></td></tr></table></figure>
+<h3 id="用户端"><a href="#用户端" class="headerlink" title="用户端"></a>用户端</h3><p>用户端的判定比较简单，控制显示与否即可。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">titleV1</span>(<span class="params">item</span>)&#123;</span><br><span class="line">  <span class="keyword">if</span>(item)&#123;</span><br><span class="line">    <span class="title function_">showSlogon</span>();</span><br><span class="line">  &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="title function_">hideSlogon</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="存在问题"><a href="#存在问题" class="headerlink" title="存在问题"></a>存在问题</h3><p>现在问题就出现了，这么设计接口，存在几个明显的疏漏：</p>
+<ol>
+<li>如果没有这个字段，应用端应该如何处理？</li>
+<li>如果后续个性化标签发生了变化，应该如何处理？</li>
+<li>如果不同的客户希望支持不同的个性化标签，应该如何处理？</li>
+<li>如果个性化标签希望支持动图，应该如何处理？</li>
+</ol>
+<p>面对任何一个需求的变更，原本的设计都无法应对。于是对接口字段进行重新设计。</p>
+<h2 id="版本-2-0："><a href="#版本-2-0：" class="headerlink" title="版本 2.0："></a>版本 2.0：</h2><h3 id="接口-1"><a href="#接口-1" class="headerlink" title="接口"></a>接口</h3><p>现实问题：由于应用端版本已经发布，原本的接口定义无法更改，就只能再新增一个字段了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">newItem</span>:&#123;</span><br><span class="line">      <span class="attr">value</span>:<span class="string">&#x27;&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>并约定字段含义：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">字段缺失：</span><br><span class="line">如果 newItem 缺失，则不展示个性化标语；</span><br><span class="line">如果 newItem.value 缺失，则不展示个性化标语；</span><br><span class="line"></span><br><span class="line">字段值有效：</span><br><span class="line">如果 newItem.value 为 &#x27;0&#x27;，则不展示个性化标语；</span><br><span class="line">如果 newItem.value 为 &#x27;1&#x27;，则展示个性化标语“（新年特别推荐）”；</span><br><span class="line">如果 newItem.value 为 &#x27;2&#x27;，则展示个性化标语“（鼠年特别推荐）”；</span><br></pre></td></tr></table></figure>
+
+<p><em>关于 value 字段值的类型，也可以选择 int，int 的好处就是可以非常容易的定义有效值范围，比如我们可以约定：如果 value 值小于 0，则判定 value 的值无效，简单丢弃即可。</em></p>
+<h3 id="用户端-1"><a href="#用户端-1" class="headerlink" title="用户端"></a>用户端</h3><p>用户端采用“白名单”的处理方式，只处理“认识”的值，不认识的值一律丢弃。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">titleV2</span>(<span class="params">newItem</span>)&#123;</span><br><span class="line">  <span class="keyword">if</span>(newItem.<span class="property">value</span> === <span class="string">&#x27;1&#x27;</span>)&#123;</span><br><span class="line">      title.<span class="property">text</span> = <span class="string">&#x27;（新年特别推荐）&#x27;</span>;</span><br><span class="line">      <span class="title function_">showSlogon</span>();</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(newItem.<span class="property">value</span> === <span class="string">&#x27;2&#x27;</span>)&#123;</span><br><span class="line">      title.<span class="property">text</span> = <span class="string">&#x27;（鼠年特别推荐）&#x27;</span>;</span><br><span class="line">      <span class="title function_">showSlogon</span>();</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="title function_">hideSlogon</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(newItem)&#123;</span><br><span class="line">  <span class="title function_">titleV2</span>();</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">  <span class="title function_">hideSlogon</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="管理后台"><a href="#管理后台" class="headerlink" title="管理后台"></a>管理后台</h3><p>后台只需要选择 newItem 并设置对应的 value 值即可。<br>由于存在历史版本，因此运营人员配置 newItem 的时候，后台系统需要自动配置老版本 item 的值：</p>
+<ol>
+<li>如果 newItem.value 设置为 ‘1’，则将 item 配置为 true；</li>
+<li>如果 newItem.value 设置为 ‘2’，则将 item 配置为 true；</li>
+<li>如果 newItem.value 设置为其他值，则将 item 配置为 false；</li>
+<li>如果没有配置 newItem，则将 item 配置为 false；</li>
+</ol>
+<h3 id="存在问题-1"><a href="#存在问题-1" class="headerlink" title="存在问题"></a>存在问题</h3><p>问题一：value 是给程序逻辑看的字段，单看 value 的值，除非看代码或者查找接口文档，不然单从’1’或者’2’这种配置是无法得知用户端展示的文字到底是什么。<br>问题二：用户端的个性化标语是预置的，如果要新增加标语，则必须要发布用户端版本。</p>
+<p>因此，这个接口可以继续改进。</p>
+<h2 id="版本-3-0"><a href="#版本-3-0" class="headerlink" title="版本 3.0"></a>版本 3.0</h2><h3 id="接口-2"><a href="#接口-2" class="headerlink" title="接口"></a>接口</h3><p>既然标语是一段文字，那我们就干脆把实际要展示的文字也放到接口中：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">newItem</span>:&#123;</span><br><span class="line">      <span class="attr">value</span>:<span class="string">&#x27;1&#x27;</span>,</span><br><span class="line">      <span class="attr">text</span>:<span class="string">&#x27;（新年特别推荐）&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>并约定字段含义：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">字段缺失：</span><br><span class="line">如果 newItem.text 缺失，则回退到版本2.0；</span><br><span class="line"></span><br><span class="line">字段值有效：</span><br><span class="line">如果 newItem.text 不为空，则展示个性化标语“$&#123;text&#125;”；</span><br></pre></td></tr></table></figure>
+
+<p>关于“不为空”的理解，不同的产品可能有不同的定义，保持一致即可。比如，我们可以认为只有在以下两种情况，text 的值才被认为是“空”：</p>
+<ol>
+<li>text 为 ‘’;</li>
+<li>text 为 null；</li>
+</ol>
+<p>如果是其他字符串，则均不为空；</p>
+<h3 id="用户端-2"><a href="#用户端-2" class="headerlink" title="用户端"></a>用户端</h3><p>优先判定 text，然后判定 value，如果没有 text 字段，则降级到版本 2.0，以保证版本的向前兼容用。至于 text 的值，只要不为空，就直接显示。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">titleV3</span>(<span class="params">newItem</span>)&#123;</span><br><span class="line">  <span class="keyword">if</span>(<span class="title function_">isEmpty</span>(newItem.<span class="property">text</span>))&#123;</span><br><span class="line">    title.<span class="property">text</span> = newItem.<span class="property">text</span>;</span><br><span class="line">    <span class="title function_">showSlogon</span>();</span><br><span class="line">  &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="title function_">titleV2</span>(newItem);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(newItem)&#123;</span><br><span class="line">  <span class="title function_">titleV3</span>(newItem);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">  <span class="title function_">hideSlogon</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="管理后台-1"><a href="#管理后台-1" class="headerlink" title="管理后台"></a>管理后台</h3><p>经过迭代之后，后台需要兼容的配置就多了起来，而且，由于 value 和 text 同时控制了用户端 UI 的显示结果，可能就无法自动的来进行适配了。<br>因此后台系统需要在运营人员进行配置的时候，可能就需要同时配置 value 和 text 了：</p>
+<ol>
+<li>设置 text 的值 ${text}；</li>
+<li>如果历史版本中的 value 存在与 ${text} 对应的值，则配置 value 为对应的值；</li>
+<li>如果历史版本中的 value 不存在与 ${text} 对应的值，则根据实际情况配置 value 为的值；</li>
+</ol>
+<p>比如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">newItem</span>:&#123;</span><br><span class="line">      <span class="attr">value</span>:<span class="string">&#x27;1&#x27;</span>, <span class="comment">// 不存在与 text 对应的 value，则选择一个最合适的 value</span></span><br><span class="line">      <span class="attr">text</span>:<span class="string">&#x27;（新年特别特别特别特别特别推荐）&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="版本-4-0"><a href="#版本-4-0" class="headerlink" title="版本 4.0"></a>版本 4.0</h2><p>在处理完版本 3 的情况之后，“支持动图”的需求就类似了。</p>
+<h3 id="接口-3"><a href="#接口-3" class="headerlink" title="接口"></a>接口</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">newItem</span>:&#123;</span><br><span class="line">      <span class="attr">value</span>:<span class="string">&#x27;1&#x27;</span>, </span><br><span class="line">      <span class="attr">text</span>:<span class="string">&#x27;（新年特别特别特别特别特别推荐）&#x27;</span>,</span><br><span class="line">      <span class="attr">icon</span>:<span class="string">&#x27;http://x.y.z/xxx.png&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>约定字段含义：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">字段缺失：</span><br><span class="line">如果 newItem.icon 缺失，则回退到版本 3.0；</span><br><span class="line"></span><br><span class="line">字段值有效：</span><br><span class="line">如果 newItem.icon 不为空，则展示个性化标语的动图“$&#123;icon&#125;”；</span><br></pre></td></tr></table></figure>
+
+<h3 id="用户端-3"><a href="#用户端-3" class="headerlink" title="用户端"></a>用户端</h3><p>接口的定义很明确，但是 icon 与 text 不同，icon 的显示是一个异步的过程，这个过程存在”成功“或者”失败“的可能性，如果”失败“，是选择”不显示“还是”显示 ${text}“就是一个需要定义的机制了。用户端的处理需要明确的约定，在此，我们采取的原则是”尽可能的显示“，于是我们选择”显示 ${text}“。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">titleV4</span>(<span class="params">newItem</span>)&#123;</span><br><span class="line">  <span class="keyword">if</span>(<span class="title function_">isEmpty</span>(newItem.<span class="property">icon</span>))&#123;</span><br><span class="line">    <span class="title function_">titleV3</span>(newItem);</span><br><span class="line">  &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="title function_">load</span>(newItem.<span class="property">icon</span>).<span class="title function_">then</span>(<span class="function"><span class="params">img</span>=&gt;</span>&#123;</span><br><span class="line">      title.<span class="property">imgSrc</span> = img;</span><br><span class="line">      <span class="title function_">showSlogon</span>();</span><br><span class="line">    &#125;).<span class="title function_">catch</span>(<span class="function"><span class="params">err</span>=&gt;</span>&#123;</span><br><span class="line">      <span class="title function_">titleV3</span>(newItem);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(newItem)&#123;</span><br><span class="line">  <span class="title function_">titleV4</span>(newItem);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">  <span class="title function_">hideSlogon</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p><em>这里根据不同的用户端平台，采取的策略可能也会不一致，比如 Android 应用，无法直接给图片组件设置 src，因此需要应用自身实现图片的加载逻辑。但是如果是 web 页面，可以给 image 标签设置 src，无需应用自身管理图片的加载。因此，是选择显示顺序上，可以有不同的策略，比如“先显示 text，在 icon 加载完毕之后，再用icon 替代（或者覆盖）”。</em></p>
+<h3 id="管理后台-2"><a href="#管理后台-2" class="headerlink" title="管理后台"></a>管理后台</h3><p>与版本 3.0 类似，运营人员在配置后台的时候，需要慎重选择各个字段的值：</p>
+<ol>
+<li>设置 icon 的值 ${icon}；</li>
+<li>根据 icon 的内容，设置 text 的值 ${text}；</li>
+<li>参考版本 3.0 的配置，设置 value；</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>与 UI 配置相关的字段，尽量使用对象的形式，以便于后续的扩展。换句话说，需要遵顼设计的基本原则：<strong>渐进增强，平稳降级</strong>。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2021/04/01/software/2021-04-01-api-anti-pattern-1/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/software/" title="software">
+                        <b>#</b> software
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/software/" title="software">
+                        #software
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2021/09/01/product/2021-09-01-just-do-it-1/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%A7%88"><span class="toc-text">概览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%88%E6%9C%AC-1-0"><span class="toc-text">版本 1.0</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3"><span class="toc-text">接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%AB%AF"><span class="toc-text">用户端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%9C%A8%E9%97%AE%E9%A2%98"><span class="toc-text">存在问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%88%E6%9C%AC-2-0%EF%BC%9A"><span class="toc-text">版本 2.0：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3-1"><span class="toc-text">接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%AB%AF-1"><span class="toc-text">用户端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%A1%E7%90%86%E5%90%8E%E5%8F%B0"><span class="toc-text">管理后台</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%9C%A8%E9%97%AE%E9%A2%98-1"><span class="toc-text">存在问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%88%E6%9C%AC-3-0"><span class="toc-text">版本 3.0</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3-2"><span class="toc-text">接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%AB%AF-2"><span class="toc-text">用户端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%A1%E7%90%86%E5%90%8E%E5%8F%B0-1"><span class="toc-text">管理后台</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%88%E6%9C%AC-4-0"><span class="toc-text">版本 4.0</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3-3"><span class="toc-text">接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%AB%AF-3"><span class="toc-text">用户端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%A1%E7%90%86%E5%90%8E%E5%8F%B0-2"><span class="toc-text">管理后台</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

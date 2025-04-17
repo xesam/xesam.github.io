@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Android 如何快速构建Android Demo 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Android 如何快速构建Android Demo</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/android/" title="android">
+                    <b>#</b> android
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/android/" title="android">
+                    #android
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>在 Android 学习的过程中，经常需要针对某些项目来写一些测试的例子，或者在做一些 demo 的时候，都需要先写 Activity 然后注册。<br>如果里面有太多的跳转的话，还需要每个跳转都增加一个事件。这些都是非常繁琐的步骤。那么如何省略这些步骤呢？</p>
+<p>有一种办法就是使用 Fragment，然后按照“约定大于配置”的原则，遍历安装包下符合条件的 Fragment 然后自动构建目录索引与跳转动作。<br>通俗来讲，就是把 APK 里面的包结构文件当做树形结构的文件夹来处理，然后构建一个文件浏览器。当然，我们构建的“类浏览器”。</p>
+<p>一个完整的实现请参考 <em><a target="_blank" rel="noopener" href="https://github.com/xesam/AndroidQuickDemo">https://github.com/xesam/AndroidQuickDemo</a></em></p>
+<p>PS：AndroidQuickDemo 同时增加了 Activity 的支持，但是由于 Android 系统的限制，Activity必须被注册，这一点是无法绕过去的。<br>当然，也可以使用插件的原理，达到自动索引 Activity 的目的，不过，在我的实际使用中，当一定要使用 Activity 的时候，肯定是为了使用或者探究 Activity 的直接效果，而不应该进行代理或者拦截。</p>
+<h2 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h2><pre><code>compile &#39;dev.xesam.android:quick-demo-creator:0.2.0&#39;
+</code></pre>
+<h1 id="使用方式-1"><a href="#使用方式-1" class="headerlink" title="使用方式"></a>使用方式</h1><p>现在支持两种模式：</p>
+<h2 id="1-列出所有已经注册的-Activity，点击即可打开"><a href="#1-列出所有已经注册的-Activity，点击即可打开" class="headerlink" title="1. 列出所有已经注册的 Activity，点击即可打开"></a>1. 列出所有已经注册的 Activity，点击即可打开</h2><p>这个方式只是使用一个列表简单列出所有的已注册 Activity，然后点击即可打开。</p>
+<p>用法：</p>
+<pre><code>QuickDemo.inflateActivity(activity, R.id.listview);
+</code></pre>
+<h2 id="2-像文件管理器一样，列出-app-的目录索引"><a href="#2-像文件管理器一样，列出-app-的目录索引" class="headerlink" title="2. 像文件管理器一样，列出 app 的目录索引"></a>2. 像文件管理器一样，列出 app 的目录索引</h2><p>个人比较推荐这种用法，直接构建完整的“类浏览器”。</p>
+<p>lib工程里面已经内置了一个 QuickDemoActivity，你只需要在你的 Android 项目中的 AndroidManifest.xml 中注册这个 Activity，并设置为 LAUNCHER Activity 即可</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">activity</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:name</span>=<span class="string">&quot;dev.xesam.android.quickdemo.QuickDemoActivity&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:label</span>=<span class="string">&quot;@string/app_name&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">&quot;android.intent.action.MAIN&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">&quot;android.intent.category.LAUNCHER&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">activity</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果你不想使用内置的 QuickDemoActivity，那么也可以在自己的 Activity 中来显示目录，只需要提供一个 container view id 就可以了，示例如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyManActivity</span> <span class="keyword">extends</span> <span class="title class_">FragmentActivity</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(Bundle savedInstanceState)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        QuickDemo.inflateActivity(<span class="built_in">this</span>, R.id.lv);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>默认的目录索引只会显示当前 PackageName 下名称中包含 “demo 或者 sample 或者 example”的 Activity 或者 Fragment，<br>如果想按照自己的规则来定义过滤，可以自定义 QuickDemoFilter,一个示例如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CustomFilter</span> <span class="keyword">implements</span> <span class="title class_">QuickDemoFilter</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">Pattern</span> <span class="variable">target</span> <span class="operator">=</span> Pattern.compile(<span class="string">&quot;demo|sample|example&quot;</span>, Pattern.CASE_INSENSITIVE);</span><br><span class="line">    String pkgName;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">CustomFilter</span><span class="params">(Context context)</span> &#123;</span><br><span class="line">        pkgName = context.getPackageName();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">filter</span><span class="params">(String className)</span> &#123;</span><br><span class="line">        String[] comps = className.split(<span class="string">&quot;\\.&quot;</span>);</span><br><span class="line">        <span class="type">String</span> <span class="variable">simpleClassName</span> <span class="operator">=</span> comps[comps.length - <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">return</span> className.startsWith(pkgName) &amp;&amp; target.matcher(simpleClassName).find() &amp;&amp; simpleClassName.indexOf(<span class="string">&quot;$&quot;</span>) == -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后在对应的 Activity 中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyManActivity</span> <span class="keyword">extends</span> <span class="title class_">FragmentActivity</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(Bundle savedInstanceState)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        QuickDemo.inflateDemo(<span class="built_in">this</span>, R.id.quick_demo_root, <span class="keyword">new</span> <span class="title class_">CustomFilter</span>(<span class="built_in">this</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="效果预览"><a href="#效果预览" class="headerlink" title="效果预览"></a>效果预览</h2><p><img src="https://github.com/xesam/AndroidQuickDemo/raw/master/Screenshot_2015-08-12-23-36-42.png" alt="Screenshot_2015-08-12-23-36-42.png"></p>
+<p><img src="https://github.com/xesam/AndroidQuickDemo/raw/master/Screenshot_2015-08-12-23-36-47.png" alt="Screenshot_2015-08-12-23-36-47.png"></p>
+<p><img src="https://github.com/xesam/AndroidQuickDemo/blob/master/Screenshot_2015-08-12-23-36-53.png" alt="Screenshot_2015-08-12-23-36-53.png"></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2016/03/24/android/2016/2016-03-24-volley-drawback-thread/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/android/" title="android">
+                        <b>#</b> android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/android/" title="android">
+                        #android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2016/03/27/android/2016/2016-03-27-Android-Handler-1/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-text">使用方式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F-1"><span class="toc-text">使用方式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%88%97%E5%87%BA%E6%89%80%E6%9C%89%E5%B7%B2%E7%BB%8F%E6%B3%A8%E5%86%8C%E7%9A%84-Activity%EF%BC%8C%E7%82%B9%E5%87%BB%E5%8D%B3%E5%8F%AF%E6%89%93%E5%BC%80"><span class="toc-text">1. 列出所有已经注册的 Activity，点击即可打开</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%83%8F%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86%E5%99%A8%E4%B8%80%E6%A0%B7%EF%BC%8C%E5%88%97%E5%87%BA-app-%E7%9A%84%E7%9B%AE%E5%BD%95%E7%B4%A2%E5%BC%95"><span class="toc-text">2. 像文件管理器一样，列出 app 的目录索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%88%E6%9E%9C%E9%A2%84%E8%A7%88"><span class="toc-text">效果预览</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

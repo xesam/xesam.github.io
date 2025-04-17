@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      new URL() 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">new URL()</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/javascript/" title="javascript">
+                    <b>#</b> javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/javascript/" title="javascript">
+                    #javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>URL 接口是 web 接口，包含若干静态方法的对象，用来创建 URLs。</p>
+<p>当使用一个没有实现该构造器的用户代理时，可以通过 window.URL 属性来访问该对象（比如小程序里面就只有 window.URL），对于没有 URL 的用户代理，可以使用第三方实现，比如：<a target="_blank" rel="noopener" href="https://github.com/zloirock/core-js/blob/master/packages/core-js/web/url.js">https://github.com/zloirock/core-js/blob/master/packages/core-js/web/url.js</a></p>
+<p>基础使用参见：</p>
+<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/URL/URL">https://developer.mozilla.org/zh-CN/docs/Web/API/URL/URL</a><br><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/URL">https://developer.mozilla.org/zh-CN/docs/Web/API/URL</a><br><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/URLSearchParams">https://developer.mozilla.org/zh-CN/docs/Web/API/URLSearchParams</a></p>
+<p>容易让人疑惑的点：</p>
+<p>示例一，Chrome 浏览器：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = <span class="keyword">new</span> <span class="title function_">URL</span>(<span class="string">&#x27;http://hostname/pathname?name=value#hash&#x27;</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj);</span><br><span class="line"></span><br><span class="line"><span class="comment">//output</span></span><br><span class="line"><span class="attr">hash</span>: <span class="string">&quot;#hash&quot;</span></span><br><span class="line"><span class="attr">href</span>: <span class="string">&quot;http://hostname/pathname?name=pages/main/index#hash&quot;</span></span><br><span class="line"><span class="attr">password</span>: <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="attr">port</span>: <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="attr">protocol</span>: <span class="string">&quot;http:&quot;</span></span><br><span class="line"><span class="attr">search</span>: <span class="string">&quot;?name=value&quot;</span></span><br><span class="line"><span class="attr">searchParams</span>: <span class="title class_">URLSearchParams</span> &#123;&#125;</span><br><span class="line"><span class="attr">username</span>: <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">host</span>: <span class="string">&quot;hostname&quot;</span></span><br><span class="line"><span class="attr">hostname</span>: <span class="string">&quot;hostname&quot;</span></span><br><span class="line"><span class="attr">pathname</span>: <span class="string">&quot;/pathname&quot;</span></span><br><span class="line"><span class="attr">origin</span>: <span class="string">&quot;http://hostname&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>示例二，Chrome 浏览器，把 http 协议换成 scheme：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = <span class="keyword">new</span> <span class="title function_">URL</span>(<span class="string">&#x27;scheme://hostname/pathname?name=value#hash&#x27;</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj);</span><br><span class="line"></span><br><span class="line"><span class="comment">//output</span></span><br><span class="line"><span class="attr">hash</span>: <span class="string">&quot;#hash&quot;</span></span><br><span class="line"><span class="attr">href</span>: <span class="string">&quot;scheme://hostname/pathname?name=value#hash&quot;</span></span><br><span class="line"><span class="attr">password</span>: <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="attr">port</span>: <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="attr">protocol</span>: <span class="string">&quot;scheme:&quot;</span></span><br><span class="line"><span class="attr">search</span>: <span class="string">&quot;?name=value&quot;</span></span><br><span class="line"><span class="attr">searchParams</span>: <span class="title class_">URLSearchParams</span> &#123;&#125;</span><br><span class="line"><span class="attr">username</span>: <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">host</span>: <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="attr">hostname</span>: <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="attr">pathname</span>: <span class="string">&quot;//hostname/pathname&quot;</span></span><br><span class="line"><span class="attr">origin</span>: <span class="string">&quot;null&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>示例三，Node.js：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> url = <span class="built_in">require</span>(<span class="string">&#x27;url&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> obj = url.<span class="title function_">parse</span>(<span class="string">&#x27;scheme://hostname/pathname?name=value#hash&#x27;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj);</span><br><span class="line"></span><br><span class="line"><span class="comment">//output</span></span><br><span class="line"><span class="attr">hash</span>: <span class="string">&#x27;#hash&#x27;</span>,</span><br><span class="line"><span class="attr">href</span>: <span class="string">&#x27;scheme://hostname/pathname?name=value#hash&#x27;</span></span><br><span class="line"><span class="attr">protocol</span>: <span class="string">&#x27;scheme:&#x27;</span>,</span><br><span class="line"><span class="attr">slashes</span>: <span class="literal">true</span>,</span><br><span class="line"><span class="attr">auth</span>: <span class="literal">null</span>,</span><br><span class="line"><span class="attr">port</span>: <span class="literal">null</span>,</span><br><span class="line"><span class="attr">search</span>: <span class="string">&#x27;?name=pages/main/index&#x27;</span>,</span><br><span class="line"><span class="attr">query</span>: <span class="string">&#x27;?name=pages/main/index&#x27;</span>,</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="attr">host</span>: <span class="string">&#x27;hostname&#x27;</span>,</span><br><span class="line"><span class="attr">hostname</span>: <span class="string">&#x27;hostname&#x27;</span>,</span><br><span class="line"><span class="attr">pathname</span>: <span class="string">&#x27;/pathname&#x27;</span>,</span><br><span class="line"><span class="attr">path</span>: <span class="string">&#x27;/pathname?name=pages/main/index&#x27;</span>,</span><br></pre></td></tr></table></figure>
+
+<p>可以看出，这个 URL 的规范与其他实现里面的实现还是有区别的，whatwg 的 URL Standard 定义了几个 special-scheme：</p>
+<p><a target="_blank" rel="noopener" href="https://url.spec.whatwg.org/#special-scheme">https://url.spec.whatwg.org/#special-scheme</a></p>
+<p>当你发现 URL 解析的结果不符合你的预期时，你需要的可能是 URI ，而不是 URL。&#x3D;。&#x3D;</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2018/09/13/fe/2018-09-13-fe-wx-mp-auth/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/javascript/" title="javascript">
+                        <b>#</b> javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/javascript/" title="javascript">
+                        #javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2019/01/21/physics/2019-01-01-physics-r-1/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      用户故事与敏捷方法 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">用户故事与敏捷方法</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/talk/" title="talk">
+                    <b>#</b> talk
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/talk/" title="talk">
+                    #talk
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>这本书的英文名是《User Stories Applied : For Agile Software Development》，是一本将敏捷开发（XP）的思想与流程应用到需求管理工作的小册子。<br>用户故事是一种管理需求的方法，以便开发人员、客户团队、客户以及用户共同配合开发出高质量产品。</p>
+<span id="more"></span>
+
+<p>用户故事的特征：</p>
+<ol>
+<li>独立的；</li>
+<li>可讨论的；</li>
+<li>对用户或客户有价值的；</li>
+<li>可估计的；</li>
+<li>小的，注意区分“复合故事”与“复杂故事”的区别；</li>
+<li>可测试的</li>
+</ol>
+<p>用户故事不是“场景”，主要区别在于“范围与细节”，场景包含更多的细节，同时涵盖多个故事。</p>
+<p>用户故事的优势：</p>
+<ol>
+<li>强调口头沟通；</li>
+<li>容易理解；</li>
+<li>适合做计划；</li>
+<li>适合迭代开发；</li>
+<li>鼓励延迟细节；</li>
+<li>支持随机应变的开发；</li>
+<li>鼓励参与性设计；</li>
+<li>传播隐性知识。</li>
+</ol>
+<p>来自前辈的箴言：</p>
+<ol>
+<li>用户以及客户通常不能准确的知道自己的实际需求；</li>
+<li>即便开发者知道所有的需求，很多需求细节只能随着他们的开发进展变得清晰；</li>
+<li>就算假设所有的细节可以在前面弄清楚，人们也没有能力理解这么多细节；</li>
+<li>就算我们真的能理解所有的细节，产品和项目也会经常变更；</li>
+<li>人非圣贤，孰能无过。</li>
+</ol>
+<p>需求最重要的两个问题：</p>
+<ol>
+<li>用户是谁？</li>
+<li>他们的诉求是什么？</li>
+</ol>
+<p>所以本书围绕“用户角色”和“优秀故事”着力进行了介绍：</p>
+<ol>
+<li>用户角色。初始角色 -&gt; 整合角色 -&gt; 提炼角色。两个额外的技术：虚拟人物，极端人物。确定真正的用户，注意区分客户与用户，排除用户经理、开发经理与市场人员这种干扰项，如果希望软件是可用的，就要与未来的用户交流。</li>
+<li>优秀故事：够用就行，写尽可能多的故事，在较高层面讨论、不要陷入细节，尽量让客户编写故事，故事需要围绕单个用户，同时符合故事的特征（见上文）。</li>
+</ol>
+<p>不良故事的症兆：</p>
+<ol>
+<li>故事太小；</li>
+<li>相互依赖；</li>
+<li>额外实现；</li>
+<li>细节太多；</li>
+<li>过早考虑界面；</li>
+<li>频繁划分；</li>
+<li>难以排序；</li>
+<li>客户甩锅。</li>
+</ol>
+<p><em>客户定义测试，测试是开发过程的一部分，而不是在编码完成后要做的事。</em></p>
+<p>排列优先级的莫斯科（MoSCow）规则：</p>
+<pre><code>·必须有的（Must have）；
+·应该有的（Should have）；
+·可以有（Could have）
+·这次不会有（Won&#39;t have this time）。
+</code></pre>
+<p><em>优先级需要考虑的因素：重要性、成本、风险、架构，如果有冲突，就以客户的优先级为准。</em></p>
+<p>以故事为需求单元，从故事分解出任务，然后在团队内分配职责，同时测试并监控速率。</p>
+<p>XP 的 12 个实践：</p>
+<ol>
+<li>短交付周期（small releases）；</li>
+<li>计划游戏（the planning game）；</li>
+<li>重构（refactoring）；</li>
+<li>测试（testing）；</li>
+<li>结对编程（pair programing）；</li>
+<li>持续一致的速度（sustainable pace）；</li>
+<li>团队代码所有权（team code ownership）；</li>
+<li>编码标准（coding standard）；</li>
+<li>简单设计（simple design）；</li>
+<li>隐喻（metaphor）；</li>
+<li>持续集成（continuous integration）；</li>
+<li>现场客户（on-site customer）；</li>
+</ol>
+<p>XP 提倡的 4 大价值：</p>
+<ol>
+<li>沟通（Communication）；</li>
+<li>简单（Simplicity）；</li>
+<li>反馈（Feedback）；</li>
+<li>勇气（Courage）。</li>
+</ol>
+<p>XP 的五项基本原则；</p>
+<ol>
+<li>快速反馈（rapid feedback）；</li>
+<li>假设简单（assuming simplicity）；</li>
+<li>增量变化（incremental change）；</li>
+<li>拥抱变化（embrace change）；</li>
+<li>高品质的产品（doing quality work）。</li>
+</ol>
+<p><em>PS:产品经理最喜欢其中“拥抱变化”这条了。</em></p>
+<p>XP 团队特质：</p>
+<ol>
+<li>向客户提供快速反馈，并从反馈中学习；</li>
+<li>喜欢简单，并总是试图在转移到更复杂的解决方案前，先做简单的解决方案；</li>
+<li>通过小的、增量的变化提高软件质量；</li>
+<li>拥抱变化，知道自己是真正地善于包容和适应；</li>
+<li>坚决主张软件应该始终展示出最高的质量工艺。</li>
+</ol>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2021/11/03/talk/2021-11-03-talk-logic-1/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/talk/" title="talk">
+                        <b>#</b> talk
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/talk/" title="talk">
+                        #talk
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

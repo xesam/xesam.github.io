@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Handler（二）Message面面观 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Handler（二）Message面面观</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/android/" title="android">
+                    <b>#</b> android
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/android/" title="android">
+                    #android
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h3 id="Message-有几种？"><a href="#Message-有几种？" class="headerlink" title="Message 有几种？"></a>Message 有几种？</h3><p>Message 有两种：Data Message（数据消息） 与 Task Message（任务消息）</p>
+<p>Data Message 是指有携带多个数据参数的 Message。比如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> Message <span class="title function_">obtain</span><span class="params">(Handler h, <span class="type">int</span> what, <span class="type">int</span> arg1, <span class="type">int</span> arg2, Object obj)</span></span><br></pre></td></tr></table></figure>
+<p>其中 arg1， arg2，以及 obj 都是携带的数据。</p>
+<p>Task Message 是指发送一个 Runnable 的 Message。比如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> Message <span class="title function_">obtain</span><span class="params">(Handler h, Runnable callback)</span></span><br></pre></td></tr></table></figure>
+<p>其中 callback 就是消息携带的任务。</p>
+<p>注意，一个 Message 不可能同时为 Data Message 和 Task Message，而只能是其中之一。<br>当然，你可以强制给一个 Message 设置所有的属性，但是只会有一种类型起作用。</p>
+<h2 id="Message-的特征属性是什么？即，如何区分-Message？"><a href="#Message-的特征属性是什么？即，如何区分-Message？" class="headerlink" title="Message 的特征属性是什么？即，如何区分 Message？"></a>Message 的特征属性是什么？即，如何区分 Message？</h2><p>一个 Message 包含四个方面：</p>
+<ol>
+<li><p>Handler # 必须——消息的接收者，同时也是消息的管理者。</p>
+</li>
+<li><p>Object # 非必须——消息的 token</p>
+</li>
+<li><p>Integer # 非必须——数据消息独有</p>
+</li>
+<li><p>Runnable # 非必须——任务消息独有</p>
+</li>
+</ol>
+<p>因此，对于所有的 Message 来说，只要其中任意一个属性不相同，就是不同的 Message。因此，像下面的情况，是不会发生冲突的 。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Message.obtain(handler1, <span class="number">1</span>).sendToTarget();</span><br><span class="line">Message.obtain(handler2, <span class="number">1</span>).sendToTarget();</span><br></pre></td></tr></table></figure>
+
+<h2 id="如何创建-Message"><a href="#如何创建-Message" class="headerlink" title="如何创建 Message"></a>如何创建 Message</h2><p>第一种方式，可以直接 new 一个 Message 对象：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Message</span> <span class="variable">message</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Message</span>();</span><br><span class="line">message.what = <span class="number">1</span>;</span><br><span class="line">message.setTarget(handler1);</span><br><span class="line">message.sendToTarget();</span><br></pre></td></tr></table></figure>
+<p>但是这种方式有两个缺点：</p>
+<ol>
+<li>只能创建 Data Message， 无法创建 Task Message</li>
+<li>每次都创建新的 Message 会增加系统资源。</li>
+</ol>
+<p>第二种方式，从消息池里面重用取出。</p>
+<p>系统内部维护了一个消息池，推荐的做法是每次需要的时候就从消息池里获取一个，然后系统会自动回收重用。<br>因此，上面的调用可以修改为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Message.obtain(handler1, <span class="number">1</span>).sendToTarget();</span><br></pre></td></tr></table></figure>
+
+<p>而且这种方式也可以创建 Task Message：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Message.obtain(handler1, <span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>第三种方式，从另一个消息拷贝而来：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Message.obtain(message).sendToTarget();</span><br></pre></td></tr></table></figure>
+
+<h2 id="如何发送-Message"><a href="#如何发送-Message" class="headerlink" title="如何发送 Message"></a>如何发送 Message</h2><p>消息最终的接受者肯定是一个 Handler，因此，Message 的四特征里面，Handler必不可少。<br>发送消息有两种方式，从 Message 发送：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">    Message.obtain(handler1, <span class="number">1</span>).sendToTarget();</span><br><span class="line">```    </span><br><span class="line"></span><br><span class="line">从 Handler 发送：</span><br><span class="line"></span><br><span class="line">```java</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Handler</span>().post(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">    </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//或者</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Handler</span>().sendEmptyMessage()</span><br></pre></td></tr></table></figure>
+
+<p>有一个简单的区分：</p>
+<p>send 前缀的方法用来发送 Data Message</p>
+<p>post 前缀的方法用来发送 Task Message</p>
+<p>本质上，以上两种方式是一样的，因为 Message.sendToTarget() 方法最终还是委托给内部的 Handler 来处理，这么做只是使用起来更方便而已。</p>
+<p>而返回值（boolean）都是用来表明消息是否成功发送。</p>
+<h2 id="Message-的处理"><a href="#Message-的处理" class="headerlink" title="Message 的处理"></a>Message 的处理</h2><p>Task Message 会在指定的时间直接在 Handler 线程被执行，Handler 本身无法接收到任何回调。</p>
+<p>而对于 Data Message 来说，处理方法就比较丰富一些了。Handler 通过 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Handler.handleMessage(Message msg)</span><br></pre></td></tr></table></figure>
+<p>来处理。</p>
+<p>Handler 处理的方式也有两种：</p>
+<p>第一种，通过继承的方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">CbkHandler</span> <span class="keyword">extends</span> <span class="title class_">Handler</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handleMessage</span><span class="params">(Message msg)</span> &#123;</span><br><span class="line">        <span class="comment">//handle message</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第二种，通过回调的方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="title class_">Handler</span>(<span class="keyword">new</span> <span class="title class_">Handler</span>.Callback() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">handleMessage</span><span class="params">(Message msg)</span> &#123;</span><br><span class="line">        <span class="comment">//handle message</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>对于第二种方式的返回值，true 表示已经处理了消息， false 表示没有处理消息。如果没有处理消息，那么消息将会被投递到 Handler 本身的 handleMessage(Message msg) 方法，也就是第一种方式。</p>
+<h2 id="如何移除消息"><a href="#如何移除消息" class="headerlink" title="如何移除消息"></a>如何移除消息</h2><p>移除 Message 同样要参考 Message 的四个特征。只要相应的特征符合，就可以移除对应的消息。</p>
+<p>移除 Data Message 使用 removeMessages 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Handler.removeMessages(<span class="type">int</span> what) <span class="comment">//移除所有 what 值匹配的 Message</span></span><br><span class="line">Handler.removeMessages(<span class="type">int</span> what, Object token) <span class="comment">//移除所有 what 值匹配并且 token 也相同的 Message</span></span><br></pre></td></tr></table></figure>
+
+<p>移除 Task Message 使用 removeCallbacks 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Handler.removeCallbacks(Runnable r) <span class="comment">//移除所有 r 相同的 Message</span></span><br><span class="line">Handler.removeCallbacks(Runnable r, Object token) <span class="comment">//移除所有 r 相同并且 token 也相同的 Message</span></span><br></pre></td></tr></table></figure>
+
+<p>由于 token 是两类消息共有的，因此，可以通过 token 来同时移除两类消息：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">removeCallbacksAndMessages(Object token) <span class="comment">//移除所有 token 相同的 Message</span></span><br></pre></td></tr></table></figure>
+
+<p>如果 token 为 null，效果就是清空所有的消息队列。</p>
+<h2 id="Message-的生命周期"><a href="#Message-的生命周期" class="headerlink" title="Message 的生命周期"></a>Message 的生命周期</h2><p><img src="/image/message_lifecycle.png" alt="1"></p>
+<p>注意，在正式的程序开发中，是没有手段来检测 Message 的生命周期状态的。而且，也不应该持续持有一个 Message，更不应该在一个 Message 发送之后，再对其进行修改。<br>因为，既无法确认 Message 的状态，而且 Message 有可能被重用，会直接影响到下一个处理逻辑。</p>
+<h2 id="观察-Message-Queue"><a href="#观察-Message-Queue" class="headerlink" title="观察 Message Queue"></a>观察 Message Queue</h2><p>系统提供了两种方式来观察当前消息队列的情况：</p>
+<p>第一种，在 Handler 上调用 Handler.dump(Printer pw, String prefix) 来输出当前的消息队列情况：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">handler.dump(<span class="keyword">new</span> <span class="title class_">LogPrinter</span>(Log.DEBUG, <span class="string">&quot;HandlerDemo&quot;</span>), <span class="string">&quot;xesam&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>示例结果如下；</p>
+<pre><code>xesam  Looper (main, tid 1) &#123;44bd1af0&#125;
+xesam    Message 0: &#123; when=-9ms barrier=62 &#125;
+xesam    Message 1: &#123; when=+10s0ms callback=dev.xesam.android.demo.system.handler.HandlerDemo$2 target=android.os.Handler callback=dev.xesam.android.demo.system.handler.HandlerDemo$2@44d5ae18 target=Handler (android.os.Handler) &#123;44bd7758&#125; &#125;
+xesam    (Total messages: 2, idling=false, quitting=false)
+</code></pre>
+<p>第二种，可以使用 Looper#setMessageLogging(Printer printer) 来监控消息的处理过程。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Looper.myLooper().setMessageLogging(<span class="keyword">new</span> <span class="title class_">LogPrinter</span>(Log.DEBUG, <span class="string">&quot;xesam&quot;</span>));</span><br></pre></td></tr></table></figure>
+<p>示例结果如下，展示了每一个 Message 的处理情况：</p>
+<pre><code>D/xesam: &gt;&gt;&gt;&gt;&gt; Dispatching to Handler (android.os.Handler) &#123;44d27750&#125; dev.xesam.android.demo.system.handler.HandlerDemo$2@44d27a20: 0
+D/xesam: &lt;&lt;&lt;&lt;&lt; Finished to Handler (android.os.Handler) &#123;44d27750&#125; dev.xesam.android.demo.system.handler.HandlerDemo$2@44d27a20
+</code></pre>
+<p>这是主要的调试手段，而且比较实用。</p>
+<h3 id="推荐书籍"><a href="#推荐书籍" class="headerlink" title="推荐书籍"></a>推荐书籍</h3><p><a target="_blank" rel="noopener" href="https://book.douban.com/subject/25900200/">《Efficient Android Threading》</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2016/03/27/android/2016/2016-03-27-Android-Handler-1/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/android/" title="android">
+                        <b>#</b> android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/android/" title="android">
+                        #android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2016/04/12/android/2016/2016-04-12-Android-how-to-JsBridge/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Message-%E6%9C%89%E5%87%A0%E7%A7%8D%EF%BC%9F"><span class="toc-text">Message 有几种？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Message-%E7%9A%84%E7%89%B9%E5%BE%81%E5%B1%9E%E6%80%A7%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E5%8D%B3%EF%BC%8C%E5%A6%82%E4%BD%95%E5%8C%BA%E5%88%86-Message%EF%BC%9F"><span class="toc-text">Message 的特征属性是什么？即，如何区分 Message？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA-Message"><span class="toc-text">如何创建 Message</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%8F%91%E9%80%81-Message"><span class="toc-text">如何发送 Message</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Message-%E7%9A%84%E5%A4%84%E7%90%86"><span class="toc-text">Message 的处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E7%A7%BB%E9%99%A4%E6%B6%88%E6%81%AF"><span class="toc-text">如何移除消息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Message-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-text">Message 的生命周期</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%82%E5%AF%9F-Message-Queue"><span class="toc-text">观察 Message Queue</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A8%E8%8D%90%E4%B9%A6%E7%B1%8D"><span class="toc-text">推荐书籍</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      【Javascript】Prototype源码浅析—String部分(一)有关indexOf优化 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">【Javascript】Prototype源码浅析—String部分(一)有关indexOf优化</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/javascript/" title="javascript">
+                    <b>#</b> javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/javascript/" title="javascript">
+                    #javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>添加到String.prototype中的方法比较多，不过归结起来，大致分为下面几类：</p>
+<pre><code>原始能力增强 strip |  include  |  startsWith  |  endsWith |  empty |  blank
+格式	camelize | capitalize |  underscore |  dasherize  | inspect          
+变形	toArray |  succ  | times
+替换	interpolate  | sub |  scan |  truncate | gsub
+HTML处理	stripTags  | escapeHTML |  unescapeHTML
+参数序列化	toQueryParams
+JSON处理	unfilterJSON |  isJSON |  evalJSON |  parseJSON
+脚本处理	stripScripts |  extractScripts  | evalScripts
+</code></pre>
+<p>（我自己分的，不妥之处请指出）</p>
+<p>从基本的原始能力增强开始，下面是具体的实现，这一段很好理解的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span>(<span class="params">s</span>)&#123;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">strip</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/^\s+/</span>,<span class="string">&#x27;&#x27;</span>).<span class="title function_">replace</span>(<span class="regexp">/\s+$/</span>,<span class="string">&#x27;&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">include</span>(<span class="params">pattern</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">indexOf</span>(pattern) &gt; -<span class="number">1</span>;<span class="comment">//split</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">startsWith</span>(<span class="params">pattern</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">lastIndexOf</span>(pattern, <span class="number">0</span>) === <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">endsWith</span>(<span class="params">pattern</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> d = <span class="variable language_">this</span>.<span class="property">length</span> - pattern.<span class="property">length</span>;</span><br><span class="line">        <span class="keyword">return</span> d &gt;= <span class="number">0</span> &amp;&amp; <span class="variable language_">this</span>.<span class="title function_">indexOf</span>(pattern, d) === d; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">empty</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span> == <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">blank</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="regexp">/^\s*$/</span>.<span class="title function_">test</span>(<span class="variable language_">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    s.<span class="property">strip</span> = <span class="title class_">String</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">trim</span> || strip;</span><br><span class="line">    s.<span class="property">include</span> = include;</span><br><span class="line">    s.<span class="property">startsWith</span> = startsWith;</span><br><span class="line">    s.<span class="property">endsWith</span> = endsWith;</span><br><span class="line">    s.<span class="property">empty</span> = empty;</span><br><span class="line">    s.<span class="property">blank</span> = blank;</span><br><span class="line">&#125;)(<span class="title class_">String</span>.<span class="property"><span class="keyword">prototype</span></span>);</span><br></pre></td></tr></table></figure>
+<p>上面的strip在jquery里面是$.trim,而且大部分貌似都是trim。这里直接扩展原生原型的悲剧之处就显现出来了，因为后面的JS实现中(比如chrome)就实现了trim方法，那就弄巧成拙了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">strip</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/^\s+/</span>,<span class="string">&#x27;&#x27;</span>).<span class="title function_">replace</span>(<span class="regexp">/\s+$/</span>,<span class="string">&#x27;&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里面的 replace(&#x2F;^\s+&#x2F;,’’) 就是 trimLeft，replace(&#x2F;\s+$&#x2F;,’’) 是 trimRight，不过 Prototype.String 中没有这两个方法。</p>
+<p>下面是这一部分比较有意思的地方：</p>
+<p>当时看这段的时候，对其中的startsWith和endsWith甚是不解，按理来说，startsWith用indexOf就可以了，这里却是用的lastIndexOf。后来去翻了一下Prototype1.6版本的实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">startsWith</span>(<span class="params">pattern</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">indexOf</span>(pattern) === <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">endsWith</span>(<span class="params">pattern</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> d = <span class="variable language_">this</span>.<span class="property">length</span> - pattern.<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">return</span> d &gt;= <span class="number">0</span> &amp;&amp; <span class="variable language_">this</span>.<span class="title function_">lastIndexOf</span>(pattern) === d;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可见，以前版本中startsWith用的就是indexOf，不过1.7版本修改了startsWith的实现。在1.7版本中：</p>
+<pre><code>startsWith 实现中lastIndexOf从后向前查找，不过起点（fromindex）设置为0，因此，只需要检测开头一次就可以了。
+endsWith 实现中indexOf从前向后查找，由于字符串长度不定，因此这里计算了一下长度，然后再确定了起点（fromindex），因此也只需要检测结尾一次就可以了。
+</code></pre>
+<p>这里的性能优化之处在于，1.6的实现中，如果开头没有匹配（就是startsWith不成立），但是indexOf依旧会向后查找，直到找到一个匹配的或者字符串结尾，这样就浪费了。<br>举个例子，对于下面的一个操作：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;abcdefgabcdefg&#x27;</span>.<span class="title function_">startsWith</span>(<span class="string">&#x27;abc&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>在1.6版本和1.7版本的实现中，没有任何区别，但是我们转换一下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;abcdefgabcdefg&#x27;</span>.<span class="title function_">startsWith</span>(<span class="string">&#x27;xesam&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>在1.6实现中，startsWith内部的 indexOf 操作会在开头的 a 没有和 x 匹配后，虽然没有必要再继续了，但是 indexOf 依旧会继续向后查找，直到找到匹配的‘xesam’或者字符串末尾。</p>
+<p>在1.7实现中，startsWith内部的lastIndexOf是反向查找的（fromIndex&#x3D;0），因此在开头的a没有和x匹配后，操作就停止了，因为lastIndexOf已经到头了。</p>
+<p>这么一对比，如果待检测的字符串非常长的话，两种实现方式的效率会有明显的区别。</p>
+<p>endsWith的原理也是一样的。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2012/01/01/javascript/2012-01-01-Javascript-string-JSON/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/javascript/" title="javascript">
+                        <b>#</b> javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/javascript/" title="javascript">
+                        #javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2012/01/11/javascript/2012-01-11-Javascript-Prototype-String-2/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

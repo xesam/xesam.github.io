@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      单元测试的艺术-第三版 简记 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">单元测试的艺术-第三版 简记</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/computer/" title="computer">
+                    <b>#</b> computer
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/computer/" title="computer">
+                    #computer
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>本文是《The Art of Unit Testing with example in JavaScript, 3rd Edition》一书的读书简记，此书前两版有中文版本：第一版使用 C 语言描述，第二版使用 C# 语言描述。<br>第三版暂未出版中文版，使用 Javascript&#x2F;Typescript 语言描述，使用的主要测试框架的 <a target="_blank" rel="noopener" href="https://jestjs.io/">Jest</a></p>
+<span id="more"></span>
+
+<p>作者对 Unit of Work 的定义：</p>
+<p>*A unit of work is the sum of actions that take place between the invocation of an entry point up until a noticeable end result through one or more exit points. The entry point is the thing we trigger. *</p>
+<p>A unit of work can be a single function, multiple functions, multiple functions or even multiple modules or components. But it always has an entry point which we can trigger from the outside, and it always ends up doing something useful.</p>
+<p>这里就引出了全文的核心概念——<strong>Entry Points &amp; Exit Points</strong>：</p>
+<p><strong>Exit points are end results of a unit of work.</strong></p>
+<p><img src="/assets/the_art_of_unit_testing_3rd/EntryPoints&ExitPoints.png" alt="1"></p>
+<p>Three different types of end results: </p>
+<ol>
+<li>The invoked function returns a useful value (not undefined). </li>
+<li>There’s a noticeable change to the state or behavior of the system before and after invocation that can be determined without interrogating private state. </li>
+<li>There’s a callout to a third-party system over which the test has no control.</li>
+</ol>
+<p>根据适用测试技术的不同，上述又可以分为：</p>
+<ol>
+<li>Return-value based exit points (direct outputs) of all the exit point types, should be the easiest to test. You trigger an entry point, you get something back, you check the value you get back.</li>
+<li>State based tests (indirect outputs) require a little more gymnastics usually. You call something, then you do another call to check something else (or call the previous thing again) to see if everything went according to plan.</li>
+</ol>
+<p>整个单元测试的侧重点是“Exit Points”。</p>
+<p>Characteristics of a good unit test:</p>
+<ol>
+<li>It should be easy to read and understand the intent of the test author. </li>
+<li>It should be easy to read and write </li>
+<li>It should be automated and repeatable. </li>
+<li>It should be useful and provide actionable results. </li>
+<li>Anyone should be able to run it at the push of a button. </li>
+<li>When it fails, it should be easy to detect what was expected and determine how to pinpoint the problem.</li>
+</ol>
+<p>Great unit tests should also exhibit the following properties: </p>
+<ol>
+<li>It should run quickly. </li>
+<li>It should be consistent in its results . </li>
+<li>It should have full control of the code under test. </li>
+<li>It should be fully isolated. </li>
+<li>It should run in memory without requiring system files, networks, databases It should be as synchronous and linear as possible when it makes sense.</li>
+</ol>
+<p>To start off, ask yourself the following questions about the tests you’ve written&#x2F;executed up to now:</p>
+<ol>
+<li>Can I run and get results from a test I wrote two weeks or months or years ago? </li>
+<li>Can any member of my team run and get results from tests I wrote two months ago? </li>
+<li>Can I run all the tests I’ve written in no more than a few minutes? </li>
+<li>Can I run all the tests I’ve written at the push of a button?</li>
+<li>Do the tests I wrote always report the same outcome (given no code changes on my team)? </li>
+<li>Do my tests pass when there are bugs in another team’s code? </li>
+<li>Do my test show the same result when run on different machines or environments? </li>
+<li>Do my tests stop working if there’s no database, network or deployment? </li>
+<li>If I delete, move or change one test, do other tests remain unaffected? </li>
+<li>Can I easily set up the needed state for a test without relying on outside resources like a database or a 3rd party, with very little code?</li>
+</ol>
+<p>关于 legacy code 的调侃：</p>
+<p><em>A client once defined legacy code in a down-to-earth way: “code that works.” Many people like to define legacy code as “code that has no tests.”</em></p>
+<p>这些自省的问题，都围绕者单元测试的核心原则：</p>
+<ol>
+<li>Readability. </li>
+<li>Maintainability.</li>
+<li>Trust.</li>
+</ol>
+<p>做个简单的总结：</p>
+<p>A unit test is an automated piece of code that invokes the unit of work trough an entry point, and then checks one of its exit points. A unit test is almost always written using a unit testing framework. It can be written easily and runs quickly. It’s trustworthy, readable &amp; maintainable. It is consistent as long as the production code we control has not changed.</p>
+<h3 id="TDD"><a href="#TDD" class="headerlink" title="TDD"></a>TDD</h3><p>最佳实践之一：TDD（我的补充：可以参考 《Java测试驱动开发》等等书籍）。</p>
+<p>The technique of TDD is quite simple: </p>
+<ol>
+<li>Write a failing test to prove code or functionality is missing from the end product. </li>
+<li>Make the test pass by adding functionality to the production code that meets the expectations of your test. </li>
+<li>Refactor your code.</li>
+</ol>
+<p>Technically, one of the biggest benefits of TDD nobody tells you about is that by seeing a test fail, and then seeing it pass without changing the test, you’re basically testing the test itself. If you expect it to fail and it passes, you might have a bug in your test or you’re testing the wrong thing. If the test failed and now you expect it to pass, and it still fails, your test could have a bug, or it’s expecting the wrong thing to happen.</p>
+<p>Three core skills needed for successful TDD：</p>
+<ol>
+<li>Writing Good Tests.</li>
+<li>Writing Test First.</li>
+<li>SOLID Design.</li>
+</ol>
+<h3 id="Unit-testing-frameworks-Jest"><a href="#Unit-testing-frameworks-Jest" class="headerlink" title="Unit testing frameworks &amp; Jest"></a>Unit testing frameworks &amp; Jest</h3><p>Jest acted in several capacities for us: </p>
+<ol>
+<li>It acted as a test library to use when writing the test </li>
+<li>It acted as an assertion library for asserting inside the test (‘expect’) </li>
+<li>It acted as the test runner </li>
+<li>It acted as the test reporter for the test run.</li>
+</ol>
+<p>What unit testing frameworks offer:</p>
+<ol>
+<li>Structure.</li>
+<li>Repeatability.</li>
+<li>Confidence through time savings.</li>
+</ol>
+<p>Unit tests usually are made of three main “steps”: <strong>Arrange, Act and Assert</strong>. </p>
+<ol>
+<li>Arrange: setup the scenario under test.</li>
+<li>Act: invoke the entry point with inputs.</li>
+<li>Assert: check the exit point.</li>
+</ol>
+<p>This is colloquially called the ‘<strong>AAA</strong>’ Pattern.</p>
+<p>Put three pieces of information in test names, so that the reader of the test will be able to answer most of their mental questions just by looking at the name of the test. These three parts include: </p>
+<ol>
+<li>The unit of work under test.</li>
+<li>The scenario or inputs to the unit.</li>
+<li>The expected behavior or exit point.</li>
+</ol>
+<p>A nice acronym for this: <strong>U.S.E</strong>: </p>
+<ol>
+<li>Unit under test.</li>
+<li>Scenario.</li>
+<li>Expectation.</li>
+</ol>
+<p>作者的心得：<em>It’s human nature to put things in the easiest place possible, especially if everyone else before you have done so as well.</em></p>
+<h3 id="Stub-Mock"><a href="#Stub-Mock" class="headerlink" title="Stub &amp; Mock"></a>Stub &amp; Mock</h3><p>There are two main types of dependencies that our unit of can use.</p>
+<ol>
+<li>Outgoing Dependencies: dependencies that represent an exit point of our unit of work.</li>
+<li>Dependencies: dependencies that are not exit points. They do not represent a requirement on the eventual behavior of the unit of work. They are merely there to provide test-specific specialized data or behavior into the unit of work.</li>
+</ol>
+<h4 id="STUB"><a href="#STUB" class="headerlink" title="STUB:"></a>STUB:</h4><p>Break incoming dependencies (indirect inputs). Stubs are fake modules, objects or functions that provide fake behavior or data into the code under test. We do not assert against them. We can have many stubs in a single test. </p>
+<p>Stubs represent waypoints, not exit points. They do not represent exit points because the data or behavior flow into the unit of work. They are points of interaction, but they do not represent an ultimate outcome the the unit of work ends up doing. Instead they are an interaction on the way to achieve the end result we care about, so we don’t treat them as exit.</p>
+<h4 id="MOCK"><a href="#MOCK" class="headerlink" title="MOCK"></a>MOCK</h4><p>Break outgoing dependencies (outputs, exit points). Mocks are fake modules, objects or functions that we assert were called in our tests. A Mock represents an exit point in a unit test. Because of this, it is recommended to have no more than a single mock per test.</p>
+<p>概念参考：</p>
+<pre><code>Dependencies： 
+The things that make our testing lives &amp; code maintainability difficult, since we cannot control them from our tests. 
+
+Control：
+The ability to instruct a dependency how to behave. Whoever is creating the dependencies is said to be in control over them since they have the ability to configure them before they are used in the code under test. 
+
+Inversion of Control： 
+Designing the code to remove the responsibility of creating the dependency internally and externalizing it instead. 
+
+Dependency Injection ：
+The act of sending a dependency through the design interface to be used internally by apiece of code. The place where you inject the dependency is the injection point. 
+
+Seam ：
+Seams are where two pieces of software meet and something else can be injected. They are a place where you can alter behavior in your program without editing in that place. 
+</code></pre>
+<h3 id="Interaction-testing"><a href="#Interaction-testing" class="headerlink" title="Interaction testing"></a>Interaction testing</h3><p>Interaction testing is checking how a unit of work interacts and sends messages to a dependency beyond its control. Mock functions or objects are used to assert that a call was made correctly to an external dependency.</p>
+<p>常用技巧：</p>
+<pre><code>Standard:
+Introduce Parameter 
+
+Functional:
+Convert to partial application function 
+Convert to Factory Function 
+
+Modular:
+Abstract Module Dependency 
+
+Object Oriented: 
+Inject Untyped Object Inject Interface
+</code></pre>
+<p>A simple rule of thumb: </p>
+<p><strong>It should be OK to have multiple stubs in a test, but you don’t usually want to have more than a single mock per test – because that means you’re testing more than requirements in a single test.</strong></p>
+<p>I use the word “Fake” to denote anything that isn’t real. Another common word for this sort of thing is “Test Double”. Fake is shorter so I like it.<br>I highly recommend to use only fake interfaces that answer both of these conditions: </p>
+<ol>
+<li>You control those interfaces (they are not made by a 3rd party). </li>
+<li>They are adapted to the needs of your unit of work or component.</li>
+</ol>
+<p>这里作者吐槽了一下 spy 的设计（或者说命名），作者这个特性引发了滥用：</p>
+<p>Both in test frameworks, to “take over” existing objects and functions and “spy” on them. By spying on them we can later check if they were called, how many times and with which arguments.<br>This essentially can turn parts of real objects into mock functions, while keeping the rest of the object as a real object. This can create more complicated tests that are more brittle, but can sometimes be a viable option, especially if you’re dealing with legacy code.</p>
+<p>Spy was originally designed as the idea that you can look at a real function and “spy” on it without altering its behavior. <strong>Whenever you see someone mention “spy” think “partial mock&#x2F;stub” because chance are that’s what they’re trying to achieve. When in doubt, think of “Spy” as “Partial Mock&#x2F;Stub”</strong></p>
+<p>Isolation Frameworks 的定义：</p>
+<p><em>An isolation framework is a set of programmable APIs that allow the dynamic creation, configuration and verification of mocks and stubs, either in object or function form; Using a framework, these tasks can often be simpler, faster, and shorter than hand-coding them.</em></p>
+<p>Because JavaScript supports multiple paradigms of programming design, we can split the frameworks in our world to two main flavors: </p>
+<ol>
+<li><p>Loose JS Isolation Frameworks: </p>
+<pre><code>Vanilla JS friendly loose-typed isolation frameworks. These usually also lend themselves better to more functional style code because they require less “ceremony” and boilerplate code to do their work. 
+</code></pre>
+</li>
+<li><p>Typed JS Isolation Frameworks: </p>
+<pre><code> More Object Oriented/TypeScript friendly isolation frameworks. Very useful when dealing with whole classes and interfaces.
+</code></pre>
+</li>
+</ol>
+<p>What type of dependencies will you need to fake mostly? </p>
+<ol>
+<li>Module dependencies (imports, requires).</li>
+<li>Functional (single and higher order functions, simple parameters and values) .</li>
+<li>Full objects, object hierarchies and interfaces.</li>
+</ol>
+<p>Distinct advantages to using isolation frameworks: </p>
+<ol>
+<li>Easier modular faking. </li>
+<li>Easier simulation of values or errors. </li>
+<li>Easier fakes creation.</li>
+</ol>
+<p>A few things to watch out for: </p>
+<ol>
+<li>You don’t need mock objects most of the time.</li>
+<li>Unreadable test code.</li>
+<li>Verifying the wrong things.(A lot of people new to tests end up verifying things just because they can, not because it makes sense.)</li>
+<li>Having more than one mock per test.</li>
+<li>Over specifying the tests.</li>
+</ol>
+<p><strong>Testing interactions is a double-edged sword: test it too much, and you start to lose sight of the big picture—the overall functionality; test it too little, and you’ll miss the important interactions between units of work.</strong> </p>
+<p>Here are some ways to balance this effect:</p>
+<ol>
+<li>Use stubs instead of mocks when you can.</li>
+<li>Avoid using stubs as mocks if humanly possible.</li>
+</ol>
+<h3 id="Async"><a href="#Async" class="headerlink" title="Async"></a>Async</h3><p>Make the code more unit-testable:</p>
+<ol>
+<li>Extract Entry Point. Extracting the parts that are pure logic into their own function and treating those functions as entry points for our tests. </li>
+<li>Extract Adapter: Extracting the thing that is inherently asynchronous and abstracting it away so that we can replace it with something that is synchronous.</li>
+</ol>
+<h4 id="Extract-Entry-Point"><a href="#Extract-Entry-Point" class="headerlink" title="Extract Entry Point"></a>Extract Entry Point</h4><p>In this pattern, we take a specific piece of async work, and split it into the two pieces:</p>
+<ol>
+<li>The async part (which stays intact)</li>
+<li>The callbacks that are invoked when the async execution finishes. Those are extracted as new functions which eventually become entry points for a purely logical unit of work that we can invoke with pure unit tests.</li>
+</ol>
+<p><img src="/assets/the_art_of_unit_testing_3rd/ExtractEntryPoint.png" alt="1"></p>
+<h4 id="Extract-Adapter"><a href="#Extract-Adapter" class="headerlink" title="Extract Adapter"></a>Extract Adapter</h4><p>We look at the asynchronous piece of code just like we look at any dependency we’d like to replace in our tests to gain more control.<br>Instead of extracting the logical code into its own set of entry points, we’re extracting the asynchronous code (our dependency) and abstracting it away under an adapter, which we can later inject just like any other dependency.</p>
+<p><img src="/assets/the_art_of_unit_testing_3rd/ExtractAdapter.png" alt="1"></p>
+<h3 id="Dealing-with-Timers"><a href="#Dealing-with-Timers" class="headerlink" title="Dealing with Timers"></a>Dealing with Timers</h3><p>Two patterns of getting around them directly: </p>
+<ol>
+<li>Directly Monkey patching the function.Monkey patching is a way for a program to extend or modify supporting system software locally (affecting only the running instance of the program).</li>
+<li>Using test frameworks to disable and control them.</li>
+</ol>
+<h3 id="写好单元测试"><a href="#写好单元测试" class="headerlink" title="写好单元测试"></a>写好单元测试</h3><p>The tests that you write should have three properties that together make them good:</p>
+<ol>
+<li>Trustworthiness—Developers will want to run trustworthy tests, and they’ll accept the test results with confidence. Trustworthy tests don’t have bugs, and they test the right things. </li>
+<li>Maintainability—Unmaintainable tests are nightmares because they can ruin project schedules, or they may be sidelined when the project is put on a more aggressive schedule. Developers will simply stop maintaining and fixing tests that take too long to change or that need to change very often on very minor production code changes. </li>
+<li>Readability—This means not just being able to read a test but also figuring out the problem if the test seems to be wrong. Without readability, the other two pillars fall pretty quickly. Maintaining tests becomes harder, and you can’t trust them anymore because you don’t understand them.</li>
+</ol>
+<h3 id="Trustworthiness"><a href="#Trustworthiness" class="headerlink" title="Trustworthiness"></a>Trustworthiness</h3><p>Why Tests Fail？</p>
+<ol>
+<li>A real bug has been uncovered in the production code.</li>
+<li>Buggy (lying) test.</li>
+<li>Out of Date test (feature changed).</li>
+<li>Conflicting test (with another test).</li>
+<li>Flaky Test.</li>
+<li>Smelling a false sense of trust in passing tests</li>
+</ol>
+<p>降低测试代码自身的出错可能性：</p>
+<ol>
+<li>write your code in a test driven manner.</li>
+<li>remove the amount of logic related code that exists in the test.</li>
+</ol>
+<p><em>大家跟我一起喊：No ifs, switches, loops or other forms of logic if I can help it.</em></p>
+<p>又一条准则：</p>
+<p><strong>Avoid dynamically creating the expected value in your asserts, use hardcoded values when possible.</strong></p>
+<p>Out of Date test (feature changed)：</p>
+<ol>
+<li>Adapt the test to the new functionality.</li>
+<li>Write a new test for the new functionality and remove the old test because it has now become irrelevant.</li>
+</ol>
+<p>Here are some reasons I reduce my trust in tests even if they are passing:</p>
+<ol>
+<li>Tests that don’t assert anything.</li>
+<li>Not understanding the tests.</li>
+<li>Mixing Unit &amp; Integration (Flaky) Tests.</li>
+<li>Having logic inside unit tests.</li>
+<li>Testing multiple concerns (entry&#x2F;exit points).</li>
+<li>Tests that keep changing.</li>
+</ol>
+<p>对开发经理&#x2F;项目经理的话: Code coverage shouldn’t ever be a goal on its own. It doesn’t mean “code quality”. In fact, it often causes your developers to write meaningless tests that will cost even more time to maintain. Instead, measure “Escaped Bugs” ,“Time to Fix” and well as other metrics.</p>
+<p>The test-break-up rule: </p>
+<p><strong>if the first assert fails, do you still care what the result of the next assert is?? If you do, you should probably separate the test into two tests.</strong></p>
+<p>Here are some ways to reduce the costs associated with handling flaky tests: </p>
+<ol>
+<li>Agree on what flaky means to your organization.</li>
+<li>Place any test deemed “flaky” in a special category or folder of tests that can be run separately. </li>
+<li>Prune and remove flakiness from quarantined tests.</li>
+</ol>
+<p>Dealing with flaky tests:</p>
+<ol>
+<li>Quarantine.</li>
+<li>Fix.</li>
+<li>Convert.</li>
+<li>Kill.</li>
+</ol>
+<h3 id="Maintainability"><a href="#Maintainability" class="headerlink" title="Maintainability"></a>Maintainability</h3><p>Ask these questions if we ever want to get down to the root causes: </p>
+<ol>
+<li>When do we notice that a test might require a change? (When tests fail) </li>
+<li>Why do tests fail?</li>
+<li>Which test failures “force” us to change the test? </li>
+<li>When do we “choose” to change a test even if we are not forced to?</li>
+</ol>
+<p>The basic concept to keep in mind is that <strong>a test should always run in its own little world, isolated from even the knowledge that other tests out there may do similar or different things</strong>.</p>
+<p>CONSTRAINED TEST ORDER（意味着测试之间存在依赖）</p>
+<p>Refactoring this we can take a few steps: </p>
+<ol>
+<li>Extract a helper function for adding a user </li>
+<li>Reusing this function form multiple tests </li>
+<li>Reset the user cache between tests.</li>
+</ol>
+<p>Refactoring to increase maintainability</p>
+<ol>
+<li>Avoid Testing private or protected methods.</li>
+<li>Remove duplication.</li>
+<li>Avoid setup methods( in a maintainable manner).</li>
+<li>Using parameterized tests to remove duplication.</li>
+<li>Avoid overspecification.</li>
+</ol>
+<p>if you see a private method, find the public use case in the system that will exercise it.Sometimes if a private method is worth testing, it might be worth making it public, static, or at least internal and defining a public contract against any code that uses it. In some cases, the design may be cleaner if you put the method in a different class altogether.</p>
+<p>Here are ways unit tests are often over specified:</p>
+<ol>
+<li>A test asserts purely internal state in an object under test. </li>
+<li>A test uses multiple mocks. </li>
+<li>A test uses stubs also as mocks. </li>
+<li>A test assumes specific order or exact string matches when it isn’t required.</li>
+</ol>
+<p>The real exit point depends on the type of test we wish to perform:</p>
+<ol>
+<li>For a value based test, which I would highly recommend to lean towards when possible, we look for a return value from the called function.</li>
+<li>For a state based test we look for a sibling function (a function that exists at the same level of scope as the entry point.</li>
+<li>For a 3d party test we would have to use a mock, and that would require us to find out where is the “fire and forget” location inside the code.</li>
+</ol>
+<h3 id="Readability"><a href="#Readability" class="headerlink" title="Readability"></a>Readability</h3><p>There are several facets to readability: </p>
+<ol>
+<li>Naming unit tests </li>
+<li>Naming variables </li>
+<li>Creating good assert messages </li>
+<li>Separating asserts from actions</li>
+</ol>
+<p>Three important pieces of information are present in the name of the test:</p>
+<ol>
+<li>The entry point to the unit of work (or, the name of the feature you’re testing) </li>
+<li>The scenario under which you’re testing the entry point </li>
+<li>The expected behavior of the exit point</li>
+</ol>
+<p>Variable names and values are just as much about explaining to the reader what they should NOT care about as it is about explaining what IS important.</p>
+<p>readability! readability! readability!</p>
+<p>作者在书中不止一个地方提到了测试框架的 setup 特性，并表示这个特性也导致了太多的滥用：</p>
+<p>I like that each test is self- encapsulating its own state. The nested describe structure acts as a good way to know where we are, but the state is all triggered from inside the ‘it’ blocks. Not outside of them.</p>
+<p>Factory methods &amp; Parameterized tests can help maintainability even more.</p>
+<h3 id="书中提到的参考书籍"><a href="#书中提到的参考书籍" class="headerlink" title="书中提到的参考书籍"></a>书中提到的参考书籍</h3><p>《XUnit Test Patterns》<a target="_blank" rel="noopener" href="http://xunitpatterns.com/">http://xunitpatterns.com/</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2022/01/02/talk/2022-01-02-talk-joke-story-1/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/computer/" title="computer">
+                        <b>#</b> computer
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/computer/" title="computer">
+                        #computer
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#TDD"><span class="toc-text">TDD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Unit-testing-frameworks-Jest"><span class="toc-text">Unit testing frameworks &amp; Jest</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Stub-Mock"><span class="toc-text">Stub &amp; Mock</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#STUB"><span class="toc-text">STUB:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MOCK"><span class="toc-text">MOCK</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Interaction-testing"><span class="toc-text">Interaction testing</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Async"><span class="toc-text">Async</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Extract-Entry-Point"><span class="toc-text">Extract Entry Point</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Extract-Adapter"><span class="toc-text">Extract Adapter</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dealing-with-Timers"><span class="toc-text">Dealing with Timers</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%99%E5%A5%BD%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95"><span class="toc-text">写好单元测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Trustworthiness"><span class="toc-text">Trustworthiness</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Maintainability"><span class="toc-text">Maintainability</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Readability"><span class="toc-text">Readability</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B9%A6%E4%B8%AD%E6%8F%90%E5%88%B0%E7%9A%84%E5%8F%82%E8%80%83%E4%B9%A6%E7%B1%8D"><span class="toc-text">书中提到的参考书籍</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Cache-Control扩展 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Cache-Control扩展</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/computer/" title="computer">
+                    <b>#</b> computer
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/computer/" title="computer">
+                    #computer
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>rfc5861 定义了两个 Cache-Control 的扩展：</p>
+<ol>
+<li>stale-while-revalidate</li>
+<li>stale-if-error</li>
+</ol>
+<p>这是两个扩展都是用来定义缓存过期（stale）后的处理策略，旨在提高用户体验，不过两者是独立使用，并无关联的。</p>
+<h2 id="stale-while-revalidate"><a href="#stale-while-revalidate" class="headerlink" title="stale-while-revalidate"></a>stale-while-revalidate</h2><p>我们在 http 里已经使用缓存很多年了，不过有个问题很常见：如果缓存过期了会发生什么？<br>如果从缓存中可以立即取得响应，但是从服务器获取响应需要几百毫秒或者更久，那用户会很容易注意到这个细节差异。</p>
+<p>一个理所当然的解决方案是“在缓存过期之前预拉取最新的内容”，这个听上去很合理，不过这引发了另外一个头疼的问题：“如何决定何时预拉取呢？”。如果没有正确实现预拉取策略，那就有可能加重缓存，网络以及后台服务器等等的负载。</p>
+<p>退而求其次，另一个可以采取的方案是，对于那些”稍微“过期的缓存，允许先直接使用，然后在后台静默的更新缓存内容。</p>
+<p><img src="/image/http_cache_stale_1.png" alt="1"></p>
+<span id="more"></span>
+
+<p>如上图所示，请求 #1 发出的时候，缓存内容还是新鲜的，所以直接从缓存中获取响应。<br>不过当请求 #2 发起的时候，本地缓存刚刚过期，此时 stale-while-revalidate 就开始发挥作用了，请求 #2 先直接从缓存中获取响应返回给调用者，然后在静默的在后台向原始服务器发起一次异步请求。<br>请求 #3 也一样，因为它们都在 ”stale-while-revalidate“ 时间窗口内。</p>
+<p>所以，stale-while-revalidate 通过新鲜度的自由裁量，对客户端屏蔽了请求后台响应的等待时延。</p>
+<p>一个响应的例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cache-Control: max-age=600, stale-while-revalidate=30</span><br></pre></td></tr></table></figure>
+
+<p>这个响应表明当前响应内容新鲜时间为 600 秒，以及额外的 30 秒可以用来容忍过期缓存，同时去验证（以及更新）当前缓存是否继续有效。<br>如果验证无效或者在这 30 秒内没有请求来触发验证，那么在这 30 之后，缓存内容就真正过期了。后续再发送过来的请求，都会像没有缓存一样，阻塞执行。</p>
+<p>通常来说，服务器会将 max-age 和 stale-while-revalidate 的时间加在一起作为潜在最长可容忍的新鲜度时间。比如，如果两者都是设置的 600 秒，那么服务器就应该容许在 20 分钟内（1200 秒），所有的响应都由缓存提供。</p>
+<p>另一点需要注意的是，异步验证只有处在缓存过期之后以及 stale-while-revalidate 时间窗口结束之前才会执行，时间窗口的大小以及实际请求的疏密程度都会影响到是否所有的请求都能够避免延时。<br>如果时间窗口太小，或者请求太稀疏，部分请求就就会落在时间窗口之后，这部分请求就会阻塞直到服务器有响应。</p>
+<h2 id="stale-if-error"><a href="#stale-if-error" class="headerlink" title="stale-if-error"></a>stale-if-error</h2><p>另一种要面对的问题是：后台服务宕机。在许多情况下，不应该给用户一个不友好的错误页面，而应该是给用户一个可用，哪怕是“稍微”过期的响应也行。stale-if-error 就是出于这种考虑，让你可以配置这种策略。</p>
+<p>一个响应的例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Cache-Control: max-age=600, stale-if-error=1200</span><br><span class="line">Content-Type: text/plain</span><br><span class="line"></span><br><span class="line">success</span><br></pre></td></tr></table></figure>
+
+<p>上述响应的新鲜时间为 600s，如果后续请求碰到某种错误，那么在（这 600s）随后的 1200s 时间内，可以继续使用这个缓存响应。<br>注意这里与 stale-while-revalidate 的区别，两者在新鲜时间之后的表现是不一样的，stale-while-revalidate 会先返回缓存，同时再静默的在后台进行缓存验证。而 stale-if-error 是先去向服务器进行缓存验证，如果遇到服务器错误之后才使用这个缓存。</p>
+<p>对于上述响应中的 stale-if-error，假如缓存验证发生在缓存过期后的 900s，此时还在 stale-if-error 指明的 1200s 范围内，所以服务器返回的结果会类似这种：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 500 Internal Server Error</span><br><span class="line">Content-Type: text/plain</span><br><span class="line"></span><br><span class="line">failure</span><br></pre></td></tr></table></figure>
+<p>但是请求得到的实际响应依旧是成功的，同时为了指明这是个缓存结果，附带了一个 “Age: 900” 头部：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Cache-Control: max-age=600, stale-if-error=1200</span><br><span class="line">Age: 900</span><br><span class="line">Content-Type: text/plain</span><br><span class="line"></span><br><span class="line">success</span><br></pre></td></tr></table></figure>
+<p>如果缓存验证发生在 1800s（600 + 1200） 之后，那么缓存就直接返回错误信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 500 Internal Server Error</span><br><span class="line">Content-Type: text/plain</span><br><span class="line"></span><br><span class="line">failure</span><br></pre></td></tr></table></figure>
+
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p>为了验证 stale-while-revalidate 的效果，我们可以构建一个新鲜时间 10s，stale 时间 30s 的响应，然后在第 15s 发送一个请求。<br>如果 stale-while-revalidate 没有生效，那么我们会看到服务器的最新响应，反之，我们还是会看到缓存中的响应。</p>
+<p>服务器 node：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> http = <span class="built_in">require</span>(<span class="string">&#x27;http&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> util = <span class="built_in">require</span>(<span class="string">&#x27;util&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> server = http.<span class="title function_">createServer</span>(<span class="keyword">function</span>(<span class="params">req, res</span>)&#123;   </span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(req.<span class="property">url</span>);</span><br><span class="line">    <span class="keyword">if</span>(req.<span class="property">url</span> == <span class="string">&#x27;/favicon.ico&#x27;</span>)&#123;</span><br><span class="line">        res.<span class="title function_">end</span>();</span><br><span class="line">    &#125;<span class="keyword">if</span>(req.<span class="property">url</span> == <span class="string">&#x27;/getData&#x27;</span>)&#123;</span><br><span class="line">         res.<span class="title function_">writeHead</span>(<span class="number">200</span>, &#123;</span><br><span class="line">            <span class="string">&#x27;Cache-Control&#x27;</span> : <span class="string">&#x27;max-age=10,stale-while-revalidate=30&#x27;</span></span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="keyword">var</span> data = <span class="keyword">new</span> <span class="title class_">Date</span>().<span class="title function_">toGMTString</span>();</span><br><span class="line">        res.<span class="title function_">end</span>(data);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(req.<span class="property">headers</span>); </span><br><span class="line">        fs.<span class="title function_">readFile</span>(<span class="string">&#x27;cache.html&#x27;</span>, <span class="keyword">function</span>(<span class="params">err, data</span>)&#123;</span><br><span class="line">            res.<span class="title function_">end</span>(data);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;).<span class="title function_">listen</span>(<span class="number">3000</span>, <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;start&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>前段界面 cache.html：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">title</span>&gt;</span>stale-while-revalidate<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">&quot;getData&quot;</span>&gt;</span>getDate<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;https://cdn.bootcss.com/jquery/3.2.1/jquery.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">            <span class="keyword">function</span> <span class="title function_">getData</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">                $.<span class="title function_">ajax</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">                    url : <span class="string">&#x27;getData&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">                    cache :<span class="literal">true</span>,</span></span><br><span class="line"><span class="language-javascript">                    success :<span class="keyword">function</span>(<span class="params">data</span>)&#123;</span></span><br><span class="line"><span class="language-javascript">                        <span class="variable language_">console</span>.<span class="title function_">log</span>(data);</span></span><br><span class="line"><span class="language-javascript">                    &#125;</span></span><br><span class="line"><span class="language-javascript">                &#125;);</span></span><br><span class="line"><span class="language-javascript">            &#125;</span></span><br><span class="line"><span class="language-javascript">            $(<span class="string">&#x27;#getData&#x27;</span>).<span class="title function_">on</span>(<span class="string">&#x27;click&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">                <span class="title function_">getData</span>();</span></span><br><span class="line"><span class="language-javascript">                <span class="built_in">setTimeout</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">                   <span class="title function_">getData</span>();</span></span><br><span class="line"><span class="language-javascript">                &#125;, <span class="number">15000</span>);</span></span><br><span class="line"><span class="language-javascript">            &#125;);</span></span><br><span class="line"><span class="language-javascript">        </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>响应结果：</p>
+<pre><code>Thu, 22 Jun 2017 08:23:44 GMT # Thu, 22 Jun 2017 08:23:44 GMT
+Thu, 22 Jun 2017 08:23:59 GMT # Thu, 22 Jun 2017 08:23:44 GMT
+</code></pre>
+<p>相隔 15s 的两个请求响应结果是一样的，虽然响应缓存的新鲜时间只有 10s，但是依旧可用。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc5861">https://tools.ietf.org/html/rfc5861</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.mnot.net/blog/2007/12/12/stale">https://www.mnot.net/blog/2007/12/12/stale</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.fastly.com/blog/stale-while-revalidate-stale-if-error-available-today">https://www.fastly.com/blog/stale-while-revalidate-stale-if-error-available-today</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.fastly.com/guides/performance-tuning/serving-stale-content">https://docs.fastly.com/guides/performance-tuning/serving-stale-content</a></li>
+</ol>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2017/05/07/android/2017/2017-02-07-androidstudio-aar/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/computer/" title="computer">
+                        <b>#</b> computer
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/computer/" title="computer">
+                        #computer
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2017/05/08/computer/2017-05-08-cs-regex-1/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#stale-while-revalidate"><span class="toc-text">stale-while-revalidate</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#stale-if-error"><span class="toc-text">stale-if-error</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-text">实验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-text">参考资料</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

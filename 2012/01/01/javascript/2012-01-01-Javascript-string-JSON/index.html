@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      【Javascript】从字符串中解析出JSON 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">【Javascript】从字符串中解析出JSON</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/javascript/" title="javascript">
+                    <b>#</b> javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/javascript/" title="javascript">
+                    #javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>JSON介绍<a target="_blank" rel="noopener" href="http://json.org/">http://json.org/</a></p>
+<p>这个解析JSON，也是Prototype源码浅析的一个铺垫。</p>
+<p>下面是一个开篇例子，其中response是从服务器获得的JSON字符串：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> response_1 = <span class="string">&quot;&#123;\&quot;user\&quot;:\&quot;xesam\&quot;,\&quot;info\&quot;:&#123;\&quot;age\&quot;:\&quot;24\&quot;&#125;&#125;&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> response_2 = <span class="string">&quot;&#123;&#x27;user&#x27; : &#x27;xesam&#x27;&#125;&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> response_3 = <span class="string">&quot;console.log(&#x27;xss&#x27;)&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj_1_1 = <span class="built_in">eval</span>(<span class="string">&#x27;(&#x27;</span> + response_1 + <span class="string">&#x27;)&#x27;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_1_1&#x27;</span>,obj_1_1);</span><br><span class="line"><span class="keyword">var</span> obj_1_2 = <span class="built_in">eval</span>(<span class="string">&#x27;(&#x27;</span> + response_2 + <span class="string">&#x27;)&#x27;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_1_2&#x27;</span>,obj_1_2);</span><br><span class="line"><span class="keyword">var</span> obj_1_3 = <span class="built_in">eval</span>(<span class="string">&#x27;(&#x27;</span> + response_3 + <span class="string">&#x27;)&#x27;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_1_3&#x27;</span>,obj_1_3);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj_2_1 = (<span class="keyword">new</span> <span class="title class_">Function</span>(<span class="string">&#x27;return &#x27;</span> + response_1))();</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_2_1&#x27;</span>,obj_2_1);</span><br><span class="line"><span class="keyword">var</span> obj_2_2 = (<span class="keyword">new</span> <span class="title class_">Function</span>(<span class="string">&#x27;return &#x27;</span> + response_2))();</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_2_2&#x27;</span>,obj_2_2);</span><br><span class="line"><span class="keyword">var</span> obj_2_3 = (<span class="keyword">new</span> <span class="title class_">Function</span>(<span class="string">&#x27;return &#x27;</span> + response_3))();</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_2_3&#x27;</span>,obj_2_3);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj_3_1 = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(response_1);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_3_1&#x27;</span>,obj_3_1);</span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> obj_3_2 = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(response_2);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_3_2&#x27;</span>,obj_3_2);</span><br><span class="line">&#125;<span class="keyword">catch</span>(e)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_3_2&#x27;</span>,<span class="string">&#x27;error&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> obj_3_3 = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(response_3);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_3_3&#x27;</span>,obj_3_3);</span><br><span class="line">&#125;<span class="keyword">catch</span>(e)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj_3_3&#x27;</span>,<span class="string">&#x27;error&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">obj_1_1 <span class="title class_">Object</span> </span><br><span class="line">obj_1_2 <span class="title class_">Object</span></span><br><span class="line">xss</span><br><span class="line">obj_1_3 <span class="literal">undefined</span></span><br><span class="line">obj_2_1 <span class="title class_">Object</span></span><br><span class="line">obj_2_2 <span class="title class_">Object</span></span><br><span class="line">xss</span><br><span class="line">obj_2_3 <span class="literal">undefined</span></span><br><span class="line">obj_3_1 <span class="title class_">Object</span></span><br><span class="line">obj_3_2 error</span><br><span class="line">obj_3_3 error</span><br></pre></td></tr></table></figure>
+
+<p>可见，对于浏览器自带的标准JSON解析器来说，response_2和response_3是非法的。因此，我们可以更进一步的了解到JSON的几点主要的地方。</p>
+<p>第一、对于key&#x2F;value的形式，每一个key都需要有引号（这个和javascript原生对象可有可无的引号不同），需要是字符串（这种字符串形式上更类似于C语言里面的字符串，必须是双引号，这个和javascript原生对象引号可以使双引号也可以是单引号不同）。</p>
+<p><img src="http://json.org/string.gif" alt="1"></p>
+<p>上面的图示是对JSON中string的要求</p>
+<p>第二、JSON本来就是一种交换数据的格式，因此，里面是不应该包含需要执行的javascript代码的。</p>
+<p>所以，只有严格符合标准的JSON字符串形式，才能通过JSON.parse的解析。</p>
+<p>对于大部分现代浏览器而言，window.JSON 是一个内置的对象，但是对于IE6&#x2F;7来说，这个对象是缺失的，所以，需要借助例子中的前两种形式eval和new Function。</p>
+<p>平常而言，eval用的比较多，但是eval够强大，所以够危险。</p>
+<p>response_2 被解析成对象是eval本身的功能，跟JSON无关。如果服务器返回的是类似response_2的形式，八成是一开始的传值就有问题，我就犯过这种错误。不过如果是服务端生成的，一般倒不会有什么问题。</p>
+<p>response_3 被解析成可执行代码页是eval本身的功能，是危险的来源，不过好像平时也没怎么注意。</p>
+<p>不过，对于IE6&#x2F;7来说，要从字符串中解析出来JSON对象，又必须借助于eval（依稀听说新的ECMAScript标准抛弃了eval？不过这跟IE6&#x2F;7半毛钱的关系都没有）。</p>
+<p>因此，这一部分可以参考JSON.js的String.prototype.parseJSON</p>
+<p>对于</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> response_1 = <span class="string">&quot;&#123;\&quot;user\&quot;:\&quot;xesam\&quot;,\&quot;info\&quot;:&#123;\&quot;age\&quot;:\&quot;24\&quot;&#125;&#125;&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这段，String.prototype.parseJSON的转换流程如下：</p>
+<p>第一，先检测待转换字符串的合法性</p>
+<p>第二，eval字符串</p>
+<p>所以response_1的解析情况大致如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> responseTemp = response_1.<span class="title function_">replace</span>(<span class="regexp">/\\./g</span>, <span class="string">&#x27;@&#x27;</span>).<span class="title function_">replace</span>(<span class="regexp">/&quot;[^&quot;\\\n\r]*&quot;/g</span>, <span class="string">&#x27;&#x27;</span>);</span><br><span class="line">    <span class="keyword">var</span> correct = <span class="regexp">/^[,:&#123;&#125;\[\]0-9.\-+Eaeflnr-u \n\r\t]*$/</span>.<span class="title function_">test</span>(responseTemp);</span><br><span class="line">    <span class="keyword">if</span>(correct)&#123;</span><br><span class="line">        <span class="keyword">var</span> j = <span class="built_in">eval</span>(<span class="string">&#x27;(&#x27;</span> + response_1+ <span class="string">&#x27;)&#x27;</span>);</span><br><span class="line">        <span class="keyword">return</span> j;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">SyntaxError</span>(<span class="string">&#x27;parseJSON&#x27;</span>);</span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">replace</span>(<span class="regexp">/\\./g</span>, <span class="string">&#x27;@&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>先把一些转义字符替换掉，那个“@”并没有什么特殊意思，至于为什么@，估计是因为正则里面没有这个元字符，所以避免冲突，想换做其他的，应该也可以。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">replace</span>(<span class="regexp">/&quot;[^&quot;\\\n\r]*&quot;/g</span>, <span class="string">&#x27;&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>这一步替换掉了所有引号包含的内容，于是，字符串中剩下的部分就是除去string外可以存在的字符。</p>
+<p>看这个，</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/^[,:&#123;&#125;\[\]<span class="number">0</span>-<span class="number">9.</span>\-+<span class="title class_">Eaeflnr</span>-u \n\r\t]*$/</span><br></pre></td></tr></table></figure>
+<p>其实好理解，JSON的value值可以是string，object，array，number，false，true，null等7种，需要引号包含string的内容都处理掉了，所以除了这些，JSON格式还有</p>
+<pre><code>&#123;&#125;表示对象结构，对应,:&#123;&#125;
+[]表示数组结构，对应\[\]
+0-9 . E e表示数字类型，对应0-9.\-+Ee
+true 和 false 对应aflsrtu
+null 对应n
+其他一些特殊字符对应 \n\r\t
+</code></pre>
+<p>这些组合起来就是上面的一段正则。</p>
+<p>下面是完整的JSON.js的源码，无非是添加了一个递归而已，从而可以安全的解析整个嵌套的部分。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span>(<span class="params">s</span>)&#123;</span><br><span class="line">    s.<span class="property">parseJSON</span> = <span class="keyword">function</span> (<span class="params">filter</span>) &#123;</span><br><span class="line">      <span class="keyword">var</span> j;</span><br><span class="line">      <span class="keyword">function</span> <span class="title function_">walk</span>(<span class="params">k, v</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> i;</span><br><span class="line">        <span class="keyword">if</span> (v &amp;&amp; <span class="keyword">typeof</span> v === <span class="string">&#x27;object&#x27;</span>) &#123;</span><br><span class="line">          <span class="keyword">for</span> (i <span class="keyword">in</span> v) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">hasOwnProperty</span>.<span class="title function_">apply</span>(v, [i])) &#123;</span><br><span class="line">              v[i] = <span class="title function_">walk</span>(i, v[i]);</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_">filter</span>(k, v);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (<span class="regexp">/^[,:&#123;&#125;\[\]0-9.\-+Eaeflnr-u \n\r\t]*$/</span>.<span class="title function_">test</span>(<span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/\\./g</span>, <span class="string">&#x27;@&#x27;</span>).<span class="title function_">replace</span>(<span class="regexp">/&quot;[^&quot;\\\n\r]*&quot;/g</span>, <span class="string">&#x27;&#x27;</span>))) &#123;</span><br><span class="line">        j = <span class="built_in">eval</span>(<span class="string">&#x27;(&#x27;</span> + <span class="variable language_">this</span> + <span class="string">&#x27;)&#x27;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">typeof</span> filter === <span class="string">&#x27;function&#x27;</span> ? <span class="title function_">walk</span>(<span class="string">&#x27;&#x27;</span>, j) : j;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">SyntaxError</span>(<span class="string">&#x27;parseJSON&#x27;</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;)(<span class="title class_">String</span>.<span class="property"><span class="keyword">prototype</span></span>);</span><br></pre></td></tr></table></figure>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2012/01/01/javascript/2012-01-01-Javascript-ie-check/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/javascript/" title="javascript">
+                        <b>#</b> javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/javascript/" title="javascript">
+                        #javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2012/01/10/javascript/2012-01-10-Javascript-Prototype-String-1-indexOf/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

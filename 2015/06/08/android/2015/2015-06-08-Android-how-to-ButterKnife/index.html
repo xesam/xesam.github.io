@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      如何实现ButterKnife 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">如何实现ButterKnife</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/android/" title="android">
+                    <b>#</b> android
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/android/" title="android">
+                    #android
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>本文的目标是用最简代码实现 ButterKnife 的核心功能。示例代码在github上： <a target="_blank" rel="noopener" href="https://github.com/xesam/ButterKnifeProcedure">ButterKnifeProcedure</a></p>
+<h2 id="Pluggable-Annotation-Processing"><a href="#Pluggable-Annotation-Processing" class="headerlink" title="Pluggable Annotation Processing"></a>Pluggable Annotation Processing</h2><p>注解处理器<br>Java5 中叫APT(Annotation Processing Tool)，在Java6开始，规范化为 Pluggable Annotation Processing。</p>
+<h2 id="第一步（收集信息）"><a href="#第一步（收集信息）" class="headerlink" title="第一步（收集信息）"></a>第一步（收集信息）</h2><p>找到所有被注解的属性或者方法，将所有的信息收集到对应的“类数据集”中。</p>
+<h2 id="第二步（生成源文件）"><a href="#第二步（生成源文件）" class="headerlink" title="第二步（生成源文件）"></a>第二步（生成源文件）</h2><p>根据每一个“类数据集”，生成对应的java源文件。由于这些文件并不是在运行时生成的，因此也无需动态编译，注解处理器运行完成之后，<br>编译器会处理所有的编译流程。</p>
+<h2 id="第三步（动态注入）"><a href="#第三步（动态注入）" class="headerlink" title="第三步（动态注入）"></a>第三步（动态注入）</h2><p>运行时动态注入，即用户常规调用的 ButterKnife.bind(activity)</p>
+<p>这一步为了避免蹩脚的调用，使用了运行时反射，但是作者对每一个类进行了缓存，因此，不会对执行效率产生多大影响。</p>
+<h3 id="注"><a href="#注" class="headerlink" title="注"></a>注</h3><p>在最新的 ButterKnife 源码（2015.06.08）中，ButterKnife已经重构了部分方法：</p>
+<pre><code>ButterKnife#inject -&gt; ButterKnife#bind
+@InjectView -&gt; @FindView
+</code></pre>
+<p>等等，具体变化可以去看官方文档，<strong>本文档后续代码使用最新版本代码演示</strong>。</p>
+<h1 id="极简实现演示"><a href="#极简实现演示" class="headerlink" title="极简实现演示"></a>极简实现演示</h1><h2 id="演示代码说明"><a href="#演示代码说明" class="headerlink" title="演示代码说明"></a>演示代码说明</h2><ol>
+<li>示例代码由 ButterKnife 简化而来，部分定义和实现有删改，只能绑定 Activity 中的 View 字段</li>
+<li>为了避免引入Android平台，但是又需要更直观，所以mock了android的两个类，<a href="./android/app/Activity.java">Activity</a> 和 <a href="./android/view/View.java">View</a></li>
+<li>为了避免使用 Pluggable Annotation Processing 过程中的jar包要求，以及波及不必要的java文件，请使用命令行运行演示，直接运行 .&#x2F;run.sh 即可查看结果</li>
+<li>保证 CLASSPATH 中含有tools.jar</li>
+</ol>
+<h2 id="第一步（收集信息）-1"><a href="#第一步（收集信息）-1" class="headerlink" title="第一步（收集信息）"></a>第一步（收集信息）</h2><ol>
+<li>在每一个类中找到所有被 FindView 注解的字段</li>
+<li>每一个需要绑定的字段信息都保存为一个 <a href="./butterknife/internal/FieldViewBinding.java">FieldViewBinding</a> 对象，比如：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FindView(100)</span></span><br><span class="line">View vView1;</span><br></pre></td></tr></table></figure>
+
+<p>得到：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="title class_">FieldViewBinding</span>(vView1, android.view.View, <span class="number">100</span>)</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>将字段分类，获取每一个类的“类数据集”<a href="./butterknife/internal/BindingClass.java">BindingClass</a>，比如， MainActivity 对应的 “类数据集” 如下：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">MainActivity：</span><br><span class="line">    List&lt;FieldViewBinding&gt; fieldViewBindings = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;FieldViewBinding&gt;();</span><br><span class="line">    fieldViewBindings.add(<span class="keyword">new</span> <span class="title class_">FieldViewBinding</span>(vView1, android.view.View, <span class="number">100</span>))</span><br><span class="line">    fieldViewBindings.add(<span class="keyword">new</span> <span class="title class_">FieldViewBinding</span>(vView2, android.view.View, <span class="number">200</span>))</span><br></pre></td></tr></table></figure>
+
+<h2 id="第二步（生成-Bind-工具类源文件）"><a href="#第二步（生成-Bind-工具类源文件）" class="headerlink" title="第二步（生成 Bind 工具类源文件）"></a>第二步（生成 Bind 工具类源文件）</h2><p>为了便于在反射时容易实例化生成的类，每一个生成的类都实现了一个 <a href="./butterknife/internal/ButterKnifeProcessor.java">ActivityBinder<T extends Activity></a> 接口，因此，根据 <a href="./sample/MainActivity">MainActivity</a> “类数据集”生成的文件如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> sample;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"><span class="keyword">import</span> android.app.Activity;</span><br><span class="line"><span class="keyword">import</span> butterknife.ButterKnife.ActivityBinder;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MainActivity$$ViewBinder</span> <span class="keyword">implements</span> <span class="title class_">ActivityBinder</span>&lt;sample.MainActivity&gt; &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">bind</span><span class="params">(sample.MainActivity target)</span> &#123;</span><br><span class="line">        View view;</span><br><span class="line">        view = target.findViewById(<span class="number">100</span>);</span><br><span class="line">        target.vView1 = view; <span class="comment">//这里要求 vView1 的访问权限为 package 级别</span></span><br><span class="line">        view = target.findViewById(<span class="number">200</span>);</span><br><span class="line">        target.vView2 = view;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="第三步（动态注入）-1"><a href="#第三步（动态注入）-1" class="headerlink" title="第三步（动态注入）"></a>第三步（动态注入）</h2><p>我们在 MainActivity 中调用 ButterKnife#bind，第一件事就是找到对应生成的 Bind 工具类，这里遵循命名规则(在对应类后增加 $$ViewBinder 后缀)，直接使用动态加载并实例化：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Class&lt;?&gt; activityBindingClass = Class.forName(targetClass.getName() + ButterKnifeProcessor.SUFFIX);</span><br><span class="line">activityBinder = (ActivityBinder) activityBindingClass.newInstance();</span><br></pre></td></tr></table></figure>
+
+<p>获得相应的 ActivityBinder 之后，使用 ActivityBinder#bind 进行绑定，与手动调用 findViewById 效果相同</p>
+<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><p>运行：</p>
+<pre><code>ButterKnifeProcedure/src$ ./run.sh
+</code></pre>
+<p>结果：</p>
+<pre><code>mainActivity.vView1.id = 100
+mainActivity.vView2.id = 200
+</code></pre>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2015/05/17/android/2015/2015-05-17-Android-Context-basic/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/android/" title="android">
+                        <b>#</b> android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/android/" title="android">
+                        #android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2015/07/14/java/2015-07-14-Java-POST/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Pluggable-Annotation-Processing"><span class="toc-text">Pluggable Annotation Processing</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%88%E6%94%B6%E9%9B%86%E4%BF%A1%E6%81%AF%EF%BC%89"><span class="toc-text">第一步（收集信息）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%88%E7%94%9F%E6%88%90%E6%BA%90%E6%96%87%E4%BB%B6%EF%BC%89"><span class="toc-text">第二步（生成源文件）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%88%E5%8A%A8%E6%80%81%E6%B3%A8%E5%85%A5%EF%BC%89"><span class="toc-text">第三步（动态注入）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8"><span class="toc-text">注</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9E%81%E7%AE%80%E5%AE%9E%E7%8E%B0%E6%BC%94%E7%A4%BA"><span class="toc-text">极简实现演示</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%94%E7%A4%BA%E4%BB%A3%E7%A0%81%E8%AF%B4%E6%98%8E"><span class="toc-text">演示代码说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%88%E6%94%B6%E9%9B%86%E4%BF%A1%E6%81%AF%EF%BC%89-1"><span class="toc-text">第一步（收集信息）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%88%E7%94%9F%E6%88%90-Bind-%E5%B7%A5%E5%85%B7%E7%B1%BB%E6%BA%90%E6%96%87%E4%BB%B6%EF%BC%89"><span class="toc-text">第二步（生成 Bind 工具类源文件）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%88%E5%8A%A8%E6%80%81%E6%B3%A8%E5%85%A5%EF%BC%89-1"><span class="toc-text">第三步（动态注入）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C"><span class="toc-text">运行</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      变长参数的坑 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">变长参数的坑</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/java/" title="java">
+                    <b>#</b> java
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/java/" title="java">
+                    #java
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h4 id="VarArgs简述"><a href="#VarArgs简述" class="headerlink" title="VarArgs简述"></a>VarArgs简述</h4><p>只需要明确一点即可，java方法的变长参数只是语法糖，其本质上还是将变长的实际参数 varargs 包装为一个数组。</p>
+<p>所以</p>
+<pre><code>Object[] objs
+</code></pre>
+<p>与</p>
+<pre><code>Object... objs
+</code></pre>
+<p>被看作是相同的签名，在源码级别是不能同时存在的，因此，无法编译通过</p>
+<h4 id="VarArgs包装"><a href="#VarArgs包装" class="headerlink" title="VarArgs包装"></a>VarArgs包装</h4><p>包装方式（注意，下面的代码不是实际的实现，而是一个比喻说明）:</p>
+<ol>
+<li>如果实参是唯一且匹配形参varargs要求的数组（就是实参独占形参varargs），那么可以认为你已经替编译器干了这个活，所以可以看作不包装，直接使用这个数组</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">invoke</span><span class="params">(String...varargs)</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">invoke(<span class="keyword">new</span> <span class="title class_">String</span>[]&#123;<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>&#125;);</span><br><span class="line">那么大致的调用过程如下：</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">invoke</span><span class="params">(String...varargs)</span>&#123;</span><br><span class="line">    innerVarArgs = varargs;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>如果实参是多个单独的变量（就是多个实参分享varargs），那么会将这多个参数包装成一个相应的类型数组</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">invoke</span><span class="params">(String...varargs)</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">invoke(<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>);</span><br><span class="line"></span><br><span class="line">那么大致的调用过程如下：</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">invoke</span><span class="params">(String...varargs)</span>&#123;</span><br><span class="line">    innerVarArgs = <span class="keyword">new</span> <span class="title class_">String</span>[varargs.length];</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>, size = varargs; i &lt; size; i++)&#123;</span><br><span class="line">        innerVarArgs[i] = varargs[i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+
+<h4 id="那么问题来了"><a href="#那么问题来了" class="headerlink" title="那么问题来了"></a>那么问题来了</h4><h5 id="问题一：当变长参数是Object…-objs的情况"><a href="#问题一：当变长参数是Object…-objs的情况" class="headerlink" title="问题一：当变长参数是Object… objs的情况"></a>问题一：当变长参数是Object… objs的情况</h5><p>要知道，数组也是一个对象，所以会产生下面的情况：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">test1</span><span class="params">(Object... varargs)</span> &#123;</span><br><span class="line">    System.out.println(varargs.length);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">[<span class="number">1</span>] test1(<span class="keyword">new</span> <span class="title class_">String</span>[]&#123;<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>&#125;);   <span class="comment">//3</span></span><br><span class="line">[<span class="number">2</span>] test1(<span class="number">1</span>, <span class="keyword">new</span> <span class="title class_">String</span>[]&#123;<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>&#125;);<span class="comment">//2</span></span><br><span class="line"></span><br><span class="line">[<span class="number">3</span>] test1(<span class="keyword">new</span> <span class="title class_">Integer</span>[]&#123;<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;);        <span class="comment">//3</span></span><br><span class="line">[<span class="number">4</span>] test1(<span class="number">1</span>, <span class="keyword">new</span> <span class="title class_">Integer</span>[]&#123;<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;);     <span class="comment">//2</span></span><br><span class="line">[<span class="number">5</span>] test1(<span class="number">1</span>, <span class="keyword">new</span> <span class="title class_">Integer</span>[]&#123;<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;, <span class="keyword">new</span> <span class="title class_">Integer</span>[]&#123;<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;);<span class="comment">//3</span></span><br><span class="line"></span><br><span class="line">[<span class="number">6</span>] test1(<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>);              <span class="comment">//3</span></span><br><span class="line">[<span class="number">7</span>] test1(<span class="keyword">new</span> <span class="title class_">int</span>[]&#123;<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;);   <span class="comment">//1</span></span><br><span class="line">[<span class="number">8</span>] test1(<span class="number">1</span>, <span class="keyword">new</span> <span class="title class_">int</span>[]&#123;<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;);<span class="comment">//2</span></span><br></pre></td></tr></table></figure>
+
+<p>结果分析：</p>
+<ol>
+<li>[1]test1的实参是唯一的数组new String[]{“a”, “b”, “c”}，因此直接使用</li>
+<li>[2]test1的实参有两项，而且这两项都符合varargs的要求，实参数组无法独占形参varargs，编译器看到的是test1(1, ArrayObject)，<br>因此包装侯结果为Object[]{1, ArrayObject}<br><strong>[注意，ArrayObject只是为了在本文中说明这个对像是一个数组，实际并不存在这种类型]</strong></li>
+<li>其他同理</li>
+</ol>
+<h5 id="问题二：int-与-Integer"><a href="#问题二：int-与-Integer" class="headerlink" title="问题二：int[] 与 Integer[]"></a>问题二：int[] 与 Integer[]</h5><p>注意问题一里面的[3]和[7]，两者的结果是不一样的，原因：</p>
+<p>int[]是没有办法直接转型成Object[]的，基本类型与Object也是无法匹配上的，因此，退而求其次，int[]被当作一个单纯的数组对象ArrayObject，包装结果为Object[]{ArrayObject}，因此数组长度为1。</p>
+<p>Integer[]本身就可以看作是Object[]，因此参照包装方式一，可以直接使用这个数组，因此数组长度不变。</p>
+<h4 id="VarArgs在反射中的注意点"><a href="#VarArgs在反射中的注意点" class="headerlink" title="VarArgs在反射中的注意点"></a>VarArgs在反射中的注意点</h4><p>首先需要明确的一点是，反射是在运行时才能产生作用的，因此，下面两个方法的效果是一样的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">fn</span><span class="params">(String[] args)</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">fn</span><span class="params">(String... args)</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在运行时看来，此方法的签名就是：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">fn</span><span class="params">([java.lang.String args)</span> <span class="comment">// public void fn(String[] args)</span></span><br></pre></td></tr></table></figure>
+
+<p>注意，此时方法形参只有一个，就是那个 <em>String[] args</em></p>
+<p>一个示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Reflect</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line"></span><br><span class="line">        String[] mArgs = <span class="keyword">new</span> <span class="title class_">String</span>[]&#123;<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>&#125;;</span><br><span class="line"></span><br><span class="line">        <span class="type">Method</span> <span class="variable">mFn1</span> <span class="operator">=</span> Reflect.class.getMethod(<span class="string">&quot;fn1&quot;</span>, mArgs.getClass());</span><br><span class="line">        <span class="comment">/*[调用1]*/</span>mFn1.invoke(<span class="literal">null</span>, <span class="keyword">new</span> <span class="title class_">Object</span>[]&#123;mArgs&#125;); <span class="comment">// 3</span></span><br><span class="line">        <span class="comment">/*[调用2]*/</span>mFn1.invoke(<span class="literal">null</span>, (Object) mArgs);      <span class="comment">// 3</span></span><br><span class="line">        <span class="comment">/*[调用3]*/</span>mFn1.invoke(<span class="literal">null</span>, mArgs);               <span class="comment">// error</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">fn1</span><span class="params">(String... args)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;fn1:&quot;</span> + args.length);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在看一下Method的invoke方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Object <span class="title function_">invoke</span><span class="params">(Object obj, Object... args)</span></span><br></pre></td></tr></table></figure>
+
+<p>转化为对应的方法调用为：</p>
+<pre><code>fn1(args) //fn1签名 public void fn([java.lang.String args)
+</code></pre>
+<ol>
+<li><p>[调用1]mFn1.invoke(null, new Object[]{mArgs});</p>
+<pre><code> 相当与调用fn1(mArgs)，即fn1(new String[]&#123;&quot;a&quot;, &quot;b&quot;, &quot;c&quot;&#125;)
+</code></pre>
+</li>
+<li><p>[调用2]mFn1.invoke(null, (Object) mArgs);</p>
+<pre><code> mArgs被包装 -&gt; mFn1.invoke(null, new Object[]&#123;mArgs&#125;) 转化为[调用1]
+</code></pre>
+</li>
+<li><p>[调用3]mFn1.invoke(null, mArgs);</p>
+<p> 不包装，直接使用。<br> 即调用fn1(“a”, “b”, “c”)，但是fn1只接受一个参数，即String[] args，所以会报”wrong number of arguments”错误，即参数数量不对</p>
+</li>
+</ol>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2014/12/19/javascript/2014-12-19-Chrome-other/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/java/" title="java">
+                        <b>#</b> java
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/java/" title="java">
+                        #java
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2015/01/02/product/2015-01-02-prepare-product/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#VarArgs%E7%AE%80%E8%BF%B0"><span class="toc-text">VarArgs简述</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#VarArgs%E5%8C%85%E8%A3%85"><span class="toc-text">VarArgs包装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%82%A3%E4%B9%88%E9%97%AE%E9%A2%98%E6%9D%A5%E4%BA%86"><span class="toc-text">那么问题来了</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E4%B8%80%EF%BC%9A%E5%BD%93%E5%8F%98%E9%95%BF%E5%8F%82%E6%95%B0%E6%98%AFObject%E2%80%A6-objs%E7%9A%84%E6%83%85%E5%86%B5"><span class="toc-text">问题一：当变长参数是Object… objs的情况</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E4%BA%8C%EF%BC%9Aint-%E4%B8%8E-Integer"><span class="toc-text">问题二：int[] 与 Integer[]</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#VarArgs%E5%9C%A8%E5%8F%8D%E5%B0%84%E4%B8%AD%E7%9A%84%E6%B3%A8%E6%84%8F%E7%82%B9"><span class="toc-text">VarArgs在反射中的注意点</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

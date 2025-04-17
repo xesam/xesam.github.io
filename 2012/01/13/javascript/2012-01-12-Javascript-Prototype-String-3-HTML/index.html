@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      【Javascript】Prototype源码浅析—String部分(三)之HTML字符串处理 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">【Javascript】Prototype源码浅析—String部分(三)之HTML字符串处理</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/javascript/" title="javascript">
+                    <b>#</b> javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/javascript/" title="javascript">
+                    #javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <pre><code>HTML处理	stripTags    |  escapeHTML      |  unescapeHTML 	 
+JSON处理	unfilterJSON |  isJSON          |  evalJSON     |  parseJSON
+脚本处理	stripScripts |  extractScripts  |  evalScripts
+</code></pre>
+<p>现在，String部分转入具体的关联应用，分别对应 HTML字符串，JSON字符串和HTML中的脚本字符串。</p>
+<p>【乱入一句，有关JSON的一点东西，可以看看<a target="_blank" rel="noopener" href="http://www.cnblogs.com/TomXu/archive/2012/01/11/2311956.html">http://www.cnblogs.com/TomXu/archive/2012/01/11/2311956.html</a>】</p>
+<p>下面分别叙述：</p>
+<h3 id="一、HTML字符串"><a href="#一、HTML字符串" class="headerlink" title="一、HTML字符串"></a>一、HTML字符串</h3><pre><code>stripTags  ：移除字符串中所有的 HTML 标签。
+escapeHTML ： 将 HTML 特殊字符转换为它们的等价实体。（&amp;对应&amp;amp; &lt;对应&amp;lt; &gt;对应&amp;gt; ）
+unescapeHTML ：移除字符串中的标签，并将用实体表示的 HTML 特殊字符转换为它们的正常形式。（escapeHTML 的逆操作）
+</code></pre>
+<p>stripTags  中的一段正则</p>
+<pre><code>/&lt;\w+(\s+(&quot;[^&quot;]*&quot;|&#39;[^&#39;]*&#39;|[^&gt;])+)?&gt;|&lt;\/\w+&gt;/gi
+</code></pre>
+<p>用来匹配标签中的内容，注意不能换行，不过换行的话就有语法错误了。</p>
+<p>【这个方法唯一需要注意的位置是，stripTags会移除<script>标签，但是不会移除里面的内容，所以可能将<script>里面的内容暴露出来，影响页面结构】</p>
+<h3 id="二、脚本字符串"><a href="#二、脚本字符串" class="headerlink" title="二、脚本字符串"></a>二、脚本字符串</h3><pre><code>stripScripts ： 移除字符串中所有的 HTML script 块。弥补stripTags方法对script标签的缺陷
+extractScripts ：提取出字符串中包含的所有 script 的内容，并将之返回作为一个字符串数组。
+evalScripts ：执行字符串中包含的所有 script 块的内容。返回一个数组，该数组包含每个 script 执行后返回的值。  
+</code></pre>
+<p>stripScripts中的正则是对stripTags中一个正则的发展</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">stripScripts</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> pattern = <span class="keyword">new</span> <span class="title class_">RegExp</span>(<span class="string">&#x27;&lt;script[^&gt;]*&gt;([\\S\\s]*?)&lt;\/script&gt;&#x27;</span>, <span class="string">&#x27;img&#x27;</span>);<span class="comment">//i忽略大小写，m换行，g全局</span></span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">replace</span>(pattern , <span class="string">&#x27;&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">extractScripts</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> matchAll = <span class="keyword">new</span> <span class="title class_">RegExp</span>(<span class="string">&#x27;&lt;script[^&gt;]*&gt;([\\S\\s]*?)&lt;\/script&gt;&#x27;</span>, <span class="string">&#x27;img&#x27;</span>),</span><br><span class="line">    matchOne = <span class="keyword">new</span> <span class="title class_">RegExp</span>(<span class="string">&#x27;&lt;script[^&gt;]*&gt;([\\S\\s]*?)&lt;\/script&gt;&#x27;</span>, <span class="string">&#x27;im&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> (<span class="variable language_">this</span>.<span class="title function_">match</span>(matchAll) || []).<span class="title function_">map</span>(<span class="keyword">function</span>(<span class="params">scriptTag</span>) &#123; </span><br><span class="line">        <span class="keyword">return</span> (scriptTag.<span class="title function_">match</span>(matchOne) || [<span class="string">&#x27;&#x27;</span>, <span class="string">&#x27;&#x27;</span>])[<span class="number">1</span>];</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>map是对数组的一个扩展，某些浏览器有这个原生方法，参见《chrome原生方法之数组》<br>最后获得的是一个所有script标签内部内容的一个数组，因此evalScripts 的做法就很自然的可以想出来——循环遍历获得的数组，然后依次执行（eval），存储每一项执行的结果。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">evalScripts</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">extractScripts</span>().<span class="title function_">map</span>(<span class="keyword">function</span>(<span class="params">script</span>) &#123; <span class="keyword">return</span> <span class="built_in">eval</span>(script) &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="三、JSON处理"><a href="#三、JSON处理" class="headerlink" title="三、JSON处理"></a>三、JSON处理</h3><pre><code>unfilterJSON：移除 Ajax JSON 或 JavaScript 响应内容周围的安全注释界定符。
+isJSON：使用正则表达式检测字符串是否是合法的 JSON 格式
+evalJSON：执行一个 JSON 格式的字符串，并返回结果对象
+</code></pre>
+<p>其中isJSON和evalJSON就是JSON.js中的parseJSON，而且代码也差不多，参见《从字符串中解析出JSON》</p>
+<p>顺便说一点unfilterJSON中的安全注释界定符，这是一种安全机制，对于自家的数据，可以在返回值两端加上特殊的字符（界定符）来表明数据的来源，客户端解析的时候用unfilterJSON来处理掉添加的界定符，借此可以在一定程度上减少一些XSS的攻击。</p>
+<p>Prototype中默认的形式是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;/*-secure-\n&#123;&quot;name&quot;: &quot;小西山子&quot;,&quot;age&quot;: 24&#125;\n*/&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>其中界定符号是 /<em>-secure-\n&#39;和&#39;\n</em>/&#39;</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2012/01/13/javascript/2012-02-03-Javascript-Prototype-String-4/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/javascript/" title="javascript">
+                        <b>#</b> javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/javascript/" title="javascript">
+                        #javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2012/01/13/javascript/2012-01-13-Javascript-from-alert/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81HTML%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-text">一、HTML字符串</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

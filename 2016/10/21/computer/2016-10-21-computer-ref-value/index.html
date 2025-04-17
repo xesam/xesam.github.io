@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      传值调用与传引用调用 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">传值调用与传引用调用</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/computer/" title="computer">
+                    <b>#</b> computer
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/computer/" title="computer">
+                    #computer
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>这个问题的关键是明确“传值调用（Call by value）”与“传引用调用（Call by reference）”的定义。</p>
+<p>简单来说：</p>
+<pre><code>“传值调用”是将值（values）作为函数参数传入；
+“传引用调用”是将变量（variables）本身作为函数参数传入；
+</code></pre>
+<p>一个隐喻：</p>
+<pre><code>“传值调用”是我在纸片上写下一些内容并把纸片交给你， 内容可以是一个URL，也可能是一份完整的《战争与和平》副本。
+不管是什么，现在都在我给你的那张纸上，所以它实际上是你的纸。你可以在那张纸上随便涂鸦，也可以通过那张纸找到别的什么东西。
+
+“传引用调用”是当我在我的笔记本上写了一些内容然后把笔记本递给你。
+你可以在我的笔记本上涂鸦（也许我想要你这么做，也许我没料到你会这么做），然后我保留我的笔记本，你的任何涂鸦也一并保留在笔记本里。
+此外，如果你或我写的是有关如何找到其他内容的信息，无论你或我可以去那里，更改这些信息。
+</code></pre>
+<span id="more"></span>
+
+<h2 id="常见误解"><a href="#常见误解" class="headerlink" title="常见误解"></a>常见误解</h2><p>注意，这两个概念与“引用类型（reference types）”或者“指针类型（pointer types）”的概念是完全独立和正交的，所谓“引用类型”，就是 Java 中 Object 的子类型，C＃ 中的所有 class 类型；所谓“指针类型”类似 C 语言中指针的概念，在语义上等同于 Java 的“引用类型”。</p>
+<p>“引用类型”的概念对应于一个 URL ：它本身是一条信息，一个到其他信息的引用（或者一个指针）。你可以在不同的地方拥有多个网址副本，而且他们不会更改他们所有链接到的网站; 如果网站被更新，则每个 URL 副本将指向更新后的信息。 相反的，在任何一个 URL副本的更改不会影响到任何其他的 URL 副本。</p>
+<p>注意 C++ 有一个概念叫“引用（references）”（例如 &amp;int），它不像 Java 和 C＃ 的“引用类型”，而是像“传引用调用”。 Java 和 C＃ 中的“引用类型”以及 Python 中的所有类型都更像是 C 和 C ++ 中的“指针类型（pointer types）”（例如int *）。</p>
+<h2 id="术语定义"><a href="#术语定义" class="headerlink" title="术语定义"></a>术语定义</h2><p>首先，需要强调一些重要的术语，并确保我们对所用词汇的理解都达成一致。在实践中，词不达意的词汇，是导致绝大多数概念混淆的一个重要原因。</p>
+<p>首先，定义一个函数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">foo</span><span class="params">(<span class="type">int</span> param)</span> &#123;  <span class="comment">// line 1</span></span><br><span class="line">    param += <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后调用此函数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">bar</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">int</span> arg = <span class="number">1</span>; <span class="comment">// line 2</span></span><br><span class="line">    foo(arg);    <span class="comment">// line 3</span></span><br><span class="line">&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过这个例子，我想定义一些重要的术语：</p>
+<ol>
+<li>foo 是在第1行声明的函数（ C 和 C ++ 区分声明和定义，在 Java 中，函数声明和定义是合二为一的，但是概念是相同的，这里不作深入讨论）</li>
+<li>param 是 foo 的形式参数（formal parameter，后文简称“形参”），也在第1行声明</li>
+<li>arg 是一个变量（variable），在第2行上声明和初始化，是函数 bar 的局部变量（ local variable）</li>
+<li>arg 也是第3行上 foo 调用（invocation）的参数（argument）</li>
+</ol>
+<p>这里有两组非常重要的概念要区分。</p>
+<h4 id="第一组概念是“值（value）”与“变量（variable）”："><a href="#第一组概念是“值（value）”与“变量（variable）”：" class="headerlink" title="第一组概念是“值（value）”与“变量（variable）”："></a>第一组概念是“值（value）”与“变量（variable）”：</h4><p>值（value）是对语言中表达式进行求值的结果。例如，在上面的 bar 函数中， int arg &#x3D; 1 ; 执行之后，表达式 arg 的值（value）为 1。</p>
+<p>变量（variable）是“值（value）”的容器。变量可以是“可变的（mutable）”，这是大多数类似C语言的默认值，或者“只读的（read-only）”，例如使用 Java 的 final 或 C＃ 的 readonly 声明，又或者完全不可变的，例如使用 C++ 的 const。</p>
+<h4 id="另一组概念是“形参（parameter）”与“实参（argument）”："><a href="#另一组概念是“形参（parameter）”与“实参（argument）”：" class="headerlink" title="另一组概念是“形参（parameter）”与“实参（argument）”："></a>另一组概念是“形参（parameter）”与“实参（argument）”：</h4><p>形参（formal parameter）是调用函数时必须由调用者（caller）提供的“变量（variable）”。</p>
+<p>实参（argument）是由函数的调用者提供以满足该函数形参的特定形式参数的“值（value）”。</p>
+<h2 id="传值调用"><a href="#传值调用" class="headerlink" title="传值调用"></a>传值调用</h2><p>在“传值调用”中，函数的形参是为了调用函数所新创建，并使用实参值初始化的变量。<br>这与用值来初始化任何其他类型变量的方式完全相同。例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> arg = <span class="number">1</span>;</span><br><span class="line"><span class="type">int</span> another_variable = arg;</span><br></pre></td></tr></table></figure>
+
+<p>这里 arg 和 another_variable 是完全独立的变量 - 它们的值可以彼此独立地变化。因为，在声明 another_variable 的时候，它就被初始化为保持与arg所保持的相同的值：也就是数值 1。</p>
+<p>由于它们是独立变量，对 another_variable 的更改不会影响 arg：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> arg = <span class="number">1</span>;</span><br><span class="line"><span class="type">int</span> another_variable = arg;</span><br><span class="line">another_variable = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">assert arg == <span class="number">1</span>; <span class="comment">// true</span></span><br><span class="line">assert another_variable == <span class="number">2</span>; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>这与上例中 arg 和 param 之间的关系完全相同，对比一下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">foo</span><span class="params">(<span class="type">int</span> param)</span> &#123;</span><br><span class="line">  param += <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">bar</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="type">int</span> arg = <span class="number">1</span>;</span><br><span class="line">  foo(arg);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>它就好像我们这样编写代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在这里进入函数“bar”</span></span><br><span class="line"><span class="type">int</span> arg = <span class="number">1</span>;</span><br><span class="line">  <span class="comment">//这里进入函数“foo”</span></span><br><span class="line">  <span class="type">int</span> param = arg;</span><br><span class="line">  param += <span class="number">1</span>;</span><br><span class="line">  <span class="comment">//在这里退出函数“foo”</span></span><br><span class="line"><span class="comment">//在这里退出函数“bar”</span></span><br></pre></td></tr></table></figure>
+
+<p>也就是说，“传值调用”的定义特征是“被调用者（callee）”（即foo）接收值（values）作为参数（ arguments），对于这些传入的值，相对于“调用者（caller）”（即bar）的变量，“被调用者”具有其自己的独立变量（variables）。</p>
+<p>回到上面的隐喻，如果我是 bar，你是foo，当我调用你的时候，我给你一张纸上写着一个值（value）。你称这张纸为 param，该值是我写在笔记本（本地变量）上，被称为 arg 的变量的副本。</p>
+<p>（另外：一个函数调用一个函数的各种调用约定（ calling conventions），取决于所用的硬件和操作系统。所谓“调用约定”，就像我们共同来约定是我将值写在一张纸上，然后交给你，还是你本身就有一张纸，我直接把值写在上面，又还是我把值写在我们都能看到的墙上。这是一个有趣的话题，但与本话题无关）</p>
+<h2 id="传引用调用"><a href="#传引用调用" class="headerlink" title="传引用调用"></a>传引用调用</h2><p>在“传引用调用”中，函数的形参仅仅是调用者提供的实参的新名称（new names）。</p>
+<p>回到上面的例子，它等同于：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在这里进入函数 “bar”</span></span><br><span class="line"><span class="type">int</span> arg = <span class="number">1</span>;</span><br><span class="line">  <span class="comment">//这里进入函数 “foo”</span></span><br><span class="line">  <span class="comment">//啊哈！我注意到 “param” 只是另一个名字 “arg”</span></span><br><span class="line">  arg <span class="comment">/* param */</span> += <span class="number">1</span>;</span><br><span class="line">  <span class="comment">//在这里退出函数 “foo”</span></span><br><span class="line"><span class="comment">//在这里退出函数 “bar”</span></span><br></pre></td></tr></table></figure>
+
+<p>由于 param 只是 arg 的另一个名称，也就是说，它们是同一个变量（the same variable），param 的更改反映到 arg 上。这是“传引用调用”不同于“传值调用”的根本之处。</p>
+<p>很少有语言支持传引用调用，但 C++ 可以这样做：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">foo</span><span class="params">(<span class="type">int</span>&amp; param)</span> &#123;</span><br><span class="line">  param += <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">bar</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="type">int</span> arg = <span class="number">1</span>;</span><br><span class="line">  foo(arg);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这种情况下，param 不仅具有与 arg 相同的值（value），它实际上就是 arg（只是名称不同而已），因此 bar 可以观察到 arg 已经增加。</p>
+<p>注意，这不是 Java，JavaScript，C，Objective-C，Python 或任何其他流行语言的执行方式，也就意味着这些语言不是“传引用调用”的，它们是“传值调用”的。</p>
+<h2 id="附录：对象共享调用（call-by-object-sharing）"><a href="#附录：对象共享调用（call-by-object-sharing）" class="headerlink" title="附录：对象共享调用（call by object sharing）"></a>附录：对象共享调用（call by object sharing）</h2><p>如果在“传值调用”中，实际的值是一个引用类型（reference type）或指针类型（pointer type），那么“值”本身不是什么特别的（例如在 C 语言里面，它只是一个平台特定大小的整数），特别的是”值”所指向的内容。</p>
+<p>如果引用类型（或者说指针）指向的是可变值（mutable）的，那么一个可能的效果是：你可以修改被指向的值，并且调用者可以观察到被指向值的变化，即使调用者不能观察到这个引用类型本身的更改。</p>
+<p>再次借用URL的隐喻：</p>
+<pre><code>我给你一个网站 URL的副本，我们关心的是网站，而不是URL。
+无论你如何更改你的 URL 副本，都不影响我的 URL 内容
+（实际上，在 Java 或者 Python 这样的语言中，“URL”或引用类型值，他们本身的值根本就不能被修改，只有它指向的东西可以被修改）。
+</code></pre>
+<p>当 Barbara Liskov 发明 CLU 编程语言时，她意识到现有的术语“传值调用”和“传引用调用”对描述这种新语言的语义并不是特别有用。所以她发明了一个新的术语：共享对象调用（call by object sharing）。</p>
+<p>对于通过“传值调用”，但实际使用中的常用类型是引用或指针类型（即：几乎每一种现代命令式，面向对象或多范式编程语言）的语言，只需要避免谈论“传值调用”或“传引用调用”，而坚持通过“共享对象调用”（或简单地“传对象调用”），就没有人会困惑了。</p>
+<p>参考 <a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/373419/whats-the-difference-between-passing-by-reference-vs-passing-by-value/34971934#34971934">http://stackoverflow.com/questions/373419/whats-the-difference-between-passing-by-reference-vs-passing-by-value/34971934#34971934</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2016/09/30/android/2016/2016-09-30-Android-Splash/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/computer/" title="computer">
+                        <b>#</b> computer
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/computer/" title="computer">
+                        #computer
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2016/12/17/computer/2016-12-17-computer-BIOS-0x7C00/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E8%AF%AF%E8%A7%A3"><span class="toc-text">常见误解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AF%E8%AF%AD%E5%AE%9A%E4%B9%89"><span class="toc-text">术语定义</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%BB%84%E6%A6%82%E5%BF%B5%E6%98%AF%E2%80%9C%E5%80%BC%EF%BC%88value%EF%BC%89%E2%80%9D%E4%B8%8E%E2%80%9C%E5%8F%98%E9%87%8F%EF%BC%88variable%EF%BC%89%E2%80%9D%EF%BC%9A"><span class="toc-text">第一组概念是“值（value）”与“变量（variable）”：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%A6%E4%B8%80%E7%BB%84%E6%A6%82%E5%BF%B5%E6%98%AF%E2%80%9C%E5%BD%A2%E5%8F%82%EF%BC%88parameter%EF%BC%89%E2%80%9D%E4%B8%8E%E2%80%9C%E5%AE%9E%E5%8F%82%EF%BC%88argument%EF%BC%89%E2%80%9D%EF%BC%9A"><span class="toc-text">另一组概念是“形参（parameter）”与“实参（argument）”：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%A0%E5%80%BC%E8%B0%83%E7%94%A8"><span class="toc-text">传值调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%A0%E5%BC%95%E7%94%A8%E8%B0%83%E7%94%A8"><span class="toc-text">传引用调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%84%E5%BD%95%EF%BC%9A%E5%AF%B9%E8%B1%A1%E5%85%B1%E4%BA%AB%E8%B0%83%E7%94%A8%EF%BC%88call-by-object-sharing%EF%BC%89"><span class="toc-text">附录：对象共享调用（call by object sharing）</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

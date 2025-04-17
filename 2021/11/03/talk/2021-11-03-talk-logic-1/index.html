@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      不令人讨厌的分析逻辑 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">不令人讨厌的分析逻辑</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/talk/" title="talk">
+                    <b>#</b> talk
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/talk/" title="talk">
+                    #talk
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>今天吃饭看到一个视频《苏伊士运河为什么修得这么窄》，此视频的逻辑比较清晰，可以作为一个问题分析性视频的正面典型。</p>
+<span id="more"></span>
+
+<pre><code>PS：随着投身自媒体的玩家越来越越多，自媒体中优秀作品的数量也变多了（当然，整体比例依旧是变低了）。
+</code></pre>
+<p>视频的主题是“苏伊士运河为什么修得这么窄？”，整个视频基本都围绕这个主题来，没有偏题。我们来看 UP 主的思路。</p>
+<h3 id="变窄了"><a href="#变窄了" class="headerlink" title="变窄了"></a>变窄了</h3><p>首先，UP 主按照讨论问题的第一原则：</p>
+<pre><code>要问为什么，先问是不是。
+</code></pre>
+<p>既然提到“苏伊士运河这么窄”，那么首先需要明确的是“苏伊士运河是不是真的窄”，如果这条运河并不窄，那这个问题便不成立，也就没有讨论的必要了。于是，UP 主从以下几个方面阐述了“真的窄”这个问题：</p>
+<ol>
+<li>物理尺寸。通过描述自身物理参数，同时与其他运河进行对比，表明苏伊士运河确实“窄”。</li>
+<li>航运量。显而易见的大，而且还在持续增长，需求的“宽”与运河的“窄”已经不匹配了。</li>
+<li>事故情况。由于宽度的问题，导致了事故率的上升，以及救援的困难增加。</li>
+</ol>
+<p>因此，这个问题自身是成立的，而且同时隐含了“窄”是一个动态的过程，是随着局势的发展，逐步变窄的，以前不是问题的问题，现在成了一个真的问题。</p>
+<p>既然“太窄”，接下来就需要考虑“有没有必要将运河修得更宽”的问题了。于是UP主做了一个对比：</p>
+<ol>
+<li>如果不拓宽运河，埃及的收益情况。</li>
+<li>如果拓宽运河，未来的收益增减情况。</li>
+</ol>
+<p>结论显而易见：</p>
+<pre><code>如果拓宽运河，埃及的综合收益是正的，且数值不低，是个一本万利的生意。
+</code></pre>
+<p>有拓宽的意图，那就需要验证拓宽的可能性了。UP 主接下来论证“运河有没有可能修得更宽？”。答案是“有可能”，原因如下：</p>
+<ol>
+<li>地理条件好，地势比较平坦，两端海平面落差小。</li>
+<li>施工工艺成熟，难度低。</li>
+</ol>
+<p>既然“该做”、“想做”、“能做”，剩下就是“怎么做”了。</p>
+<h3 id="依旧窄"><a href="#依旧窄" class="headerlink" title="依旧窄"></a>依旧窄</h3><p>于是 UP 主进行了粗略推算：如果决定加宽运河，需要投入多少资金。结论：</p>
+<pre><code>这个工程耗资大、周期长。结合埃及的国内情况，埃及当局没有办法拿出足够的钱来实施扩建工程。
+</code></pre>
+<p>这是阻碍运河加宽的主要原因。于是，作者围绕资金问题展开了假设，提出这么几条解决方案：</p>
+<h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h4><h5 id="第一种解决方案：国内筹资。"><a href="#第一种解决方案：国内筹资。" class="headerlink" title="第一种解决方案：国内筹资。"></a>第一种解决方案：国内筹资。</h5><p>运河的投资回报周期比较长，且国内经济疲软，融资通道不畅，国内没有能完全承接此工程的企业。</p>
+<p>同时，埃及政局不稳定，极有可能还没修完，当局政府就倒台了，结果反而替反对派做了嫁衣。</p>
+<h5 id="第二种解决方案：引入国外资本来进行运河的拓宽。"><a href="#第二种解决方案：引入国外资本来进行运河的拓宽。" class="headerlink" title="第二种解决方案：引入国外资本来进行运河的拓宽。"></a>第二种解决方案：引入国外资本来进行运河的拓宽。</h5><p>“苏伊士运河危机”的历史事件阴影还未完全散去，且政局不稳定，如果贸然引入，容易加剧国内反对派、民族主义的对抗情绪，所以执政当局只能坚持独立自主开发运河。</p>
+<p>同样由于埃及的政局不稳定，且与周边国家存在军事对抗的潜在可能，外资也担心发生政变，投资受损，参与意愿也比较低，。</p>
+<h5 id="第三种解决方案：迭代-，"><a href="#第三种解决方案：迭代-，" class="headerlink" title="第三种解决方案：迭代&#x3D;，&#x3D;"></a>第三种解决方案：迭代&#x3D;，&#x3D;</h5><p>每年投资一部分钱，小修小补，逐年扩建。这种方案的好处是“自主可控”，缺点也比较明显：进展非常慢。</p>
+<p>最终，现实迫使埃及只能采取第三种解决方案，所以，苏伊士运河只能这么窄了。</p>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>回顾整个分析过程，总结如下：</p>
+<ol>
+<li>确认问题自身的合理性。</li>
+<li>明确解决问题的必要性。</li>
+<li>分析解决问题的可能性。</li>
+<li>推演解决问题的可能途径。</li>
+<li>对比每一条途径的优劣势。</li>
+<li>结合实际情况，选择最优路径。</li>
+</ol>
+<p>虽然原视频中第4、5点可能不够充分，但是这个逻辑思路值得推广。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2021/11/02/talk/2021-11-02-talk-argue-1/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/talk/" title="talk">
+                        <b>#</b> talk
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/talk/" title="talk">
+                        #talk
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2021/12/01/talk/2021-12-01-talk-book-user-stories-applied/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E7%AA%84%E4%BA%86"><span class="toc-text">变窄了</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BE%9D%E6%97%A7%E7%AA%84"><span class="toc-text">依旧窄</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%A7%8D%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%9A%E5%9B%BD%E5%86%85%E7%AD%B9%E8%B5%84%E3%80%82"><span class="toc-text">第一种解决方案：国内筹资。</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%A7%8D%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%9A%E5%BC%95%E5%85%A5%E5%9B%BD%E5%A4%96%E8%B5%84%E6%9C%AC%E6%9D%A5%E8%BF%9B%E8%A1%8C%E8%BF%90%E6%B2%B3%E7%9A%84%E6%8B%93%E5%AE%BD%E3%80%82"><span class="toc-text">第二种解决方案：引入国外资本来进行运河的拓宽。</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E7%A7%8D%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%9A%E8%BF%AD%E4%BB%A3-%EF%BC%8C"><span class="toc-text">第三种解决方案：迭代&#x3D;，&#x3D;</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%93%E8%AF%AD"><span class="toc-text">结语</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

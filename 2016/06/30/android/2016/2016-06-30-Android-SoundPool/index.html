@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Android 的SoundPool 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Android 的SoundPool</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/android/" title="android">
+                    <b>#</b> android
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/android/" title="android">
+                    #android
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>SoundPool 适合播放小而短促的声音，比如声效。可以同时播放多个声音，效率高。<br>MediaPlayer 适合播放大片段的声音，比如音乐。一次只能播放一个声音，新的声音会中断当前正在播放的声音。</p>
+<h2 id="简单使用"><a href="#简单使用" class="headerlink" title="简单使用"></a>简单使用</h2><p>看名字就知道，SoundPool 是一个“池”。因此，SoundPool 会先将多个的声音文件全部加载进内存中，需要播放的时候就可以立即播放。</p>
+<p>所以，大致的步骤应该是：</p>
+<ol>
+<li>创建一个池</li>
+<li>加载声音</li>
+<li>等待声音加载完成</li>
+<li>播放声音</li>
+</ol>
+<p>一个简单的例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//创建 SoundPool</span></span><br><span class="line"><span class="comment">//新版本推荐使用 SoundPool.Builder 来创建</span></span><br><span class="line"><span class="type">SoundPool</span> <span class="variable">mSoundPool</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SoundPool</span>(<span class="number">2</span>, AudioManager.STREAM_MUSIC, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//加载声音文件，load 方法有多个重载，按需使用</span></span><br><span class="line"><span class="type">int</span> <span class="variable">soundId</span> <span class="operator">=</span> mSoundPool.load(<span class="string">&quot;/storage/0/1.aac&quot;</span>, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//设置加载监听</span></span><br><span class="line">mSoundPool.setOnLoadCompleteListener(<span class="keyword">new</span> <span class="title class_">SoundPool</span>.OnLoadCompleteListener() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onLoadComplete</span><span class="params">(SoundPool soundPool, <span class="type">int</span> sampleId, <span class="type">int</span> status)</span> &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//播放声音，播放一遍，然后重复10遍，具体参数参见文件</span></span><br><span class="line"><span class="keyword">final</span> <span class="type">int</span> <span class="variable">streamId</span> <span class="operator">=</span> mSoundPool.play(soundID, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="title class_">Handler</span>().post(<span class="keyword">new</span> <span class="title class_">Runnable</span>()&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span>&#123;</span><br><span class="line">        mSoundPool.stop(streamId);</span><br><span class="line">        mSoundPool.unload(soundId);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="几点说明"><a href="#几点说明" class="headerlink" title="几点说明"></a>几点说明</h2><h3 id="soundId-与-streamId"><a href="#soundId-与-streamId" class="headerlink" title="soundId 与 streamId"></a>soundId 与 streamId</h3><p>注意上面代码的区别. SoundPool#load 加载完成返回的是 soundId， SoundPool#unload 卸载的也是 soundId。</p>
+<p>SoundPool#play 播放的也是 soundId，但是 SoundPool#play 播放返回的是 streamId，同时 SoundPool#stop 停止的是 streamId。</p>
+<p>对于同一个声音文件，每次加载 SoundPool#load 的时候，返回的 soundId 都是不同的。<br>对于同一个 soundId，每次播放 SoundPool#play(soundId) 的时候，返回的 streamId 也是不同的，因此这个不能重用。<br>因此，在这两种 ID 的处理上，需要谨慎。</p>
+<table>
+    <thead>
+    <tr>
+        <th></th><th>Sound Id</th><th>Stream Id</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>load</td><td>（√）返回 soundId</td><td>×</td>
+    </tr>
+    <tr>
+        <td>unload</td><td>（√）传入 soundId</td><td>×</td>
+    </tr>
+    <tr>
+        <td>play</td><td>（√）传入 soundId</td><td>（√）返回 streamId</td>
+    </tr>
+    <tr>
+        <td>pause</td><td>×</td><td>（√）传入 streamId</td>
+    </tr>
+    <tr>
+        <td>resume</td><td>×</td><td>（√）传入 streamId</td>
+    </tr>
+    <tr>
+        <td>stop</td><td>×</td><td>（√）传入 streamId</td>
+    </tr>
+    </tbody>
+</table>
+
+<h3 id="资源释放"><a href="#资源释放" class="headerlink" title="资源释放"></a>资源释放</h3><p>这里的释放包括两方面：</p>
+<ol>
+<li>释放 sound。即 unload(soundId)，释放已经加载的声音文件。</li>
+<li>释放 stream。即 stop(streamId)，释放每次 play 的播放流，可以起到停止声音的效果，如果只是想暂停&#x2F;恢复，可以用 pause&#x2F;resume。</li>
+</ol>
+<p>通常来说，运行过程中没必要释放sound，因为使用 SoundPool 通常是为了迅速播放小文件，如果每次都释放 sound，反而会影响效率。在程序结束的时候再统一释放即可。</p>
+<h3 id="可能问题"><a href="#可能问题" class="headerlink" title="可能问题"></a>可能问题</h3><ol>
+<li><p>play 没有声音</p>
+<p> 可能原因有：没有正确加载 sound，或者同时加载的声音数目超过上限， 或者 sound 还未 load 完毕。</p>
+<p> 因此，可以先检测是否有加载过的 soundId，如果有就直接播放，如果没有则启动加载过程，在 OnLoadCompleteListener 回调中再进行播放。</p>
+<p> 如果是因为加载的声音数目超过上限，需要先 release 资源，然后再重新 load，注意 unload 不一定会释放数目。</p>
+</li>
+<li><p>声音播放结束</p>
+<p> SDK 并没有提供方法来获知一段声音是否播放完毕</p>
+</li>
+</ol>
+<h3 id="priority-参数"><a href="#priority-参数" class="headerlink" title="priority 参数"></a>priority 参数</h3><p>SoundPool#play 中的 priority 参数，只在同时播放的流的数量超过了预先设定的最大数量时起作用，管理器将自动终止优先级低的播放流。<br>如果存在多个同样优先级的流，再进一步根据其创建事件来处理，新创建的流的优先级是最低的，将被终止或者忽略。</p>
+<p>SoundPool#load 中的 priority 参数暂时没什么用，我估计也是用来自动处理 sound 加载数目的问题的。</p>
+<h5 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h5><p><a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/media/SoundPool.html">https://developer.android.com/reference/android/media/SoundPool.html</a><br><a target="_blank" rel="noopener" href="http://blog.csdn.net/qduningning/article/details/8680575">http://blog.csdn.net/qduningning/article/details/8680575</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2016/06/06/computer/2016-06-06-computer-fork-printf/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/android/" title="android">
+                        <b>#</b> android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/android/" title="android">
+                        #android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2016/07/04/android/2016/2016-07-04-Android-NDK-Eclipse/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8"><span class="toc-text">简单使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%A0%E7%82%B9%E8%AF%B4%E6%98%8E"><span class="toc-text">几点说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#soundId-%E4%B8%8E-streamId"><span class="toc-text">soundId 与 streamId</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE"><span class="toc-text">资源释放</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E8%83%BD%E9%97%AE%E9%A2%98"><span class="toc-text">可能问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#priority-%E5%8F%82%E6%95%B0"><span class="toc-text">priority 参数</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol></li></ol></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

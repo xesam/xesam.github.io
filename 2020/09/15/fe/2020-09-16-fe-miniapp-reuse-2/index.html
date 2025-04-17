@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      小程序复用-Behavior 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">小程序复用-Behavior</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/fe/" title="fe">
+                    <b>#</b> fe
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/fe/" title="fe">
+                    #fe
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>虽然小程序提供了基于 Behavior 的复用机制，但 Behavior 对 Component 和 Page 的支持程度不一样，有必要详细区分一下。</p>
+<span id="more"></span>
+
+<h2 id="Behavior-的构成"><a href="#Behavior-的构成" class="headerlink" title="Behavior 的构成"></a>Behavior 的构成</h2><p>再次回顾一下 Behavior 支持的属性：</p>
+<pre><code>properties
+data
+relations
+methods
+
+observers
+created
+attached
+ready
+moved
+detached
+
+lifetimes
+pageLifetimes
+
+behaviors
+definitionFilter
+</code></pre>
+<p>其中</p>
+<pre><code>created
+attached
+ready
+moved
+detached
+</code></pre>
+<p>已经标记为废弃，以后不应该再在实际开发中使用，因此，这个列表可以简化一下：</p>
+<pre><code>properties
+data
+relations
+methods
+
+observers
+lifetimes
+pageLifetimes
+
+behaviors
+definitionFilter
+</code></pre>
+<h2 id="Page-与-Component-的差异"><a href="#Page-与-Component-的差异" class="headerlink" title="Page 与 Component 的差异"></a>Page 与 Component 的差异</h2><p>Page 可以认为是一个 特殊的 Component，但是与 Component 不同的是，Page 作为基础的视图容器，承担了与显示相关的控制。因此，Page 比 Component 多了几个与视图相关的生命周期方法：</p>
+<table>
+<thead>
+<tr>
+<th>Page</th>
+<th>Component</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>onLoad</td>
+<td>created, attached</td>
+</tr>
+<tr>
+<td>onShow</td>
+<td>无对应</td>
+</tr>
+<tr>
+<td>onReady</td>
+<td>ready</td>
+</tr>
+<tr>
+<td>无对应</td>
+<td>moved</td>
+</tr>
+<tr>
+<td>onHide</td>
+<td>无对应</td>
+</tr>
+<tr>
+<td>onUnload</td>
+<td>detached</td>
+</tr>
+<tr>
+<td>onResize</td>
+<td>无对应</td>
+</tr>
+</tbody></table>
+<p>以上对应生命周期方法在 lifetimes 字段里配置，不过这些方法都没有参数：</p>
+<pre><code>lifetimes: &#123;
+    created: function() &#123;&#125;,
+    attached: function() &#123;&#125;,
+    ready: function() &#123;&#125;,
+    moved: function() &#123;&#125;,
+    detached: function() &#123;&#125;
+&#125;
+</code></pre>
+<p><em>注意：lifetimes 的方法会覆盖外层的同名方法，而不会依次执行</em></p>
+<p>为了填补 Component 的缺失，Component 新增了 pageLifetimes 字段，用来监听 onShow、onHide、onResize 对应的生命周期。pageLifetimes 的构成：</p>
+<pre><code>pageLifetimes: &#123;
+    show: function() &#123;&#125;,
+    hide: function() &#123;&#125;,
+    resize: function(size) &#123;&#125;
+&#125;
+</code></pre>
+<p>同理，由于 Page 是基础容器，因此，Page 不支持<em>模板数据绑定</em>，也就没有 properties 和 relations 字段。有一点需要注意，Page 也不支持 observers，至于原因则未知，<strong>可能</strong>小程序基础库的后续版本会逐步支持。</p>
+<p>总结一下，Page 与 Component 的配置字段对比：</p>
+<table>
+<thead>
+<tr>
+<th>Behavior 属性</th>
+<th>Page</th>
+<th>Component</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>properties</td>
+<td>不生效</td>
+<td>生效</td>
+</tr>
+<tr>
+<td>data</td>
+<td>生效</td>
+<td>生效</td>
+</tr>
+<tr>
+<td>relations</td>
+<td>不生效</td>
+<td>生效</td>
+</tr>
+<tr>
+<td>methods</td>
+<td>生效</td>
+<td>生效</td>
+</tr>
+<tr>
+<td>observers</td>
+<td>不生效</td>
+<td>生效</td>
+</tr>
+<tr>
+<td>lifetimes</td>
+<td>生效</td>
+<td>生效</td>
+</tr>
+<tr>
+<td>pageLifetimes</td>
+<td>不生效</td>
+<td>生效</td>
+</tr>
+<tr>
+<td>behaviors</td>
+<td>生效</td>
+<td>生效</td>
+</tr>
+<tr>
+<td>definitionFilter</td>
+<td>生效</td>
+<td>生效</td>
+</tr>
+</tbody></table>
+<p>因此，可以引出一个结论：虽然 Page 与 Component 都支持 behaviors 属性，但是由于存在以上差异，能够生效的 behavior 配置会略有不同，在使用过程中需要注意。</p>
+<h3 id="相关链接"><a href="#相关链接" class="headerlink" title="相关链接"></a>相关链接</h3><ol>
+<li><a href="/fe-miniapp-reuse/">小程序复用</a></li>
+<li><a href="/fe-miniapp-reuse-2/">小程序复用-Behavior</a></li>
+<li><a href="/fe-miniapp-reuse-3/">小程序复用-函数构造器</a></li>
+</ol>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2020/09/14/fe/2020-09-14-fe-miniapp-event/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/fe/" title="fe">
+                        <b>#</b> fe
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/fe/" title="fe">
+                        #fe
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2020/09/15/fe/2020-09-15-fe-miniapp-reuse/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Behavior-%E7%9A%84%E6%9E%84%E6%88%90"><span class="toc-text">Behavior 的构成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Page-%E4%B8%8E-Component-%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="toc-text">Page 与 Component 的差异</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E9%93%BE%E6%8E%A5"><span class="toc-text">相关链接</span></a></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

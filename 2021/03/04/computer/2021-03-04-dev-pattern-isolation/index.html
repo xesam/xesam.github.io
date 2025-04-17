@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      开发模式-框架隔离 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">开发模式-框架隔离</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/computer/" title="computer">
+                    <b>#</b> computer
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/computer/" title="computer">
+                    #computer
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>在做一般的应用产品开发时，通常会基于特定的平台（比如 Android、iOS）、框架（Vue、React）或者技术标准（Servlet）等等。<br>这些开发平台通常经过精心设计，给程序员提供一个受控环境和开发模板，程序员在这个特定的环境中按照开发平台的规范进行开发。</p>
+<span id="more"></span>
+
+<h2 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h2><p>典型案例是开发平台提供一系列组件构造器，并预定义好组件的生命周期方法：</p>
+<pre><code>onCreated
+onShow
+onHide
+onDestory
+</code></pre>
+<p>程序员无权忽略或者调整生命周期方法的调用时机以及调用顺序，只能配置指定的生命方法；<br>或者执行某个操作，由开发平台决定是否执行以及何时执行某个生命周期方法。</p>
+<p>常见的组件构造器有两种实现方式：</p>
+<p>1、组件类</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Page</span>()&#123;</span><br><span class="line">    <span class="title function_">onCreated</span>(<span class="params"></span>)&#123;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="title function_">onShow</span>(<span class="params"></span>)&#123;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="title function_">onHide</span>(<span class="params"></span>)&#123;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="title function_">onDestory</span>(<span class="params"></span>)&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>使用者需要继承此类，然后定义自己的业务操作。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">HomePage</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Page</span>()&#123;</span><br><span class="line">    <span class="title function_">onCreated</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">loadData</span>();</span><br><span class="line">    &#125;,</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>2、组件方法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Page</span>(<span class="params">option</span>)&#123;</span><br><span class="line">    option.<span class="title function_">onCreated</span>();</span><br><span class="line">    option.<span class="title function_">onShow</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>使用者传入配置对象，然后定义自己的业务操作。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="title class_">Page</span>(&#123;</span><br><span class="line">    <span class="title function_">onCreated</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">loadData</span>();</span><br><span class="line">    &#125;,</span><br><span class="line">    ...</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>其中，第 2 种方式（组件方法）相较于第 1 种方式（组件类）更为灵活，因为任意数据都可以附加在参数对象上直接传入。<br>但第 2 种方式的缺点也比较明显，无法继承父类方法，不过对于层级比较简单的组件，缺点也不算太明显。</p>
+<h2 id="框架隔离"><a href="#框架隔离" class="headerlink" title="框架隔离"></a>框架隔离</h2><p>在实际开发中，我们通常不应该直接使用开发平台提供的原始组件构造器，原因如下：</p>
+<ol>
+<li>原始的组件类或者构造方法无法更改，如存在公共方法，只能在每个组件中各自添加。</li>
+<li>后续要引入第三方框架，就需要每个组件分别修改了。</li>
+</ol>
+<p>所以，较好的选择是在原始组件构造器与具体的组件之间，插入一个全局的公共构造器中间层，作为后续改进的一个缓冲区。</p>
+<p>中间层的基本原则是<strong>渐进增强，平稳回退</strong>，或者说，最好是<strong>无感的</strong>。具体表现就是：</p>
+<ol>
+<li><strong>调用形式不变</strong>。调用中间层的方式与调用原始构造器的方式没有区别，最好是连构造器的名称也不变。</li>
+<li><strong>逻辑结果不变</strong>。使用中间层的结果与直接原始构造器的结果没有业务逻辑上的差别，即不要在中间层添加专属于部分组件的业务逻辑。</li>
+</ol>
+<h2 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h2><p>对于<em>组件方法</em>的方式，由于所有的配置都是通过参数传入的，因此，我们可以这样来定义中间层：<em>拦截配置参数然后对其进行操作（增强、修改等等）</em>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">middleware = <span class="keyword">function</span>(<span class="params">option</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> option;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//具体组件</span></span><br><span class="line"><span class="title class_">Page</span>(<span class="title function_">middleware</span>(&#123;</span><br><span class="line">    <span class="title function_">onCreated</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">loadData</span>();</span><br><span class="line">    &#125;,</span><br><span class="line">    ...</span><br><span class="line">&#125;))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>可以在 middleware 函数操作 option。不过这种调用繁琐而迷惑，可以选择同时修改构造器，把 middleware 融入其中：</p>
+<ol>
+<li>直接替换（屏蔽）原始的组件方法。</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">oldPage = <span class="title class_">Page</span>;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Page</span> = <span class="keyword">function</span>(<span class="params">option</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">oldPage</span>(<span class="title function_">middleware</span>(option));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//具体组件</span></span><br><span class="line"><span class="title class_">Page</span>(&#123;</span><br><span class="line">    <span class="title function_">onCreated</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">loadData</span>();</span><br><span class="line">    &#125;,</span><br><span class="line">    ...</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>这种方式的好处太明显了——基本什么都不用改，在应用启动的时候完成替换就行。<br>缺点也很明显，安全性太低，如果某个第三方偷偷修改了 Page ，就可能导致安全隐患。<br>所以，一般框架都会禁止替换原始构造器。</p>
+<ol start="2">
+<li>包装原始的组件方法。</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">_Page = <span class="keyword">function</span>(<span class="params">option</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">Page</span>(<span class="title function_">middleware</span>(option));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//具体组件</span></span><br><span class="line"><span class="keyword">const</span> &#123;_Page&#125; = <span class="built_in">require</span>(<span class="string">&#x27;_Page&#x27;</span>);</span><br><span class="line"><span class="title function_">_Page</span>(&#123;</span><br><span class="line">    <span class="title function_">onCreated</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">loadData</span>();</span><br><span class="line">    &#125;,</span><br><span class="line">    ...</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果框架允许的话，可以进一步：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//具体组件</span></span><br><span class="line"><span class="keyword">const</span> &#123;_Page <span class="keyword">as</span> <span class="title class_">Page</span>&#125; = <span class="built_in">require</span>(<span class="string">&#x27;_Page&#x27;</span>);</span><br><span class="line"><span class="title class_">Page</span>(&#123;</span><br><span class="line">    <span class="title function_">onCreated</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">loadData</span>();</span><br><span class="line">    &#125;,</span><br><span class="line">    ...</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>以此减轻修改负担。</p>
+<p>对于 <em>组件类</em> 的方式，我们可以这样来定义中间层：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BasePage</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Page</span>()&#123;</span><br><span class="line">    <span class="title function_">onCreated</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">before</span>();</span><br><span class="line">        <span class="variable language_">super</span>.<span class="title function_">onCreated</span>();</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">after</span>();</span><br><span class="line">    &#125;,</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//具体组件</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">PageA</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Page</span>()&#123;</span><br><span class="line">    <span class="title function_">onCreated</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="variable language_">super</span>.<span class="title function_">onCreated</span>();</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">loadData</span>();</span><br><span class="line">    &#125;,</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于那些类似 Java 约束较多的语言，这种方式比较直观。当然，通过注解也一定可以：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//具体组件</span></span><br><span class="line"><span class="meta">@BasePage</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">PageA</span> <span class="keyword">extends</span> <span class="title class_">Page</span>()&#123;</span><br><span class="line">    onCreated()&#123;</span><br><span class="line">        <span class="built_in">super</span>.onCreated();</span><br><span class="line">        <span class="built_in">this</span>.loadData();</span><br><span class="line">    &#125;,</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>以上是内部新人培训记录，实际上，相同功能的第三方框架很多，但是我都不太喜欢，不喜欢的原因主要可以概括为：</p>
+<ol>
+<li>侵入性太强。比如重新定义了一套构造方式，强迫开发者去适应第三方框架的思路。</li>
+<li>需要编译工具支持，特别是通过代码生成方式来实现的工具，调试起来相当麻烦。</li>
+<li>最重要的原因，第三方框架更新不及时，无法支持开发平台的新特性，而且第三方框架动不动就黄了！</li>
+</ol>
+<p>我的意思也并不是鼓励造轮子，而是要谨慎选择一个框架。<br>在打算使用择框架之前，<em>先问目的</em>，在选择框架的时候，<em>谨慎取舍</em>。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2021/01/01/introspection/2021-01-01-introspection-1/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/computer/" title="computer">
+                        <b>#</b> computer
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/computer/" title="computer">
+                        #computer
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2021/03/04/computer/2020-03-05-node-monorepo/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF%E4%BB%8B%E7%BB%8D"><span class="toc-text">背景介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A1%86%E6%9E%B6%E9%9A%94%E7%A6%BB"><span class="toc-text">框架隔离</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="toc-text">实现方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AF%AD"><span class="toc-text">结语</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

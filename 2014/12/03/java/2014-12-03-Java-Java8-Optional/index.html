@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Java8 Optional 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Java8 Optional</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/java/" title="java">
+                    <b>#</b> java
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/java/" title="java">
+                    #java
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>按照字面意思的理解，应该可选的意思。一开始我还以为是类似python里面的默认参数用法呢，结果语义是指某个值可能有也可能没有（null）。<br>感觉名字取得不是很直观。。我觉得叫Nullable不是更好？</p>
+<p>python： </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">fn</span>(<span class="params">a=<span class="string">&#x27;default_value&#x27;</span></span>):</span><br><span class="line">    <span class="built_in">print</span>(a)</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<h2 id="Optional方法"><a href="#Optional方法" class="headerlink" title="Optional方法"></a>Optional方法</h2><p>Optional没有公开的构造方法，只有静态工厂方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">    Optional&lt;String&gt; optional_2 = Optional.of(str); <span class="comment">// 如果str == null，抛出错误NullPointerException</span></span><br><span class="line">    Optional&lt;String&gt; optional = Optional.ofNullable(str); <span class="comment">// 如果str == null，返回一个空Optional&lt;String&gt;</span></span><br><span class="line">    Optional.&lt;String&gt;empty(); <span class="comment">// 返回一个空Optional&lt;String&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="type">String</span> <span class="variable">s</span> <span class="operator">=</span> optional.get(); <span class="comment">//获取被包装的值</span></span><br><span class="line">    optional.ifPresent((value) -&gt; System.out.println(<span class="string">&quot;hello&quot;</span>)); <span class="comment">// 如果optional的value不是null，则执行函数表达式</span></span><br><span class="line"></span><br><span class="line">    optional.orElse(<span class="string">&quot;elseValue&quot;</span>); <span class="comment">// 如果optional的value为null，则返回&quot;elseValue&quot;</span></span><br><span class="line">    optional.orElseGet(() -&gt; <span class="string">&quot;orElseGet&quot;</span>); <span class="comment">// 如果optional的value不是null，则返回函数表达式的执行结果</span></span><br><span class="line">    optional.orElseThrow(RuntimeException::<span class="keyword">new</span>); <span class="comment">// 如果optional的value不是null，则抛出错误</span></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    optional.filter((value) -&gt; value.length() == <span class="number">5</span>); <span class="comment">// 过滤得到长度等于5的value</span></span><br><span class="line">    </span><br><span class="line">     optional.map((value) -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;map:&quot;</span> + value);</span><br><span class="line">        <span class="keyword">return</span> value;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    optional.flatMap((value) -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;flatMap:&quot;</span> + value);</span><br><span class="line">        <span class="keyword">return</span> Optional.ofNullable(value);</span><br><span class="line">    &#125;);</span><br><span class="line">```    </span><br><span class="line"></span><br><span class="line">### map 与 flatMap 的区别</span><br><span class="line"></span><br><span class="line">map(mapper) 与 flatMap(mapper) 功能上基本是一样的，只是最后的返回值不一样。map(mapper)方法里面的mapper可以返回任意类型，但是flatMap(mapper)方法里面的只能返回Optional类型。</span><br><span class="line"></span><br><span class="line">如果mapper返回结果result的不是<span class="literal">null</span>，那么map就会返回一个Optional&lt;Object&gt;,但是 flatMap 不会对result进行任何包装。一个常见的例子：</span><br><span class="line"></span><br><span class="line">```java</span><br><span class="line">    Optional&lt;String&gt; os;</span><br><span class="line">    os.map((value)-&gt;Optional.of(value)) <span class="comment">//返回的类型是Optional&lt;Optional&lt;String&gt;&gt;</span></span><br><span class="line">    os.flatMap((value)-&gt;Optional.of(value)) <span class="comment">//返回的类型是Optional&lt;String&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Optional的好处"><a href="#Optional的好处" class="headerlink" title="Optional的好处"></a>Optional的好处</h2><ol>
+<li><p>显式的提醒你需要关注null的情况，对程序员是一种字面上的约束</p>
+</li>
+<li><p>将平时的一些显式的防御性检测给标准化了，并提供一些可串联操作</p>
+</li>
+<li><p>解决一下null会导致疑惑的概念，比如Map里面的key&#x3D;&#x3D;null的情况，以及value&#x3D;&#x3D;null的情况</p>
+</li>
+</ol>
+<h2 id="小节"><a href="#小节" class="headerlink" title="小节"></a>小节</h2><p>不过Optional一下子有这么多方法，Optional的初衷是什么？而且Optional也是一个对象，所以它本身也有可能是null，这可如何是好。</p>
+<p>所以，有个观点认为，Optional比较适用的地方是作为返回值，这样可以给使用者一个善意的提醒。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="http://www.javacodegeeks.com/2013/09/deep-dive-into-optional-class-api-in-java-8.html">http://www.javacodegeeks.com/2013/09/deep-dive-into-optional-class-api-in-java-8.html</a></li>
+<li><a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/9561295/whats-the-point-of-guavas-optional-class">What’s the point of Guava’s Optional class</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.nurkiewicz.com/2013/08/optional-in-java-8-cheat-sheet.html">http://www.nurkiewicz.com/2013/08/optional-in-java-8-cheat-sheet.html</a></li>
+</ol>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2014/12/02/android/2014/2014-12-02-Android-RecyclerView/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/java/" title="java">
+                        <b>#</b> java
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/java/" title="java">
+                        #java
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2014/12/04/android/2014/2014-12-04-Android-ListPopupWindow/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Optional%E6%96%B9%E6%B3%95"><span class="toc-text">Optional方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Optional%E7%9A%84%E5%A5%BD%E5%A4%84"><span class="toc-text">Optional的好处</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E8%8A%82"><span class="toc-text">小节</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

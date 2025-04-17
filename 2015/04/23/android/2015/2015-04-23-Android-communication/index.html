@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Android 组件通信模式 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Android 组件通信模式</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/android/" title="android">
+                    <b>#</b> android
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/android/" title="android">
+                    #android
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>本文对原文进行了精简</p>
+<p>原文链接:<a target="_blank" rel="noopener" href="http://vinsol.com/blog/2014/11/04/communication-patterns-for-application-components/">Communication patterns for application components</a></p>
+<h2 id="紧耦合"><a href="#紧耦合" class="headerlink" title="紧耦合"></a>紧耦合</h2><p>组件之间相互持有引用,以及直接调用方法.在下面的代码中,MenuFragment持有MagazineActivity的直接引用,因此, MenuFragment 就与 MagazineActivity紧耦合了.<br>一旦没有了MagazineActivity,就无法工作了.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 紧耦合示例</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MenuFragment</span> <span class="keyword">extends</span> <span class="title class_">Fragment</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">onArticleClick</span><span class="params">(<span class="type">int</span> articleId)</span> &#123;</span><br><span class="line">        <span class="type">MagazineActivity</span> <span class="variable">magAct</span> <span class="operator">=</span> (MagazineActivity) getActivity();</span><br><span class="line">        magAct.showArticle(articleId);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这样的设计中,一个类的修改可能会影响到一大波相关的类,如果开发中还涉及到多个开发人员,那么这种情况带来的只会是痛苦和悲哀..</p>
+<p>松耦合的核心就是一种减少组件之间的依赖关系,一个松耦合系统可以很方便的分解为良构的元素.这样就使得系统更具有弹性与扩展性.<br>每个开发人员可以维护一个单独的模块,并使用标准的协议与其他部分通信.</p>
+<h2 id="常规解耦方式-接口"><a href="#常规解耦方式-接口" class="headerlink" title="常规解耦方式:接口"></a>常规解耦方式:接口</h2><p>(个人补充:接口并不是单纯指代的java里面的interface关键字,而是指的一种消息规范&#x2F;协议)<br>接口是一个强大的解耦工具:类可以通过接口进行通信,而不必要直接引用另一个具体类.一个类可以向外提供一个接口供其他类与之通信.在这个抽象层上,其他类不用关心具体的实现是什么.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//接口示例</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MenuFragment</span> <span class="keyword">extends</span> <span class="title class_">Fragment</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> MenuFragment <span class="title function_">instantiate</span><span class="params">(ArticleSwitcher articleSwitcher)</span> &#123;</span><br><span class="line">        <span class="type">MenuFragment</span> <span class="variable">menuFragment</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MenuFragment</span>();</span><br><span class="line">        menuFragment.articleSwitcher = articleSwitcher;</span><br><span class="line">        <span class="keyword">return</span> menuFragment;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ArticleSwitcher articleSwitcher;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onArticleClick</span><span class="params">(<span class="type">int</span> articleId)</span> &#123;</span><br><span class="line">	    articleSwitcher.showArticle(articleId);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用接口的缺点:</p>
+<ol>
+<li>组件之间还是需要相互了解以传递接口,部分依赖依旧存在</li>
+<li>接口不能通过intent传递</li>
+<li>在大项目中,接口数量会急剧增加,导致大量的模板代码</li>
+<li>当接口在组件之间传递时会形成接口链,导致复杂度上升</li>
+</ol>
+<h2 id="优雅解决方案-消息总线"><a href="#优雅解决方案-消息总线" class="headerlink" title="优雅解决方案:消息总线"></a>优雅解决方案:消息总线</h2><p>基于发布&#x2F;订阅者模式的通信方案.发布者发布一个通知,订阅者得到通知并做出反应,因此,发布者和订阅者之间就实现了解耦.</p>
+<h2 id="实现消息总线"><a href="#实现消息总线" class="headerlink" title="实现消息总线"></a>实现消息总线</h2><h3 id="隐式intent-BroadcastReceiver"><a href="#隐式intent-BroadcastReceiver" class="headerlink" title="隐式intent + BroadcastReceiver"></a>隐式intent + BroadcastReceiver</h3><p>通过隐式Intent的通信可以看作是消息队列的一种形式:<br>sendBroadcast(Intent) 或者 startActivity(Intent)是发布者方法,含有相应IntentFilter的BroadcastReceiver 或者 Activity则扮演订阅者的角色.</p>
+<p>优点与缺点</p>
+<p>优点:可以跨应用传递,也是Android里面的标准方法</p>
+<p>缺点:无法传递复杂数据,必须通过bundle来传递</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/alexvasilkov/fluffy-events">FluffyEvents</a> 就是一个通过 BroadcastReceiver 实现的消息总线.</p>
+<h3 id="EventBus-基于事件的消息总线"><a href="#EventBus-基于事件的消息总线" class="headerlink" title="EventBus: 基于事件的消息总线"></a>EventBus: 基于事件的消息总线</h3><p>(“事件”本身也是一种消息,原理还是订阅&#x2F;发布者模式)</p>
+<p>事件本身可以是任何java类,如下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 一个示例事件类</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DownloadProgressEvent</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">float</span> progress;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">DownloadProgressEvent</span><span class="params">(<span class="type">float</span> progress)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.progress = progress;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">float</span> <span class="title function_">getProgress</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> progress;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="EventBus-大致原理"><a href="#EventBus-大致原理" class="headerlink" title="EventBus: 大致原理"></a>EventBus: 大致原理</h4><p>EventBus使用合适的数据结构来维持事件以及订阅者的对应关系,比如Otto使用的方式:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** Cache event bus subscriber methods for each class. */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Map&lt;Class&lt;?&gt;, Map&lt;EventClass, Set&gt;&gt; SUBSCRIBERS_CACHE = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;Class&lt;?&gt;, Map&lt;EventClass, Set&gt;&gt;();</span><br></pre></td></tr></table></figure>
+
+<p>每当有订阅者注册或者注销的时候,都会同时更新相应的对应关系,通常,Activity 或者 Fragment会在onResume阶段进行注册,在onPause阶段进行注销.(译者注:可以减少内存泄露的问题)</p>
+<p>每当有事件发布的时候,EventBus遍历整个对应关系,找到所有符合条件的订阅者方法并执行.</p>
+<h4 id="Sticky-Event"><a href="#Sticky-Event" class="headerlink" title="Sticky Event"></a>Sticky Event</h4><p>类似Android原生的StickyBroadcast,使得一个订阅者在任何时候注册都可以获得这个事件.</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>由于EventBus并不是Android的内在机制,因此无法跨应用传递事件.</p>
+<p>比较常用的两个EventBus开源类库:</p>
+<p><a target="_blank" rel="noopener" href="http://square.github.io/otto/">Square’s Otto</a>:基于注解,在Guava EventBus基础上针对Android平台进行了优化</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/greenrobot/EventBus">GreenRobot’s EventBus</a>:更好的线程分发机制.</p>
+<p>(译者注: EventBus比较适合组件之间的解耦, 而接口是一个更抽象的概念,还可以用在view或者其他方面)</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2015/04/11/android/2015/2015-04-11-Android-UI-vars/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/android/" title="android">
+                        <b>#</b> android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/android/" title="android">
+                        #android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2015/04/26/java/2015-04-26-Java-how-to-eventbus/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B4%A7%E8%80%A6%E5%90%88"><span class="toc-text">紧耦合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%84%E8%A7%A3%E8%80%A6%E6%96%B9%E5%BC%8F-%E6%8E%A5%E5%8F%A3"><span class="toc-text">常规解耦方式:接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E9%9B%85%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-%E6%B6%88%E6%81%AF%E6%80%BB%E7%BA%BF"><span class="toc-text">优雅解决方案:消息总线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E6%B6%88%E6%81%AF%E6%80%BB%E7%BA%BF"><span class="toc-text">实现消息总线</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9A%90%E5%BC%8Fintent-BroadcastReceiver"><span class="toc-text">隐式intent + BroadcastReceiver</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#EventBus-%E5%9F%BA%E4%BA%8E%E4%BA%8B%E4%BB%B6%E7%9A%84%E6%B6%88%E6%81%AF%E6%80%BB%E7%BA%BF"><span class="toc-text">EventBus: 基于事件的消息总线</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#EventBus-%E5%A4%A7%E8%87%B4%E5%8E%9F%E7%90%86"><span class="toc-text">EventBus: 大致原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Sticky-Event"><span class="toc-text">Sticky Event</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

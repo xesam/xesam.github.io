@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      客户端产品重要的事 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">客户端产品重要的事</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/talk/" title="talk">
+                    <b>#</b> talk
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/talk/" title="talk">
+                    #talk
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>本人所经历的产品主要面向移动 C 端用户，同时产品对外提供各种应用级别的开放服务。</p>
+<p>本文只是个人的经验记录，以下所有内容——非参考，非规范，非权威。</p>
+<h3 id="最最重要的方面"><a href="#最最重要的方面" class="headerlink" title="最最重要的方面"></a>最最重要的方面</h3><p>对 C&#x2F;S 形式的产品来说，最最最最最重要的事，就是</p>
+<h5 id="版本升级机制！"><a href="#版本升级机制！" class="headerlink" title="版本升级机制！"></a>版本升级机制！</h5><p>最初我们都没有任何经验，因此一开始谁都没有在乎这一点，直到后面碰到各种问题特别是接口被盗取的时候，才开始认真考虑。</p>
+<p>产品本身对版本升级应该支持的内容包括：</p>
+<ol>
+<li>自主可控的升级提示和升级渠道。对于iOS这种无法控制渠道的，也应在应用内保留完整的升级提示机制，并提供打开升级AppStore的快捷方式。</li>
+<li>对于因版本问题引发的产品问题，一定要给用户强反馈，并引导用户升级。比如，如果由于接口安全升级导致用户无法查询，那么在检测到接口数据的特定标志后，应该给用户一个弹框，告知具体原因并引导升级。</li>
+</ol>
+<h3 id="重要的方面"><a href="#重要的方面" class="headerlink" title="重要的方面"></a>重要的方面</h3><h5 id="1-用户体系"><a href="#1-用户体系" class="headerlink" title="1. 用户体系"></a>1. 用户体系</h5><p>产品开始的第一天，就应该确定下来产品的用户访问模式，一个产品可以选择支持游客模式或者注册模式，或者两者都支持，典型代表：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>游客模式</th>
+<th>注册模式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>今日头条</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>微信</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+</tbody></table>
+<p>需要指出的是，如果产品一开始只支持游客模式而不支持注册模式，那么在引入注册模式之前，尽量不要做任何带有用户成长性质的活动。同一个用户从游客模式转化到注册模式的时候，数据合并策略也应该想清楚衔接方案，保持平稳过渡。</p>
+<p>如果选择了注册模式，一定要考虑跨平台的迁移问题。</p>
+<h5 id="唯一入口"><a href="#唯一入口" class="headerlink" title="唯一入口"></a>唯一入口</h5><p>对于对外开放服务的应用，需要坚持的原则：</p>
+<ol>
+<li>保持对外沟通的入口与协议的唯一性</li>
+<li>对外提供的协议应屏蔽任何功能的实现细节</li>
+<li>禁止任何第三方应用绕开入口或使用非标准协议访问产品功能</li>
+</ol>
+<h4 id="次要的方面"><a href="#次要的方面" class="headerlink" title="次要的方面"></a>次要的方面</h4><p>次要的方面不是核心问题，但在前期也比较重要。不过这些方面通常有其他方式可以实现基本功能，只有在这些方式确实不满足需求的时期，才需要考虑自行设计实现方案。</p>
+<p>原则：做得差的实现，比不做影响更恶劣。</p>
+<h5 id="数据统计"><a href="#数据统计" class="headerlink" title="数据统计"></a>数据统计</h5><p>统计数据的方式大致有：</p>
+<ol>
+<li>后台请求数据</li>
+<li>应用市场的后台数据</li>
+<li>服务商的后台数据</li>
+<li>第三方统计SDK</li>
+</ol>
+<h5 id="用户反馈"><a href="#用户反馈" class="headerlink" title="用户反馈"></a>用户反馈</h5><p>获取用户反馈的方式大致有：</p>
+<ol>
+<li>应用市场的评论</li>
+<li>服务商的后台</li>
+<li>微博、贴吧等大众论坛</li>
+<li>用户的主动反馈</li>
+<li>运营的用户访谈</li>
+</ol>
+<h5 id="用户分享"><a href="#用户分享" class="headerlink" title="用户分享"></a>用户分享</h5><p>与“用户反馈”类似</p>
+<h5 id="账号管理"><a href="#账号管理" class="headerlink" title="账号管理"></a>账号管理</h5><p>现在基本上所有认证都是通过手机，所以一些重要的认证信息，绑定的手机号有两种选择：</p>
+<ol>
+<li>全部使用创始人的手机</li>
+<li>新办理一个手机号挂在创始人名下，专门用于账号认证</li>
+</ol>
+<h3 id="前期不重要的方面"><a href="#前期不重要的方面" class="headerlink" title="前期不重要的方面"></a>前期不重要的方面</h3><p>只要产品实现度完成了核心功能，并且没有bug，其他方面都暂不重要。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2019/09/01/product/2019-09-01-ad-sys-1/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/talk/" title="talk">
+                        <b>#</b> talk
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/talk/" title="talk">
+                        #talk
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2019/12/01/product/2019-12-01-ad-sys-2/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E6%9C%80%E9%87%8D%E8%A6%81%E7%9A%84%E6%96%B9%E9%9D%A2"><span class="toc-text">最最重要的方面</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7%E6%9C%BA%E5%88%B6%EF%BC%81"><span class="toc-text">版本升级机制！</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E8%A6%81%E7%9A%84%E6%96%B9%E9%9D%A2"><span class="toc-text">重要的方面</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-%E7%94%A8%E6%88%B7%E4%BD%93%E7%B3%BB"><span class="toc-text">1. 用户体系</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%94%AF%E4%B8%80%E5%85%A5%E5%8F%A3"><span class="toc-text">唯一入口</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AC%A1%E8%A6%81%E7%9A%84%E6%96%B9%E9%9D%A2"><span class="toc-text">次要的方面</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1"><span class="toc-text">数据统计</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E5%8F%8D%E9%A6%88"><span class="toc-text">用户反馈</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E5%88%86%E4%BA%AB"><span class="toc-text">用户分享</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%B4%A6%E5%8F%B7%E7%AE%A1%E7%90%86"><span class="toc-text">账号管理</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E6%9C%9F%E4%B8%8D%E9%87%8D%E8%A6%81%E7%9A%84%E6%96%B9%E9%9D%A2"><span class="toc-text">前期不重要的方面</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

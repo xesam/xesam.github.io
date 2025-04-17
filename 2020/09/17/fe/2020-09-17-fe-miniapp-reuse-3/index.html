@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      小程序复用-函数构造器 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">小程序复用-函数构造器</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/fe/" title="fe">
+                    <b>#</b> fe
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/fe/" title="fe">
+                    #fe
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>小程序App、Page 和 Component 是通过函数调用的方式来实现创建的，通过函数参数 option 来定义数据和行为，通过 Behavior 来实现复用。<br>但是在抽象组件的时候，会面临几个问题：</p>
+<ol>
+<li>小程序没有继承体系。</li>
+<li>部分 option 的属性无法通过 Behavior 来组合&#x2F;混入。</li>
+</ol>
+<span id="more"></span>
+
+<p><strong>没有继承体系</strong>导致的问题是自定义组件难以扩展。</p>
+<p>比如我们使用了一个第三方的组件，如果对方没有提供完全满足需求的 properties，那使用者就只能把源码复制过来，然后修改源码。<br>但是更理想的方式是我们能直接继承第三方组件，然后扩展它的自定义 properties、覆盖默认行为以及增加新的方法。</p>
+<p>而且，大部分时候，我们已经定义了一部分组件，自然希望在不修改已有组件的情况下，能够支持继承。</p>
+<p><strong>无法通过 Behavior 来组合&#x2F;混入</strong>的一个典型例子就是 externalClasses ，这个属性只对当前组件有效，无法继承。一个示例（以下代码不可运行，仅做说明）：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Parent</span> = <span class="title class_">Component</span>(&#123;<span class="attr">externalClasses</span>:[<span class="string">&#x27;common-class&#x27;</span>]&#125;);</span><br><span class="line"></span><br><span class="line"><span class="title class_">Child</span> <span class="keyword">extends</span> <span class="title class_">Parent</span>；</span><br></pre></td></tr></table></figure>
+<p>我们期望的是 Child 能够支持 externalClasses:[‘common-class’]，但实际上并没有这种内置支持。<br>当然，小程序团队有自己的考虑，不过我们完全可以自己来实现这一套逻辑。</p>
+<p>实现的原则：</p>
+<ol>
+<li>不改变小程序的调用方式。</li>
+<li>不改变小程序的字段定义与原有逻辑。</li>
+</ol>
+<h4 id="不改变小程序的调用方式"><a href="#不改变小程序的调用方式" class="headerlink" title="不改变小程序的调用方式"></a>不改变小程序的调用方式</h4><p>这条原则的意思是，原本小程序是这样的调用方式：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Component</span>(&#123;</span><br><span class="line">    <span class="attr">properties</span>:&#123;&#125;,</span><br><span class="line">    <span class="attr">data</span>:&#123;&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>增强之后也沿用类似的调用：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123;_Component <span class="keyword">as</span> <span class="title class_">Component</span>&#125; = <span class="built_in">require</span>(<span class="string">&#x27;xxxx&#x27;</span>);</span><br><span class="line"><span class="title class_">Component</span>(&#123;</span><br><span class="line">    <span class="attr">properties</span>:&#123;&#125;,</span><br><span class="line">    <span class="attr">data</span>:&#123;&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>但是有部分框架却采取自定义一套写法的方案，比如同样实现上述调用，需要这么写：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123;<span class="title class_">NiubiComponent</span>&#125; = <span class="built_in">require</span>(<span class="string">&#x27;xxxx&#x27;</span>);</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">NiubiComponent</span>(&#123;</span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">properties</span> = &#123;&#125;;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">data</span> = &#123;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>这么些确实更适合表达意图，要是这个框架一直维护还好，如果一旦烂尾了，以后想升级或者想移除框架，要修改的内容可就不止一丁半点了，所以，我个人非常不建议在一个长期项目中使用这类框架，完美印证“开发一时爽，维护火葬场”。</p>
+<h4 id="不改变小程序的字段定义与原有逻辑"><a href="#不改变小程序的字段定义与原有逻辑" class="headerlink" title="不改变小程序的字段定义与原有逻辑"></a>不改变小程序的字段定义与原有逻辑</h4><p>这个原则的意思就是不在框架中引入会被使用者引用的“元数据”，比如有的框架会引入 state 字段来管理状态。其次，也不改变小程序原有的复用逻辑（比如 behaviours 的优先级顺序），否则会误导使用者，也会导致应用与框架的强耦合，由于小程序框架迭代较快，这种耦合越紧，就越拉跨。</p>
+<h3 id="一个实现案例"><a href="#一个实现案例" class="headerlink" title="一个实现案例"></a>一个实现案例</h3><p>基于这个原则，提供了一个实现案例：<a target="_blank" rel="noopener" href="https://github.com/miniapp-develop/view-support">view-support</a></p>
+<p>使用示例</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123;presets&#125; = <span class="built_in">require</span>(<span class="string">&quot;@mini-dev/view-support&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//定义父组件</span></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">ParentComponent</span> = presets.<span class="title class_">Component</span>(&#123;</span><br><span class="line">    <span class="attr">externalClasses</span>: [<span class="string">&#x27;parent-class&#x27;</span>],</span><br><span class="line">    <span class="attr">options</span>: &#123;</span><br><span class="line">        <span class="attr">styleIsolation</span>: <span class="string">&#x27;isolated&#x27;</span>,</span><br><span class="line">        <span class="attr">multipleSlots</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="attr">pureDataPattern</span>: <span class="regexp">/^_mini/</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//定义子组件</span></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">ChildComponent</span> = presets.<span class="title class_">Component</span>(&#123;</span><br><span class="line">    <span class="attr">externalClasses</span>: [<span class="string">&#x27;child-class&#x27;</span>],</span><br><span class="line">&#125;, <span class="title class_">ParentComponent</span>); <span class="comment">// 会继承 ParentComponent 的配置、属性和行为</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>页面中调用，最终应用的 externalClasses 为 [‘parent-class’, ‘child-class’, ‘option-class’]</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">ChildComponent</span> = <span class="built_in">require</span>(<span class="string">&quot;ChildComponent&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="title class_">ChildComponent</span>(&#123;</span><br><span class="line">    <span class="attr">externalClasses</span>: [<span class="string">&#x27;option-class&#x27;</span>], </span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果已经有成熟的标准组件（按照小程序官方框架定义的），也可以直接复用：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">ChildComponent</span> = <span class="built_in">require</span>(<span class="string">&quot;ChildComponent&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="title class_">ChildComponent</span>(&#123;</span><br><span class="line">    <span class="attr">externalClasses</span>: [<span class="string">&#x27;option-class&#x27;</span>], </span><br><span class="line">&#125;, <span class="title class_">ExistComponent</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="相关链接"><a href="#相关链接" class="headerlink" title="相关链接"></a>相关链接</h3><ol>
+<li><a href="/fe-miniapp-reuse/">小程序复用</a></li>
+<li><a href="/fe-miniapp-reuse-2/">小程序复用-Behavior</a></li>
+<li><a href="/fe-miniapp-reuse-3/">小程序复用-函数构造器</a></li>
+</ol>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2020/09/15/fe/2020-09-15-fe-miniapp-reuse/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/fe/" title="fe">
+                        <b>#</b> fe
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/fe/" title="fe">
+                        #fe
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2021/01/01/introspection/2021-01-01-introspection-1/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E6%94%B9%E5%8F%98%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%B0%83%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-text">不改变小程序的调用方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E6%94%B9%E5%8F%98%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%AD%97%E6%AE%B5%E5%AE%9A%E4%B9%89%E4%B8%8E%E5%8E%9F%E6%9C%89%E9%80%BB%E8%BE%91"><span class="toc-text">不改变小程序的字段定义与原有逻辑</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%B8%AA%E5%AE%9E%E7%8E%B0%E6%A1%88%E4%BE%8B"><span class="toc-text">一个实现案例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E9%93%BE%E6%8E%A5"><span class="toc-text">相关链接</span></a>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

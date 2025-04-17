@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Numpy Broadcasting 机制 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Numpy Broadcasting 机制</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/computer/" title="computer">
+                    <b>#</b> computer
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/computer/" title="computer">
+                    #computer
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>首先需要明确的是，ndarray 在执行 element-wise （比如四则运算）的时候才会进行广播（Broadcasting），而 numpy 中 element-wise 的要求是 shape (形状)匹配。</p>
+<span id="more"></span>
+
+<p>即</p>
+<pre><code>narrayA.shape == narrayB.shape 为 True
+</code></pre>
+<p>换句话说就是执行运算的 ndarray 轴数（维度）相同，并且每个轴的长度相等。</p>
+<p>Broadcasting 的逻辑流程：</p>
+<ol>
+<li>如果两个 ndarray 的轴数目不同，则将轴数较小的数组扩展到与轴数较大数组的轴数一致。即扩展 shape 的长度，扩展方式是通过在 shape 左端补 1 直到维度相等。</li>
+<li>从最后一根轴开始，依次比较每根轴的长度。<br>（1）如果当前轴的长度不相等，并且其中较短轴的长度等于 1，则将此轴的长度扩展至与较长轴的长度一致，并用此轴上的第一组数据填充扩展出来的其他部分。<br>（2）如果其中较短轴的长度不等于 1，则抛出错误。</li>
+</ol>
+<p>以上是运算逻辑，并不代表 Numpy 在执行过程中进行了实际的内存分配。</p>
+<p>一个例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">a = np.arange(<span class="number">4</span>).reshape((<span class="number">4</span>,<span class="number">1</span>))</span><br><span class="line">b = np.arange(<span class="number">4</span>)</span><br><span class="line">a + b</span><br></pre></td></tr></table></figure>
+
+<p>a:</p>
+<pre><code>array([[0],
+      [1],
+      [2],
+      [3]])
+</code></pre>
+<p>b:</p>
+<pre><code>array([0, 1, 2, 3])
+</code></pre>
+<p>此时，a.shape 为 (4,1)，b.shape 为 (4,)，很明显 shape 不一致，所以我们先让两者的轴数相等，扩展 b：</p>
+<p>b:</p>
+<pre><code>array([[0, 1, 2, 3]])
+</code></pre>
+<p>此时，a.shape 为 (4,1)，b.shape 为 (1,4)</p>
+<p>从后往前依次处理每根轴，a 的最后一个轴长度小为 1，b 的最后一个轴长度为 4，两者不相等并且，因此需要将 a 的轴长度扩展，并用轴上的第一个值填充扩展出来的部分，扩展 a:</p>
+<p>a：</p>
+<pre><code>array([[0,0,0,0],
+      [1,1,1,1],
+      [2,2,2,2],
+      [3,3,3,3]])
+</code></pre>
+<p>此时，a.shape 为 (4,4)，b.shape 为 (1,4)，继续比较轴长度，扩展 b:</p>
+<p>b:</p>
+<pre><code>array([[0, 1, 2, 3],
+      [0, 1, 2, 3],
+      [0, 1, 2, 3],
+      [0, 1, 2, 3]])
+</code></pre>
+<p>此时，a.shape 为 (4,4)，b.shape 为 (4,4)，两者相等，可以进行运算：</p>
+<p>a + b</p>
+<pre><code>array([[0, 1, 2, 3],
+      [1, 2, 3, 4],
+      [2, 3, 4, 5],
+      [3, 4, 5, 6]])
+</code></pre>
+<p>  参考：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/python-broadcasting-with-numpy-arrays/">https://www.geeksforgeeks.org/python-broadcasting-with-numpy-arrays/</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">https://docs.scipy.org/doc/numpy/user/basics.broadcasting.html</a></li>
+</ol>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2020/01/04/computer/2020-01-04-numpy-array/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/computer/" title="computer">
+                        <b>#</b> computer
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/computer/" title="computer">
+                        #computer
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2020/03/04/computer/2020-03-04-javascript-lerna/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

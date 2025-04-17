@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      【Javascript】Prototype源码浅析—String部分(二) 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">【Javascript】Prototype源码浅析—String部分(二)</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/javascript/" title="javascript">
+                    <b>#</b> javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/javascript/" title="javascript">
+                    #javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>本文接着上面的String部分，继续下面表格的部分</p>
+<pre><code>格式	camelize | capitalize |  underscore |  dasherize  | inspect          
+变形	toArray |  succ  | times
+</code></pre>
+<p>这里面一个有用的方法是inspect，按照参考手册的说明，他的作用是“返回该字符串针对调试的字符串表现形式（即用单引号或双引号包括起来，并使用 ‘&#39; 对特殊字符进行转义）”，在Object的toJSON里面也涉及到这个方法。</p>
+<p>既然涉及到需要转义的字符，我们自然要一份转义字符信息，下面直接给出：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">String</span>.<span class="property">specialChar</span> = &#123;</span><br><span class="line">  <span class="string">&#x27;\b&#x27;</span>: <span class="string">&#x27;\\b&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;\t&#x27;</span>: <span class="string">&#x27;\\t&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;\n&#x27;</span>: <span class="string">&#x27;\\n&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;\f&#x27;</span>: <span class="string">&#x27;\\f&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;\r&#x27;</span>: <span class="string">&#x27;\\r&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;\\&#x27;</span>: <span class="string">&#x27;\\\\&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>【在JSON.js里面，多了一个’”‘，因为JSON里面string里面是不能出现”的，所以需要转义】</p>
+<p>第一步，当然是要替换特殊的转义字符，初始版本：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">inspect</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/[\b\t\n\f\r\\]/</span>,<span class="keyword">function</span>(<span class="params">a</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title class_">String</span>.<span class="property">specialChar</span>[a];</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于JSON形式来说，双引号是必须的，因此，我们应该可以选择自己的返回形式，所以，给inspect一个参数useDoubleQuotes，默认是用单引号返回字符串的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">inspect</span>(<span class="params">useDoubleQuotes</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> escapedString =  <span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/[\b\t\n\f\r\\]/</span>,<span class="keyword">function</span>(<span class="params">a</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title class_">String</span>.<span class="property">specialChar</span>[a];</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">if</span> (useDoubleQuotes)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;&quot;&#x27;</span> + escapedString.<span class="title function_">replace</span>(<span class="regexp">/&quot;/g</span>, <span class="string">&#x27;\\&quot;&#x27;</span>) + <span class="string">&#x27;&quot;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;&#x27;&quot;</span> + escapedString.<span class="title function_">replace</span>(<span class="regexp">/&#x27;/g</span>, <span class="string">&#x27;\\\&#x27;&#x27;</span>) + <span class="string">&quot;&#x27;&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在这跟源码中的功能差不多，不过Prototype源码中的实现方式并不是这样的，主要区别在于escapedString这一段。源码中直接列出来所有的控制字符，表示为[\x00-\x1f]，外加’&#39;就是[\x00-\x1f\]，因此改造上面的初始版本就是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">inspect</span>(<span class="params">useDoubleQuotes</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> escapedString = <span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/[\x00-\x1f\\]/g</span>, <span class="keyword">function</span>(<span class="params">character</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (character <span class="keyword">in</span> <span class="title class_">String</span>.<span class="property">specialChar</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="title class_">String</span>.<span class="property">specialChar</span>[character];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> character ;</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">if</span> (useDoubleQuotes) <span class="keyword">return</span> <span class="string">&#x27;&quot;&#x27;</span> + escapedString.<span class="title function_">replace</span>(<span class="regexp">/&quot;/g</span>, <span class="string">&#x27;\\&quot;&#x27;</span>) + <span class="string">&#x27;&quot;&#x27;</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;&#x27;&quot;</span> + escapedString.<span class="title function_">replace</span>(<span class="regexp">/&#x27;/g</span>, <span class="string">&#x27;\\\&#x27;&#x27;</span>) + <span class="string">&quot;&#x27;&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果发现除了String.specialChar中的字符，还有其他的控制字符，源码中也有一步处理，就是将控制字符转变为unicode的表示形式，因为这个方法本身就是要获得字符串的形式。</p>
+<p>比如垂直制表符’\v’。’\v’.inspect() –&gt;’\u000b’</p>
+<p>完整版本：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">inspect</span>(<span class="params">useDoubleQuotes</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> escapedString = <span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/[\x00-\x1f\\]/g</span>, <span class="keyword">function</span>(<span class="params">character</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (character <span class="keyword">in</span> <span class="title class_">String</span>.<span class="property">specialChar</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="title class_">String</span>.<span class="property">specialChar</span>[character];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;\\u00&#x27;</span> + character.<span class="title function_">charCodeAt</span>().<span class="title function_">toPaddedString</span>(<span class="number">2</span>, <span class="number">16</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">if</span> (useDoubleQuotes) <span class="keyword">return</span> <span class="string">&#x27;&quot;&#x27;</span> + escapedString.<span class="title function_">replace</span>(<span class="regexp">/&quot;/g</span>, <span class="string">&#x27;\\&quot;&#x27;</span>) + <span class="string">&#x27;&quot;&#x27;</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;&#x27;&quot;</span> + escapedString.<span class="title function_">replace</span>(<span class="regexp">/&#x27;/g</span>, <span class="string">&#x27;\\\&#x27;&#x27;</span>) + <span class="string">&quot;&#x27;&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中toPaddedString(length[, radix])将当前 Number 对象转换为字符串，如果转换后的字符串长度小于 length 指定的值，则用 0 在左边补足其余的位数。可选的参数 radix 用于指定转换时所使用的进制。这是Prototype中Number的一个扩展，暂时知道即可。</p>
+<p>因此’\v’.charCodeAt().toPaddedString(2, 16)就是将’\v’的字符编码转换成16进制的两位编码符[操作字符不会范围有限制，因此不会超出]，最后冠以’\u00’开头即可。</p>
+<p>方法说明：</p>
+<p>toArray：将字符串拆分为字符数组。</p>
+<p>succ：根据 Unicode 字母表转换字符串最后的字符为后续的字符</p>
+<p>times：将字符串重复。</p>
+<p>对应具体的实现也很简单，String部分的重要之处在于后面的脚本,JSON和替换处理，其他都是增强性质的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">toArray</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">split</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中split(‘’)就将字符串打撒为单个字符，并以数组形式返回，如果还要再增强，可以给一个参数给toArray来指定分隔符。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">toArray</span>(<span class="params">pattern</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">split</span>(pattern);</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(toArray.<span class="title function_">call</span>(<span class="string">&#x27;my name is xesam&#x27;</span>,<span class="string">&#x27; &#x27;</span>));<span class="comment">//[&quot;my&quot;, &quot;name&quot;, &quot;is&quot;, &quot;xesam&quot;]</span></span><br></pre></td></tr></table></figure>
+<p>就是对split的使用而已，不过源码中并没有这么做，因为并没有这个必要。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">succ</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">slice</span>(<span class="number">0</span>, <span class="variable language_">this</span>.<span class="property">length</span> - <span class="number">1</span>) + <span class="title class_">String</span>.<span class="title function_">fromCharCode</span>(<span class="variable language_">this</span>.<span class="title function_">charCodeAt</span>(<span class="variable language_">this</span>.<span class="property">length</span> - <span class="number">1</span>) + <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里主要的就是fromCharCode和charCodeAt方法的使用。从代码中也可以看出，两者的明显区别是fromCharCode是String的静态方法，而charCodeAt是字符串的方法（挂在String.prototype上面）。然后两者的作用正好相反，下面是<a href="http://www.w3school.com.cn给出的解释：">http://www.w3school.com.cn给出的解释：</a></p>
+<p>fromCharCode() 可接受一个指定的 Unicode 值，然后返回一个字符串。</p>
+<p>charCodeAt() 方法可返回指定位置的字符的 Unicode 编码。这个返回值是 0 - 65535 之间的整数。<br>具体到succ，以字符串‘hello xesam’为例，先获取除结尾字符外的所有字符‘hello xesa’，然后加上Unicode表中‘m’后面的一个字符‘n’，因此结果就是‘hello xesan’<br>以此为基础，我们要打印从‘a’到‘z’的所有字母，可以用以下的函数：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">printChar</span>(<span class="params">start,end</span>)&#123;  </span><br><span class="line">    <span class="keyword">var</span> s = (start + <span class="string">&#x27;&#x27;</span>).<span class="title function_">charCodeAt</span>()</span><br><span class="line">    <span class="keyword">var</span> e = (end + <span class="string">&#x27;&#x27;</span>).<span class="title function_">charCodeAt</span>();</span><br><span class="line">    <span class="keyword">if</span>(s &gt; e)&#123;</span><br><span class="line">        s = [e,e=s][<span class="number">0</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i = s ;i &lt;= e; i++)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">String</span>.<span class="title function_">fromCharCode</span>(i));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">printChar</span>(<span class="string">&#x27;a&#x27;</span>,<span class="string">&#x27;z&#x27;</span>);</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">times</span>(<span class="params">count</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> count &lt; <span class="number">1</span> ? <span class="string">&#x27;&#x27;</span> : <span class="keyword">new</span> <span class="title class_">Array</span>(count + <span class="number">1</span>).<span class="title function_">join</span>(<span class="variable language_">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>times作用是重复整个字符串，其主要思想就是将当前字符作为数组的连接符调用join来获得预期结果。当然用循环添加也可以，不过没这么简洁。</p>
+<p>如果要重复字符串里面的每个字符，可以用相同的思想：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">String</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">letterTimes</span> =  <span class="keyword">function</span>(<span class="params">count</span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> arr = [];</span><br><span class="line">    arr.<span class="property">length</span> = count + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/\w/g</span>,<span class="keyword">function</span>(<span class="params">a</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> arr.<span class="title function_">join</span>(a);</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;xesam&#x27;</span>.<span class="title function_">letterTimes</span>(<span class="number">3</span>));<span class="comment">//xxxeeesssaaammm</span></span><br></pre></td></tr></table></figure>
+
+<p>camelize | capitalize |  underscore |  dasherize这四个主要是关于变量名转换的。</p>
+<p>camelize ： 将一个用横线分隔的字符串转换为 Camel 形式</p>
+<p>capitalize ：将一个字符串的首字母转换为大写，其它的字母全部转为小写。</p>
+<p>underscore ：将一个 Camel 形式的字符串转换为以下划线（”_”）分隔的一系列单词。</p>
+<p>dasherize ：将字符串中的下划线全部替换为横线（”_” 替换为 “-“）。</p>
+<p>最明显的，可以用在CSS属性与DOM的style属性的相互转换中【class与float不属于此范畴】。对应到上面的方法中，将CSS属性转换为对应的DOM的style属性可以使用camelize 方法，但是反过来却没有这个方法，因此必须连续调用underscore -&gt; dasherize 方法才行。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">camelize</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/-+(.)?/g</span>, <span class="keyword">function</span>(<span class="params">match, chr</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> chr ? chr.<span class="title function_">toUpperCase</span>() : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>核心是replace方法的使用，其他挺简单，参见《浅析字符串的replace方法应用》</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">capitalize</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">charAt</span>(<span class="number">0</span>).<span class="title function_">toUpperCase</span>() + <span class="variable language_">this</span>.<span class="title function_">substring</span>(<span class="number">1</span>).<span class="title function_">toLowerCase</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里注意charAt（charAt() 方法可返回指定位置的字符。）与charCodeAt的区别就可以了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">underscore</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/::/g</span>, <span class="string">&#x27;/&#x27;</span>)</span><br><span class="line">             .<span class="title function_">replace</span>(<span class="regexp">/([A-Z]+)([A-Z][a-z])/g</span>, <span class="string">&#x27;$1_$2&#x27;</span>)</span><br><span class="line">             .<span class="title function_">replace</span>(<span class="regexp">/([a-z\d])([A-Z])/g</span>, <span class="string">&#x27;$1_$2&#x27;</span>)</span><br><span class="line">             .<span class="title function_">replace</span>(<span class="regexp">/-/g</span>, <span class="string">&#x27;_&#x27;</span>)</span><br><span class="line">             .<span class="title function_">toLowerCase</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>实例来说明步骤：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;helloWorld::ABCDefg&#x27;</span>.<span class="title function_">underscore</span>()</span><br><span class="line"><span class="comment">//&#x27;helloWorld::ABCDefg&#x27;</span></span><br><span class="line"></span><br><span class="line">.<span class="title function_">replace</span>(<span class="regexp">/::/g</span>, <span class="string">&#x27;/&#x27;</span>)                      <span class="comment">//&#x27;helloWorld/ABCDefg&#x27;</span></span><br><span class="line">.<span class="title function_">replace</span>(<span class="regexp">/([A-Z]+)([A-Z][a-z])/g</span>, <span class="string">&#x27;$1_$2&#x27;</span>)<span class="comment">//helloWorld/ABC_Defg</span></span><br><span class="line">.<span class="title function_">replace</span>(<span class="regexp">/([a-z\d])([A-Z])/g</span>, <span class="string">&#x27;$1_$2&#x27;</span>)    <span class="comment">//hello_World/ABC_Defg</span></span><br><span class="line">.<span class="title function_">replace</span>(<span class="regexp">/-/g</span>, <span class="string">&#x27;_&#x27;</span>)                       <span class="comment">//hello_World/ABC_Defg</span></span><br><span class="line">.<span class="title function_">toLowerCase</span>();                           <span class="comment">//hello_world/abc_defg</span></span><br></pre></td></tr></table></figure>
+<p>这个方法只适合Camel 形式的，就是得有‘峰’。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">dasherize</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/_/g</span>, <span class="string">&#x27;-&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个就是单纯的字符替换而已。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2012/01/10/javascript/2012-01-10-Javascript-Prototype-String-1-indexOf/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/javascript/" title="javascript">
+                        <b>#</b> javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/javascript/" title="javascript">
+                        #javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2012/01/12/javascript/2012-01-12-Javascript-url-params/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

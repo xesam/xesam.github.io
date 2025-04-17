@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      【Javascript】Sizzle引擎--原理与实践（四） 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">【Javascript】Sizzle引擎--原理与实践（四）</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/javascript/" title="javascript">
+                    <b>#</b> javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/javascript/" title="javascript">
+                    #javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>元素过滤是Sizzle中最复杂的一部分</p>
+<h2 id="基本形式"><a href="#基本形式" class="headerlink" title="基本形式"></a>基本形式</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Sizzle</span>.<span class="property">filter</span> = <span class="keyword">function</span>(<span class="params"> expr, set, inplace, not </span>) &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<pre><code>expr    过滤表达式
+set      候选集合
+inplace 是否原地修改
+not      是否取补集
+</code></pre>
+<p>说明：set传递的是一个集合(数组)，如果inplace为true，set会被修改；not的作用是用来取补集。还是用个例子来说明下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">li</span> <span class="attr">id</span>=<span class="string">&quot;a1&quot;</span> <span class="attr">class</span>=<span class="string">&quot;test&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">li</span> <span class="attr">id</span>=<span class="string">&quot;a2&quot;</span> <span class="attr">class</span>=<span class="string">&quot;test&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">li</span> <span class="attr">id</span>=<span class="string">&quot;a3&quot;</span> &gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>原始集合</p>
+<pre><code>set = [#a1,#a2,#a3]
+</code></pre>
+<p>(1)</p>
+<pre><code>filter(&#39;.test&#39;,set,true,false)
+--&gt;   result = [#a1,#a2]
+--&gt;   set    = [#a1,#a2]
+</code></pre>
+<p>(2)</p>
+<pre><code>filter(&#39;.test&#39;,set,false,false)
+--&gt;   result = [#a1,#a2]
+--&gt;   set    = [#a1,#a2,#a3]
+</code></pre>
+<p>(3)</p>
+<pre><code>filter(&#39;.test&#39;,set,true,true)
+--&gt;   result = [#a3]
+--&gt;   set    = [#a1,#a2]
+</code></pre>
+<p>(4)</p>
+<pre><code>filter(&#39;.test&#39;,set,false,true)
+--&gt;   result = [#a3]
+--&gt;   set    = [#a1,#a2,#a3]
+</code></pre>
+<h2 id="基本流程"><a href="#基本流程" class="headerlink" title="基本流程"></a>基本流程</h2><p>在前面的find中，我们获得了一个类似</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    expr : expr,</span><br><span class="line">    set  : set</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>的结果。其中，expr是过滤表达式，set是候选集合</p>
+<p>简要说一下Sizzle.filter的过程：</p>
+<p>第一步：过程和find差不多，提取expr中的过滤类型，相比find的类型，filter的类型有7种，分别是：</p>
+<pre><code>ID选择器，CLASS选择器，TAG选择器，ATTR属性选择器，CHILD子元素选择器，PSEUDO伪类选择器，POS位置选择器
+</code></pre>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">&#x27;ID&#x27;</span>,<span class="string">&#x27;TAG&#x27;</span>,<span class="string">&#x27;ATTR&#x27;</span>,<span class="string">&#x27;CHILD&#x27;</span>,<span class="string">&#x27;POS&#x27;</span>,<span class="string">&#x27;PSEUDO&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+<p>由于filter的情况太过复杂，所以，在执行最终的过滤之前，都会先执行一步预过滤，来统一调用。对应到源码中就是Expr.preFilter和Expr.filter</p>
+<p>第二步：预过滤</p>
+<p>第三步：最终过滤，true表示结果符合条件，false表示不符合</p>
+<p>第四步：去除expr中已经匹配的部分，重复上面的操作，知道expr全部完毕或者set为空</p>
+<p>因此，Sizzle.filter的大致代码流程是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Sizzle</span>.<span class="property">filter</span> = <span class="keyword">function</span>(<span class="params"> expr, set, inplace, not </span>) &#123;</span><br><span class="line">    <span class="keyword">while</span> ( expr &amp;&amp; set.<span class="property">length</span> ) &#123;</span><br><span class="line">        <span class="keyword">for</span> ( type <span class="keyword">in</span> <span class="title class_">Expr</span>.<span class="property">filter</span> ) &#123;</span><br><span class="line">            <span class="keyword">if</span> ( (match = <span class="title class_">Expr</span>.<span class="property">leftMatch</span>[ type ].<span class="title function_">exec</span>( expr )) != <span class="literal">null</span> &amp;&amp; match[<span class="number">2</span>] ) &#123; <span class="comment">//第一步</span></span><br><span class="line">                match = <span class="title class_">Expr</span>.<span class="property">preFilter</span>[ type ]( ? ); <span class="comment">//第二步</span></span><br><span class="line">                <span class="keyword">if</span> ( match ) &#123;</span><br><span class="line">                    found = <span class="title function_">filter</span>( ? );<span class="comment">//第三步</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> ( found !== <span class="literal">undefined</span> ) &#123;<span class="comment">//第四步</span></span><br><span class="line">                expr = expr.<span class="title function_">replace</span>( <span class="title class_">Expr</span>.<span class="property">match</span>[ type ], <span class="string">&quot;&quot;</span> );</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> curLoop;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实例说明</p>
+<p>沿用find部分的例子：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;radio&quot;</span> <span class="attr">id</span>=<span class="string">&quot;a&quot;</span> <span class="attr">name</span>=<span class="string">&quot;gender&quot;</span> <span class="attr">value</span>=<span class="string">&quot;man&quot;</span> <span class="attr">class</span>=<span class="string">&quot;default&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;a&quot;</span> &gt;</span>男<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;radio&quot;</span> <span class="attr">id</span>=<span class="string">&quot;b&quot;</span> <span class="attr">name</span>=<span class="string">&quot;gender&quot;</span> <span class="attr">value</span>=<span class="string">&quot;man&quot;</span> <span class="attr">class</span>=<span class="string">&quot;default&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;b&quot;</span>&gt;</span>女<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;checkbox&quot;</span> <span class="attr">id</span>=<span class="string">&quot;c&quot;</span> <span class="attr">name</span>=<span class="string">&quot;gender&quot;</span> <span class="attr">value</span>=<span class="string">&quot;man&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;c&quot;</span>&gt;</span>人妖<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在第一步的find中，我们获得的返回值是</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    expr : <span class="string">&#x27;[class*=&quot;default&quot;]&#x27;</span>,</span><br><span class="line">    set  : <span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">slice</span>.<span class="title function_">call</span>(<span class="variable language_">document</span>.<span class="title function_">getElementsByTagName</span>(<span class="string">&#x27;input&#x27;</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>filter的情况很多，因此单独抠出例子中用到的部分：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Expr</span> = &#123;</span><br><span class="line">        match : &#123;</span><br><span class="line">            <span class="variable constant_">ATTR</span> : <span class="regexp">/(^(?:.|\r|\n)*?)\[\s*((?:[\w\u00c0-\uFFFF\-]|\\.)+)\s*(?:(\S?=)\s*(?:([&#x27;&quot;])(.*?)\4|(#?(?:[\w\u00c0-\uFFFF\-]|\\.)*)|)|)\s*\](?![^\[]*\])(?![^\(]*\))/</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">attrMap</span>: &#123;  <span class="comment">//见讨论部分</span></span><br><span class="line">            <span class="string">&quot;class&quot;</span>: <span class="string">&quot;className&quot;</span>,</span><br><span class="line">            <span class="string">&quot;for&quot;</span>: <span class="string">&quot;htmlFor&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">attrHandle</span>: &#123;<span class="comment">//见讨论部分</span></span><br><span class="line">            <span class="attr">href</span>: <span class="keyword">function</span>(<span class="params"> elem </span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> elem.<span class="title function_">getAttribute</span>( <span class="string">&quot;href&quot;</span> );</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="attr">type</span>: <span class="keyword">function</span>(<span class="params"> elem </span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> elem.<span class="title function_">getAttribute</span>( <span class="string">&quot;type&quot;</span> );</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        preFilter : &#123;<span class="comment">//预过滤</span></span><br><span class="line">            <span class="variable constant_">ATTR</span> : <span class="keyword">function</span>(<span class="params">match</span>)&#123;</span><br><span class="line">                <span class="comment">//var name = match[1] = match[1].replace( rBackslash, &quot;&quot; );这里被我屏蔽了，暂不考虑有\的情况</span></span><br><span class="line">                <span class="keyword">var</span> name = match[<span class="number">1</span>];</span><br><span class="line">                <span class="keyword">if</span> (<span class="title class_">Expr</span>.<span class="property">attrMap</span>[name] ) &#123;</span><br><span class="line">                    match[<span class="number">1</span>] = <span class="title class_">Expr</span>.<span class="property">attrMap</span>[name];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//match[4] = ( match[4] || match[5] || &quot;&quot; ).replace( rBackslash, &quot;&quot; );这里被我屏蔽了，暂不考虑有\的情况</span></span><br><span class="line">                <span class="keyword">if</span> ( match[<span class="number">2</span>] === <span class="string">&quot;~=&quot;</span> ) &#123;</span><br><span class="line">                    match[<span class="number">4</span>] = <span class="string">&quot; &quot;</span> + match[<span class="number">4</span>] + <span class="string">&quot; &quot;</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> match;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        filter : &#123;<span class="comment">//过滤</span></span><br><span class="line">            <span class="variable constant_">ATTR</span> : <span class="keyword">function</span>(<span class="params">elem , match</span>)&#123;</span><br><span class="line">                <span class="keyword">var</span> name = match[<span class="number">1</span>],     <span class="comment">//选择表达式的属性名</span></span><br><span class="line">                    result = <span class="title class_">Expr</span>.<span class="property">attrHandle</span>[ name ] ? <span class="title class_">Expr</span>.<span class="property">attrHandle</span>[ name ] :</span><br><span class="line">                                    elem[ name ] != <span class="literal">null</span> ? elem[ name ] : elem.<span class="title function_">getAttribute</span>( name );</span><br><span class="line">                <span class="keyword">var</span> value = result + <span class="string">&quot;&quot;</span>, <span class="comment">//元素的实际值</span></span><br><span class="line">                    type = match[<span class="number">2</span>],     <span class="comment">//选择表达式的符号类型</span></span><br><span class="line">                    check = match[<span class="number">4</span>];    <span class="comment">//选择表达式的目标值</span></span><br><span class="line">                </span><br><span class="line">                <span class="keyword">return</span>  result == <span class="literal">null</span> ? type === <span class="string">&quot;!=&quot;</span> :</span><br><span class="line">                        !type &amp;&amp; <span class="title class_">Sizzle</span>.<span class="property">attr</span> ? result != <span class="literal">null</span> :</span><br><span class="line">                        type === <span class="string">&quot;=&quot;</span> ?value === check :</span><br><span class="line">                        type === <span class="string">&quot;*=&quot;</span> ?value.<span class="title function_">indexOf</span>(check) &gt;= <span class="number">0</span> :</span><br><span class="line">                        type === <span class="string">&quot;~=&quot;</span> ?(<span class="string">&quot; &quot;</span> + value + <span class="string">&quot; &quot;</span>).<span class="title function_">indexOf</span>(check) &gt;= <span class="number">0</span> :</span><br><span class="line">                        !check ? value &amp;&amp; result !== <span class="literal">false</span> :   <span class="comment">//待检测的属性值为空</span></span><br><span class="line">                        type === <span class="string">&quot;!=&quot;</span> ? value !== check :</span><br><span class="line">                        type === <span class="string">&quot;^=&quot;</span> ?value.<span class="title function_">indexOf</span>(check) === <span class="number">0</span> :</span><br><span class="line">                        type === <span class="string">&quot;$=&quot;</span> ?value.<span class="title function_">substr</span>(value.<span class="property">length</span> - check.<span class="property">length</span>) === check : <span class="comment">//indexOf(value.length - check.length) &gt;= 0</span></span><br><span class="line">                        type === <span class="string">&quot;|=&quot;</span> ?value === check || value.<span class="title function_">substr</span>(<span class="number">0</span>, check.<span class="property">length</span> + <span class="number">1</span>) === check + <span class="string">&quot;-&quot;</span> :</span><br><span class="line">                        <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">var</span> expr = <span class="string">&#x27;[class*=&quot;default&quot;]&#x27;</span>;</span><br><span class="line">    <span class="keyword">var</span> curLoop =<span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">slice</span>.<span class="title function_">call</span>(<span class="variable language_">document</span>.<span class="title function_">getElementsByTagName</span>(<span class="string">&#x27;input&#x27;</span>));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">filter</span>(<span class="params">expr, set</span>)&#123;</span><br><span class="line">        <span class="keyword">var</span> match,item,i,found,left;</span><br><span class="line">        <span class="keyword">var</span> curLoop = set,result=[];</span><br><span class="line">        <span class="keyword">while</span>(expr &amp;&amp; set.<span class="property">length</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>((match = <span class="title class_">Expr</span>.<span class="property">match</span>.<span class="property">ATTR</span>.<span class="title function_">exec</span>(expr)) != <span class="literal">null</span>)&#123;</span><br><span class="line">                left = match[<span class="number">1</span>];</span><br><span class="line">                match.<span class="title function_">splice</span>(<span class="number">1</span>,<span class="number">1</span>);</span><br><span class="line">                <span class="comment">//预过滤，主要是处理形式和兼容性的问题</span></span><br><span class="line">                match = <span class="title class_">Expr</span>.<span class="property">preFilter</span>[ <span class="string">&#x27;ATTR&#x27;</span> ]( match);   <span class="comment">//注意这里与jquery的区别，多余的参数都去掉了</span></span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span>(match)&#123;</span><br><span class="line">                    <span class="keyword">for</span> ( i = <span class="number">0</span>; (item = curLoop[i]) != <span class="literal">null</span>; i++ ) &#123;</span><br><span class="line">                        <span class="keyword">if</span> ( item ) &#123;</span><br><span class="line">                            found = <span class="title class_">Expr</span>.<span class="property">filter</span>[<span class="string">&#x27;ATTR&#x27;</span>]( item, match, i, curLoop );<span class="comment">//true代表满足条件</span></span><br><span class="line">                            <span class="keyword">if</span>(found)&#123;</span><br><span class="line">                                result.<span class="title function_">push</span>(item);</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">if</span> ( found !== <span class="literal">undefined</span> ) &#123;</span><br><span class="line">                        expr = expr.<span class="title function_">replace</span>( <span class="title class_">Expr</span>.<span class="property">match</span>[ <span class="string">&#x27;ATTR&#x27;</span> ], <span class="string">&quot;&quot;</span> );</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> curLoop;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> s = <span class="title function_">filter</span>(expr, curLoop);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(s);  <span class="comment">//[#a,#b]</span></span><br></pre></td></tr></table></figure>
+<p>对照上面的代码：</p>
+<p>第一步、Expr.match.ATTR被匹配</p>
+<p>第二步、预过滤，在这一步中，需要处理的问题是属性选择器的“属性值”，“属性操作符”，“属性值”的逻辑与兼容性问题，ATTR中return的结果可能不好理解，一行一行的看比较好。</p>
+<p>第三步、通过Expr.filter.ATTR依次检测set中每一项，符合过滤条件的就保存，不符合的就丢弃。</p>
+<p>第四步、选择表达式修剪，开始下一轮。</p>
+<p>具体到源码中的实现，流程是一样的，只是多了两个参数，注意一下not就行，并没有显示的传递not为true或者false，而是经过了运算或者隐式转换：</p>
+<pre><code>undefined --&gt; false
+
+true^undefined --&gt;1(true)
+</code></pre>
+<p>^异或操作符平时用的不多，这里可以复习下，源码中的逻辑就是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(not==<span class="literal">true</span>)&#123;</span><br><span class="line">    pass = !found</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    pass = found</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因此设置not&#x3D;true可以获得与默认情况下的原始集合互补的集合,就像文章开头一样。</p>
+<h2 id="讨论"><a href="#讨论" class="headerlink" title="讨论"></a>讨论</h2><h3 id="1、a标签的-href-属性"><a href="#1、a标签的-href-属性" class="headerlink" title="1、a标签的 href 属性"></a>1、a标签的 href 属性</h3><p>关于这个的讨论网上有不少，可以参考：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="http://www.planabc.net/2008/11/06/ie-href-bug/">http://www.planabc.net/2008/11/06/ie-href-bug/</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.quirksmode.org/bugreports/archives/2005/02/getAttributeHREF_is_always_absolute.html">http://www.quirksmode.org/bugreports/archives/2005/02/getAttributeHREF_is_always_absolute.html</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.glennjones.net/2006/02/getattribute-href-bug/">http://www.glennjones.net/2006/02/getattribute-href-bug/</a></li>
+</ol>
+<p>源码中对于这个的处理是单独定义了Expr的一个属性：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">attrHandle</span>: &#123;</span><br><span class="line">    <span class="attr">href</span>: <span class="keyword">function</span>(<span class="params"> elem </span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> elem.<span class="title function_">getAttribute</span>( <span class="string">&quot;href&quot;</span> );</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">type</span>: <span class="keyword">function</span>(<span class="params"> elem </span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> elem.<span class="title function_">getAttribute</span>( <span class="string">&quot;type&quot;</span> );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+<p>然后在源码的1130行，</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">div.<span class="property">innerHTML</span> = <span class="string">&quot;&lt;a href=&#x27;#&#x27;&gt;&lt;/a&gt;&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ( div.<span class="property">firstChild</span> &amp;&amp; <span class="keyword">typeof</span> div.<span class="property">firstChild</span>.<span class="property">getAttribute</span> !== <span class="string">&quot;undefined&quot;</span> &amp;&amp;</span><br><span class="line">        div.<span class="property">firstChild</span>.<span class="title function_">getAttribute</span>(<span class="string">&quot;href&quot;</span>) !== <span class="string">&quot;#&quot;</span> ) &#123;</span><br><span class="line">    <span class="title class_">Expr</span>.<span class="property">attrHandle</span>.<span class="property">href</span> = <span class="keyword">function</span>(<span class="params"> elem </span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> elem.<span class="title function_">getAttribute</span>( <span class="string">&quot;href&quot;</span>, <span class="number">2</span> );</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、关于新增的type"><a href="#2、关于新增的type" class="headerlink" title="2、关于新增的type"></a>2、关于新增的type</h3><p>上面的type在以前的源码中是没有的，这个是新加的，原因就是HTML5新增了许多type类型，但是老式浏览器直接获取elem.type并不能获取新的类型，所以采用getAttribute方法。</p>
+<h3 id="3、两个特殊属性class和for。"><a href="#3、两个特殊属性class和for。" class="headerlink" title="3、两个特殊属性class和for。"></a>3、两个特殊属性class和for。</h3><p>这两个应该都清楚，class是保留字，for是，都不能用属性操作符来获取属性，所以单独拎出来处理。</p>
+<p>整个Sizzle.filter也是一个分发器的作用，相比find的三种情况，filter的情况就复杂多了，后面再一个个的分析实现，以及这么做的思想。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2012/02/17/javascript/2012-02-17-Javascript-Sizzle-3/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/javascript/" title="javascript">
+                        <b>#</b> javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/javascript/" title="javascript">
+                        #javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2012/02/21/javascript/2012-02-21-Javascript-Sizzle-4-getElementsByClassName/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%BD%A2%E5%BC%8F"><span class="toc-text">基本形式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B"><span class="toc-text">基本流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A8%E8%AE%BA"><span class="toc-text">讨论</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81a%E6%A0%87%E7%AD%BE%E7%9A%84-href-%E5%B1%9E%E6%80%A7"><span class="toc-text">1、a标签的 href 属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81%E5%85%B3%E4%BA%8E%E6%96%B0%E5%A2%9E%E7%9A%84type"><span class="toc-text">2、关于新增的type</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E3%80%81%E4%B8%A4%E4%B8%AA%E7%89%B9%E6%AE%8A%E5%B1%9E%E6%80%A7class%E5%92%8Cfor%E3%80%82"><span class="toc-text">3、两个特殊属性class和for。</span></a></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

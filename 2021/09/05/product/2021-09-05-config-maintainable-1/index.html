@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      可维护的配置 1 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">可维护的配置 1</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/product/" title="product">
+                    <b>#</b> product
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/product/" title="product">
+                    #product
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>场景描述：</p>
+<pre><code>一群门店给一群园区送外卖，不同门店营业时间不同，不同园区允许外卖进入的时间段也不一样。同时，由于门店与不同园区之间的距离有远有近，所以并不是每个门店都能服务所有的园区，也不是每个园区都能点所有门店的外卖。有的门店可能会因为某些不可预计的原因临时闭店，从而无法按照预期提供外卖服务。
+</code></pre>
+<span id="more"></span>
+
+<p>现在想要把这些约束关系尽可能简单的配置起来。</p>
+<h3 id="门店"><a href="#门店" class="headerlink" title="门店"></a>门店</h3><p>门店的基本配置项：</p>
+<ol>
+<li>营业日期。</li>
+<li>营业时间。</li>
+<li>营业状态（正常营业&#x2F;暂停营业）。</li>
+</ol>
+<h3 id="园区"><a href="#园区" class="headerlink" title="园区"></a>园区</h3><p>园区的基本配置项：</p>
+<ol>
+<li>允许外卖进入的日期。</li>
+<li>允许外卖进入的时间段。</li>
+<li>园区开放状态（正常开放&#x2F;疫情管控）。</li>
+</ol>
+<h3 id="门店-园区"><a href="#门店-园区" class="headerlink" title="门店&amp;园区"></a>门店&amp;园区</h3><ol>
+<li>生效日期。</li>
+<li>生效时间。</li>
+<li>生效状态（启用&#x2F;禁用）。</li>
+</ol>
+<p>在配置理解之前，有几个问题需要先明确。</p>
+<h4 id="一、-如何配置日期？"><a href="#一、-如何配置日期？" class="headerlink" title="一、 如何配置日期？"></a>一、 如何配置日期？</h4><p>最精确的当然是配置到每一天，但是这样有比较多的问题：1. 日期是无限的。2. 修改不便。<br>所以综合考虑下来，像闹钟一样配置星期的重复模式就够用了。如果在此重复模式下，需要临时调整，就通过各项的状态开关进行手动控制。</p>
+<h4 id="二、-门店-园区上配置的日期和时间，是什么作用？"><a href="#二、-门店-园区上配置的日期和时间，是什么作用？" class="headerlink" title="二、 门店&amp;园区上配置的日期和时间，是什么作用？"></a>二、 门店&amp;园区上配置的日期和时间，是什么作用？</h4><p>这个配置有多种理解：</p>
+<ol>
+<li>不论门店或者园区上是如何配置的，一切以 门店&amp;园区 上的配置为准。</li>
+<li>门店配置 与 园区配置 与 门店&amp;园区配置，这三者取交集。交集规则：日期与日期计算，时间与时间计算，不然就无限了。</li>
+</ol>
+<p>不同的理解有不同的优劣势。如果我们遵循第一种理解，优势是简单直接，实现也简单。但是缺点也很明显：如果门店延长或者缩短了营业时间之后，实际情况就与配置情况不一致了，要么导致门店实际服务时间比实际短了，要么导致用户看到可以下单，但实际门店并不能服务。如果我们遵循第二种理解，优势是可以自动伸缩，缺点就是无法直观的看出最终生效的结果到底是怎样的。</p>
+<h4 id="三、-如果不配置，默认值应该是多少？"><a href="#三、-如果不配置，默认值应该是多少？" class="headerlink" title="三、 如果不配置，默认值应该是多少？"></a>三、 如果不配置，默认值应该是多少？</h4><p>门店：</p>
+<pre><code>日期：周一到周日。
+时间：00:00 - 23:59 。
+</code></pre>
+<p>园区：</p>
+<pre><code>日期：周一到周日。
+时间：00:00 - 23:59 。
+</code></pre>
+<p>至于门店&amp;园区配置的默认值，对于不同的理解，应该有不同的默认值：如果“一切以 门店&amp;园区 上的配置为准”，理应以创建当时 门店配置 与 园区配置 的交集为默认值。否则，应该以 </p>
+<pre><code>日期：周一到周日。
+时间：00:00 - 23:59 
+</code></pre>
+<p>作为默认值。</p>
+<p>配置完成之后，一个门店在某个时间能否为某个社群提供外卖服务，取决于三项配置共同作用的结果。</p>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><p>门店A在1月1号在10:00 - 13:00之间正常营业， 园区在1月1日在12:00 - 14:00之间正常开放。在没有其他配置情况下，门店1月1号就只能在12:00-13:00之间为园区 B 提供外卖服务。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2021/09/05/product/2021-09-05-just-do-it-6/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/product/" title="product">
+                        <b>#</b> product
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/product/" title="product">
+                        #product
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2021/09/06/product/2021-09-06-fuck-work-wx-1/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%A8%E5%BA%97"><span class="toc-text">门店</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%AD%E5%8C%BA"><span class="toc-text">园区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%A8%E5%BA%97-%E5%9B%AD%E5%8C%BA"><span class="toc-text">门店&amp;园区</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E3%80%81-%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE%E6%97%A5%E6%9C%9F%EF%BC%9F"><span class="toc-text">一、 如何配置日期？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-%E9%97%A8%E5%BA%97-%E5%9B%AD%E5%8C%BA%E4%B8%8A%E9%85%8D%E7%BD%AE%E7%9A%84%E6%97%A5%E6%9C%9F%E5%92%8C%E6%97%B6%E9%97%B4%EF%BC%8C%E6%98%AF%E4%BB%80%E4%B9%88%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="toc-text">二、 门店&amp;园区上配置的日期和时间，是什么作用？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%89%E3%80%81-%E5%A6%82%E6%9E%9C%E4%B8%8D%E9%85%8D%E7%BD%AE%EF%BC%8C%E9%BB%98%E8%AE%A4%E5%80%BC%E5%BA%94%E8%AF%A5%E6%98%AF%E5%A4%9A%E5%B0%91%EF%BC%9F"><span class="toc-text">三、 如果不配置，默认值应该是多少？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-text">示例</span></a></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

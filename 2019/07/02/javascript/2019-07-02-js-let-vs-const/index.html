@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      var &amp; let &amp; const 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">var & let & const</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/javascript/" title="javascript">
+                    <b>#</b> javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/javascript/" title="javascript">
+                    #javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>关于这个话题，我想要讨论的问题只有一个：什么时候应该用var，什么时候应该用 let，什么时候应该用const？</p>
+<p>我的观点是，对于现代前端项目，有三个原则：</p>
+<ol>
+<li>任何时候都不要用 var</li>
+<li>能用 const 的地方都用 const</li>
+<li>不能用 const 的地方，就用 let</li>
+</ol>
+<span id="more"></span>
+
+<p>如果你的代码风格不是函数式风格，那么一个应用代码中最复杂的问题就是状态管理。说得更具体一点，就是变量的使用（取值与赋值）。不论是前辈给我们的谆谆教导，还是我们自己的代码实践，都告诉我们一个道理——可变量是痛苦的根源，变量的作用域一定要越小越好。在大众编程语言中：</p>
+<ol>
+<li>块作用与优于方法作用域</li>
+<li>方法作用域优于类作用域</li>
+<li>类作用域优于模块作用域</li>
+<li>模块作用域优于全局作用域</li>
+</ol>
+<p>可以看出，全局变量是魔鬼，我们的头号敌人就是全局作用域，于是，var 以及 不加修饰的变量声明，就是我们最应该限制的使用方式。现在就剩下 let 与 const 的抉择了，我们看一下 let 与 const 的语义与特性：</p>
+<pre><code>let 可以作用在块级作用域上，所声明的变量可以再次赋值。
+const 也可以作用在块级作用域上，所声明的变量不可以再次赋值。
+</code></pre>
+<p>抛开可能存在的性能问题不说，两者其实只有能否再次赋值这一个区别。回到现实所面临的代码问题，我们从来不担心变量的读操作，我们从来只关心变量的写操作。比如对于一个方法来说，一个不经意的赋值，修改了距离很远处的一个初始变量，这是一个比逻辑错误更难发觉的bug。再或者对于一个类来说，一个能修改实例状态的方法，你永远不知道会在哪里被哪个外部类调用。类似的情况下，如果一个变量根本就不能被改变，所有这些问题就不存在了。</p>
+<p>各位可以回头翻一翻自己写过的代码，一个方法中所声明过的变量里面，再次赋值的比例是多少？如果变量被声明定义之后再也没有修改过，那为何要用 let？一开始就声明为 const 才是最好的选择。</p>
+<p>更强的约束，意味着更好的协作。不要在此谈性能、谈效率。软件开发不是一个短期事件，软件运作的每一天，都在软件的生命周期内。所以性能问题，效率问题，都应该放在软件的整个生命周期来讨论，而不是放在开发人员那区区的编码周期中讨论。再者，性能问题是一个技术问题，而维护问题是一个管理问题，维护的每一天，都是在还开发时期的债务。</p>
+<p>如果不是 var 的既成事实以及广泛存在，js 根本就只需要 var（let）以及 const 两个关键字（保留字）就能满足设计需求，现在却拥有三个，只是对现实的妥协而已。</p>
+<p><em>备注</em></p>
+<p>如果是简单的页面，出于兼容或者代码量的考虑，用 var 也许是一个好的选择。比如，一个移动端的下载提示页面，访问量大，且页面很简单，如果用 ES6 语法开发之后再转码的话，会增加大量的模板代码，是不划算的。这个时候，用 var 就显得性价比更高了。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2019/06/06/javascript/2019-06-06-emitter-1/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/javascript/" title="javascript">
+                        <b>#</b> javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/javascript/" title="javascript">
+                        #javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2019/07/03/javascript/2019-07-03-js-arrow-function/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      产品中的基础删除操作 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">产品中的基础删除操作</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/product/" title="product">
+                    <b>#</b> product
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/product/" title="product">
+                    #product
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>最近的产品设计中，删除操作已经越来越难用了。根据自身的使用感受，列表内容的删除一定要支持“单项删除”与“批量删除”才算是好的体验。</p>
+<span id="more"></span>
+
+<h2 id="单项删除"><a href="#单项删除" class="headerlink" title="单项删除"></a>单项删除</h2><h3 id="左滑删除"><a href="#左滑删除" class="headerlink" title="左滑删除"></a>左滑删除</h3><p>用户在列表上左滑，直接删除项目。这种操作在 google 的设计里面比较常见，比如gmail。<br>但这个体验实在是难受，删除来得太快，显得比较突兀。不过这类删除通常不是真删除，而是先移入回收站，一段时间之后清空回收站才是真正的删除。</p>
+<p><img src="/assets/product/ue_del/4.png" alt="1"></p>
+<h3 id="左滑菜单删除"><a href="#左滑菜单删除" class="headerlink" title="左滑菜单删除"></a>左滑菜单删除</h3><p>iOS 的标准交互，用户左滑列表项目左滑出现“删除”菜单，点击“删除”之后执行删除操作，在这种交互中，滑动相当于二次确认。</p>
+<p><img src="/assets/product/ue_del/3.png" alt="1"></p>
+<h3 id="长按菜单删除"><a href="#长按菜单删除" class="headerlink" title="长按菜单删除"></a>长按菜单删除</h3><p>android 的标准操作，用户长按列表项目，弹出上下文菜单，点击“删除”之后执行删除操作，在这种交互中，长按相当于二次确认。</p>
+<p><img src="/assets/product/ue_del/1.png" alt="1"></p>
+<p>总体来说，iOS 的交互比较简便，因为相比滑动，长按实在是个比较尴尬的操作。<br>同时，现在很多安卓的应用因为偷懒，把长按的视觉反馈效果去掉了，导致用户在执行长按操作的时候，界面毫无变化，没有任何视觉反馈，体验实不行。<br>再者，弹出的对话框本身会阻挡原来的条目，导致用户无法确认被删除的项目是否是想删除的条目，所以，对话框的内容需要明确体现出将要删除的条目特征。<br>而滑动的位置变化本身就是天然的视觉反馈，简单而直接。</p>
+<h2 id="批量删除"><a href="#批量删除" class="headerlink" title="批量删除"></a>批量删除</h2><h3 id="长按触发选择"><a href="#长按触发选择" class="headerlink" title="长按触发选择"></a>长按触发选择</h3><p>用户长按列表项目，触发批量选择模式：</p>
+<p><img src="/assets/product/ue_del/2.png" alt="1"></p>
+<h3 id="独立的编辑菜单"><a href="#独立的编辑菜单" class="headerlink" title="独立的编辑菜单"></a>独立的编辑菜单</h3><p>用户点击独立的“编辑”按钮之后，触发批量选择模式，如上图所示。</p>
+<h3 id="对返回的处理"><a href="#对返回的处理" class="headerlink" title="对返回的处理"></a>对返回的处理</h3><p>由于安卓有返回键，因此用户在进行了批量选择之后，可以有两种选择：</p>
+<ol>
+<li>取消批量选择模式，页面恢复常规模式</li>
+<li>退出当前页面</li>
+</ol>
+<p>现在大部分应用都是采用第二种“退出当前页面”的模式，应该也是参照了 iOS 的设计，不过对于安卓老用户的我来说，经常导致误返回，<br>所以我还是希望更多的应用采用第一种选项，保留安卓的返回键交互。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2019/12/01/product/2019-12-01-ad-sys-2/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/product/" title="product">
+                        <b>#</b> product
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/product/" title="product">
+                        #product
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2020/01/04/computer/2020-01-04-numpy-array/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E9%A1%B9%E5%88%A0%E9%99%A4"><span class="toc-text">单项删除</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A6%E6%BB%91%E5%88%A0%E9%99%A4"><span class="toc-text">左滑删除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A6%E6%BB%91%E8%8F%9C%E5%8D%95%E5%88%A0%E9%99%A4"><span class="toc-text">左滑菜单删除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%95%BF%E6%8C%89%E8%8F%9C%E5%8D%95%E5%88%A0%E9%99%A4"><span class="toc-text">长按菜单删除</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4"><span class="toc-text">批量删除</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%95%BF%E6%8C%89%E8%A7%A6%E5%8F%91%E9%80%89%E6%8B%A9"><span class="toc-text">长按触发选择</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8B%AC%E7%AB%8B%E7%9A%84%E7%BC%96%E8%BE%91%E8%8F%9C%E5%8D%95"><span class="toc-text">独立的编辑菜单</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E8%BF%94%E5%9B%9E%E7%9A%84%E5%A4%84%E7%90%86"><span class="toc-text">对返回的处理</span></a></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

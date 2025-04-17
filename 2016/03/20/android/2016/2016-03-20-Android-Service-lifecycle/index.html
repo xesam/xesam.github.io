@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Android Service生命周期回顾 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Android Service生命周期回顾</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/android/" title="android">
+                    <b>#</b> android
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/android/" title="android">
+                    #android
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>Service 经历的生命周期较少，可以分三种情况记录。</p>
+<h2 id="第一种，startService-stopService"><a href="#第一种，startService-stopService" class="headerlink" title="第一种，startService &#x2F; stopService"></a>第一种，startService &#x2F; stopService</h2><p><img src="/image/service_lifecycle_1_and_2.png" alt="1"></p>
+<p>注意点：</p>
+<ol>
+<li>第一次 startService 会触发 onCreate 和 onStartCommand，以后在服务运行过程中，每次 startService 都只会触发 onStartCommand</li>
+<li>不论 startService 多少次，stopService 一次就会停止服务</li>
+</ol>
+<h2 id="第二种，bindService-unbindService"><a href="#第二种，bindService-unbindService" class="headerlink" title="第二种，bindService &#x2F; unbindService"></a>第二种，bindService &#x2F; unbindService</h2><p>图示同上。</p>
+<p>注意点：</p>
+<ol>
+<li>第一次 bindService 会触发 onCreate 和 onBind，以后在服务运行过程中，每次 bindService 都不会触发任何回调</li>
+<li>bindService 多少次，就对应多少次的 unbindService， bindService &#x2F; unbindService 操作顺序以及次数对应的话， 就会停止当前服务</li>
+</ol>
+<h2 id="第三种，前面两种交错"><a href="#第三种，前面两种交错" class="headerlink" title="第三种，前面两种交错"></a>第三种，前面两种交错</h2><p><img src="/image/service_lifecycle_3.png" alt="1"></p>
+<p>注意点：</p>
+<ol>
+<li>只有当 startService &#x2F; stopService 与 bindService &#x2F; unbindService 都满足条件时，才会停止服务</li>
+</ol>
+<h3 id="onBind-的作用"><a href="#onBind-的作用" class="headerlink" title="onBind 的作用"></a>onBind 的作用</h3><p>如果我们将 “开始有 client 发起 bindService”到“所有 client 都调用 unbindService”中间的过程视为一个“轮回”，<br>那么同一个服务的同一个运行生命周期（从 onCrete 到 onDestroy 之间）内，就有可能发生多次“轮回”。</p>
+<p>onBind 主要用来产生一个 Binder，只需要知道同一个服务的 Binder 只会有一个，onBind 只会在第一个“轮回”调用一次，主要负责则 “Create Binder”。</p>
+<h3 id="onRebind"><a href="#onRebind" class="headerlink" title="onRebind"></a>onRebind</h3><p>onBind 与 onRebind 不会在一个“轮回”中同时被调用。</p>
+<p>如果 bindService 操作触发了 onCreate 回调，那么，同时也会触发 onBind。</p>
+<h3 id="onUnbind-的返回值"><a href="#onUnbind-的返回值" class="headerlink" title="onUnbind 的返回值"></a>onUnbind 的返回值</h3><p>onUnbind 的返回值只会在服务运行期间从第二个“轮回”开始发生作用。<br>那如何才能出现第二个“轮回”？肯定只有在调用了 startService 的情况下，服务保持运行期间，才会有第二，第三个“轮回”。<br>否则，每一个“轮回”就都是第二种情况了。举个例子说明下：</p>
+<p>第一个例子，onUnbind 返回 false</p>
+<ol>
+<li>调用 startService。触发 onCreate 与 onStartCommand</li>
+<li>调用 bindService。触发 onBind</li>
+<li>调用 unbindService 触发 unbindService</li>
+<li>调用 bindService。无回调</li>
+<li>调用 unbindService 无回调</li>
+<li>调用 stopService。触发 onDestroy</li>
+</ol>
+<p>第二种例子，onUnbind 返回 true</p>
+<ol>
+<li>调用 startService。触发 onCreate 与 onStartCommand</li>
+<li>调用 bindService。触发 onBind</li>
+<li>调用 unbindService 触发 unbindService</li>
+<li>调用 bindService。触发 onRebind</li>
+<li>调用 unbindService 触发 onUnbind</li>
+<li>调用 stopService。触发 onDestroy</li>
+</ol>
+<h2 id="几个问题"><a href="#几个问题" class="headerlink" title="几个问题"></a>几个问题</h2><h3 id="bindService-与什么有关？"><a href="#bindService-与什么有关？" class="headerlink" title="bindService 与什么有关？"></a>bindService 与什么有关？</h3><p>ServiceConnection 对象是 bind 操作的标识符。</p>
+<p>bindService &#x2F; unbindService 都需要与同一个 ServiceConnection 对象配对。<br>同一个 ServiceConnection 对象只会触发一次绑定。只有在 unbindService 后才能重新绑定。</p>
+<h3 id="如何知道绑定了多少个-client"><a href="#如何知道绑定了多少个-client" class="headerlink" title="如何知道绑定了多少个 client"></a>如何知道绑定了多少个 client</h3><p>Service 本身不能知道有多少个 client，可以在每次触发 ServiceConnection 的时候增加一次静态计数。</p>
+<h3 id="Service-如何指导是否有新的-client-绑定？"><a href="#Service-如何指导是否有新的-client-绑定？" class="headerlink" title="Service 如何指导是否有新的 client 绑定？"></a>Service 如何指导是否有新的 client 绑定？</h3><p>如果不是在“轮回”的开始，Service 无法知道有新的 client 绑定，只能 client 主动通知给 Service。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2016/03/07/android/2016/2016-03-07-Android-fg-bg/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/android/" title="android">
+                        <b>#</b> android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/android/" title="android">
+                        #android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2016/03/21/android/2016/2016-03-21-Android-6.0/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%A7%8D%EF%BC%8CstartService-stopService"><span class="toc-text">第一种，startService &#x2F; stopService</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%A7%8D%EF%BC%8CbindService-unbindService"><span class="toc-text">第二种，bindService &#x2F; unbindService</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E7%A7%8D%EF%BC%8C%E5%89%8D%E9%9D%A2%E4%B8%A4%E7%A7%8D%E4%BA%A4%E9%94%99"><span class="toc-text">第三种，前面两种交错</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#onBind-%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-text">onBind 的作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#onRebind"><span class="toc-text">onRebind</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#onUnbind-%E7%9A%84%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="toc-text">onUnbind 的返回值</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%A0%E4%B8%AA%E9%97%AE%E9%A2%98"><span class="toc-text">几个问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#bindService-%E4%B8%8E%E4%BB%80%E4%B9%88%E6%9C%89%E5%85%B3%EF%BC%9F"><span class="toc-text">bindService 与什么有关？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E7%9F%A5%E9%81%93%E7%BB%91%E5%AE%9A%E4%BA%86%E5%A4%9A%E5%B0%91%E4%B8%AA-client"><span class="toc-text">如何知道绑定了多少个 client</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Service-%E5%A6%82%E4%BD%95%E6%8C%87%E5%AF%BC%E6%98%AF%E5%90%A6%E6%9C%89%E6%96%B0%E7%9A%84-client-%E7%BB%91%E5%AE%9A%EF%BC%9F"><span class="toc-text">Service 如何指导是否有新的 client 绑定？</span></a></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

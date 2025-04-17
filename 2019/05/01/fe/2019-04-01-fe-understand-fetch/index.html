@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      如何理解Fetch Api 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">如何理解Fetch Api</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/fe/" title="fe">
+                    <b>#</b> fe
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/fe/" title="fe">
+                    #fe
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>关于 Fetch Api，接受度越来越高了。网上很多文章在介绍 Fetch 的用法，在鼓吹 Fetch 的优势，也有人在撰文批评 Fetch 的难以使用。<br>但是，当我们在讨论 Fetch Api 的优点和缺点的时候，我们在讨论什么？如果不清楚一个接口的设计目的，又如何去评判这个设计？</p>
+<span id="more"></span>
+
+<p>从我个人看来，我觉得我们需要明确以下两点：</p>
+<h2 id="第一、Fetch-Api-是一个“底层”接口"><a href="#第一、Fetch-Api-是一个“底层”接口" class="headerlink" title="第一、Fetch Api 是一个“底层”接口"></a>第一、Fetch Api 是一个“底层”接口</h2><p>这个“底层”的意思并不是说这个 api 有操纵 OS 或者浏览器原生特性的能力，而是说这个接口是 Web 的底层。<br>Fetch Api 属于 WEB API，不是一个高度封装接口。竞争对手不是jquery，不是axios，也不是其他的 HTTP 库。</p>
+<p>所以，fetch api 本身就不是给普通开发者用的，而是给库开发者用的。就像在 java 里面，你通常不会直接通过 socket 去执行 http 请求一样。所以，不要站在普通开发者的视角来看这些问题，如果你想像用 axios 一样来使用 fetch，你就掉坑里了。</p>
+<h2 id="第二、Fetch-Api-是由-whatag-（对比一下-W3C）-制定的。"><a href="#第二、Fetch-Api-是由-whatag-（对比一下-W3C）-制定的。" class="headerlink" title="第二、Fetch Api 是由 whatag （对比一下 W3C） 制定的。"></a>第二、Fetch Api 是由 whatag （对比一下 W3C） 制定的。</h2><p>随着 web 和 js 的领域扩张，如果 Web 想成为一个通用平台，如果 js 想成为一个成熟的平台语言，那么 API 的底层化和标准化是不可避免的，不跳出浏览器这个束缚，是达不到目的的。</p>
+<ol>
+<li><p>站在语言的角度，js 竞争的是 java，是 python，是其他的通用平台语言。</p>
+</li>
+<li><p>站在平台的角度，Web 竞争的是其他平台，是 windows，是android，是ios。</p>
+</li>
+<li><p>站在标准的角度，规范要统一的是浏览器，是Node，也是其他的 Web 运行宿主。</p>
+</li>
+</ol>
+<p>当前 XMLHttpRequest 面临的困境是，XMLHttpRequest 满足不了 web 的扩展（不论是横向扩展还是纵向扩展）。而不是因为 XMLHttpRequest 有什么内在缺陷。所以 Fetch 重新模块化了各个部分，</p>
+<pre><code>Request
+Response
+
+Header
+Body
+</code></pre>
+<p>显然，这种架构根本就是对 Http 协议的复刻，因为 Http 才是 Web 的底层协议。</p>
+<p>如果我们能记住以上两点，我们就能理解那些槽点：</p>
+<ol>
+<li>fetch api 备受苛责点的“错误处理”。404、502之类的状态码被认为是 “resolved” 不是一目了然吗？因为对于一个底层接口来说，网络是正常的，只是你的服务不正常。</li>
+<li>Request 默认是不带 cookie。这个在我看来是改进，而不是槽点，“如无必要,勿增实体”。</li>
+<li>不支持取消请求。说实话，这才真的是一个槽点。不过这只是一个暂时缺失的点，而不是接口设计如此。 AbortController 已经在实现中了，而且最新的浏览器已经实现了。不过，最后使用当然不会像 XMLHttpRequest 直接调用 abort() 这么简单。</li>
+<li>如果还有其他问题，请参照对比 Fetch 与 Socket。</li>
+</ol>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2019/04/01/software/2019-04-01-resource-auth-design/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/fe/" title="fe">
+                        <b>#</b> fe
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/fe/" title="fe">
+                        #fe
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2019/06/02/computer/2019-06-02-ikbc-w200/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E3%80%81Fetch-Api-%E6%98%AF%E4%B8%80%E4%B8%AA%E2%80%9C%E5%BA%95%E5%B1%82%E2%80%9D%E6%8E%A5%E5%8F%A3"><span class="toc-text">第一、Fetch Api 是一个“底层”接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E3%80%81Fetch-Api-%E6%98%AF%E7%94%B1-whatag-%EF%BC%88%E5%AF%B9%E6%AF%94%E4%B8%80%E4%B8%8B-W3C%EF%BC%89-%E5%88%B6%E5%AE%9A%E7%9A%84%E3%80%82"><span class="toc-text">第二、Fetch Api 是由 whatag （对比一下 W3C） 制定的。</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

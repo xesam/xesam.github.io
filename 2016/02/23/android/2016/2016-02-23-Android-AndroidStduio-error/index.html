@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      AndroidStduio错误记录 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">AndroidStduio错误记录</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/android/" title="android">
+                    <b>#</b> android
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/android/" title="android">
+                    #android
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>系统：Ubuntu</p>
+<p>java本版：1.7</p>
+<h2 id="1-启动的时候“Plugin-com-intellij-failed-to-initialize-and-will-be-disabled-null”"><a href="#1-启动的时候“Plugin-com-intellij-failed-to-initialize-and-will-be-disabled-null”" class="headerlink" title="1. 启动的时候“Plugin com.intellij failed to initialize and will be disabled null”"></a>1. 启动的时候“Plugin com.intellij failed to initialize and will be disabled null”</h2><p>解决办法：将java的安装位置更改到&#x2F;usr&#x2F;java或者&#x2F;opt&#x2F;java就行了，注意同时修改原本的JAVA_HOME系统变量。 </p>
+<h2 id="2-下载的Android-Studio自带了SDK，但是系统原本安装有SDK，所以删除新的SDK之后报错-“Your-Android-SDK-is-out-of-date-or-is-missing-templates-Please-ensure-you-are-using-SDK-version-22-or-later-”"><a href="#2-下载的Android-Studio自带了SDK，但是系统原本安装有SDK，所以删除新的SDK之后报错-“Your-Android-SDK-is-out-of-date-or-is-missing-templates-Please-ensure-you-are-using-SDK-version-22-or-later-”" class="headerlink" title="2. 下载的Android Studio自带了SDK，但是系统原本安装有SDK，所以删除新的SDK之后报错 “Your Android SDK is out of date or is missing templates. Please ensure you are using SDK version 22 or later.”"></a>2. 下载的Android Studio自带了SDK，但是系统原本安装有SDK，所以删除新的SDK之后报错 “Your Android SDK is out of date or is missing templates. Please ensure you are using SDK version 22 or later.”</h2><p>解决办法：在SDK Manager中将tools(包括sdk tools,platform tools,build tools)更新到最新的版本。然后</p>
+<pre><code>Configure -&gt; Project Defaults -&gt; Project Structure
+</code></pre>
+<p>在Project 设定Project SDK。在SDKs设定Buildtarget。 保存之后就可以“New Project”了</p>
+<h2 id="3-修改包名之后-Activity-class-does-not-exist"><a href="#3-修改包名之后-Activity-class-does-not-exist" class="headerlink" title="3. 修改包名之后 Activity class does not exist"></a>3. 修改包名之后 Activity class does not exist</h2><p>问题描述：</p>
+<p>修改了 applicationId 之后，无法从 As 界面 launcher Activity 。提示错误：</p>
+<pre><code>Activity class &#123;package/xxxxx&#125; does not exist
+</code></pre>
+<p>这个应该是 As 自身的问题，没有刷新缓存，把 .idea *.iml 什么都删除一下，重新打开基本就可以了。</p>
+<h2 id="4-无法关联源码"><a href="#4-无法关联源码" class="headerlink" title="4. 无法关联源码"></a>4. 无法关联源码</h2><pre><code>File -&gt; Settings (ctrl+alt+s) -&gt; Appearance &amp; Behavior -&gt; System Settings -&gt; Android SDK.
+</code></pre>
+<p>点击 edit，无论有没有下载过对应的源码，都执行一遍，主要是让 Android studio 刷新自身的信息。</p>
+<h2 id="支持-java8"><a href="#支持-java8" class="headerlink" title="支持 java8"></a>支持 java8</h2><p>最新有的库是使用 java8 编译的，有可能报字节码解析错误，所以可以都改成 java8 编译。</p>
+<p>要求 as 2.1 以上， jack 支持：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">  ...</span><br><span class="line">  defaultConfig &#123;</span><br><span class="line">    ...</span><br><span class="line">    jackOptions &#123;</span><br><span class="line">      enabled <span class="keyword">true</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  compileOptions &#123;</span><br><span class="line">    <span class="keyword">sourceCompatibility</span> JavaVersion.VERSION_1_8</span><br><span class="line">    <span class="keyword">targetCompatibility</span> JavaVersion.VERSION_1_8</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2016/02/22/android/2016/2016-02-22-Android-App-error/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/android/" title="android">
+                        <b>#</b> android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/android/" title="android">
+                        #android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2016/02/24/talk/2016-02-24-talk-rpc/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%90%AF%E5%8A%A8%E7%9A%84%E6%97%B6%E5%80%99%E2%80%9CPlugin-com-intellij-failed-to-initialize-and-will-be-disabled-null%E2%80%9D"><span class="toc-text">1. 启动的时候“Plugin com.intellij failed to initialize and will be disabled null”</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%B8%8B%E8%BD%BD%E7%9A%84Android-Studio%E8%87%AA%E5%B8%A6%E4%BA%86SDK%EF%BC%8C%E4%BD%86%E6%98%AF%E7%B3%BB%E7%BB%9F%E5%8E%9F%E6%9C%AC%E5%AE%89%E8%A3%85%E6%9C%89SDK%EF%BC%8C%E6%89%80%E4%BB%A5%E5%88%A0%E9%99%A4%E6%96%B0%E7%9A%84SDK%E4%B9%8B%E5%90%8E%E6%8A%A5%E9%94%99-%E2%80%9CYour-Android-SDK-is-out-of-date-or-is-missing-templates-Please-ensure-you-are-using-SDK-version-22-or-later-%E2%80%9D"><span class="toc-text">2. 下载的Android Studio自带了SDK，但是系统原本安装有SDK，所以删除新的SDK之后报错 “Your Android SDK is out of date or is missing templates. Please ensure you are using SDK version 22 or later.”</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E4%BF%AE%E6%94%B9%E5%8C%85%E5%90%8D%E4%B9%8B%E5%90%8E-Activity-class-does-not-exist"><span class="toc-text">3. 修改包名之后 Activity class does not exist</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%97%A0%E6%B3%95%E5%85%B3%E8%81%94%E6%BA%90%E7%A0%81"><span class="toc-text">4. 无法关联源码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%AF%E6%8C%81-java8"><span class="toc-text">支持 java8</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

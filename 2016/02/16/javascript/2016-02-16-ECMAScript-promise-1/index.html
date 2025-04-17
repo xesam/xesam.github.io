@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      promise核心概念（一） 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">promise核心概念（一）</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/javascript/" title="javascript">
+                    <b>#</b> javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/javascript/" title="javascript">
+                    #javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>首先，要明确一点，Promise 是用来处理回调嵌套的问题，而不是用来处理回调本身的问题。</p>
+<h2 id="程序要素"><a href="#程序要素" class="headerlink" title="程序要素"></a>程序要素</h2><p>通常，我们的程序有三个要素：</p>
+<ol>
+<li>执行器</li>
+<li>上下文</li>
+<li>表达式</li>
+</ol>
+<p>执行器按照语义规则在上下文中执行表达式，而表达式的最终效果都是要修改上下文，不修改上下文的表达式除了浪费时间之外，是没有意义的。 方法是表达式的集合，方法对上下文的修改可以表现在两个方面：</p>
+<ol>
+<li>在方法体中直接修改了上下文的状态。</li>
+<li>产生一个返回值，参与到接下来的表达式中。</li>
+</ol>
+<p>所以，执行一个方法，最终的意义就是观察这个方法对上下文的修改结果，然后做出相应的动作。</p>
+<h2 id="同步与异步"><a href="#同步与异步" class="headerlink" title="同步与异步"></a>同步与异步</h2><p>同步方法的特征：</p>
+<ol>
+<li>有直接的返回值，没有返回值的方法肯定直接修改了上下文。</li>
+<li>可预期的异常栈，异常会沿着当前调用链向上传播。</li>
+</ol>
+<p>异步方法的特征：</p>
+<ol>
+<li>运行在另一个执行过程中，因此，异常不会沿着当前调用连向上传播。</li>
+<li>没有直接的返回值，只能通过回调函数来观察修改结果。</li>
+</ol>
+<p>对比下面的例子：</p>
+<p>同步：</p>
+<pre><code class="language-java">    var value = fn_1();
+    var c = value_1 + 20;
+    var value_2 = fn_2(c);
+    console.log(value_2);
+</code></pre>
+<pre><code>执行器 A 发起 fn_1 的调用, 执行器 A 执行并等待 fn_1 的执行完成，执行器 A 观察 fn_1 的结果。
+执行器 A 发起 fn_2 的调用, 执行器 A 执行并等待 fn_2 的执行完成，执行器 A 观察 fn_2 的结果。
+</code></pre>
+<p>由于 fn_1 和 fn_2 都是同步方法，这个过程会很完美的工作。 但是，如果 fn_1 和 fn_2 都是异步方法，而异步调用根本就没有返回值，所以，这段代码是得不到预期效果的。 那我们就只能这么写了：</p>
+<p>异步：</p>
+<pre><code class="language-java">fn_1(function(value_1)&#123;
+    var c = value_1 + 20;
+    fn_2(c, function(value_2)&#123;
+        console.log(value_2);
+    &#125;)
+&#125;)
+</code></pre>
+<p>虽然写法不一样，但是本质都是一样的，注意其中执行器的变化：</p>
+<pre><code>执行器 A 发起 fn_1 的调用，执行器 B 执行并等待 fn_1 的执行完成，执行器 A 观察 fn_1 的结果。
+执行器 A 发起 fn_2 的调用，执行器 C 执行并等待 fn_2 的执行完成，执行器 A 观察 fn_2 的结果。
+</code></pre>
+<p>既然本质都是一样的，那么我们就可以将 “执行并等待 -&gt; 观察”封装为一个概念——Promise，当异步方法的结果返回时，根据不同的结果，触发不同的动作。 形式如下：</p>
+<pre><code class="language-java">var promise_1 = create_promise(fn_1);
+
+var promise_2 = promise_1.then(function(value_1)&#123;
+    var c = value_1 + 20;
+    return create_promise(c, fn_2);
+&#125;);
+
+promise_2.then(function(value_2)&#123;
+    console.log(value_2);
+&#125;);
+</code></pre>
+<p>如此一来，就将异步的嵌套回调，转化为扁平的同步调用形式。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2016/01/02/computer/2016-01-02-computer-C++_Java/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/javascript/" title="javascript">
+                        <b>#</b> javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/javascript/" title="javascript">
+                        #javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2016/02/22/android/2016/2016-02-22-Android-App-error/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A8%8B%E5%BA%8F%E8%A6%81%E7%B4%A0"><span class="toc-text">程序要素</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BC%82%E6%AD%A5"><span class="toc-text">同步与异步</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

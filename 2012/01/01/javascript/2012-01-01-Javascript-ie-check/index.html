@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      【Javascript】有关IE版本检测 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">【Javascript】有关IE版本检测</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/javascript/" title="javascript">
+                    <b>#</b> javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/javascript/" title="javascript">
+                    #javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>PS：检测浏览器虽然不是一个什么好的做法，但是有时候还是很必要的。</p>
+<p>见得最多的就是检测navigator.userAgent(这个可以面向所有浏览器，略过)。</p>
+<p>另外一种就是IE的条件注释，这篇有个比较详细的说明</p>
+<p><a target="_blank" rel="noopener" href="http://www.cnblogs.com/JustinYoung/archive/2009/03/02/ie-jiaojianzhushi.html">http://www.cnblogs.com/JustinYoung/archive/2009/03/02/ie-jiaojianzhushi.html</a>，注意看它下面的回复</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--[if !IE]&gt;&lt;!--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-handlebars"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars"> alert(&#x27;非IE&#x27;)</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">&lt;/ script&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars"><span class="comment">&lt;!--&lt;![endif]--&gt;</span></span></span></span><br></pre></td></tr></table></figure>
+
+<p>我测试的结果是这种形式是可用的。唯一需要注意的是&lt;!– [if IE 8]&gt; 中’IE’和’8’中间的这个空白符是必须的，掉了就悲剧了。</p>
+<p>基于IE的条件注释，变种版本就有几种，</p>
+<p>第一、类似下面的形式：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">    &lt;!--[<span class="keyword">if</span> <span class="variable constant_">IE</span> <span class="number">6</span>]&gt;</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">id</span>=<span class="string">&quot;ieVersion&quot;</span> <span class="attr">value</span>=<span class="string">&quot;6&quot;</span> /&gt;</span></span></span><br><span class="line">    &lt;![endif]--&gt;</span><br><span class="line">    &lt;!--[<span class="keyword">if</span> <span class="variable constant_">IE</span> <span class="number">7</span>]&gt;</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">id</span>=<span class="string">&quot;ieVersion&quot;</span> <span class="attr">value</span>=<span class="string">&quot;7&quot;</span> /&gt;</span></span></span><br><span class="line">    &lt;![endif]--&gt;</span><br><span class="line"><span class="keyword">var</span> ieVersion = (<span class="keyword">function</span>(<span class="params"></span>)&#123; <span class="keyword">return</span> <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;ieVersion&#x27;</span>)&#125;)();</span><br></pre></td></tr></table></figure>
+<p>以此类推，可以获得各个版本的信息，甚至可以添加gt，gte等，从而一次判定一类版本。</p>
+<p>关于这种写法，有个例子就是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">    &lt;!--[<span class="keyword">if</span> <span class="variable constant_">IE</span> <span class="number">6</span>]&gt;</span><br><span class="line">    &lt;html class=&quot;ie6&quot;&gt;</span><br><span class="line">    &lt;![endif]--&gt;</span><br><span class="line">    &lt;!--[if IE 7]&gt;</span><br><span class="line">    &lt;html class=&quot;ie7&quot;&gt;</span><br><span class="line">    &lt;![endif]--&gt;    </span><br><span class="line">&lt;!--[if !IE]&gt;&lt;!--&gt;</span><br><span class="line">    &lt;html&gt;&lt;!--&lt;![endif]--&gt;</span><br></pre></td></tr></table></figure>
+<p>于是在CSS里面就可以不用别的hack了,从而避免在IE里面多加载一次CSS，</p>
+<p>直接</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.ie6</span> xx&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.ie7</span> xx&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.ie8</span> xx&#123;&#125;</span><br><span class="line"></span><br><span class="line">xx&#123;&#125;</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+<p>第二、既然可以写在页面内，当然也可以JS来动态生成。我google了一把，发现还真有人这么做的。</p>
+<p>文章地址如下：<a target="_blank" rel="noopener" href="http://www.cnblogs.com/bruceli/archive/2011/04/11/2012470.html%EF%BC%8C%E5%86%99%E5%BE%97%E8%BF%98%E6%AF%94%E8%BE%83%E8%AF%A6%E7%BB%86%EF%BC%8C%E5%8E%9F%E7%90%86%E4%B9%9F%E5%BE%88%E7%AE%80%E5%8D%95%E3%80%82">http://www.cnblogs.com/bruceli/archive/2011/04/11/2012470.html，写得还比较详细，原理也很简单。</a></p>
+<p>不过这样的缺憾就是把条件注释限定到JS上了，于CSS就是鸡肋了。</p>
+<p>继续，既然可以动态生成条件注释来辨明IE版本，基于IE的CSS hack，应该也可以动态生成一段html片段，用样式值来判定版本。</p>
+<p>下面是最容易想到的形式，我测试发现这么确实可以，不过也发现了一个问题，看下面的一段代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;test_1&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">span</span> <span class="attr">style</span>=<span class="string">&quot;color: red; color: #ff6600\0; color: yellow\9\0;  *color:green; _color:blue;&quot;</span>&gt;</span>测试<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> test_1 = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;test_1&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> test_2 = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;div&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">    test_2.<span class="property">innerHTML</span> = <span class="string">&#x27;&lt;span style=&quot;color: red; color: #ff6600\\0; color: yellow\\9\\0;  *color:green; _color:blue;&quot;&gt;测试&lt;/span&gt;&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;test_1:&#x27;</span> + test_1.<span class="property">firstChild</span>.<span class="property">style</span>.<span class="property">color</span> + <span class="string">&#x27;----&#x27;</span> + <span class="string">&#x27;test_2:&#x27;</span> + test_2.<span class="property">firstChild</span>.<span class="property">style</span>.<span class="property">color</span>);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<pre><code>在IE9下结果：LOG: test_1:yellow----test_2:yellow 
+在IE8下结果：LOG: test_1:#ff6600----test_2:#ff6600 
+在IE7下结果：LOG: test_1:green----test_2:blue 
+在IE6下结果：test_1:blue ----test_2:blue （IE6没有console.log，所以上面的console.log需要换成alert）
+</code></pre>
+<p>上面的问题大家应该看出来了，IE7下两种情况不一致，不知道是我的IE7兼容模式的问题还是别的什么原因，知道的请指教。</p>
+<p>确认代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">span</span> <span class="attr">style</span>=<span class="string">&quot;*color:red; _color:blue;&quot;</span>&gt;</span>原始<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">var</span> test = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;div&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">test.<span class="property">innerHTML</span> = <span class="string">&#x27;&lt;span style=&quot;*color:red; _color:blue;&quot;&gt;动态生成&lt;/span&gt;&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">appendChild</span>(test);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<pre><code>IE7结果：&quot;原始&quot;显示为红色
+IE6结果：&quot;原始&quot;显示为蓝色
+</code></pre>
+<p>基本原理和IE的条件注释差不多，我们一次检测color值就可以了，所以改变一下上面的例子就是：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;test_1&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">span</span> <span class="attr">style</span>=<span class="string">&quot;color: red; color: #ff6600\0; color: yellow\9\0;  *color:green; _color:blue;&quot;</span>&gt;</span>测试<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> test_1 = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;test_1&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">//var test_2 = document.createElement(&#x27;div&#x27;);</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">//test_2.innerHTML = &#x27;&lt;span style=&quot;color: red; color: #ff6600\\0; color: yellow\\9\\0;  *color:green; _color:blue;&quot;&gt;测试&lt;/span&gt;&#x27;;</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> c = test_1.<span class="property">firstChild</span>.<span class="property">style</span>.<span class="property">color</span>;</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">alert</span>(c==<span class="string">&#x27;red&#x27;</span>?<span class="string">&#x27;other&#x27;</span>:c==<span class="string">&#x27;yellow&#x27;</span>?<span class="string">&#x27;IE9&#x27;</span>:c==<span class="string">&#x27;#ff6600&#x27;</span>?<span class="string">&#x27;IE8&#x27;</span>:c==<span class="string">&#x27;green&#x27;</span>?<span class="string">&#x27;IE7&#x27;</span>:<span class="string">&#x27;IE6&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code>在IE9下结果：IE9
+在IE8下结果：IE8
+在IE7下结果：IE7
+在IE6下结果：IE6
+</code></pre>
+<p>按理来说，对于FF,Chrome&#x2F;Safari、opera都可以利用-moz、-webkit、-o等私有前缀来辨别，不过对于属性的选取要斟酌，类似color是不行的。</p>
+<p>这个检测方法旁门左道而已，未来版本或者其他浏览器是不是有这个bug也不确定，而且IE7的那个bug我还没有弄清楚，所以也就暂时知道可以这么做就可以了。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2011/12/28/javascript/2011-12-28-Javascript-Prototype-Class-2-extend/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/javascript/" title="javascript">
+                        <b>#</b> javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/javascript/" title="javascript">
+                        #javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2012/01/01/javascript/2012-01-01-Javascript-string-JSON/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

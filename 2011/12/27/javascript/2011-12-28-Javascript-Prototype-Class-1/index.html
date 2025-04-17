@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      【Javascript】Prototype源码浅析——Class部分(一)之类 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">【Javascript】Prototype源码浅析——Class部分(一)之类</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/javascript/" title="javascript">
+                    <b>#</b> javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/javascript/" title="javascript">
+                    #javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>说明：</p>
+<p>在javascript中，由于缺乏传统面向对象语言的继承机制，类与继承是一个比较复杂的概念。<br>因此本段解析中，不就javascript中的原型、类、继承、封装进行深入探讨。<br>需要深入了解的可以去参考大牛的文章，另推荐几本书《javascript高级程序设计》、《javascript语言精髓与编程实践》和《javascript设计模式》，多读几遍就会对javascript的原型有深入的了解。</p>
+<p>所以本文只就Prototype远源码涉及到的部分进行解析。</p>
+<p>到Class这一步，需要说一下前面没有说到的单体模式，通过前面的几个部分的观察，会发现整个Prototype部分，大部分对象的方法扩展采用的都是类似下面的形式：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = (<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> variable ;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">method</span>(<span class="params"></span>)&#123;&#125;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">method</span>:method</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<p>这就是单体模式。</p>
+<p>不过这么做有什么好处呢？</p>
+<p>单体简单的理解就是一个对象。比如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">    name : <span class="string">&#x27;xesam&#x27;</span>,</span><br><span class="line">    say  : <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">name</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">obj.<span class="title function_">say</span>();</span><br></pre></td></tr></table></figure>
+<p>此时，obj有个作用就是可以提供一个命名空间，并且组织了一部分变量和方法。</p>
+<p>不够这样的一个去缺点就是name完全暴露在外面，可以随意修改，如果name对我们来说是私有的，那么这么样就无法满足要求了。所以鉴于JS中奇特的作用域限制，我们自然得依靠函数来帮忙，于是修改如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> name = <span class="string">&#x27;xesam&#x27;</span>;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">say</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">obj.<span class="title function_">say</span>();</span><br></pre></td></tr></table></figure>
+<p>此时，name变成一个局部变量，外界就无法访问了，不过此时obj.say()也会报错，因为obj已经不是一个对象（这里的对象是指普通对象，而非函数这种对象）了，因此我们再让函数自执行，返回我们需要的对象：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = (<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> name = <span class="string">&#x27;xesam&#x27;</span>;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">say</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(name);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        say : say</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)();</span><br><span class="line">obj.<span class="title function_">say</span>();</span><br></pre></td></tr></table></figure>
+<p>于是就得到了类似Prototype中的形式，这么做的好处大概也就出来了，变量和方法的组织，数据的封装和隐藏。两外，由于匿名函数只执行（实例化）了一次，所以也不会带来内存的问题。如果愿意，也可以这么样来模拟JS中的Math对象。</p>
+<p>现在回到Prototype的Class部分，我们来一步步实现Prototype中的Class部分。</p>
+<p>对于最常见的类的声明，就是创建一个构造函数，然后扩展其原型。比如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params">name</span>)&#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">say</span> = <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;hello &#x27;</span> + <span class="variable language_">this</span>.<span class="property">name</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> xesam = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&#x27;xesam&#x27;</span>);</span><br><span class="line">xesam.<span class="title function_">say</span>();</span><br></pre></td></tr></table></figure>
+<p>上面定义构造函数和添加方法分开了，现在我们把他们打包到一起。运用刚才说故偶的单体模式，我们先定义一个对象，用作命名空间：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Class</span> = &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>现在需要提供的是一个初始化变量和添加方法的功能。</p>
+<p>写之前我们先得规定一下最终形式的调用方法，我们还是尊重Prototype的形式，并且以上面的Person类为例，声明Person类的形式为：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Person</span> = <span class="title class_">Class</span>.<span class="title function_">create</span>(&#123;</span><br><span class="line">    <span class="attr">initialize</span>:<span class="keyword">function</span>(<span class="params">name</span>)&#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">    &#125;,</span><br><span class="line">    say : <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;hello &#x27;</span> + <span class="variable language_">this</span>.<span class="property">name</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">var</span> xesam =<span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&#x27;xesam&#x27;</span>);</span><br><span class="line">xesam.<span class="title function_">say</span>();</span><br></pre></td></tr></table></figure>
+<p>如上所示，Class.create的参数是一个对象，其中initialize包含的是初始化部分（相当于普通面向对象的构造函数），其他部分（say）则是需要添加的方法</p>
+<p>【说明：initialize是必须的，其他则可选】</p>
+<p>在实现之前，我们先准备一个工具函数$A，作用就是获得一个对象的数组形式（转化为一个数组）：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">$A</span>(<span class="params">iterable</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!iterable) <span class="keyword">return</span> [];</span><br><span class="line">    <span class="keyword">if</span> (<span class="string">&#x27;toArray&#x27;</span> <span class="keyword">in</span> <span class="title class_">Object</span>(iterable)) <span class="keyword">return</span> iterable.<span class="title function_">toArray</span>();</span><br><span class="line">    <span class="keyword">var</span> length = iterable.<span class="property">length</span> || <span class="number">0</span>, results = <span class="keyword">new</span> <span class="title class_">Array</span>(length);</span><br><span class="line">    <span class="keyword">while</span> (length--) results[length] = iterable[length];</span><br><span class="line">    <span class="keyword">return</span> results;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法挺简单的，无需多说。</p>
+<p>下面我们可以获得一个最简单的Class.create实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Class</span> = &#123;&#125;;</span><br><span class="line"><span class="title class_">Class</span>.<span class="property">create</span> = <span class="keyword">function</span>(<span class="params">source</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> i <span class="keyword">in</span> source)&#123;</span><br><span class="line">            <span class="variable language_">this</span>[i] = <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">                source[i].<span class="title function_">apply</span>(<span class="variable language_">this</span>,$A(<span class="variable language_">arguments</span>));</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//如果你还记得Function部分的内容，这里可以写成this[i] = source[i].bind();</span></span><br><span class="line">        &#125;</span><br><span class="line">        source.<span class="property">initialize</span>.<span class="title function_">apply</span>(<span class="variable language_">this</span>,<span class="variable language_">arguments</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">Person</span> = <span class="title class_">Class</span>.<span class="title function_">create</span>(&#123;</span><br><span class="line">    <span class="attr">initialize</span>:<span class="keyword">function</span>(<span class="params">name</span>)&#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">    &#125;,</span><br><span class="line">    say : <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;hello &#x27;</span> + <span class="variable language_">this</span>.<span class="property">name</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">var</span> xesam =<span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&#x27;xesam&#x27;</span>);</span><br><span class="line">xesam.<span class="title function_">say</span>();</span><br></pre></td></tr></table></figure>
+<p>上面create返回的是一个匿名函数，我们还可以采用另一种方式，先声明一个函数，处理这个函数之后再返回：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Class</span>.<span class="property">create</span> = <span class="keyword">function</span>(<span class="params">source</span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> kclass = <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">initialize</span>.<span class="title function_">apply</span>(<span class="variable language_">this</span>,<span class="variable language_">arguments</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i <span class="keyword">in</span> source)&#123;</span><br><span class="line">        kclass.<span class="property"><span class="keyword">prototype</span></span>[i] = source[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> kclass;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这里先前的实现其实差不多，而且和最初的Person比较吻合。</p>
+<p>分析上面的实现，你会发现定义完成之后，除了去改动初始定义，就没办法扩展了。因此我们在打包了之后再将具体实现分开，将Class分为初始化和添加方法两个部分，并使用刚才说过的单体模式来组织：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Class</span> = (<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">     <span class="keyword">function</span> <span class="title function_">create</span>(<span class="params">source</span>)&#123;</span><br><span class="line">        <span class="keyword">function</span> <span class="title function_">kclass</span>(<span class="params"></span>)&#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">initialize</span>.<span class="title function_">apply</span>(<span class="variable language_">this</span>,<span class="variable language_">arguments</span>);</span><br><span class="line">        &#125;;</span><br><span class="line">        addMethods.<span class="title function_">call</span>(kclass,source);<span class="comment">//注意这里的调用</span></span><br><span class="line">        <span class="keyword">return</span> kclass;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">addMethods</span>(<span class="params">source</span>)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> property <span class="keyword">in</span> source)&#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property"><span class="keyword">prototype</span></span>[property] = source[property];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        create : create,</span><br><span class="line">        addMethods : addMethods</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<p>这么处理过之后，addMethods方法分离出来了，但是现在还是在Class对象上，并不会添加到我们新创建的Person类上面，所以我们将addMethods添加到实现中的kclass上面。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kclass.<span class="property">addMethods</span> = addMethods;<span class="comment">//（代码4-1）</span></span><br></pre></td></tr></table></figure>
+<p>注意，这里有个关于扩展性的问题。如果我们的Class并不是只有addMethods一个方法，而且有addMethods1，addMethods2，addMethods3···方法，那么我们总不能按照这个顺序一并写下去吧，所以我们可以用一个对象（比如叫Methods）来把这些方法都组织起来。所以代码4-1的形式变成：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kclass.<span class="property">addMethods</span> = <span class="title class_">Methods</span>.<span class="property">addMethods</span>;</span><br></pre></td></tr></table></figure>
+<p>继续分析，create的参数可能是多个需要添加的方法，因此不能用一个形参source来限定死了，采用内置的arguments对象来替代。所以Class的基本骨架就出来了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Class</span> = (<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">     <span class="keyword">function</span> <span class="title function_">create</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="keyword">var</span> properties = $A(<span class="variable language_">arguments</span>);</span><br><span class="line">        <span class="keyword">function</span> <span class="title function_">kclass</span>(<span class="params"></span>)&#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">initialize</span>.<span class="title function_">apply</span>(<span class="variable language_">this</span>,<span class="variable language_">arguments</span>);<span class="comment">//实例化的时候，这里自动调用了initialize方法</span></span><br><span class="line">        &#125;;</span><br><span class="line">        kclass.<span class="property">addMethods</span> = <span class="title class_">Class</span>.<span class="property">Methods</span>.<span class="property">addMethods</span>;</span><br><span class="line">         <span class="comment">//在Prototype中由于有一个Object方法，所以这里调用的是Object.extend(Class.Methods)方法</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; properties.<span class="property">length</span>; i++)&#123;</span><br><span class="line">            kclass.<span class="title function_">addMethods</span>(properties[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!kclass.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">initialize</span>)&#123;<span class="comment">//这里是一个小检测，避免因找不到initialize而报错</span></span><br><span class="line">            kclass.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">initialize</span> = <span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> kclass;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">addMethods</span>(<span class="params">source</span>)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> property <span class="keyword">in</span> source)&#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property"><span class="keyword">prototype</span></span>[property] = source[property];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        create : create,</span><br><span class="line">        <span class="title class_">Methods</span> : &#123; <span class="comment">//注意这里的改动</span></span><br><span class="line">            addMethods : addMethods</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+
+<p>到此，我们有了一个Class对象（可以创建类和添加方法）和一个Person类（有name属性和say方法）。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2011/12/22/javascript/2011-12-22-Javascript-Prototype-Object-3-JSON/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/javascript/" title="javascript">
+                        <b>#</b> javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/javascript/" title="javascript">
+                        #javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2011/12/28/javascript/2011-12-28-Javascript-Prototype-Class-2-extend/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

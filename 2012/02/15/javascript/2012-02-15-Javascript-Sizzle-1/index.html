@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      【Javascript】Sizzle引擎--原理与实践（一） 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">【Javascript】Sizzle引擎--原理与实践（一）</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/javascript/" title="javascript">
+                    <b>#</b> javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/javascript/" title="javascript">
+                    #javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h2><p>Sizzle是jQuery的御用选择器引擎，是jQuery作者John Resig写的DOM选择器引擎，速度号称业界第一。<br>另外，Sizzle是独立的一部分，不依赖任何库，如果你不想用jQuery,可 以只用Sizzle。<br>所以单独拿出来特别对待。在Prototype1.7中，选择器也采用了Sizzle，不过版本有点老，所以我去Sizzle网站搞了一份新的 下来，于是下面分析的时候使用的是最新版的Sizzle.js</p>
+<h2 id="预先说明"><a href="#预先说明" class="headerlink" title="预先说明"></a>预先说明</h2><p>在分析初期为了保证各个浏览器的结果一致，不考虑原生getElementsByClass以及querySelectorAll的影响，同时忽略XML类型，因此作一下处理：</p>
+<p>源码1292行，</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+
+<p>改为：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+<p>源码1140行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( <span class="variable language_">document</span>.<span class="property">querySelectorAll</span> ) &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>改为：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( <span class="variable language_">document</span>.<span class="property">querySelectorAll</span> &amp;&amp; <span class="literal">false</span>) &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>至于其他的浏览器兼容处理部分，会在初步分析中一并涉及。</p>
+<h2 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h2><p>CSS选择器，jQuery选择器。由于jQuery选择器的形式来自CSS，但是在CSS的基础上又增加了很多新的选择表达式，因此，一切以jQuery选择器为基础。</p>
+<h3 id="实例开题"><a href="#实例开题" class="headerlink" title="实例开题"></a>实例开题</h3><p>对于一个选择表达式：</p>
+<pre><code>div#outer &gt; ul , div p:nth(1)，form input[type=&quot;text&quot;]
+</code></pre>
+<h4 id="关于分块的讨论"><a href="#关于分块的讨论" class="headerlink" title="关于分块的讨论"></a>关于分块的讨论</h4><p>这里面包含三个并联的选择符，我们怎么处理？</p>
+<p>解决方案：</p>
+<pre><code>1. 可以用split(&#39;,&#39;)来处理，但是这样只是单纯的分割出来了，并不能获得更多的信息。
+2. 所以我们采用正则来分块，缺点是可读性以及效率的问题，优点是可以提取一些必要的信息，进行预处理。
+</code></pre>
+<p>所以jquery采取的是正则，但是并没有完全分块，而是一部分一部分的取。对于上面的例子我们看看怎么分块。</p>
+<p>div#outer &gt; ul , div p:nth(1)，form input[type&#x3D;”text”] </p>
+<p>先分离出来 div#outer &gt; ul，处理完毕后再分离出来 div p:nth(1)，处理完毕后再分离出来 form input[type&#x3D;”text”]，最后合并三部分的结果</p>
+<h4 id="关于选择顺序的讨论"><a href="#关于选择顺序的讨论" class="headerlink" title="关于选择顺序的讨论"></a>关于选择顺序的讨论</h4><p>这里需要记得jQuery选择器的作用，一个典型的例子：</p>
+<pre><code>body div p:first-child
+body div p:first
+</code></pre>
+<p>这两个的含义完全不一样，如果可以用括号这么写的话，可以改成：</p>
+<pre><code>body div p:first-child --&gt; body div (p:first-child)
+body div p:first --&gt; (body div p):first
+</code></pre>
+<p>first-child 是用来限定 p 的，可以算是 p 的一个属性，</p>
+<p>body div p:first 是用来限定 body div p 结果集的，可以算是 body div p 结果集的一个方法。</p>
+<p>body div p:first &#x3D;&#x3D; (body div p).eq(0)</p>
+<p>类似的情况还有jQuery自定义的几个位置查询表达式，所以</p>
+<p>情况一、body div p:first</p>
+<p>　　自左向右的查询。先找到body，获得集合A，然后在集合A中查找div获得集合B，在集合B中查找p获得集合C，最后取集合C的第一个元素，得最终结果XX</p>
+<p>情况二、body div p:first-child　　</p>
+<p>　　自右向左的查询，先找到p:first-child获得集合A1，然后判断祖先元素里面是否有div获得集合B1，然后判断祖先元素里面是否有body获得集合C1，得最终结果C1</p>
+<p>　　对比上面的两个过程，相较于过程一，过程二更像是一个过滤的过程，因此，Sizzle最大的亮点是自右向左过滤。</p>
+<p>　　另外，为了提高查询效率，最重要的就是缩小查找范围和减少遍历次数。</p>
+<p>一个典型的例子是：</p>
+<pre><code>div p
+</code></pre>
+<p>情况一、先找到p，获得集合A，然后判断祖先元素里面是否有div获得集合B,得最终结果B</p>
+<pre><code>div#a p
+</code></pre>
+<p> #a 一般只会有一个，所以情况一里面p的范围太大了，所以如果第一个选择表达式里面含有id，Sizzle总是先查找第一个，从而缩小查找范围</p>
+<p>情况二、先找到div#a，获得单个元素A1，然后再A1的环境中查找p，得最终结果B1</p>
+<p>因此，最终的过程就变成</p>
+<ol>
+<li>分割表达式</li>
+<li>查找元素</li>
+<li>过滤元素（过滤分两种，1、通过元素自身属性过滤 2、通过元素之间关系过滤。）</li>
+</ol>
+<p>因此可以获得Sizzle的大致代码结构</p>
+<p>Sizzle引擎基本结构</p>
+<pre><code>主要流程：window.Sizzle = function()&#123;&#125;;
+查找元素：Sizzle.find = function()&#123;&#125;;
+过滤元素：Sizzle.filter = function()&#123;&#125;;
+</code></pre>
+<p>定义用到的一些查找方式和过滤条件：Sizzle.selectors &#x3D; {};</p>
+<p>Sizzle.selectors 经常要用到，于是给它一个简短的名字，就叫做 Expr</p>
+<p>于是Sizzle的代码框架如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">window</span>.<span class="property">Sizzle</span> = <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="comment">//主要负责分块和主线流程，通过元素之间关系过滤也被放在这个部分</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="title class_">Sizzle</span>.<span class="property">find</span> = <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="comment">//查找元素</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="title class_">Sizzle</span>.<span class="property">filter</span> = <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="comment">//过滤元素，主要处理通过元素自身属性过滤</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="title class_">Sizzle</span>.<span class="property">selectors</span> = &#123;</span><br><span class="line">    <span class="comment">//命名空间，以及定义一些变量和特异方法</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> <span class="title class_">Expr</span> = <span class="title class_">Sizzle</span>.<span class="property">selectors</span>;<span class="comment">//别称</span></span><br></pre></td></tr></table></figure>
+<p>剩下的问题就是怎么获得我们需要的元素集合</p>
+<h2 id="关于查找元素的初步讨论"><a href="#关于查找元素的初步讨论" class="headerlink" title="关于查找元素的初步讨论"></a>关于查找元素的初步讨论</h2><p>我们先看，怎么找元素，浏览器原生只有三种查找元素的方式（文章开头我们已经假设初步所有的浏览器原生都不支持getElementsByClassName，虽然大部分都支持）：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">getElementById</span><br><span class="line">getElementsByName</span><br><span class="line">getElementsByTagName</span><br></pre></td></tr></table></figure>
+
+<h3 id="问题一"><a href="#问题一" class="headerlink" title="问题一"></a>问题一</h3><p>当我们遇到一个选择表达式的时候，怎么判断这个选择表达式是什么类型的。</p>
+<p>解决方案：</p>
+<p>依次检测这个表达式的类型，获得匹配的类型，注意，一旦获得了匹配的类型，就不会继续匹配了。至于先匹配哪个类型，查找原则就是尽可能的缩小检索范围（特异性越高，检索范围就越小）。一般情况下，ID数量小于NAME数量,NAME数量又小于TAG数量。因此判断顺序就是[‘ID’,’NAME’,’TAG’]</p>
+<p>实例说明：</p>
+<ol>
+<li>input[name&#x3D;”test”]，先查找[name&#x3D;”test”]，此时虽然还可以继续查找input，但是没有那个必要了，因为如果查询input之后再去取交集，会破坏程序的结构。</li>
+</ol>
+<p>Sizzle的处理方式就是：先查找[name&#x3D;”test”]获得集合A，然后在A中过滤input，input被作为一个过滤条件丢到过滤部分去处理。</p>
+<ol start="2">
+<li>input#demo[name&#x3D;”test”] 由于ID的优先级比NAME高，所以先查找#demo获得集合A，然后在A中过滤input[name&#x3D;”test”]，input[name&#x3D;”test”]被作为一个过滤条件丢到过滤部分去处理。</li>
+</ol>
+<h4 id="关于过滤元素的初步讨论"><a href="#关于过滤元素的初步讨论" class="headerlink" title="关于过滤元素的初步讨论"></a>关于过滤元素的初步讨论</h4><p>过滤是一个条件一个条件来进行的，对于一个集合A以及过滤表达式</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expr=<span class="string">&#x27;[class=&quot;test&quot;][rel=1]:first-child&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>在A中过滤[class&#x3D;”test”]得到集合B，此时过滤表达式expr&#x3D;’[rel&#x3D;1]:first-child’</p>
+<p>在B中过滤[rel&#x3D;1]得到集合C，此时过滤表达式expr&#x3D;’:first-child’</p>
+<p>在C中过滤:first-child得到集合D，此时过滤表达式expr&#x3D;’’，过滤完毕</p>
+<p>【说明，上面的顺序不代表真实的顺序，是指为了说明“过滤是一个条件一个条件来进行的”这句活而已】</p>
+<p>过滤分两步：</p>
+<ol>
+<li>预过滤Expr.preFilter，处理兼容问题以及格式转换，决定下一步的走向</li>
+<li>最终过滤Expr.filter，这一步的形式都是一样的，最终返回的都是一个布尔值。</li>
+</ol>
+<p>过滤方式：</p>
+<pre><code>假设第一轮的筛选集合：A = [&#39;#1&#39;,&#39;#2&#39;,&#39;#3&#39;,&#39;#4&#39;,&#39;#5&#39;,&#39;#6&#39;]
+过滤条件为isMatch
+满足条件的集合为C = [&#39;#1&#39;,&#39;#2&#39;,&#39;#3&#39;]
+</code></pre>
+<p>第一、</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> B = [];</span><br><span class="line"><span class="keyword">for</span>( i = <span class="number">0</span>; (item = A[i]) != <span class="literal">null</span>; i++ )&#123;</span><br><span class="line">    A[i] = <span class="title function_">isMatch</span>(item);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span>( i = <span class="number">0</span>;  i &lt; A.<span class="property">length</span>; i++ )&#123;</span><br><span class="line">    <span class="keyword">if</span>(A[i])&#123;</span><br><span class="line">        B.<span class="title function_">push</span>(A[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>[‘#1’,’#2’,’#3’,’#4’,’#5’,’#6’]</li>
+<li>[‘#1’,’#2’,’#3’,false,false,false]</li>
+<li>[‘#1’,’#2’,’#3’]</li>
+</ol>
+<p>第二、</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> B = [];</span><br><span class="line"><span class="keyword">for</span>( i = <span class="number">0</span>; (item = A[i]) != <span class="literal">null</span>; i++ )&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="title function_">isMatch</span>(item))&#123;</span><br><span class="line">        B.<span class="title function_">push</span>(A[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2012/02/03/javascript/2012-02-03-Javascript-Prototype-$/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/javascript/" title="javascript">
+                        <b>#</b> javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/javascript/" title="javascript">
+                        #javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2012/02/16/javascript/2012-02-16-Javascript-Sizzle-2/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E8%BF%B0"><span class="toc-text">简述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%84%E5%85%88%E8%AF%B4%E6%98%8E"><span class="toc-text">预先说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86"><span class="toc-text">预备知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B%E5%BC%80%E9%A2%98"><span class="toc-text">实例开题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E5%88%86%E5%9D%97%E7%9A%84%E8%AE%A8%E8%AE%BA"><span class="toc-text">关于分块的讨论</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E9%80%89%E6%8B%A9%E9%A1%BA%E5%BA%8F%E7%9A%84%E8%AE%A8%E8%AE%BA"><span class="toc-text">关于选择顺序的讨论</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E6%9F%A5%E6%89%BE%E5%85%83%E7%B4%A0%E7%9A%84%E5%88%9D%E6%AD%A5%E8%AE%A8%E8%AE%BA"><span class="toc-text">关于查找元素的初步讨论</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E4%B8%80"><span class="toc-text">问题一</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E8%BF%87%E6%BB%A4%E5%85%83%E7%B4%A0%E7%9A%84%E5%88%9D%E6%AD%A5%E8%AE%A8%E8%AE%BA"><span class="toc-text">关于过滤元素的初步讨论</span></a></li></ol></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

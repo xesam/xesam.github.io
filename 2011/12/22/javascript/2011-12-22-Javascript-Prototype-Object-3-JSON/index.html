@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      【Javascript】Prototype源码浅析——Object部分(三)之有关JSON 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">【Javascript】Prototype源码浅析——Object部分(三)之有关JSON</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/javascript/" title="javascript">
+                    <b>#</b> javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/javascript/" title="javascript">
+                    #javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>对JSON的操作主要是解析JSON字符串为一个对象和将一个对象转换成JSON字符串。</p>
+<p>网上搜一下JSON解析，就会发现一堆文章和方法，当然这篇文章主要不是讨论JSON的解析，不过也可以大致回顾一下：</p>
+<ol>
+<li>eval。eval(‘(‘ + jsonStr + ‘)’);加个括号是为了强制表达式运算，不然直接eval(‘{}’),具体原因可以去翻看一下《JS语言精髓与编程实践》</li>
+<li>Function</li>
+<li>另外有一个JSON解析的库，这个可以自己去下载</li>
+<li>除了IE6,7之外，现代浏览器基本都内置了JSON解析器</li>
+</ol>
+<p>【说明，prototype本身也实现了一个evalJSON方法，不过也脱离不了上面几种情况】</p>
+<p>实例如下（没有用JSON解析库）：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> obj = <span class="string">&quot;&#123;\&quot;name\&quot;:\&quot;xesam\&quot;&#125;&quot;</span>;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;eval:&#x27;</span>,<span class="built_in">eval</span>(<span class="string">&#x27;(&#x27;</span> + obj + <span class="string">&#x27;)&#x27;</span>));</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Function&#x27;</span>,(<span class="keyword">new</span> <span class="title class_">Function</span>(<span class="string">&#x27;return&#x27;</span> + obj))());</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;JSON:&#x27;</span>,<span class="title class_">JSON</span>.<span class="title function_">parse</span>(obj));</span><br><span class="line">&#125;)();</span><br><span class="line"><span class="comment">//结果：&#123;name:&#x27;xesam&#x27;&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>现在将上面的过程反过来，将一个对象编码为一个JSON字符串。同样，如果浏览器带有原生的JSON方法，有一个与parse对应的方法stringify</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> obj = &#123;<span class="attr">name</span>:<span class="string">&#x27;xesam&#x27;</span>&#125;;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj:&#x27;</span>,<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(obj));<span class="comment">//&#x27;&#123;&quot;name&quot;:&quot;xesam&quot;&#125;&#x27;</span></span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<p>这种操作就不像解析那样有那么多方法，因此需要自己来写。</p>
+<p>写之前，先来探讨一下目标对象可能出现的情况,然后把它转换成字符串的形式。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> object_1 = <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">var</span> object_2 = <span class="literal">undefined</span>;</span><br><span class="line"><span class="keyword">var</span> object_3 = <span class="number">12</span>;</span><br><span class="line"><span class="keyword">var</span> object_4 = <span class="string">&#x27;12&#x27;</span>;</span><br><span class="line"><span class="keyword">var</span> object_5 = <span class="literal">true</span>;</span><br><span class="line"><span class="keyword">var</span> object_6 = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</span><br><span class="line"><span class="keyword">var</span> object_7 = &#123;name :<span class="string">&#x27;xesam&#x27;</span>&#125;;</span><br><span class="line"><span class="keyword">var</span> object_8 = &#123;name : <span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;&#125;;</span><br></pre></td></tr></table></figure>
+<p>先硬性规定一下，null、undefined、true、false返回对应的’null’、’undefined’、’true’、’false’。数字直接量和字符串直接量返回对应的数值。</p>
+<p>下面主要是区分出Array类型和Function，主要操作就是遍历每一项，碰到数组或者一般对象就依次展开，所以可以得到一个初始的版本：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">object2Str</span>(<span class="params">object</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="variable language_">arguments</span>.<span class="property">length</span> != <span class="number">0</span> &amp;&amp; <span class="keyword">typeof</span> object == <span class="string">&#x27;undefined&#x27;</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;undefined&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">switch</span> (object) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="literal">null</span> : <span class="keyword">return</span> <span class="string">&#x27;null&#x27;</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="literal">true</span> : <span class="keyword">return</span> <span class="string">&#x27;true&#x27;</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="attr">false</span>: <span class="keyword">return</span> <span class="string">&#x27;false&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">var</span> type = <span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(object);</span><br><span class="line">        <span class="keyword">switch</span>(type)&#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;[object Number]&#x27;</span> : <span class="keyword">return</span> <span class="title class_">String</span>(object);</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;[object String]&#x27;</span> : <span class="keyword">return</span> <span class="title class_">String</span>(object);</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;[object Array]&#x27;</span>  : &#123;</span><br><span class="line">                <span class="keyword">var</span> ret = [];</span><br><span class="line">                <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>,len = object.<span class="property">length</span>; i &lt; len; i++)&#123;</span><br><span class="line">                    ret.<span class="title function_">push</span>(<span class="title function_">object2Str</span>(object[i]));</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> <span class="string">&#x27;[&#x27;</span> + ret.<span class="title function_">join</span>(<span class="string">&#x27;,&#x27;</span>) + <span class="string">&#x27;]&#x27;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;[object Object]&#x27;</span> :&#123;</span><br><span class="line">                <span class="keyword">var</span> ret = [];</span><br><span class="line">                <span class="keyword">for</span>(<span class="keyword">var</span> key <span class="keyword">in</span> object)&#123;</span><br><span class="line">                    <span class="keyword">if</span>(object.<span class="title function_">hasOwnProperty</span>(key))&#123;</span><br><span class="line">                        <span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="title function_">object2Str</span>(object[key]) != <span class="string">&#x27;undefined&#x27;</span>)&#123;</span><br><span class="line">                            ret.<span class="title function_">push</span>(<span class="title class_">String</span>(key) + <span class="string">&#x27;:&#x27;</span> + <span class="title function_">object2Str</span>(object[key]));</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> <span class="string">&#x27;&#123;&#x27;</span> + ret.<span class="title function_">join</span>(<span class="string">&#x27;,&#x27;</span>) + <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">object2Str</span>(<span class="literal">null</span>));</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">object2Str</span>(<span class="literal">undefined</span>));</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">object2Str</span>(<span class="literal">true</span>));</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">object2Str</span>(<span class="number">12</span>));</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">object2Str</span>(<span class="string">&#x27;34&#x27;</span>));</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">object2Str</span>(&#123;name : <span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;&#125;));</span><br><span class="line">    <span class="keyword">var</span> object = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,[<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>],<span class="number">6</span>];</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">object2Str</span>(object));</span><br><span class="line">    <span class="keyword">var</span> object = &#123;</span><br><span class="line">        <span class="attr">name</span>:<span class="string">&#x27;xesam&#x27;</span>,</span><br><span class="line">        age : <span class="number">24</span>,</span><br><span class="line">        <span class="attr">books</span>:&#123;</span><br><span class="line">            key_1 : <span class="string">&#x27;book_1&#x27;</span>,</span><br><span class="line">            key_2 : <span class="string">&#x27;book_2&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">object2Str</span>(object));</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<p>看这个实现，{name:function(){}} 这个并没有显式的提到，因为在默认情况下 </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="title function_">object2Str</span>(object[key]) != <span class="string">&#x27;undefined&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>这一步就被处理了。</p>
+<p>基本的框架得到了，我们的实现中还包括了 undefined 的处理，Prototype 的实现中并没有这一步，需要注意。</p>
+<p>下面要做的就是一些修缮工作，继续补充：</p>
+<p>在上面的例子中，我们忽略了 </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> number_1 = <span class="number">12</span> </span><br></pre></td></tr></table></figure>
+<p>与 </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> number_2 = <span class="keyword">new</span> <span class="title class_">Number</span>(<span class="number">12</span>)</span><br></pre></td></tr></table></figure>
+<p>的区别，我们先填补这两者之间的区别。</p>
+<p>于是在处理每一个值之前先直接调用valueOf获得变量的原始值。于是上面的例子变为：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">object2Str</span>(<span class="params">object</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="variable language_">arguments</span>.<span class="property">length</span> != <span class="number">0</span> &amp;&amp; <span class="keyword">typeof</span> object == <span class="string">&#x27;undefined&#x27;</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;undefined&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">var</span> type = <span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(object);</span><br><span class="line">        <span class="keyword">switch</span> (type) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;[object Number]&#x27;</span> :</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;[object String]&#x27;</span> :</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;[object Boolean]&#x27;</span>:</span><br><span class="line">                object = object.<span class="title function_">valueOf</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">switch</span> (object) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="literal">null</span> : <span class="keyword">return</span> <span class="string">&#x27;null&#x27;</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="literal">true</span> : <span class="keyword">return</span> <span class="string">&#x27;true&#x27;</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="attr">false</span>: <span class="keyword">return</span> <span class="string">&#x27;false&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        type = <span class="keyword">typeof</span> object;</span><br><span class="line">        <span class="keyword">switch</span>(type)&#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;number&#x27;</span>  : <span class="keyword">return</span> <span class="title class_">String</span>(object);</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;string&#x27;</span>  : <span class="keyword">return</span> <span class="title class_">String</span>(object);</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;object&#x27;</span>  : &#123;</span><br><span class="line">                <span class="keyword">var</span> ret = [];</span><br><span class="line">                <span class="keyword">if</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(object) == <span class="string">&#x27;[object Array]&#x27;</span>)&#123;</span><br><span class="line">                    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>,len = object.<span class="property">length</span>; i &lt; len; i++)&#123;</span><br><span class="line">                        ret.<span class="title function_">push</span>(<span class="title function_">object2Str</span>(object[i]));</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">return</span> <span class="string">&#x27;[&#x27;</span> + ret.<span class="title function_">join</span>(<span class="string">&#x27;,&#x27;</span>) + <span class="string">&#x27;]&#x27;</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(object) == <span class="string">&#x27;[object Function]&#x27;</span>)&#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="string">&#x27;&#123;&#125;&#x27;</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    <span class="keyword">for</span>(<span class="keyword">var</span> key <span class="keyword">in</span> object)&#123;</span><br><span class="line">                        <span class="keyword">if</span>(object.<span class="title function_">hasOwnProperty</span>(key))&#123;</span><br><span class="line">                            <span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="title function_">object2Str</span>(object[key]) != <span class="string">&#x27;undefined&#x27;</span>)&#123;</span><br><span class="line">                                ret.<span class="title function_">push</span>(<span class="title class_">String</span>(key) + <span class="string">&#x27;:&#x27;</span> + <span class="title function_">object2Str</span>(object[key]));</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">return</span> <span class="string">&#x27;&#123;&#x27;</span> + ret.<span class="title function_">join</span>(<span class="string">&#x27;,&#x27;</span>) + <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">object2Str</span>(<span class="literal">null</span>));</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">object2Str</span>(<span class="literal">undefined</span>));</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">object2Str</span>(<span class="literal">true</span>));</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">object2Str</span>(<span class="number">12</span>));</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">object2Str</span>(<span class="string">&#x27;34&#x27;</span>));</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">object2Str</span>(&#123;name : <span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;&#125;));</span><br><span class="line">    <span class="keyword">var</span> object = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,[<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>],<span class="number">6</span>];</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">object2Str</span>(object));</span><br><span class="line">    <span class="keyword">var</span> object = &#123;</span><br><span class="line">        <span class="attr">name</span>:<span class="string">&#x27;xesam&#x27;</span>,</span><br><span class="line">        age : <span class="number">24</span>,</span><br><span class="line">        <span class="attr">books</span>:&#123;</span><br><span class="line">            key_1 : <span class="string">&#x27;book_1&#x27;</span>,</span><br><span class="line">            key_2 : <span class="string">&#x27;book_2&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">object2Str</span>(object));</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+
+<p>【说明：上面的实现中并未转义”,&#x2F;,\和还有一些控制符在Prototype中，调用的是string.inspect这个方法来实现的，不过这一部分在后面的String部分，所以暂且这么实现，了解即可】</p>
+<p>现在回到Prototype中，在Prototype里面，相似的方法叫做Str【这个函数是大写开头，说明是一个局部函数，另一个大写开头的是Type，这两个方法并未对外公开】</p>
+<p>对比 object2Str 和 Str，除了上面说的特殊字符转义之外，Str的实现还多了两个参数就是key和stack。</p>
+<p>这个 stack 的作用是什么呢？为了避免循环使用导致栈溢出。</p>
+<p>比如我有一个对象：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;name : <span class="variable language_">this</span>&#125;。</span><br></pre></td></tr></table></figure>
+
+<p>去调用Prototype里面的Str方法，就会报错（typeError），如果直接调用object2Str就会报栈溢出。所以这是一个必要的检测。</p>
+<p>所以我们仿写最终的版本是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">object2Str</span>(<span class="params">object,stack</span>)&#123;</span><br><span class="line">        stack = stack || [];</span><br><span class="line">        <span class="keyword">if</span>(<span class="variable language_">arguments</span>.<span class="property">length</span> != <span class="number">0</span> &amp;&amp; <span class="keyword">typeof</span> object == <span class="string">&#x27;undefined&#x27;</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;undefined&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">var</span> type = <span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(object);</span><br><span class="line">        <span class="keyword">switch</span> (type) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;[object Number]&#x27;</span> :</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;[object String]&#x27;</span> :</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;[object Boolean]&#x27;</span>:</span><br><span class="line">                object = object.<span class="title function_">valueOf</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">switch</span> (object) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="literal">null</span> : <span class="keyword">return</span> <span class="string">&#x27;null&#x27;</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="literal">true</span> : <span class="keyword">return</span> <span class="string">&#x27;true&#x27;</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="attr">false</span>: <span class="keyword">return</span> <span class="string">&#x27;false&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        type = <span class="keyword">typeof</span> object;</span><br><span class="line">        <span class="keyword">switch</span>(type)&#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;number&#x27;</span>  : <span class="keyword">return</span> <span class="title class_">String</span>(object);</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;string&#x27;</span>  : <span class="keyword">return</span> <span class="title class_">String</span>(object);</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;object&#x27;</span>  : &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, length = stack.<span class="property">length</span>; i &lt; length; i++) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (stack[i] === object)&#123;</span><br><span class="line">                        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;error&#x27;</span>);</span><br><span class="line">                        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TypeError</span>();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                stack.<span class="title function_">push</span>(object);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">var</span> ret = [];</span><br><span class="line">                <span class="keyword">if</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(object) == <span class="string">&#x27;[object Array]&#x27;</span>)&#123;</span><br><span class="line">                    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>,len = object.<span class="property">length</span>; i &lt; len; i++)&#123;</span><br><span class="line">                        ret.<span class="title function_">push</span>(<span class="title function_">object2Str</span>(object[i]));</span><br><span class="line">                    &#125;</span><br><span class="line">                    ret = <span class="string">&#x27;[&#x27;</span> + ret.<span class="title function_">join</span>(<span class="string">&#x27;,&#x27;</span>) + <span class="string">&#x27;]&#x27;</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    <span class="keyword">for</span>(<span class="keyword">var</span> key <span class="keyword">in</span> object)&#123;</span><br><span class="line">                        <span class="keyword">if</span>(object.<span class="title function_">hasOwnProperty</span>(key))&#123;</span><br><span class="line">                            <span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="title function_">object2Str</span>(object[key],stack) != <span class="string">&#x27;undefined&#x27;</span>)&#123;</span><br><span class="line">                                ret.<span class="title function_">push</span>(<span class="title class_">String</span>(key) + <span class="string">&#x27;:&#x27;</span> + <span class="title function_">object2Str</span>(object[key],stack));</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    ret =<span class="string">&#x27;&#123;&#x27;</span> + ret.<span class="title function_">join</span>(<span class="string">&#x27;,&#x27;</span>) + <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                stack.<span class="title function_">pop</span>();</span><br><span class="line">                <span class="keyword">return</span> ret;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">object2Str</span>(<span class="literal">null</span>));</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">object2Str</span>(<span class="literal">undefined</span>));</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">object2Str</span>(<span class="literal">true</span>));</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">object2Str</span>(<span class="number">12</span>));</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">object2Str</span>(<span class="string">&#x27;34&#x27;</span>));</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">object2Str</span>(&#123;name : <span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;&#125;));</span><br><span class="line">    <span class="keyword">var</span> object = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,[<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>],<span class="number">6</span>];</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">object2Str</span>(object));</span><br><span class="line">    <span class="keyword">var</span> object = &#123;</span><br><span class="line">        <span class="attr">name</span>:<span class="string">&#x27;xesam&#x27;</span>,</span><br><span class="line">        age : <span class="number">24</span>,</span><br><span class="line">        <span class="attr">books</span>:&#123;</span><br><span class="line">            key_1 : <span class="string">&#x27;book_1&#x27;</span>,</span><br><span class="line">            key_2 : <span class="string">&#x27;book_2&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">object2Str</span>(object));</span><br><span class="line">    <span class="keyword">var</span> object = &#123;</span><br><span class="line">        name : <span class="variable language_">this</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">object2Str</span>(object));</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+
+<p>另外，在Object中，Str是为toJSON来服务的，因此这个调用方法也是特别处理了的，其参数形式是Str(key, holder, stack)</p>
+<p>由于在Prototype的Object中是实现了一个keys方法和一个values方法，所以在类似下面的代码中</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> key <span class="keyword">in</span> object)&#123;</span><br><span class="line">    <span class="keyword">if</span>(object.<span class="title function_">hasOwnProperty</span>(key))&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="title function_">object2Str</span>(object[key]) != <span class="string">&#x27;undefined&#x27;</span>)&#123;</span><br><span class="line">            ret.<span class="title function_">push</span>(<span class="title class_">String</span>(key) + <span class="string">&#x27;:&#x27;</span> + <span class="title function_">object2Str</span>(object[key]));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>直接使用了keys函数，Prototype中的 具体实现是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> keys = <span class="title class_">Object</span>.<span class="title function_">keys</span>(value);</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, length = keys.<span class="property">length</span>; i &lt; length; i++) &#123;</span><br><span class="line">    <span class="keyword">var</span> key = keys[i], str = <span class="title class_">Str</span>(key, value, stack);</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> str !== <span class="string">&quot;undefined&quot;</span>) &#123;</span><br><span class="line">        partial.<span class="title function_">push</span>(key.<span class="title function_">inspect</span>(<span class="literal">true</span>)+ <span class="string">&#x27;:&#x27;</span> + str);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以这么一来，toJSON的调用形式也变成了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">toJSON</span>(<span class="params">value</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">Str</span>(<span class="string">&#x27;&#x27;</span>, &#123; <span class="string">&#x27;&#x27;</span>: value &#125;, []);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果按照我们在例子中的写法，可以直接是</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">toJSON</span>(<span class="params">value</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">object2Str</span>(value, []);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>说完Str，另一个用的多的就是inspect方法，顾名思义啊·检查作用，可以用来调试。</p>
+<p>一个最简单的实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">inspect</span>(<span class="params">object</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> object.<span class="title function_">toString</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<p>null和undefined没有toString方法，这里顺便说明一下，typeof null &#x3D;&#x3D; ‘object’，但是null又没有toString方法，因此不能人为null是一个简单的object</p>
+<p>所以这个讨论在前面已经讨论过了，一次跳过。其他就是一些检测，优化的机制。就不算重点了。</p>
+<p>至于keys（values）两个方法是很简单的，就是抄袭python，遍历一个对象的key（value），然后装到一个数组里返回。</p>
+<p>【toHTML,isHash,toQueryString】的具体实现跟后面关联比较紧，因此在这里就暂时不说。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2011/12/21/fe/2011-12-21-css-overflow/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/javascript/" title="javascript">
+                        <b>#</b> javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/javascript/" title="javascript">
+                        #javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2011/12/27/javascript/2011-12-28-Javascript-Prototype-Class-1/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

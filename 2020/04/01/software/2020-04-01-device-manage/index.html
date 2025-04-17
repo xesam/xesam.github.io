@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      简单设备资产管理 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">简单设备资产管理</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/software/" title="software">
+                    <b>#</b> software
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/software/" title="software">
+                    #software
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>先前做了一套外卖系统，涉及到许多小票机的管理，一开始没注意，后来随着设备数量的增加，带来了盘点与跟踪上的管理烦恼。</p>
+<span id="more"></span>
+
+<p>因此，构思了一套设备管理的系统：</p>
+<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><ol>
+<li>负责人：	申请采购设备、入库设备的商务；</li>
+<li>领取人：	从负责人处领取设备的商务；</li>
+</ol>
+<h2 id="核心步骤"><a href="#核心步骤" class="headerlink" title="核心步骤"></a>核心步骤</h2><h3 id="一、确认采购预算"><a href="#一、确认采购预算" class="headerlink" title="一、确认采购预算"></a>一、确认采购预算</h3><p>负责人根据事情需求，确定品牌、型号、数量。</p>
+<h3 id="二、提出采购申请"><a href="#二、提出采购申请" class="headerlink" title="二、提出采购申请"></a>二、提出采购申请</h3><p>提前一周，发出采购申请。</p>
+<h3 id="三、采购"><a href="#三、采购" class="headerlink" title="三、采购"></a>三、采购</h3><p>公司内专人负责。</p>
+<h3 id="四、入库"><a href="#四、入库" class="headerlink" title="四、入库"></a>四、入库</h3><p>在设备寄达之后，负责人需要在系统内确认签收。未签收的采购不支持入库，也就意味着负责人需要承担设备的损失风险。</p>
+<p>负责人签收之后，需要将设备入库，没有入库的设备无法在系统内进行任何操作。<br>如果入库数量与采购数量不一致，负责人需要说明情况。</p>
+<h3 id="五、领取"><a href="#五、领取" class="headerlink" title="五、领取"></a>五、领取</h3><p>商务从负责人处领取设备，此操作为线下操作，系统不在此阶段进行任何强制干预。</p>
+<p>但是！</p>
+<p>负责人可以要求商务可以在领取时进行“领取”操作，如果商务进行了“领取”操作，系统会将此设备的领取人都标记为当前商务。<br>若负责人无此要求，那么即便商务从负责人处领走了设备，设备也处于“未领取”状态。如果商务领取设备之后一直都没有部署，则此设备会一直处于“未领取”状态，也就意味着负责人同样需要承担设备的损失风险。</p>
+<h3 id="六、部署"><a href="#六、部署" class="headerlink" title="六、部署"></a>六、部署</h3><p>商务将设备放置到指定门店后，需在系统内进行门店绑定，此时，如果商务在上一步的领取阶段没有进行过“领取”操作，此设备的领取人也同步更新为当前商务。</p>
+<h3 id="七、移交"><a href="#七、移交" class="headerlink" title="七、移交"></a>七、移交</h3><p>商务离职或者被调离，需要将设备的当前领取人标记为新商务。新商务需要自行确认设备正常，否则，面临设备赔偿的风险。</p>
+<h3 id="八、回收"><a href="#八、回收" class="headerlink" title="八、回收"></a>八、回收</h3><p>如果门店注销（不合作），需要当前领取人将设备收回，同时将设备与门店解除绑定。此时，商务可以选择：</p>
+<ol>
+<li>将设备自己暂留，领取关系不变。</li>
+<li>交回给负责人，此操作需要在系统内进行，负责人确认后方可生效。</li>
+</ol>
+<h3 id="九、报损（损坏、丢失）"><a href="#九、报损（损坏、丢失）" class="headerlink" title="九、报损（损坏、丢失）"></a>九、报损（损坏、丢失）</h3><p>此操作只能由负责人发起。</p>
+<pre><code>损坏：寄回。
+丢失：商务自定规则。
+</code></pre>
+<h2 id="补充："><a href="#补充：" class="headerlink" title="补充："></a>补充：</h2><p>关于设备丢失的处理原则：</p>
+<pre><code>如果设备有“领取人”，则责任在“领取人”。
+如果设备没有“领取人”，则责任全在负责人。
+</code></pre>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2020/03/04/computer/2020-03-04-javascript-lerna/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/software/" title="software">
+                        <b>#</b> software
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/software/" title="software">
+                        #software
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2020/09/12/fe/2020-09-12-fe-miniapp-lifycycle/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89"><span class="toc-text">定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%AD%A5%E9%AA%A4"><span class="toc-text">核心步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E7%A1%AE%E8%AE%A4%E9%87%87%E8%B4%AD%E9%A2%84%E7%AE%97"><span class="toc-text">一、确认采购预算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%8F%90%E5%87%BA%E9%87%87%E8%B4%AD%E7%94%B3%E8%AF%B7"><span class="toc-text">二、提出采购申请</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E9%87%87%E8%B4%AD"><span class="toc-text">三、采购</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%85%A5%E5%BA%93"><span class="toc-text">四、入库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E9%A2%86%E5%8F%96"><span class="toc-text">五、领取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E9%83%A8%E7%BD%B2"><span class="toc-text">六、部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E7%A7%BB%E4%BA%A4"><span class="toc-text">七、移交</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E5%9B%9E%E6%94%B6"><span class="toc-text">八、回收</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E6%8A%A5%E6%8D%9F%EF%BC%88%E6%8D%9F%E5%9D%8F%E3%80%81%E4%B8%A2%E5%A4%B1%EF%BC%89"><span class="toc-text">九、报损（损坏、丢失）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%A5%E5%85%85%EF%BC%9A"><span class="toc-text">补充：</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

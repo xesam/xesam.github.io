@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Java与Js通信 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Java与Js通信</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/android/" title="android">
+                    <b>#</b> android
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/android/" title="android">
+                    #android
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>Java 与 Js 互调封装 <a target="_blank" rel="noopener" href="https://github.com/xesam/AndroidJavascriptBridge">AndroidJavascriptBridge</a></p>
+<h1 id="JS-调用-Java"><a href="#JS-调用-Java" class="headerlink" title="JS 调用 Java"></a>JS 调用 Java</h1><h2 id="Js-简单调用"><a href="#Js-简单调用" class="headerlink" title="Js 简单调用"></a>Js 简单调用</h2><p>这个比较常见，适用于同步，没有回调的情况</p>
+<p>示例：</p>
+<p>java ：</p>
+<pre><code>@JavascriptInterface
+public void java_fn() &#123;
+&#125;
+
+webView.addJavascriptInterface(this, &quot;Java&quot;);
+</code></pre>
+<p>js：</p>
+<pre><code>Java.java_fn();
+</code></pre>
+<h2 id="Js-回调"><a href="#Js-回调" class="headerlink" title="Js 回调"></a>Js 回调</h2><p>两种形式</p>
+<pre><code>js.call(&#123;
+    data : &#123;&#125;,
+    fn:function()&#123;&#125;
+&#125;)
+
+js.call(data, function()&#123;
+&#125;)
+</code></pre>
+<p>主要问题 ：</p>
+<ol>
+<li>普通对象无法无法直接传递</li>
+<li>回调函数无法传递</li>
+</ol>
+<p>所以，一种处理方式就是在 js 上下文种保持整个请求，在 java 执行完毕之后，从 java 去主动调用 js 方法，找到原始的请求，并执行正确的回调。<br>示意图如下：</p>
+<p><img src="https://github.com/xesam/AndroidJavascriptBridge/raw/master/js_bridge.png" alt="js_bridge.png"></p>
+<p>如此可以嵌套调用下去。一个完整的封装实现：<a target="_blank" rel="noopener" href="https://github.com/xesam/AndroidJavascriptBridge">AndroidJavascriptBridge</a></p>
+<h3 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a>使用示例</h3><p>java:</p>
+<pre><code>final JavascriptBridge javascriptBridge = new JavascriptBridge(webView);
+javascriptBridge.registerLocalRequestHandler(&quot;java_fn1&quot;, new LocalCallRequest.RequestHandler&lt;Person&gt;() &#123;
+    @Override
+    public Person formJson(String requestString) &#123;
+        Gson gson = new Gson();
+        return gson.fromJson(requestString, Person.class);
+    &#125;
+
+    @Override
+    public void handle(LocalCallRequest localCallRequest, Person data) &#123;
+        Toast.makeText(getApplicationContext(), data.name, Toast.LENGTH_SHORT).show();
+        if (localCallRequest.hasCallback()) &#123;
+            javascriptBridge.deliveryRemoteCallback(localCallRequest, &quot;succ&quot;, new Person().getJSONObject());
+        &#125;
+    &#125;
+&#125;);
+</code></pre>
+<p>js:</p>
+<pre><code>document.getElementById(&#39;call_java_2&#39;).addEventListener(&#39;click&#39;, function () &#123;
+    bridge.invoke_remote_call(&#39;java_fn2&#39;,
+        &#123;
+            succ: function (resp) &#123;
+                log(&quot;call_java_2:&quot; + resp.name);
+            &#125;
+        &#125;,
+        true);
+&#125;, false);
+</code></pre>
+<h1 id="Java-调用-Js"><a href="#Java-调用-Js" class="headerlink" title="Java 调用 Js"></a>Java 调用 Js</h1><h2 id="Java-简单调用"><a href="#Java-简单调用" class="headerlink" title="Java 简单调用"></a>Java 简单调用</h2><p>KitKat 之后可以使用 evaluateJavascript。其他择可以使用传统的 WebView.loadUrl</p>
+<pre><code>if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.KITKAT) &#123;
+    mWebView.evaluateJavascript(script, new ValueCallback&lt;String&gt;() &#123;
+        @Override
+        public void onReceiveValue(String value) &#123;
+
+        &#125;
+    &#125;);
+&#125; else &#123;
+    mWebView.loadUrl(&quot;javascript:&quot; + script);
+&#125;
+</code></pre>
+<h2 id="Java-回调"><a href="#Java-回调" class="headerlink" title="Java 回调"></a>Java 回调</h2><p>见上图</p>
+<h3 id="使用示例-1"><a href="#使用示例-1" class="headerlink" title="使用示例"></a>使用示例</h3><p>js:</p>
+<pre><code>bridge.register_local_request_handler(&#39;js_fn1&#39;, function (data, callback_id) &#123;
+    log(&quot;js_fn1:java call js[js_fn1]&quot;);
+&#125;);
+</code></pre>
+<p>java:</p>
+<pre><code>findViewById(R.id.js_fn1).setOnClickListener(new View.OnClickListener() &#123;
+    @Override
+    public void onClick(View v) &#123;
+        RemoteCallRequest remoteCallRequest = new RemoteCallRequest(&quot;js_fn1&quot;, new Person().getJSONObject());
+        javascriptBridge.invokeRemoteCall(remoteCallRequest);
+
+    &#125;
+&#125;);
+</code></pre>
+<h2 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h2><p><img src="https://github.com/xesam/AndroidJavascriptBridge/raw/master/demo.png" alt="demo.png"></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2015/09/08/android/2015/2015-09-08-Android-scroll-image/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/android/" title="android">
+                        <b>#</b> android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/android/" title="android">
+                        #android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2015/10/20/android/2015/2015-10-20-Android-looger/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#JS-%E8%B0%83%E7%94%A8-Java"><span class="toc-text">JS 调用 Java</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Js-%E7%AE%80%E5%8D%95%E8%B0%83%E7%94%A8"><span class="toc-text">Js 简单调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Js-%E5%9B%9E%E8%B0%83"><span class="toc-text">Js 回调</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="toc-text">使用示例</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Java-%E8%B0%83%E7%94%A8-Js"><span class="toc-text">Java 调用 Js</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-%E7%AE%80%E5%8D%95%E8%B0%83%E7%94%A8"><span class="toc-text">Java 简单调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-%E5%9B%9E%E8%B0%83"><span class="toc-text">Java 回调</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B-1"><span class="toc-text">使用示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%88%E6%9E%9C%E5%9B%BE"><span class="toc-text">效果图</span></a></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      小程序组件通信 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">小程序组件通信</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/fe/" title="fe">
+                    <b>#</b> fe
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/fe/" title="fe">
+                    #fe
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>小程序文档中关于“组件间通信与事件”的部分写得比较简单，在此主要记录官方的几种标准用法，以及一些骚操作。</p>
+<span id="more"></span>
+
+<h2 id="父节点、子节点、父组件、子组件"><a href="#父节点、子节点、父组件、子组件" class="headerlink" title="父节点、子节点、父组件、子组件"></a>父节点、子节点、父组件、子组件</h2><p>这些定义并不是官方文档所给出的，只是本文为了方便说明，专门为本文定义的，下面是具体说明。</p>
+<p>在小程序中，构建组件页面的方式有两个途径：</p>
+<ol>
+<li>在组件自身的布局文件中直接定义，这种在页面中直接定义的节点称为“直接子节点”；</li>
+<li>在使用组件时，通过 slot 标签引入子节点，被引入的节点称为“slot子节点”。</li>
+</ol>
+<p>一个示例：</p>
+<p>组件布局：component.wxml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">view</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">view</span> <span class="attr">name</span>=<span class="string">&quot;view-1&quot;</span>&gt;</span>......<span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">slot</span>&gt;</span><span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>页面布局：page.wxml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">view</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">component</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">view</span> <span class="attr">name</span>=<span class="string">&quot;view-2&quot;</span>&gt;</span>......<span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">component</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>在上面的示例中，view-1 是 component 的“直接子节点”，view-2 是 component 的“slot子节点”。</p>
+<p>这两种引入子节点的方式，会影响组件的通信方式，因此特意做个区分。</p>
+<p>按照概念来讲，“父组件&amp;子组件” 与 “父节点&amp;子节点” 是两类不同的抽象。“组件”更侧重说明功能，“节点”更侧重表现结构。<br>还是以上面的例子来讲：</p>
+<ol>
+<li>对于组件来讲，component.wxml 代表一个“组件”，view-1 是这个“组件”的一个子节点。</li>
+<li>对于页面来讲，component 本身也是一个子节点。</li>
+</ol>
+<p>如果不必要区分，后文将混用这两组概念。</p>
+<h2 id="官方文档方式"><a href="#官方文档方式" class="headerlink" title="官方文档方式"></a>官方文档方式</h2><h3 id="父组件向子组件传递数据"><a href="#父组件向子组件传递数据" class="headerlink" title="父组件向子组件传递数据"></a>父组件向子组件传递数据</h3><ol>
+<li>WXML 数据绑定。子组件定义 properties，父组件通过 setData 方法给子组件传递数据。</li>
+<li>父组件通过 this.selectComponent 方法获取子组件实例对象，直接访问组件的数据，或者调用子组件的方法。</li>
+</ol>
+<p>这里的“子组件”，指的其实是“直接子节点”，“slot子节点”是获取不到的。也就是说：<strong>this.selectComponent 只能在“直接子节点”里面查找，不能在“slot子节点”里面查找</strong></p>
+<p>如果要获取“slot子节点”应该怎么办呢？</p>
+<p>官方文档内没有找到直接的方法，不过小程序可以定义“组件间关系”。“组件间关系”有两类：</p>
+<ol>
+<li>parent 和 child</li>
+<li>ancestor 和 descendant</li>
+</ol>
+<p>可见，“组件间关系”只能定义上下级关系。如果组件配置了“组件间关系”，还可以通过 this.getRelationNodes 方法来获取关系组件的节点实例，也可以直接访问关系组件的数据，或者调用关系组件的方法。由于“组件间关系”本身的局限，这个方法也就只能用于事实上的父子组件，而不能用于兄弟组件。<em>注意，这里特意指出是“组件”</em>。</p>
+<p>事实上，个人觉得 this.getRelationNodes 正是用来在“slot子节点”内进行查找的，而且确实有效。与 this.selectComponent 类似，这个方式也有局限，与 this.selectComponent 正好相反，<strong>this.getRelationNodes 只能在“slot子节点”里面查找，不能在“直接子节点”里面查找</strong></p>
+<p>示例说明：parent-view 与 child-view 是关系组件。</p>
+<p>组件布局：parent.wxml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">view</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">slot</span>&gt;</span><span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">child-view</span> <span class="attr">name</span>=<span class="string">&quot;inner-a&quot;</span> <span class="attr">class</span>=<span class="string">&quot;selectComponent-class&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">child-view</span> <span class="attr">name</span>=<span class="string">&quot;inner-b&quot;</span> <span class="attr">class</span>=<span class="string">&quot;selectComponent-class&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>页面布局：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">parent-view</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">child-view</span> <span class="attr">name</span>=<span class="string">&quot;slot-a&quot;</span> <span class="attr">class</span>=<span class="string">&quot;selectComponent-class&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">child-view</span> <span class="attr">name</span>=<span class="string">&quot;slot-b&quot;</span> <span class="attr">class</span>=<span class="string">&quot;selectComponent-class&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">parent-view</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<pre><code>this.selectComponent(&#39;.selectComponent-class&#39;) 返回节点 inner-a.
+this.getRelationNodes(&#39;child&#39;); 返回节点 slot-a, slot-b.
+</code></pre>
+<p>总结起来， this.selectComponent 与 this.getRelationNodes 两个主要区别：</p>
+<ol>
+<li>this.selectComponent 只能在“直接子节点”里面查找，不能在“slot子节点”里面查找;this.getRelationNodes 只能在“slot子节点”里面查找，不能在“直接子节点”里面查找</li>
+<li>this.selectComponent 只能获取第一个找到的节点，而 this.getRelationNodes 能获取所有找到的节点。</li>
+</ol>
+<h3 id="子组件向父组件传递数据"><a href="#子组件向父组件传递数据" class="headerlink" title="子组件向父组件传递数据"></a>子组件向父组件传递数据</h3><ol>
+<li>子组件通过 this.triggerEvent 发出一个事件，父组通过WXML 绑定的事件监听器来监测此事件。</li>
+</ol>
+<p>官方文档只给了这一种方式，其实也可以算是 “WXML 数据绑定” 的一种特别形式。</p>
+<p>同理，如果组件配置了“组件间关系”，也可以通过 this.getRelationNodes 方法来获取父组件的节点实例，直接访问父组件的数据，或者调用父组件的方法。</p>
+<p>同样，只有“slot子节点”能够通过 this.getRelationNodes 来获取父组件的节点。所以，对于上文的 inner-a，inner-b 这两个“直接子组件”，其实没有获取父节点的官方推荐方法。如果一定要获取，就只能想一些“骚方法”了。</p>
+<h3 id="骚操作"><a href="#骚操作" class="headerlink" title="骚操作"></a>骚操作</h3><p>从 2.0.9 开始，WXML 数据绑定支持在数据中包含函数，比如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="title class_">Component</span>(&#123;</span><br><span class="line">  <span class="attr">properties</span>:&#123;</span><br><span class="line">    <span class="attr">fn</span>:&#123;</span><br><span class="line">      <span class="attr">type</span>:<span class="title class_">Object</span>,</span><br><span class="line">      <span class="attr">value</span>:&#123;</span><br><span class="line">        <span class="attr">get</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;，</span><br><span class="line">  <span class="attr">lifetimes</span>: &#123;</span><br><span class="line">    <span class="title function_">ready</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">data</span>.<span class="property">fn</span>.<span class="title function_">get</span>(<span class="variable language_">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>虽然写法比较丑，但是能用，因此，在实际使用的时候，不仅可以把数据都格式化好之后再传递给子组件，还可以直接把格式化函数传递给组件，毕竟，格式化的定制需求比较多。</p>
+<p>父组件的调用形式：</p>
+<p>父组件 page.js：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Page</span>(&#123;</span><br><span class="line">  <span class="title function_">onLoad</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setData</span>(&#123;</span><br><span class="line">      <span class="attr">fn</span>: &#123;</span><br><span class="line">          <span class="title function_">get</span>(<span class="params">child</span>) &#123;</span><br><span class="line">              <span class="variable language_">console</span>.<span class="title function_">log</span>(child.<span class="property">data</span>.<span class="property">name</span>, <span class="string">&#x27;created&#x27;</span>);</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>page.wxml 通过 properties 进行数据绑定：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">child-view</span> <span class="attr">name</span>=<span class="string">&quot;inner-a&quot;</span> <span class="attr">fn</span>=<span class="string">&quot;&#123;&#123;fn&#125;&#125;&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>理论上只要能够传递函数，就可以在父组件与子组件之间创建一个通道，组件之间直接通过这个通道来通信，效果也是一样的。</p>
+<p>子组件：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="title class_">Component</span>(&#123;</span><br><span class="line">    <span class="attr">options</span>: &#123;<span class="attr">virtualHost</span>: <span class="literal">true</span>&#125;,</span><br><span class="line">    <span class="attr">behaviors</span>: [<span class="title class_">Child</span>],</span><br><span class="line">    <span class="attr">properties</span>: &#123;</span><br><span class="line">        <span class="attr">name</span>: &#123;<span class="attr">type</span>: <span class="title class_">String</span>, <span class="attr">value</span>: <span class="string">&#x27;&#x27;</span>&#125;,</span><br><span class="line">        <span class="attr">fn</span>: &#123;</span><br><span class="line">            <span class="attr">type</span>: <span class="title class_">Object</span>,</span><br><span class="line">            <span class="attr">value</span>: <span class="literal">null</span>,</span><br><span class="line">            <span class="title function_">observer</span>(<span class="params">newVal, oldVal, changedPath</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (newVal) &#123;</span><br><span class="line">                    <span class="keyword">const</span> parent = newVal.<span class="title function_">get</span>(<span class="variable language_">this</span>); <span class="comment">//得到 parent</span></span><br><span class="line">                    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;parent = &#x27;</span>, parent);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>父组件：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Component</span>(&#123;</span><br><span class="line">    <span class="title function_">created</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> _this = <span class="variable language_">this</span>;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">setData</span>(&#123;</span><br><span class="line">            <span class="attr">fn</span>: &#123;</span><br><span class="line">                <span class="title function_">get</span>(<span class="params">child</span>) &#123;</span><br><span class="line">                    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;child = &#x27;</span>, child); <span class="comment">//得到 child</span></span><br><span class="line">                    <span class="keyword">return</span> _this;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>如此一来，两个组件之间可以相互持有，由于 WXML 数据绑定是小程序最基础的通信方式，因此，这种方式是没有什么限制的。不过，这种方式带来的问题也很明显：<strong>内存泄漏</strong>，如果一定要这么干，记得一定要在组件的生命周期处理好引用的管理。</p>
+<p>同理，既然数据绑定能传递函数，那么子组件的 this.triggerEvent 一样也可以发送一个函数。</p>
+<p>子组件：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="title class_">Component</span>(&#123;</span><br><span class="line">    <span class="attr">methods</span>: &#123;</span><br><span class="line">        <span class="title function_">emit</span>(<span class="params"></span>)&#123;</span><br><span class="line">          <span class="variable language_">this</span>.<span class="title function_">triggerEvent</span>(<span class="string">&#x27;emit&#x27;</span>, &#123;</span><br><span class="line">            <span class="title function_">sendMessage</span>(<span class="params">data</span>)&#123;</span><br><span class="line">              <span class="variable language_">console</span>.<span class="title function_">log</span>(data); <span class="comment">//&#x27;来自 parent 的消息&#x27;</span></span><br><span class="line">            &#125;</span><br><span class="line">          &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>父组件：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="title class_">Component</span>(&#123;</span><br><span class="line">    <span class="attr">methods</span>: &#123;</span><br><span class="line">        <span class="title function_">onEmit</span>(<span class="params">e</span>)&#123;</span><br><span class="line">          e.<span class="property">detail</span>.<span class="title function_">sendMessage</span>(&#123;</span><br><span class="line">            <span class="attr">msg</span>:<span class="string">&#x27;来自 parent 的消息&#x27;</span></span><br><span class="line">          &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>事件绑定</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">child-view</span> <span class="attr">name</span>=<span class="string">&quot;inner-a&quot;</span> <span class="attr">class</span>=<span class="string">&quot;selectComponent-class&quot;</span> <span class="attr">bindemit</span>=<span class="string">&quot;&#123;&#123;onEmit&#125;&#125;&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>相比前一种“互相持有”，这种方式显得稳妥不少，毕竟如果不特意持有组件引用，是不会内存泄漏风险的。当然，这种方式稍微改造一下，与前一种方式也无异。</p>
+<p>这种方式比较适合希望穿透父组件，直接操作子组件的情况。毕竟有时候直接通过子组件协议来操作比通过父组件协议来操作要方便不少，尤其是对于某些不必知会父组件的操作。</p>
+<h2 id="slot-的问题。"><a href="#slot-的问题。" class="headerlink" title="slot 的问题。"></a>slot 的问题。</h2><p>组件数据不能穿过 slot 边界其实挺闹心的，给自定义组件造成了一些麻烦。比如定义一个 Stepper 组件：</p>
+<p>stepper.wxml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">view</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">view</span> <span class="attr">bind:tap</span>=<span class="string">&quot;onTapDecrease&quot;</span>&gt;</span>增加<span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">view</span>&gt;</span>&#123;&#123;count&#125;&#125;<span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">view</span> <span class="attr">bind:tap</span>=<span class="string">&quot;onTapIncrease&quot;</span>&gt;</span>增加<span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>stepper.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Component</span>(&#123;</span><br><span class="line">    <span class="attr">methods</span>: &#123;</span><br><span class="line">        <span class="title function_">onTapDecrease</span>(<span class="params"></span>)&#123;</span><br><span class="line">          <span class="variable language_">this</span>.<span class="title function_">setData</span>(&#123;</span><br><span class="line">            <span class="attr">count</span>:<span class="variable language_">this</span>.<span class="property">data</span>.<span class="property">count</span> - <span class="number">1</span></span><br><span class="line">          &#125;);</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="title function_">onTapIncrease</span>(<span class="params"></span>)&#123;</span><br><span class="line">          <span class="variable language_">this</span>.<span class="title function_">setData</span>(&#123;</span><br><span class="line">            <span class="attr">count</span>:<span class="variable language_">this</span>.<span class="property">data</span>.<span class="property">count</span> + <span class="number">1</span></span><br><span class="line">          &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>如果希望使用者可以自定义 count 的展现样式，我们通常会这么写：</p>
+<p>stepper.wxml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">view</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">view</span> <span class="attr">bind:tap</span>=<span class="string">&quot;onTapDecrease&quot;</span>&gt;</span>增加<span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">view</span> <span class="attr">wx:if</span>=<span class="string">&#123;&#123;!useSlot&#125;&#125;</span> <span class="attr">class</span>=<span class="string">&quot;ext-class&quot;</span>&gt;</span>&#123;&#123;count&#125;&#125;<span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">slot</span> <span class="attr">wx:else</span>&gt;</span><span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">view</span> <span class="attr">bind:tap</span>=<span class="string">&quot;onTapIncrease&quot;</span>&gt;</span>增加<span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>可以把 ext-class 指定为 externalClasses，然后通过 ext-class 来覆盖组件内 count 的样式，不过这种毕竟局限性太大，有时候就只能通过 slot 来自定义 count 的页面结构。</p>
+<p>调用方页面结构：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">stepper-view</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">view</span>&gt;</span><span class="tag">&lt;<span class="name">text</span>&gt;</span>&#123;&#123;count&#125;&#125;<span class="tag">&lt;/<span class="name">text</span>&gt;</span><span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">stepper-view</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="绕个大圈"><a href="#绕个大圈" class="headerlink" title="绕个大圈"></a>绕个大圈</h3><p>这个时候就面临问题了，由于通过 slot 添加的部分无法直接获取 stepper-view 内部的 count 属性，因此，只能通过 stepper-view 的宿主组件来借道实现（绕个大圈）：</p>
+<p>宿主页面结构：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">stepper-view</span> <span class="attr">bindincrease</span>=<span class="string">&quot;onIncreased&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">view</span>&gt;</span><span class="tag">&lt;<span class="name">text</span>&gt;</span>&#123;&#123;count&#125;&#125;<span class="tag">&lt;/<span class="name">text</span>&gt;</span><span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">stepper-view</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>宿主方法：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="title function_">onIncreased</span>(<span class="params">e</span>)&#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="title function_">setData</span>(&#123;</span><br><span class="line">    <span class="attr">count</span>:e.<span class="property">detail</span>.<span class="property">count</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种方式着实麻烦，如果 slot 能支持数据传递，就会方便很多，比如：</p>
+<p>stepper.wxml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">view</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">view</span> <span class="attr">bind:tap</span>=<span class="string">&quot;onTapDecrease&quot;</span>&gt;</span>增加<span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">view</span> <span class="attr">wx:if</span>=<span class="string">&#123;&#123;!useSlot&#125;&#125;</span> <span class="attr">class</span>=<span class="string">&quot;ext-class&quot;</span>&gt;</span>&#123;&#123;count&#125;&#125;<span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">slot</span> <span class="attr">wx:else</span> <span class="attr">slot:data</span>=<span class="string">&#123;&#123;count&#125;&#125;</span>&gt;</span><span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">view</span> <span class="attr">bind:tap</span>=<span class="string">&quot;onTapIncrease&quot;</span>&gt;</span>增加<span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>宿主页面结构：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">stepper-view</span> <span class="attr">bindincrease</span>=<span class="string">&quot;onIncreased&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">view</span>&gt;</span><span class="tag">&lt;<span class="name">text</span>&gt;</span>&#123;&#123;slotData.count&#125;&#125;<span class="tag">&lt;/<span class="name">text</span>&gt;</span><span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">stepper-view</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>不过官方始终没有支持 slot 传值，个人开发者也没有办法绕过去，只能期待了。</p>
+<h3 id="无奈之举"><a href="#无奈之举" class="headerlink" title="无奈之举"></a>无奈之举</h3><p>所以，如果开发者想复用 stepper 现有的事件和交互，又想以灵活的方式修改页面结构，就只能将自定义的页面结构包装成特定的类型组件，使得 stepper 可以找到开发者自己的组件。</p>
+<p>stepper.wxml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">view</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">view</span> <span class="attr">bind:tap</span>=<span class="string">&quot;onTapDecrease&quot;</span>&gt;</span>增加<span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">view</span> <span class="attr">wx:if</span>=<span class="string">&#123;&#123;!useSlot&#125;&#125;</span> <span class="attr">class</span>=<span class="string">&quot;ext-class&quot;</span>&gt;</span>&#123;&#123;count&#125;&#125;<span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">slot</span> <span class="attr">wx:else</span>&gt;</span><span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">view</span> <span class="attr">bind:tap</span>=<span class="string">&quot;onTapIncrease&quot;</span>&gt;</span>增加<span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>找到开发者自定义的组件：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Component</span>(&#123;</span><br><span class="line">    <span class="attr">methods</span>: &#123;</span><br><span class="line">        <span class="title function_">onTapDecrease</span>(<span class="params"></span>)&#123;</span><br><span class="line">          <span class="keyword">const</span> countView = <span class="variable language_">this</span>.<span class="title function_">getRelationNodes</span>(<span class="string">&#x27;countBehavior&#x27;</span>)[<span class="number">0</span>];</span><br><span class="line">          countView.<span class="title function_">setData</span>(&#123;</span><br><span class="line">            <span class="attr">count</span>:<span class="variable language_">this</span>.<span class="property">data</span>.<span class="property">count</span> - <span class="number">1</span></span><br><span class="line">          &#125;);</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="title function_">onTapIncrease</span>(<span class="params"></span>)&#123;</span><br><span class="line">          <span class="keyword">const</span> countView = <span class="variable language_">this</span>.<span class="title function_">getRelationNodes</span>(<span class="string">&#x27;countBehavior&#x27;</span>)[<span class="number">0</span>];</span><br><span class="line">          countView.<span class="title function_">setData</span>(&#123;</span><br><span class="line">            <span class="attr">count</span>:<span class="variable language_">this</span>.<span class="property">data</span>.<span class="property">count</span> + <span class="number">1</span></span><br><span class="line">          &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>假如开发者自定义的组件叫 custom，那么 custom 须包含 countBehavior 这个 Behavior，从而可以直接接收与 stepper 通信：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">stepper-view</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">custom</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">stepper-view</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>貌似现阶段只有这么些方式，持续跟进…</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2020/09/13/fe/2020-09-13-fe-miniapp-hook/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/fe/" title="fe">
+                        <b>#</b> fe
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/fe/" title="fe">
+                        #fe
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2020/09/15/fe/2020-09-16-fe-miniapp-reuse-2/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%88%B6%E8%8A%82%E7%82%B9%E3%80%81%E5%AD%90%E8%8A%82%E7%82%B9%E3%80%81%E7%88%B6%E7%BB%84%E4%BB%B6%E3%80%81%E5%AD%90%E7%BB%84%E4%BB%B6"><span class="toc-text">父节点、子节点、父组件、子组件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E6%96%B9%E5%BC%8F"><span class="toc-text">官方文档方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%88%B6%E7%BB%84%E4%BB%B6%E5%90%91%E5%AD%90%E7%BB%84%E4%BB%B6%E4%BC%A0%E9%80%92%E6%95%B0%E6%8D%AE"><span class="toc-text">父组件向子组件传递数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%90%E7%BB%84%E4%BB%B6%E5%90%91%E7%88%B6%E7%BB%84%E4%BB%B6%E4%BC%A0%E9%80%92%E6%95%B0%E6%8D%AE"><span class="toc-text">子组件向父组件传递数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AA%9A%E6%93%8D%E4%BD%9C"><span class="toc-text">骚操作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#slot-%E7%9A%84%E9%97%AE%E9%A2%98%E3%80%82"><span class="toc-text">slot 的问题。</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%95%E4%B8%AA%E5%A4%A7%E5%9C%88"><span class="toc-text">绕个大圈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E5%A5%88%E4%B9%8B%E4%B8%BE"><span class="toc-text">无奈之举</span></a></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

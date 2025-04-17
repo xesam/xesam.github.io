@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      批量word和PPT文档转pdf 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">批量word和PPT文档转pdf</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/talk/" title="talk">
+                    <b>#</b> talk
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/talk/" title="talk">
+                    #talk
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>由于linux上处理word和ppt比较麻烦，而且有文件格式专利的问题，所以以下操作全部在Windows下面进行。</p>
+<p>首先需要安装Microsoft Save as PDF加载项，官方下载地址：<a target="_blank" rel="noopener" href="http://www.microsoft.com/zh-cn/download/details.aspx?id=7">http://www.microsoft.com/zh-cn/download/details.aspx?id=7</a></p>
+<p>安装成功后可以手工将文档另存为pdf。</p>
+<p>需要引用“Win32::OLE”模块</p>
+<pre><code class="language-perl">use Win32::OLE;
+use Win32::OLE::Const &#39;Microsoft Word&#39;;
+use Win32::OLE::Const &#39;Microsoft PowerPoint&#39;;
+</code></pre>
+<p>word转pdf：</p>
+<pre><code class="language-perl">sub word2pdf&#123;
+    my $word_file = $_[0];
+    my $word = CreateObject Win32::OLE &#39;Word.Application&#39; or die $!;
+    $word-&gt;&#123;&#39;Visible&#39;&#125; = 0;
+    my $document = $word-&gt;Documents-&gt;Open($word_file) || die(&quot;Unable to open document &quot;) ; 
+    my $pdffile = $word_file.&quot;.pdf&quot;;
+    $document-&gt;saveas(&#123;FileName=&gt;$pdffile,FileFormat=&gt;wdExportFormatPDF&#125;);
+    $document -&gt; close (&#123;SaveChanges=&gt;wdDoNotSaveChanges&#125;);
+    $word-&gt;quit();
+&#125;
+</code></pre>
+<p>ppt转pdf</p>
+<pre><code class="language-perl">sub ppt2pdf&#123;
+    my $word_file = $_[0];
+    my $word = CreateObject Win32::OLE &#39;PowerPoint.Application&#39; or die $!;
+    $word-&gt;&#123;&#39;Visible&#39;&#125; = 1;
+    my $document = $word-&gt;Presentations-&gt;Open($word_file) || die(&quot;Unable to open document &quot;) ; 
+    my $pdffile = $word_file.&quot;.pdf&quot;;
+    $document-&gt;saveas($pdffile,32);
+    $document -&gt; close (&#123;SaveChanges=&gt;wdDoNotSaveChanges&#125;);
+    $word-&gt;quit();
+&#125;
+</code></pre>
+<span id="more"></span>
+
+<p>注意事项：</p>
+<ol>
+<li>PPT转换中如果设置powerpoint不显示，即$word-&gt;{‘Visible’} &#x3D; 0，会导致转换失败。</li>
+<li>如果使用完整的路径，路径名中不能有空格以及“%”等特殊符号，不然无法打开文档。</li>
+</ol>
+<p>转换当前文件夹下的文件：</p>
+<pre><code class="language-perl">use Cwd;
+
+my $dirname = getcwd();
+@files = glob &quot;*.doc&quot;;
+foreach (@files)&#123;
+    print $dirname.&#39;/&#39;.$_, &quot;\n&quot;;
+    word2pdf($dirname.&#39;/&#39;.$_);
+&#125;
+</code></pre>
+<p>如果要同时转换子文件夹的文件，可以先遍历，然后再转换：</p>
+<pre><code class="language-perl">use File::Find;
+find(sub &#123;
+    word2pdf($File::Find::name) if /\.(doc|docx)/;
+    ppt2pdf($File::Find::name) if /\.(ppt|pptx)/;
+&#125;, &quot;D:/test&quot;);
+</code></pre>
+<p>为了避免多次重复打开word，可以先获取所有需要转换的文档，集中转换：</p>
+<pre><code class="language-perl">find(sub &#123;
+    push(@file_word, $File::Find::name) if /\.(doc|docx)/;
+&#125;, &quot;D:/test&quot;);
+
+word2pdf(@file_word);
+
+sub deleteSpace&#123;
+    my $filename = $_[0];
+    my @temp = split(/\//, $filename);
+    my $filename_without_path = pop(@temp);
+    $filename_without_path =~ s/\s+//g;
+    join(&#39;/&#39;, @temp).&#39;/&#39;.$filename_without_path;
+&#125;
+
+sub word2pdf&#123;
+    my @files = @_;
+    my $word = CreateObject Win32::OLE &#39;Word.Application&#39; or die $!;
+    $word-&gt;&#123;&#39;Visible&#39;&#125; = 0;
+    foreach (@files)&#123;
+        my $new_name = deleteSpace($_);
+        rename($_, $new_name);
+        print $new_name, &quot;\n&quot;;
+        my $document = $word-&gt;Documents-&gt;Open($new_name) || die &quot;can not open document&quot;;
+        my $pdffile = $new_name.&quot;.pdf&quot;;
+        $document-&gt;saveas(&#123;FileName=&gt;$pdffile,FileFormat=&gt;wdExportFormatPDF&#125;);
+        $document -&gt; close (&#123;SaveChanges=&gt;wdDoNotSaveChanges&#125;);
+    &#125;
+    $word-&gt;quit();
+&#125;
+</code></pre>
+<p>也可以换一种实现，先调用chdir到子目录中，然后在子目录中进行转换，可以避免目录有不合法字符导致的转换失败，不过文件名的不合法字符导致的失败也不可避免，所以以上的各种转换，都需要先提出空格以及特殊字符才行，deleteSpace仅仅替换了空格，还需要改进。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2012/10/09/javascript/2012-10-09-Javascript-parseInt/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/talk/" title="talk">
+                        <b>#</b> talk
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/talk/" title="talk">
+                        #talk
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2012/11/26/android/2012/2012-11-26-Android-shape/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

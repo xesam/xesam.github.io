@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      【Javascript】Sizzle引擎--原理与实践（五） 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">【Javascript】Sizzle引擎--原理与实践（五）</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/javascript/" title="javascript">
+                    <b>#</b> javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/javascript/" title="javascript">
+                    #javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>这篇是关于Sizzle.filter部分的详细分解，前提是先看懂Sizzle.filter的分发过程。</p>
+<p>回顾一下Sizzle.filter的过程：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">match = <span class="title function_">preFilter</span>()</span><br><span class="line"><span class="keyword">if</span>(match)&#123;</span><br><span class="line">    <span class="title function_">filter</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当preFilter返回为false的时候，filter就被短路了。</p>
+<h3 id="过滤CLASS"><a href="#过滤CLASS" class="headerlink" title="过滤CLASS"></a>过滤CLASS</h3><p>怎么判断一个元素时候含有某个类，源码中的方法：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">checkClass</span>(<span class="params">elem,className,not</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> not ^ (<span class="string">&#x27; &#x27;</span> + elem.<span class="property">className</span> + <span class="string">&#x27; &#x27;</span>).<span class="title function_">indexOf</span>(<span class="string">&#x27; &#x27;</span>+ className +<span class="string">&#x27; &#x27;</span>) &gt; -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意那个not参数，前面有提到过的，取补集而已。</p>
+<pre><code>checkClass(elem,className)  ---&gt;hasClass(elem,className)
+checkClass(elem,className,true)  ---&gt;hasNoClass(elem,className)
+</code></pre>
+<h4 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;test&quot;</span> <span class="attr">class</span>=<span class="string">&quot;a b c d&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">function</span> <span class="title function_">checkClass</span>(<span class="params">elem,className,not</span>)&#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">return</span> not ^ (<span class="string">&#x27; &#x27;</span> + elem.<span class="property">className</span> + <span class="string">&#x27; &#x27;</span>).<span class="title function_">indexOf</span>(<span class="string">&#x27; &#x27;</span>+ className +<span class="string">&#x27; &#x27;</span>) &gt; -<span class="number">1</span>;</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> test = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;test&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">checkClass</span>(test,<span class="string">&#x27;a&#x27;</span>)); <span class="comment">//1</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">checkClass</span>(test,<span class="string">&#x27;b&#x27;</span>)); <span class="comment">//1</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">checkClass</span>(test,<span class="string">&#x27;e&#x27;</span>)); <span class="comment">//0</span></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> test = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;test&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">checkClass</span>(test,<span class="string">&#x27;a&#x27;</span>,<span class="literal">true</span>)); <span class="comment">//0</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">checkClass</span>(test,<span class="string">&#x27;b&#x27;</span>,<span class="literal">true</span>)); <span class="comment">//0</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">checkClass</span>(test,<span class="string">&#x27;e&#x27;</span>,<span class="literal">true</span>)); <span class="comment">//1</span></span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>对照</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Expr</span>.<span class="property">match</span>.<span class="property">CLASS</span> = <span class="regexp">/\.((?:[\w\u00c0-\uFFFF\-]|\\.)+)/</span>;</span><br></pre></td></tr></table></figure>
+
+<p>获得的一个类似[‘.className’,’className’]的数组，取做match，经过层层处理之后，传递给preFilter.CLASS的形式主要是[‘.className’,’className’,?,?]的形式，因此在CLASS处理部分，只需要match的前两个参数就可以了。</p>
+<p>因此在CLASS的preFilter部分，其大致处理形式就是这样的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">preFilter.<span class="property">CLASS</span> =  <span class="keyword">function</span>(<span class="params"> match, curLoop, inplace, result, not, isXML </span>) &#123;</span><br><span class="line">     match = <span class="string">&quot; &quot;</span> + match[<span class="number">1</span>].<span class="title function_">replace</span>( rBackslash, <span class="string">&quot;&quot;</span> ) + <span class="string">&quot; &quot;</span>;</span><br><span class="line">     <span class="keyword">if</span> ( isXML ) &#123;<span class="comment">//是否是XML，咱可以不考虑</span></span><br><span class="line">         <span class="keyword">return</span> match;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="comment">//依次遍历curLoop中的待检测元素</span></span><br><span class="line">     <span class="keyword">for</span> ( <span class="keyword">var</span> i = <span class="number">0</span>, elem; (elem = curLoop[i]) != <span class="literal">null</span>; i++ ) &#123;</span><br><span class="line">         <span class="keyword">if</span> ( elem ) &#123;</span><br><span class="line">             <span class="comment">//找到对应的类</span></span><br><span class="line">             <span class="keyword">if</span> ( not ^ (elem.<span class="property">className</span> &amp;&amp; (<span class="string">&quot; &quot;</span> + elem.<span class="property">className</span> + <span class="string">&quot; &quot;</span>).<span class="title function_">replace</span>(<span class="regexp">/[\t\n\r]/g</span>, <span class="string">&quot; &quot;</span>).<span class="title function_">indexOf</span>(match) &gt;= <span class="number">0</span>) ) &#123;</span><br><span class="line">                 <span class="keyword">if</span> ( !inplace ) &#123;<span class="comment">//找到对应的类，而且不允许就地修改的时候，将满足条件的存入result</span></span><br><span class="line">                     result.<span class="title function_">push</span>( elem );</span><br><span class="line">                 &#125;</span><br><span class="line">             &#125; <span class="keyword">else</span> <span class="keyword">if</span> ( inplace ) &#123;<span class="comment">//没有对应的类，而且允许就地修改的时候，将对应项的数据改为false</span></span><br><span class="line">                 curLoop[i] = <span class="literal">false</span>;</span><br><span class="line">             &#125;</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span> <span class="literal">false</span>;<span class="comment">//这里在非XML的情况下，都是返回false，因此后面的filter部分始终被短路</span></span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure>
+<p>在上面的步骤中，需要注意的是curLoop已经result是两个数组，属于引用类型，任何改变都会反映到外部的集合中。已经得到了过滤的结果，因此返回false，无需再执行其他步骤。</p>
+<p>至于filter.CLASS就是单纯的判断是否含有某个类而已：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">filter.<span class="property">CLASS</span>: <span class="keyword">function</span>(<span class="params"> elem, match </span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> (<span class="string">&quot; &quot;</span> + (elem.<span class="property">className</span> || elem.<span class="title function_">getAttribute</span>(<span class="string">&quot;class&quot;</span>)) + <span class="string">&quot; &quot;</span>).<span class="title function_">indexOf</span>( match ) &gt; -<span class="number">1</span>;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>上面的代码已经很清晰了。</p>
+<h3 id="过滤ID"><a href="#过滤ID" class="headerlink" title="过滤ID"></a>过滤ID</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">ID</span>: <span class="regexp">/#((?:[\w\u00c0-\uFFFF\-]|\\.)+)/</span></span><br></pre></td></tr></table></figure>
+
+<p>match的形式如[‘#id’,’id’]</p>
+<p>这个步骤就很简单了，</p>
+<p>preFilter处理match[1]的格式问题</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">preFilter.<span class="property">ID</span>: <span class="keyword">function</span>(<span class="params"> match </span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> match[<span class="number">1</span>].<span class="title function_">replace</span>( rBackslash, <span class="string">&quot;&quot;</span> );</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>filter判断元素的id是不是给定的id</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">    filter.<span class="property">ID</span>: <span class="keyword">function</span>(<span class="params"> elem, match </span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> elem.<span class="property">nodeType</span> === <span class="number">1</span> &amp;&amp; elem.<span class="title function_">getAttribute</span>(<span class="string">&quot;id&quot;</span>) === match;</span><br><span class="line">    &#125;,</span><br><span class="line"><span class="string">``</span><span class="string">`    </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">一般来说，要判断id的情况并不多，因为id一般都在Sizzle.find被处理掉了，再来过滤id严重拖慢速度，expr表达式写得估计有问题。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">### 过滤TAG</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">同过滤ID</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">### 过滤ATTR</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">过滤attr的过程在filter部分的时候作为实例带过，此处忽略</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">### 过滤Child</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Child有点复杂了，可以从选择符的形式着手。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">举个栗子：</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>html</span><br><span class="line">&lt;div&gt;</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;tab&quot;</span> <span class="attr">id</span>=<span class="string">&quot;a1&quot;</span>&gt;</span>1<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;tab&quot;</span> <span class="attr">id</span>=<span class="string">&quot;a2&quot;</span>&gt;</span>2<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;tab&quot;</span> <span class="attr">id</span>=<span class="string">&quot;a3&quot;</span>&gt;</span>3<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line">&lt;/div&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;tab&quot;</span> <span class="attr">id</span>=<span class="string">&quot;a4&quot;</span>&gt;</span>4<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;p:only-child&#x27;</span>));     <span class="comment">//[#a4]</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;p:last-child&#x27;</span>));     <span class="comment">//[#a3,#a4]</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;p:first-child&#x27;</span>));    <span class="comment">//[#a1,,#a4]</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;p:nth-child(1)&#x27;</span>));   <span class="comment">//[#a1,#a4]</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;p:nth-child(odd)&#x27;</span>)); <span class="comment">//[#a1,#a3,#a4]</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;p:nth-child(even)&#x27;</span>));<span class="comment">//[#a2]</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;p:nth-child(n)&#x27;</span>));   <span class="comment">//[#a1,#a2,#a3,#a4]</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sizzle</span>(<span class="string">&#x27;p:nth-child(2n+1)&#x27;</span>));<span class="comment">//[#a1,#a3,#a4]</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>在上面的几个形式中，可以分为两组：</p>
+<p>only-child,last-child,first-child分为一组A</p>
+<p>nth-child单独为一组B。</p>
+<p>虽然由 nth-child 可以完全得到组A，但是组A是特殊形式的简便方式。</p>
+<p>另外，这两种方式的代码形式的主要是组A不能再带位置参数，组B必须后接一个位置参数。</p>
+<p>比如‘last-child(2)’是不行的，‘nth-child’是不行的，这个看名字就可以理解。</p>
+<p>先看</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">CHILD</span>: <span class="regexp">/:(only|nth|last|first)-child(?:\(\s*(even|odd|(?:[+\-]?\d+|(?:[+\-]?\d*)?n\s*(?:[+\-]\s*\d+)?))\s*\))?/</span>,</span><br></pre></td></tr></table></figure>
+<p>匹配（match）的分组就是match &#x3D; [‘nth-child’,’nth’,’2n+1’]或者match &#x3D; [‘first-child’,’first’,undefined]的形式。<br>其中nth那种的位置表达式可能比较多，因此preFilter中处理的问题就是把nth形式中的各种形式转换成统一的形式。</p>
+<p>转换原理</p>
+<p>even 转换成 2n，odd 转换成 2n+1,5 转换成 0n+5 ，可得最后要得到的形式就是 an+b 的形式。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">match[<span class="number">2</span>] === <span class="string">&quot;even&quot;</span> &amp;&amp; <span class="string">&quot;2n&quot;</span>;<span class="comment">//对于even的形式转化为2n</span></span><br><span class="line">match[<span class="number">2</span>] === <span class="string">&quot;odd&quot;</span> &amp;&amp; <span class="string">&quot;2n+1;&quot;</span><span class="comment">//对于odd的形式转化为2n+1</span></span><br><span class="line">!<span class="regexp">/\D/</span>.<span class="title function_">test</span>( match[<span class="number">2</span>] ) &amp;&amp; <span class="string">&quot;0n+&quot;</span> + match[<span class="number">2</span>];<span class="comment">//对于纯数字(比如&#x27;nth-child(5)&#x27;)的形式转化为&#x27;nth-child(0n+5)&#x27;</span></span><br><span class="line">match[<span class="number">2</span>];<span class="comment">//其他形式(&#x27;3n+4&#x27;)的直接保留</span></span><br><span class="line"><span class="comment">//这里理解&amp;&amp;这种操作符的用途就行，虽然某些人说这种用法并不提倡。</span></span><br></pre></td></tr></table></figure>
+
+<p>现在形式统一了，只需要提取出an+b中相应的a和b就可以了，提取方式当然用正则，注意a、b都可能为负数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> test = <span class="regexp">/(-?)(\d*)(?:n([+\-]?\d*))?/</span>.<span class="title function_">exec</span>(<span class="string">&#x27;an+b&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>获得的test分组类似[‘an+b’,’-‘,’a’,’+b’]，对于实例‘-2n-1’就是[‘-2n-1’,’-‘,’2’,’-1’]</p>
+<p>现在每个数组都是字符串，需要时数字才便于处理，因此我们先将数字字符串转换为纯数字，字符串转换为数字也挺简单：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">number = numberStr-<span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>因此这个基本步骤就是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> posStr = match[<span class="number">2</span>] === <span class="string">&quot;even&quot;</span> &amp;&amp; <span class="string">&quot;2n&quot;</span> || match[<span class="number">2</span>] === <span class="string">&quot;odd&quot;</span> &amp;&amp; <span class="string">&quot;2n+1&quot;</span> ||!<span class="regexp">/\D/</span>.<span class="title function_">test</span>( match[<span class="number">2</span>] ) &amp;&amp; <span class="string">&quot;0n+&quot;</span> + match[<span class="number">2</span>] || match[<span class="number">2</span>];</span><br><span class="line"><span class="keyword">var</span> test = <span class="regexp">/(-?)(\d*)(?:n([+\-]?\d*))?/</span>.<span class="title function_">exec</span>(posStr);<span class="comment">//分离an+b</span></span><br><span class="line"><span class="keyword">var</span> temp1 = (test[<span class="number">1</span>] + (test[<span class="number">2</span>] || <span class="number">1</span>)) - <span class="number">0</span>;          <span class="comment">//&#x27;a&#x27;转化为a，带符号</span></span><br><span class="line"><span class="keyword">var</span> temp2 = test[<span class="number">3</span>] - <span class="number">0</span>;                             <span class="comment">//‘b’转化为b，也带符号</span></span><br></pre></td></tr></table></figure>
+<p>看具体源码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">CHILD</span>: <span class="keyword">function</span>(<span class="params"> match </span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> ( match[<span class="number">1</span>] === <span class="string">&quot;nth&quot;</span> ) &#123;</span><br><span class="line">        <span class="keyword">if</span> ( !match[<span class="number">2</span>] ) &#123;  <span class="comment">//nth的形式必须有位置参数</span></span><br><span class="line">            <span class="title class_">Sizzle</span>.<span class="title function_">error</span>( match[<span class="number">0</span>] );</span><br><span class="line">        &#125;</span><br><span class="line">        match[<span class="number">2</span>] = match[<span class="number">2</span>].<span class="title function_">replace</span>(<span class="regexp">/^\+|\s*/g</span>, <span class="string">&#x27;&#x27;</span>);<span class="comment">//去除开头的加号或者结尾的空白</span></span><br><span class="line">        <span class="comment">//下面的步骤就对应于上面的分解步骤</span></span><br><span class="line">        <span class="keyword">var</span> test = <span class="regexp">/(-?)(\d*)(?:n([+\-]?\d*))?/</span>.<span class="title function_">exec</span>(</span><br><span class="line">            match[<span class="number">2</span>] === <span class="string">&quot;even&quot;</span> &amp;&amp; <span class="string">&quot;2n&quot;</span> || match[<span class="number">2</span>] === <span class="string">&quot;odd&quot;</span> &amp;&amp; <span class="string">&quot;2n+1&quot;</span> ||!<span class="regexp">/\D/</span>.<span class="title function_">test</span>( match[<span class="number">2</span>] ) &amp;&amp; <span class="string">&quot;0n+&quot;</span> + match[<span class="number">2</span>] || match[<span class="number">2</span>]);</span><br><span class="line">        match[<span class="number">2</span>] = (test[<span class="number">1</span>] + (test[<span class="number">2</span>] || <span class="number">1</span>)) - <span class="number">0</span>;</span><br><span class="line">        match[<span class="number">3</span>] = test[<span class="number">3</span>] - <span class="number">0</span>;</span><br><span class="line">        <span class="comment">//到这里的时候，match的形式已经统一成[&#x27;nth-child(??)&#x27;,&#x27;nth&#x27;,a,b]的形式</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ( match[<span class="number">2</span>] ) &#123;<span class="comment">//非nth的形式一定不能有位置参数</span></span><br><span class="line">        <span class="title class_">Sizzle</span>.<span class="title function_">error</span>( match[<span class="number">0</span>] );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    match[<span class="number">0</span>] = done++;</span><br><span class="line">    <span class="comment">//到这里的时候，match的形式已经统一成[done,&#x27;nth&#x27;,a,b]的形式</span></span><br><span class="line">    <span class="keyword">return</span> match;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+<h3 id="过滤POS"><a href="#过滤POS" class="headerlink" title="过滤POS"></a>过滤POS</h3><h3 id="过滤PSEUDO"><a href="#过滤PSEUDO" class="headerlink" title="过滤PSEUDO"></a>过滤PSEUDO</h3>
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2012/02/21/javascript/2012-02-21-Javascript-Sizzle-4-getElementsByClassName/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/javascript/" title="javascript">
+                        <b>#</b> javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/javascript/" title="javascript">
+                        #javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2012/03/01/javascript/2012-03-01-Javascript-Lawnchair.js/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4CLASS"><span class="toc-text">过滤CLASS</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B"><span class="toc-text">实例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4ID"><span class="toc-text">过滤ID</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4POS"><span class="toc-text">过滤POS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4PSEUDO"><span class="toc-text">过滤PSEUDO</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

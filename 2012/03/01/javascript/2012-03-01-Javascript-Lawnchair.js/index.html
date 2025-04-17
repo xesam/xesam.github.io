@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      【Javascript】轻量级JSON存储解决方案Lawnchair.js 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">【Javascript】轻量级JSON存储解决方案Lawnchair.js</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/javascript/" title="javascript">
+                    <b>#</b> javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/javascript/" title="javascript">
+                    #javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="Lawnchair"><a href="#Lawnchair" class="headerlink" title="Lawnchair"></a>Lawnchair</h2><p>Lawnchair是一个轻量级的移动应用程序数据持久化存储方案，同时也是客户端JSON文档存储方法，优点是短小，语法简洁，扩展性比较好。</p>
+<p>现在做HTML5移动应用除了LocalStorage的兼容性比较好之外，SQL web database以及IndexedDB都处在僵局中，虽然有人叫嚣着“我们应该干掉 LocalStorage API”，但那是后话，现在也没得选择。</p>
+<p>Lawnchair有个曾经的官网：<a target="_blank" rel="noopener" href="http://westcoastlogic.com/lawnchair/">http://westcoastlogic.com/lawnchair/</a>，不过这个站点提供的源码版本过时了，而且还有错误。</p>
+<p>需要下载的话，最新版本在 <a target="_blank" rel="noopener" href="https://github.com/brianleroux/lawnchair">https://github.com/brianleroux/lawnchair</a></p>
+<p>应用示例【应用的是dom Storage】：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">    <span class="keyword">var</span> store = <span class="keyword">new</span> <span class="title class_">Lawnchair</span>(&#123;<span class="attr">name</span>:<span class="string">&#x27;testing&#x27;</span>&#125;, <span class="keyword">function</span>(<span class="params">store</span>) &#123;</span><br><span class="line">    <span class="comment">// 需要保存的对象</span></span><br><span class="line">    <span class="keyword">var</span> me = &#123;<span class="attr">key</span>:<span class="string">&#x27;brian&#x27;</span>&#125;;</span><br><span class="line">    <span class="comment">// 保存</span></span><br><span class="line">    store.<span class="title function_">save</span>(me);</span><br><span class="line"></span><br><span class="line">    store.<span class="title function_">get</span>(<span class="string">&#x27;brian&#x27;</span>, <span class="keyword">function</span>(<span class="params">me</span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(me);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>或者：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">    <span class="keyword">var</span> store = <span class="title class_">Lawnchair</span>(&#123;<span class="attr">name</span>:<span class="string">&#x27;testing&#x27;</span>&#125;, <span class="keyword">function</span>(<span class="params">store</span>) &#123;</span><br><span class="line">    <span class="comment">// 需要保存的对象</span></span><br><span class="line">    <span class="keyword">var</span> me = &#123;<span class="attr">key</span>:<span class="string">&#x27;brian&#x27;</span>&#125;;</span><br><span class="line">    <span class="comment">// 保存</span></span><br><span class="line">    store.<span class="title function_">save</span>(me);</span><br><span class="line"></span><br><span class="line">    store.<span class="title function_">get</span>(<span class="string">&#x27;brian&#x27;</span>, <span class="keyword">function</span>(<span class="params">me</span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(me);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>因为使用了安全的构造函数，因此两种方法的效果一致。回调函数的第一个参数与返回的的store是同一个对象，在回调函数内部也可以用this代替。</p>
+<p>初始化：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> store = <span class="keyword">new</span> <span class="title class_">Lawnchair</span>(option,callback);</span><br></pre></td></tr></table></figure>
+<p>option默认为空对象，有三个可选属性：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">option = &#123;</span><br><span class="line">    <span class="attr">name</span>:<span class="comment">//相当于表名</span></span><br><span class="line">    <span class="attr">record</span>:<span class="comment">//</span></span><br><span class="line">    <span class="attr">adapter</span>:<span class="comment">//存储类型</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>callback的第一个参数是当前对象，在回调函数内部也可以用this代替。</p>
+<h2 id="API"><a href="#API" class="headerlink" title="API"></a>API</h2><pre><code>keys (callback) //返回存储对象的所有keys
+save (obj, callback)//保存一个对象
+batch(array, callback)//保存一组对象
+get (key|array, callback)//获取一个或者一组对象，然后调用callback处理
+exists (key, callback)//检查是否存在key，并将结果的布尔值（true/false）传递给callback函数
+each(callback)//遍历集合，将（对象，对象索引）传递给callback函数
+all (callback)//将所有对象放在一个数组返回
+remove (key|array, callback)//移除一个或者一组元素。
+nuke (callback)//销毁所有
+</code></pre>
+<p>初始化：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> store = <span class="keyword">new</span> <span class="title class_">Lawnchair</span>(&#123;<span class="attr">name</span>:<span class="string">&#x27;test&#x27;</span>&#125;, <span class="keyword">function</span>(<span class="params"></span>) &#123;&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> store = <span class="keyword">new</span> <span class="title class_">Lawnchair</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>参数中必须有一个函数作为回调函数，哪怕是空。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">save</span> (obj, callback)<span class="comment">//保存一个对象</span></span><br><span class="line"><span class="keyword">var</span> store = <span class="title class_">Lawnchair</span>(&#123;<span class="attr">name</span>:<span class="string">&#x27;table&#x27;</span>&#125;, <span class="keyword">function</span>(<span class="params">store</span>) &#123;</span><br><span class="line">&#125;);</span><br><span class="line">store.<span class="title function_">save</span>(&#123;</span><br><span class="line">    <span class="attr">key</span>:<span class="string">&#x27;hust&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>:<span class="string">&#x27;xesam_1&#x27;</span></span><br><span class="line">&#125;)</span><br><span class="line">store.<span class="title function_">save</span>(&#123;</span><br><span class="line">    <span class="attr">key</span>:<span class="string">&#x27;whu&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>:<span class="string">&#x27;xesam_2&#x27;</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>创建 Lawnchair 对象的时候，如果传入的 option 参数含有 name 属性，那么会创建一个类似 table._index_的数组用来保存索引值。</p>
+<p>保存形式为对象，如果传入的对象有key属性，那么key会作为索引值保存，如果没有key属性，则自动生成一个key值，然后保存在table._index_中，上面的例子的操作结果如下图：</p>
+<p><img src="/image/Lawnchair_1.jpg" alt="1"></p>
+<p>batch(array, callback)&#x2F;&#x2F;保存一组对象</p>
+<p>上面的例子改用batch方法就是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> store = <span class="title class_">Lawnchair</span>(&#123;<span class="attr">name</span>:<span class="string">&#x27;table&#x27;</span>&#125;, <span class="keyword">function</span>(<span class="params">store</span>) &#123;</span><br><span class="line">&#125;);</span><br><span class="line">store.<span class="title function_">batch</span>([&#123;</span><br><span class="line">    <span class="attr">key</span>:<span class="string">&#x27;hust&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>:<span class="string">&#x27;xesam_1&#x27;</span></span><br><span class="line">&#125;,&#123;</span><br><span class="line">    <span class="attr">key</span>:<span class="string">&#x27;whu&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>:<span class="string">&#x27;xesam_2&#x27;</span></span><br><span class="line">&#125;])</span><br></pre></td></tr></table></figure>
+
+<p>exists (key, callback)&#x2F;&#x2F;检查是否存在key，并将结果的布尔值（true&#x2F;false）传递给callback函数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">store.<span class="title function_">exists</span>(<span class="string">&#x27;whu&#x27;</span>,<span class="keyword">function</span>(<span class="params">result</span>)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(result);<span class="comment">//true</span></span><br><span class="line">&#125;)</span><br><span class="line">store.<span class="title function_">exists</span>(<span class="string">&#x27;test&#x27;</span>,<span class="keyword">function</span>(<span class="params">result</span>)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(result);<span class="comment">//false</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>get (key|array, callback)&#x2F;&#x2F;获取一个或者一组对象，然后调用callback处理</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">store.<span class="title function_">get</span>(<span class="string">&#x27;hust&#x27;</span>,<span class="keyword">function</span>(<span class="params">result</span>)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(result);<span class="comment">//&#123;key:&#x27;hust&#x27;,name:&#x27;xesam_1&#x27;&#125;</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>all (callback)&#x2F;&#x2F;将所有对象放在一个数组返回</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">store.<span class="title function_">all</span>(<span class="keyword">function</span>(<span class="params">result</span>)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(result);<span class="comment">//[&#123;key:&#x27;hust&#x27;,name:&#x27;xesam_1&#x27;&#125;,&#123;key:&#x27;whu&#x27;,name:&#x27;xesam_2&#x27;&#125;]</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>each(callback)&#x2F;&#x2F;遍历集合，将（对象，对象索引）传递给callback函数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">store.<span class="title function_">each</span>(<span class="keyword">function</span>(<span class="params">result</span>)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(result);</span><br><span class="line">    <span class="comment">//&#123;key:&#x27;hust&#x27;,name:&#x27;xesam_1&#x27;&#125;</span></span><br><span class="line">    <span class="comment">// &#123;key:&#x27;whu&#x27;,name:&#x27;xesam_2&#x27;&#125;</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>remove (key|array, callback)&#x2F;&#x2F;移除一个或者一组元素。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">store.<span class="title function_">remove</span>(<span class="string">&#x27;whu&#x27;</span>,<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    store.<span class="title function_">all</span>(<span class="keyword">function</span>(<span class="params">result</span>)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(result)<span class="comment">//[&#123;key:&#x27;hust&#x27;,name:&#x27;xesam_1&#x27;&#125;]</span></span><br><span class="line">    &#125;);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>nuke (callback)&#x2F;&#x2F;销毁所有</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">store.<span class="title function_">nuke</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    store.<span class="title function_">all</span>(<span class="keyword">function</span>(<span class="params">result</span>)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(result)<span class="comment">//[]</span></span><br><span class="line">    &#125;);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>keys (callback) &#x2F;&#x2F;返回存储对象的所有keys</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">store.<span class="title function_">keys</span>(<span class="keyword">function</span>(<span class="params">result</span>)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(result)<span class="comment">//[&#x27;hust&#x27;,&#x27;whu&#x27;]</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>lawnchair.js的核心很小，然后有完善的扩展和插件机制，可以按需加载。<br>自己编写也比较方便，只需要在自己的代码中实现</p>
+<pre><code>adapter 
+valid 
+init 
+keys 
+save 
+batch 
+get 
+exists 
+all 
+remove 
+nuke
+</code></pre>
+<p>方法即可。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2012/02/25/javascript/2012-02-25-Javascript-Sizzle-5/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/javascript/" title="javascript">
+                        <b>#</b> javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/javascript/" title="javascript">
+                        #javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2012/03/10/javascript/2012-03-10-Javascript-html5sql.js/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Lawnchair"><span class="toc-text">Lawnchair</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#API"><span class="toc-text">API</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

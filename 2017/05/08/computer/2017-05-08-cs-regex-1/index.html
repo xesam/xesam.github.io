@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Regex温故知新1 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Regex温故知新1</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/computer/" title="computer">
+                    <b>#</b> computer
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/computer/" title="computer">
+                    #computer
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>《正则表达式必知必会》——Ben Forta，回顾笔记。</p>
+<p>正则表达式的两种基本用途：搜索和替换。给定一个正则表达式，它要么匹配一些文本（进行一次搜索），要么匹配并替换一些文本（进行一次替换）。</p>
+<p>正则表达式的核心难点：验证某个模式能不能获得预期的匹配结果并不困难，但如何验证它不会匹配到你不想要的东西可就没那么简单了。</p>
+<span id="more"></span>
+
+<h3 id="利用字符集合区间"><a href="#利用字符集合区间" class="headerlink" title="利用字符集合区间"></a>利用字符集合区间</h3><p>字符区间的首、尾字符可以是ASCII字符表里的任意字符。但在实际工作中，最常用的字符区间还是数字字符区间和字母字符区间：</p>
+<ul>
+<li>❑ A-Z，匹配从A到Z的所有大写字母。</li>
+<li>❑ a-z，匹配从a到z的所有小写字母。</li>
+<li>❑ A-F，匹配从A到F的所有大写字母。</li>
+<li>❑ A-z，匹配从ASCII字符A到ASCII字符z的所有字母。这个模式一般不常用，因为它还包含着 [ 和 ^ 等在ASCII字符表里排列在Z和a之间的字符。</li>
+</ul>
+<blockquote>
+<p>注意 -（连字符）是一个特殊的元字符，作为元字符它只能用在[和]之间。在字符集合以外的地方，-只是一个普通字符，只能与-本身相匹配。因此，在正则表达式里，-字符不需要被转义。</p>
+</blockquote>
+<h3 id="取非匹配"><a href="#取非匹配" class="headerlink" title="取非匹配"></a>取非匹配</h3><p>用元字符^来表明你想对一个字符集合进行取非匹配——这与逻辑非运算很相似，只是这里的操作数是字符集合而已。</p>
+<blockquote>
+<p>^的效果将作用于给定字符集合里的所有字符或字符区间，而不是仅限于紧跟在^字符后面的那一个字符或字符区间。</p>
+</blockquote>
+<h3 id="匹配特定的字符类别"><a href="#匹配特定的字符类别" class="headerlink" title="匹配特定的字符类别"></a>匹配特定的字符类别</h3><table>
+<thead>
+<tr>
+<th align="left">元字符</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">\s</td>
+<td align="left">任何一个空白字符(等价于[\f\n\r\t\v])</td>
+</tr>
+<tr>
+<td align="left">\S</td>
+<td align="left">任何一个非空白字符(等价于[\f\n\r\t\v])</td>
+</tr>
+<tr>
+<td align="left">\d</td>
+<td align="left">任何一个数字字符(等价于[O-9])</td>
+</tr>
+<tr>
+<td align="left">\D</td>
+<td align="left">任何一个非数字字符(等价于[^0-9])</td>
+</tr>
+<tr>
+<td align="left">\w</td>
+<td align="left">任何一个字母数字字符(大小写均可)或下划线字符(等价于[a-zA-Z0-9_])</td>
+</tr>
+<tr>
+<td align="left">\W</td>
+<td align="left">任何一个非字母数字或非下划线字符(等价于[^a-zA-Z0-9])</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>用来匹配退格字符的[\b]元字符是一个特例：它不在类元字符\s的覆盖范围内，当然也就没有被排除在类元字符\S的覆盖范围外。</p>
+</blockquote>
+<h3 id="使用POSIX字符类"><a href="#使用POSIX字符类" class="headerlink" title="使用POSIX字符类"></a>使用POSIX字符类</h3><p>POSIX字符类是许多（但不是所有）正则表达式实现都支持的一种简写形式。</p>
+<blockquote>
+<p>注意 这里使用的模式以 [[ 开头、以 ]] 结束（两对方括号）。这是使用POSIX字符类所必须的。POSIX字符类必须括在 [: 和 :] 之间，我们使用的POSIX字符类是 [:xdigit:]（不是：xdigit:）。外层的 [ 和 ] 字符用来定义一个字符集合，内层的 [ 和 ] 字符是 POSIX 字符类本身的组成部分。</p>
+</blockquote>
+<h3 id="重复匹配"><a href="#重复匹配" class="headerlink" title="重复匹配"></a>重复匹配</h3><table>
+<thead>
+<tr>
+<th align="left">元字符</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">+</td>
+<td align="left">匹配字符或字符集合的一次或多次重复出现</td>
+</tr>
+<tr>
+<td align="left">*</td>
+<td align="left">匹配字符或字符集合的零次或多次重复出现</td>
+</tr>
+<tr>
+<td align="left">?</td>
+<td align="left">匹配字符或字符集合的零次或一次出现</td>
+</tr>
+<tr>
+<td align="left">{3}</td>
+<td align="left">匹配字符或字符集合的3次</td>
+</tr>
+<tr>
+<td align="left">{3, 10}</td>
+<td align="left">匹配字符或字符集合的 3 次到 10 次之间</td>
+</tr>
+<tr>
+<td align="left">{3, }</td>
+<td align="left">匹配字符或字符集合的 3 次到无数次</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>一般来说，当在字符集合里使用的时候，像 . 和 + 这样的元字符将被解释为普通字符，不需要被转义——但转义了也没有坏处。[\w.] 的使用效果与 [\w.] 是一样的。</p>
+</blockquote>
+<blockquote>
+<p>[ ]的常规用法是把多个字符定义为一个集合，但有不少程序员喜欢把一个字符也定义为一个集合。这么做的好处是可以增加可读性和避免产生误解，让人们一眼就可以看出哪个字符与哪个元字符相关联。</p>
+</blockquote>
+<blockquote>
+<p>因为*和+都是所谓的“贪婪型”元字符，它们在进行匹配时的行为模式是多多益善而不是适可而止的。它们会尽可能地从一段文本的开头一直匹配到这段文本的末尾，而不是从这段文本的开头匹配到碰到第一个匹配时为止。</p>
+</blockquote>
+<p>在不需要这种“贪婪行为”的时候，可以使用这些元字符的“懒惰型”版本。懒惰型元字符的写法很简单，只要给贪婪型元字符加上一个？后缀即可。</p>
+<table>
+<thead>
+<tr>
+<th align="left">贪婪型</th>
+<th align="left">堕落型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">+</td>
+<td align="left">+?</td>
+</tr>
+<tr>
+<td align="left">*</td>
+<td align="left">*?</td>
+</tr>
+<tr>
+<td align="left">{3, }</td>
+<td align="left">{3, }?</td>
+</tr>
+</tbody></table>
+<h3 id="匹配边界"><a href="#匹配边界" class="headerlink" title="匹配边界"></a>匹配边界</h3><blockquote>
+<p> \b到底匹配什么东西呢？正则表达式引擎不懂任何人类语言，也不知道什么是单词边界。简单地说，\b匹配的是一个这样的位置，这个位置位于一个能够用来构成单词的字符（字母、数字和下划线，也就是与\w相匹配的字符）和一个不能用来构成单词的字符（也就是与\W相匹配的字符）之间。</p>
+</blockquote>
+<blockquote>
+<p>如果你想表明不匹配一个单词边界，请使用\B。</p>
+</blockquote>
+<p>单词边界可以用来进行与单词有关的位置匹配（单词的开头、单词的结束、整个单词，等等）。字符串边界有着类似的用途，只不过是用来进行与字符串有关的位置匹配而已（字符串的开头、字符串的结束、整个字符串，等等）。用来定义字符串边界的元字符有两个：一个是用来定义字符串开头的^，另一个是用来定义字符串结尾的$。</p>
+<blockquote>
+<p>有许多正则表达式都支持使用一些特殊的元字符去改变另外一些元字符行为的做法，用来启用分行匹配模式（multiline mode）的（? m）记号就是一个能够改变其他元字符行为的元字符序列。</p>
+</blockquote>
+<h3 id="子表达式"><a href="#子表达式" class="headerlink" title="子表达式"></a>子表达式</h3><p>子表达式是一个更大的表达式的一部分；把一个表达式划分为一系列子表达式的目的是为了把那些子表达式当作一个独立元素来使用。</p>
+<p>子表达式的作用是把同一个表达式的各个相关部分组合在一起。子表达式必须用（和）来定义。子表达式的常见用途包括：对重复次数元字符的作用对象做出精确的设定和控制、对|操作符的OR条件做出准确的定义，等等。</p>
+<p>如有必要，子表达式允许嵌套。事实上，子表达式允许多重嵌套，这种嵌套的层次在理论上没有限制，但在实际工作中还是应该遵循适可而止的原则。</p>
+<blockquote>
+<p>nbsp是“non-breaking space”的缩写，其含义是“不是换行符的空格”</p>
+</blockquote>
+<h3 id="回溯引用（backreference）"><a href="#回溯引用（backreference）" class="headerlink" title="回溯引用（backreference）"></a>回溯引用（backreference）</h3><p>回溯引用指的是模式的后半部分引用在前半部分中定义的子表达式。<em>可以把回溯引用想像成变量。</em></p>
+<p>回溯引用只能用来引用模式里的子表达式（用（和）括起来的正则表达式片段）。</p>
+<p>回溯引用匹配通常从1开始计数（\1、\2，等等）。在许多实现里，第0个匹配（\0）可以用来代表整个正则表达式。</p>
+<blockquote>
+<p>但这种语法存在着一个严重的不足：如果子表达式的相对位置发生了变化，整个模式也许就不能再完成原来的工作，删除或添加子表达式的后果可能更为严重。为了弥补这一不足，一些比较新的正则表达式实现还支持“命名捕获”（named capture）：给某个子表达式起一个唯一的名字，然后用这个名字（而不是相对位置）来引用这个子表达式。</p>
+</blockquote>
+<p>有些正则表达式实现允许我们对字母进行大小写转换。</p>
+<table>
+<thead>
+<tr>
+<th align="left">元字符</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">\E</td>
+<td align="left">结束\L或\U转换</td>
+</tr>
+<tr>
+<td align="left">\l</td>
+<td align="left">把下一个字符转换为小写</td>
+</tr>
+<tr>
+<td align="left">\L</td>
+<td align="left">把\L到\E之间的字符全部转换为小写</td>
+</tr>
+<tr>
+<td align="left">\u</td>
+<td align="left">把下一个字符转换为大写</td>
+</tr>
+<tr>
+<td align="left">\U</td>
+<td align="left">把\U到\E之间的字符全部转换为大写</td>
+</tr>
+</tbody></table>
+<h3 id="前后查找-lookaround"><a href="#前后查找-lookaround" class="headerlink" title="前后查找(lookaround)"></a>前后查找(lookaround)</h3><p>前后查找（lookaround，对某一位置的前、后内容进行查找）</p>
+<p>有时候，你需要的是这样一个模式：它包含的匹配本身并不返回，而是用于确定正确的匹配位置，它并不是匹配结果的一部分。换句话说，你需要进行“前后查找”。</p>
+<h4 id="向前查找"><a href="#向前查找" class="headerlink" title="向前查找"></a>向前查找</h4><p>向前查找指定了一个必须匹配但不在结果中返回的模式。向前查找实际就是一个子表达式，而且从格式上看也确实如此。从语法上看，一个向前查找模式其实就是一个以 ?&#x3D; 开头的子表达式，需要匹配的文本跟在 &#x3D; 的后面。任何一个子表达式都可以转换为一个向前查找表达式，只要给它加上一个 ?&#x3D; 前缀即可。在同一个搜索模式里可以使用多个向前查找表达式，它们可以出现在模式里的任意位置。</p>
+<blockquote>
+<p>有些正则表达式文档使用术语“消费”（consume）来表述“匹配和返回文本”的含义。在向前查找里，被匹配的文本不包含在最终返回的匹配结果里，这被称为“不消费”。</p>
+</blockquote>
+<blockquote>
+<p>前后查找操作有时也被称为零宽度（zero-width）匹配操作。</p>
+</blockquote>
+<h4 id="向后查找"><a href="#向后查找" class="headerlink" title="向后查找"></a>向后查找</h4><p>除了向前查找，许多正则表达式实现还支持向后查找，也就是查找出现在被匹配文本之前的字符（但不消费它），向后查找操作符是 ?&lt;&#x3D; 。</p>
+<blockquote>
+<p>向前查找模式的长度是可变的，它们可以包含．和+之类的元字符，所以它们非常灵活。而向后查找模式只能是固定长度——这是一条几乎所有的正则表达式实现都遵守的限制。</p>
+</blockquote>
+<p>向前查找和向后查找通常用来匹配文本，其目的是为了确定将被返回为匹配结果的文本的位置（通过指定匹配结果的前后必须是哪些文本）。这种用法被称为正向前查找（positive lookahead）和正向后查找（positive lookbehind）。术语“正”指的是寻找匹配的事实。</p>
+<p>前后查找还有一种不太常见的用法叫做负前后查找（negative lookaround）。负向前查找（negative lookahead）将向前查找不与给定模式相匹配的文本，负向后查找（negative lookbehind）将向后查找不与给定模式相匹配的文本。</p>
+<p>前后查找必须用 ! 来取非（它将替换掉&#x3D;）。</p>
+<table>
+<thead>
+<tr>
+<th align="left">操作符</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">(?&#x3D;)</td>
+<td align="left">正向前查找</td>
+</tr>
+<tr>
+<td align="left">(?!)</td>
+<td align="left">负向前查找</td>
+</tr>
+<tr>
+<td align="left">(?&lt;&#x3D;)</td>
+<td align="left">正向后查找</td>
+</tr>
+<tr>
+<td align="left">(?&lt;!)</td>
+<td align="left">负向后查找</td>
+</tr>
+</tbody></table>
+<h3 id="正则表达式里的条件"><a href="#正则表达式里的条件" class="headerlink" title="正则表达式里的条件"></a>正则表达式里的条件</h3><p>在正则表达式模式里可以嵌入条件，只有当条件得到（或者没有得到）满足时，相应的表达式才会被执行。嵌入条件不外乎以下两种情况：</p>
+<ul>
+<li>❑ 根据一个回溯引用来进行条件处理。</li>
+<li>❑ 根据一个前后查找来进行条件处理。</li>
+</ul>
+<blockquote>
+<p>嵌入条件语法也使用了 ? 元字符。</p>
+</blockquote>
+<p>回溯引用条件只在一个前面的子表达式搜索取得成功的情况下才允许使用一个表达式。</p>
+<p>前后查找条件前后查找条件只在一个向前查找或向后查找操作取得成功的情况下才允许一个表达式被使用。定义一个前后查找条件的语法与定义一个回溯引用条件的语法大同小异——只需把回溯引用（括号里的回溯引用编号）替换为一个完整的前后查找表达式就行了。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2017/05/08/computer/2017-05-08-http-cache-control-extensions-for-stale/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/computer/" title="computer">
+                        <b>#</b> computer
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/computer/" title="computer">
+                        #computer
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2018/01/01/android/2018-01-02-android-edit-1/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E5%AD%97%E7%AC%A6%E9%9B%86%E5%90%88%E5%8C%BA%E9%97%B4"><span class="toc-text">利用字符集合区间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%96%E9%9D%9E%E5%8C%B9%E9%85%8D"><span class="toc-text">取非匹配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%B9%E9%85%8D%E7%89%B9%E5%AE%9A%E7%9A%84%E5%AD%97%E7%AC%A6%E7%B1%BB%E5%88%AB"><span class="toc-text">匹配特定的字符类别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8POSIX%E5%AD%97%E7%AC%A6%E7%B1%BB"><span class="toc-text">使用POSIX字符类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E5%A4%8D%E5%8C%B9%E9%85%8D"><span class="toc-text">重复匹配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%B9%E9%85%8D%E8%BE%B9%E7%95%8C"><span class="toc-text">匹配边界</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%90%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-text">子表达式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9E%E6%BA%AF%E5%BC%95%E7%94%A8%EF%BC%88backreference%EF%BC%89"><span class="toc-text">回溯引用（backreference）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E5%90%8E%E6%9F%A5%E6%89%BE-lookaround"><span class="toc-text">前后查找(lookaround)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%91%E5%89%8D%E6%9F%A5%E6%89%BE"><span class="toc-text">向前查找</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%91%E5%90%8E%E6%9F%A5%E6%89%BE"><span class="toc-text">向后查找</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E9%87%8C%E7%9A%84%E6%9D%A1%E4%BB%B6"><span class="toc-text">正则表达式里的条件</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

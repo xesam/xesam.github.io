@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      【Javascript】轻量级Web Database存储库html5sql.js 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">【Javascript】轻量级Web Database存储库html5sql.js</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/javascript/" title="javascript">
+                    <b>#</b> javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/javascript/" title="javascript">
+                    #javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>阅读之前，先看W3C关于WEB Database的一段话：</p>
+<pre><code>Beware. This specification is no longer in active maintenance and the Web
+Applications Working Group does not intend to maintain it further. 
+</code></pre>
+<p>意味着WEB Database规范陷入僵局。</p>
+<h2 id="html5sql"><a href="#html5sql" class="headerlink" title="html5sql"></a>html5sql</h2><p>html5sql官方网址：<a target="_blank" rel="noopener" href="http://html5sql.com/">http://html5sql.com/</a></p>
+<h2 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h2><p>html5sql是一个让HTML5 Web Database使用更方便的轻量级JavaScript模块，它的基本功能是提供在一个事务中顺序执行SQL语句的结构。<br>虽然 Web Database并没有停止前进的脚步，这个模块仅仅可以简化与数据库的交互过程。这个模块还包含有其他很多小细节以便开发人员能够更简单，自然便捷的工作。</p>
+<h3 id="核心特征"><a href="#核心特征" class="headerlink" title="核心特征"></a>核心特征</h3><ol>
+<li><p>提供以不同方式顺序执行SQL语句的能力：</p>
+<pre><code> 单条SQL语句
+ 一组SQL语句
+ 一组SQL语句对象（当你要想SQL中注入数据或者在SQL执行后调用一个回调函数时，可能需要使用这种形式）
+ 从一个分割完毕包含SQL语句的文件中
+ 
+</code></pre>
+</li>
+<li><p>提供一个控制数据库版本的框架</p>
+</li>
+</ol>
+<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><p>如果你用过HTML5 web database,你就会发现它有多蛋疼，尤其是当你开始建立你的表时。好了，现在你会发现这些都不是问题。为了更清楚的表明我的意思以及这个模块的能力，看下面的例子：</p>
+<p>假设你打算建立一个表兵千插入一组数据到这个表里面。如果你使用html5sql的话，你只需要把所有的语句都放入一个单独的文件中，本例中我们取名为Setup-Tables.SQL。这个文件的形式类似于</p>
+<p>本例中我们取名为Setup-Tables.SQL。这个文件的形式类似于：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE TABLE</span> example (id <span class="type">INTEGER</span> <span class="keyword">PRIMARY KEY</span>, data TEXT);</span><br><span class="line"><span class="keyword">INSERT INTO</span> example (data) <span class="keyword">VALUES</span> (<span class="string">&#x27;First&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT INTO</span> example (data) <span class="keyword">VALUES</span> (<span class="string">&#x27;Second&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT INTO</span> example (data) <span class="keyword">VALUES</span> (<span class="string">&#x27;Third&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE TABLE</span> example2 (id <span class="type">INTEGER</span> <span class="keyword">PRIMARY KEY</span>, data TEXT);</span><br><span class="line"><span class="keyword">INSERT INTO</span> example2 (data) <span class="keyword">VALUES</span> (<span class="string">&#x27;First&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT INTO</span> example2 (data) <span class="keyword">VALUES</span> (<span class="string">&#x27;Second&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT INTO</span> example2 (data) <span class="keyword">VALUES</span> (<span class="string">&#x27;Third&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>有了html5sql之后，为了顺序执行这些SQL语句（包括创建表），你只需要打开数据库，然后添加下面一段代码就可以了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$.<span class="title function_">get</span>(<span class="string">&#x27;Setup-Tables.SQL&#x27;</span>,<span class="keyword">function</span>(<span class="params">sqlStatements</span>)&#123;</span><br><span class="line"></span><br><span class="line">html5sql.<span class="title function_">process</span>(</span><br><span class="line">    <span class="comment">//This is the text data from the SQL file you retrieved</span></span><br><span class="line">    sqlStatements,</span><br><span class="line">    <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="comment">// After all statements are processed this function</span></span><br><span class="line">        <span class="comment">//   will be called.</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="keyword">function</span>(<span class="params">error</span>)&#123;</span><br><span class="line">        <span class="comment">// Handle any errors here</span></span><br><span class="line">    &#125;</span><br><span class="line">    );</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>借助于jQuery的get方法，你已经从单独的文件（’Setup-Tables.SQL’）获得了SQL语句，并且按照出现的顺序分割执行了。</p>
+<h2 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h2><p>上面的描述听起来还不错，不过你可能会问SQL顺序执行的时候性能是不是会受损。答案就是，影响不算明显，至少就我看来目前是这样。<br>比如，我用 Google的Chrome桌面版创建一张表，然后向表中顺序插入10,000条记录，整个执行过程的时间有波动，不过平均值处于2-6秒的范围内，<br>因此我有理由相信html5sql在处理大量数据的时候会有不俗的表现。</p>
+<h2 id="建议"><a href="#建议" class="headerlink" title="建议"></a>建议</h2><p>SQL的核心被设计为一种顺序执行的语言，某些语句必须在其他的语句前面执行。比方说，在插入记录之前，你必须先创建一张表。<br>相反的，javascript 是一种异步、事件驱动的语言。对于开发者来说，这些异步特征增加了HTML5客户端数据库规范与说明的复杂性。<br>写这个库的时候，W3C已经不再维护Web SQL Database规范了。<br>尽管如此，由于webkit已经实现了设个接口，而且由于webkit内核浏览器的庞大用户群，尤其是移动设备上，因此这个库还是有用的。</p>
+<p>虽然这个模块减少了HTML5 SQL database的复杂程度，但是并没有简化SQL本身，这是有意而为之的。SQL是一门强大的语言，盲目的简化它只会弄巧成拙。在我的经验中，学好SQL才是王道，大势所趋撒。</p>
+<h2 id="用户指南"><a href="#用户指南" class="headerlink" title="用户指南"></a>用户指南</h2><p>html5sql模块中内建了3个函数：</p>
+<h3 id="一，html5sql-openDatabase-databaseName-displayName-estimatedSize"><a href="#一，html5sql-openDatabase-databaseName-displayName-estimatedSize" class="headerlink" title="一，html5sql.openDatabase(databaseName, displayName, estimatedSize)"></a>一，html5sql.openDatabase(databaseName, displayName, estimatedSize)</h3><p>html5sql.openDatabase是对原生openDatabase方法的一个封装，这个方法打开一个数据库连接并返回对连接的引用。这是所有其他操作之前的第一步。</p>
+<p>这个方法有三个参数：</p>
+<pre><code>databaseName - 数据库的名字.任意你喜欢的有效的名字，通常可以是“com.yourcompany.yourapp”之类的
+displayName - 数据库描述信息
+estimatedSize - 数据库大小.5M = 5*1024*1024
+</code></pre>
+<p>如果读者熟悉web database原生方法的话，会发现上面的封装中少了版本信息这个参数。当你需要改变数据库的表结构时，版本信息是一个得力的标识工具，改变版本的这个方法被封装成html5sql的changeVersion方法。</p>
+<p>现在，我们创建一个通常的数据库连接：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">html5sql.<span class="title function_">openDatabase</span>(</span><br><span class="line">     <span class="string">&quot;com.mycompany.appdb&quot;</span>,</span><br><span class="line">     <span class="string">&quot;The App Database&quot;</span></span><br><span class="line">     <span class="number">3</span>*<span class="number">1024</span>*<span class="number">1024</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h3 id="二，html5sql-process-SQL-finalSuccessCallback-errorCallback"><a href="#二，html5sql-process-SQL-finalSuccessCallback-errorCallback" class="headerlink" title="二，html5sql.process(SQL, finalSuccessCallback, errorCallback)"></a>二，html5sql.process(SQL, finalSuccessCallback, errorCallback)</h3><p>html5sql.process()方法是所有功能的载体，一旦你创建了数据库连接，就可以传递SQL语句，剩下的事情就交给html5sql.process()，他会保证SQL顺序执行。</p>
+<p>html5sql.process()的第一个参数是SQL语句，其传递形式有许多种：</p>
+<ol>
+<li><p>字符串形式 - 你可以向process方法传递一个简单字符串，形如：</p>
+<pre><code> &quot;SELECT * FROM table;&quot;
+ 
+</code></pre>
+<p> 或者一组用分号（“;”）连接的简单字符串，形如：</p>
+<pre><code> &quot;CREATE table (id INTEGER PRIMARY KEY, data TEXT);&quot; +
+ &quot;INSERT INTO table (data) VALUES (&#39;One&#39;);&quot; +
+ &quot;INSERT INTO table (data) VALUES (&#39;Two&#39;);&quot; +
+ &quot;INSERT INTO table (data) VALUES (&#39;Three&#39;);&quot; +
+ &quot;INSERT INTO table (data) VALUES (&#39;Four&#39;);&quot; +
+ &quot;INSERT INTO table (data) VALUES (&#39;Five&#39;);&quot;
+</code></pre>
+</li>
+<li><p>来自独立文件的SQL语句。来自独立文件的SQL语句的例子跟上面的例子一样，没有本质区别。</p>
+</li>
+<li><p>一组SQL语句字符串，你可以向html5sql.process()传递一组SQL语句，形如：</p>
+<pre><code>  [
+      &quot;CREATE table (id INTEGER PRIMARY KEY, data TEXT);&quot;,
+      &quot;INSERT INTO table (data) VALUES (&#39;One&#39;);&quot;,
+      &quot;INSERT INTO table (data) VALUES (&#39;Two&#39;);&quot;,
+      &quot;INSERT INTO table (data) VALUES (&#39;Three&#39;);&quot;,
+      &quot;INSERT INTO table (data) VALUES (&#39;Four&#39;);&quot;,
+      &quot;INSERT INTO table (data) VALUES (&#39;Five&#39;);&quot;
+  ]
+</code></pre>
+</li>
+<li><p>一组SQL语句对象。这是一种最实用的形式，直接传递一组SQL语句对象。SQL语句对象的结构域原生executeSQL 方法的参数一致，有三个部分：</p>
+<pre><code> SQL[string]——包含SQL语句的字符串，其中可以包含替换符“?”
+ data[array]——一组需要插入到SQL语句中替换?符号的数据，其中SQL语句中?的数量必须与data中数据的数量一致
+ success (function)——执行完SQL语句后回调的函数，可以处理SQL语句的执行结果。另外，如果这个方法返回一个数组，这个返回的数组还可以作为下一条SQL语句的data参数来执行。这样就允许你在SQL执行中调用将上一条SQL语句的结果，在使用外键的情况中，这个比较常见。
+ 
+</code></pre>
+<p> 或许最简单的定义以及使用这个对象的方式是只用对象字面量。通用的模板类似下面的形式：</p>
+<pre><code>      &#123;
+         &quot;sql&quot;: &quot;&quot;,
+         &quot;data&quot;: [],
+         &quot;success&quot;: function(transaction, results)&#123;
+          //Code to be processed when sql statement has been processed
+         &#125;
+      &#125;
+      
+</code></pre>
+<p> 因此，一个简单的SQL对象参数实例如下：</p>
+<pre><code> [
+     &#123;
+         &quot;sql&quot;: &quot;INSERT INTO contacts (name, phone) VALUES (?, ?)&quot;,
+         &quot;data&quot;: [&quot;Joe Bob&quot;, &quot;555-555-5555&quot;],
+         &quot;success&quot;: function(transaction, results)&#123;
+                 //Just Added Bob to contacts table
+             &#125;,
+         &#125;,
+     &#123;
+         &quot;sql&quot;: &quot;INSERT INTO contacts (name, phone) VALUES (?, ?)&quot;,
+         &quot;data&quot;: [&quot;Mary Bob&quot;, &quot;555-555-5555&quot;],
+         &quot;success&quot;: function()&#123;
+             //Just Added Mary to contacts table
+         &#125;,
+     &#125;
+ ]
+</code></pre>
+</li>
+</ol>
+<p>　　上面的对象中，唯一与原生executesql()不同的是，没有error部分的处理方式，这是因为有一个通用的错误处理回调函数来处理出现error的情况，从而避免每条语句都进行error定义。这个通用的错误处理函数就是 html5sql.process()的第三个参数。</p>
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p>html5sql.process()总共有三个参数，</p>
+<pre><code>SQL - 上面叙述的任一种形式均可
+finalSuccessCallback - 一个最终的，在所有SQL成功执行完毕后触发
+errorCallback - 处理本过程中的所有错误的通用函数，发生任何错误时，当前事务会回滚，数据库版本不改变。
+</code></pre>
+<p>总结一下，这个方法的一个完整示例如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">html5sql.<span class="title function_">process</span>(</span><br><span class="line">    [</span><br><span class="line">        <span class="string">&quot;DROP TABLE table1&quot;</span>,</span><br><span class="line">        <span class="string">&quot;DROP TABLE table2&quot;</span>,</span><br><span class="line">        <span class="string">&quot;DROP TABLE table3&quot;</span>,</span><br><span class="line">        <span class="string">&quot;DROP TABLE table4&quot;</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Success Dropping Tables&quot;</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="keyword">function</span>(<span class="params">error, statement</span>)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&quot;Error: &quot;</span> + error.<span class="property">message</span> + <span class="string">&quot; when processing &quot;</span> + statement);</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h3 id="三，html5sql-changeVersion-“oldVersion”-”newVersion”-SQL-successCallback-errorCallback"><a href="#三，html5sql-changeVersion-“oldVersion”-”newVersion”-SQL-successCallback-errorCallback" class="headerlink" title="三，html5sql.changeVersion(“oldVersion”,”newVersion”,SQL,successCallback,errorCallback)"></a>三，html5sql.changeVersion(“oldVersion”,”newVersion”,SQL,successCallback,errorCallback)</h3><p>html5sql.changeVersion() 是创建、迁移数据库以及处理版本所需要的方法。</p>
+<p>这个方法会检测当前版本与旧的版本参数（oldVersion）是否一致，如果吻合的话，就会执行参数中的SQL语句，并改变数据库的版本为 newVersion参数所示的值。</p>
+<pre><code>oldVersion - 需要修改的数据库的版本号，默认初始值为&quot;&quot;
+newVersion - 你赋的新值
+SQL - 你要执行的SQL语句.具体说明参见html5sql.process()部分
+finalSuccessCallback - 成功执行后调用的函数
+errorCallback - 通用数据处理函数，与html5sql.process()中一样， 发生错误的时候，整个事务回滚，并且不改变版本号。
+</code></pre>
+<h2 id="源码深入"><a href="#源码深入" class="headerlink" title="源码深入"></a>源码深入</h2><p>本JS库最大的问题就是如果要同时操纵多个数据库，那么就会引起混乱，这一点作者似乎并没有做多考虑。另外就是对于这种批量执行SQL语句的错误恢复处理感觉还是不够完善。</p>
+<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><h4 id="补充一"><a href="#补充一" class="headerlink" title="补充一"></a>补充一</h4><p>html5sql.openDatabase()其实有四个参数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">html5sql.<span class="property">openDatabase</span> = <span class="keyword">function</span> (<span class="params">name, displayname, size, whenOpen</span>) &#123;</span><br><span class="line">     html5sql.<span class="property">database</span> = <span class="title function_">openDatabase</span>(name, <span class="string">&quot;&quot;</span>, displayname, size);</span><br><span class="line">     readTransactionAvailable = <span class="keyword">typeof</span> html5sql.<span class="property">database</span>.<span class="property">readTransaction</span> === <span class="string">&#x27;function&#x27;</span>;</span><br><span class="line">     <span class="keyword">if</span> (whenOpen) &#123;</span><br><span class="line">         <span class="title function_">whenOpen</span>();</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure>
+<p>最后的whenOpen是在获取数据库引用的时候触发的。</p>
+<h4 id="补充二"><a href="#补充二" class="headerlink" title="补充二"></a>补充二</h4><p>　　另外还有两个用于调试的属性，logErrors和logInfo:默认都是false，设置为true的时候可以看到每一步操作的过程。由于调用的是控制台的console.log，可能在某些浏览器上引发错误。</p>
+<h4 id="补充三"><a href="#补充三" class="headerlink" title="补充三"></a>补充三</h4><p>对于process方法，不论你采用什么形式的SQL参数，最终都会被转换成SQL对象的形式。</p>
+<p>当SQL语句包含的仅仅只有SELECT操作时，内部使用的是readTransaction方法，注意一下readTransaction与transaction的区别。</p>
+<p>这边用的是readTransaction，这是为了保证不对表进行写操作，这是一种安全的举措，当然也可以用transaction。不过readTransaction方法存在一定的兼容性问题，所以使用之前应该保证检测无误。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2012/03/01/javascript/2012-03-01-Javascript-Lawnchair.js/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/javascript/" title="javascript">
+                        <b>#</b> javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/javascript/" title="javascript">
+                        #javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2012/03/26/javascript/2012-03-26-Javascript-DOM-bind/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#html5sql"><span class="toc-text">html5sql</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E8%BF%B0"><span class="toc-text">简述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E7%89%B9%E5%BE%81"><span class="toc-text">核心特征</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BE%8B%E5%AD%90"><span class="toc-text">例子</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%A7%E8%83%BD"><span class="toc-text">性能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BB%BA%E8%AE%AE"><span class="toc-text">建议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E6%8C%87%E5%8D%97"><span class="toc-text">用户指南</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%EF%BC%8Chtml5sql-openDatabase-databaseName-displayName-estimatedSize"><span class="toc-text">一，html5sql.openDatabase(databaseName, displayName, estimatedSize)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%EF%BC%8Chtml5sql-process-SQL-finalSuccessCallback-errorCallback"><span class="toc-text">二，html5sql.process(SQL, finalSuccessCallback, errorCallback)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-text">小结</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%EF%BC%8Chtml5sql-changeVersion-%E2%80%9ColdVersion%E2%80%9D-%E2%80%9DnewVersion%E2%80%9D-SQL-successCallback-errorCallback"><span class="toc-text">三，html5sql.changeVersion(“oldVersion”,”newVersion”,SQL,successCallback,errorCallback)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BA%90%E7%A0%81%E6%B7%B1%E5%85%A5"><span class="toc-text">源码深入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%A5%E5%85%85"><span class="toc-text">补充</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A1%A5%E5%85%85%E4%B8%80"><span class="toc-text">补充一</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A1%A5%E5%85%85%E4%BA%8C"><span class="toc-text">补充二</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A1%A5%E5%85%85%E4%B8%89"><span class="toc-text">补充三</span></a></li></ol></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

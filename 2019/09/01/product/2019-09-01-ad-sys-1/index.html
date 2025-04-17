@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      广告投放系统（一） 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">广告投放系统（一）</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/product/" title="product">
+                    <b>#</b> product
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/product/" title="product">
+                    #product
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>我们的广告投放后台是自己做的，从零开始，一路趟坑。<br>广告后台在下发广告之前，需要知道客户端的一些必要信息，以便进行针对性投放。</p>
+<span id="more"></span>
+
+<h2 id="设备属性"><a href="#设备属性" class="headerlink" title="设备属性"></a>设备属性</h2><h3 id="操作系统属性"><a href="#操作系统属性" class="headerlink" title="操作系统属性"></a>操作系统属性</h3><pre><code>系统类型：当前主要是 Android，iOS。
+系统版本：不同版本的操作系统支持的能力不同。比如 iOS 12.2，Android 4.0.4 等等
+</code></pre>
+<h3 id="宿主平台属性"><a href="#宿主平台属性" class="headerlink" title="宿主平台属性"></a>宿主平台属性</h3><pre><code>平台类型：广告直接展示的平台。比如App，小程序或者网页应用等等
+平台版本：比如 App 的版本，浏览器版本等等。典型的如微信客户端版本，这个需求较弱，但是在宿主生态中，可能出现低版本特性缺失的情况。
+基础库版本：典型的如各种小程序基础库环境。一个例子就是微信小程序从2.6.0开始才能支持插屏广告，所以后台不应该给低版本投放插屏广告。
+</code></pre>
+<h3 id="硬件属性"><a href="#硬件属性" class="headerlink" title="硬件属性"></a>硬件属性</h3><pre><code>屏幕尺寸：不同的屏幕投放不同的图片资源，保证显示质量的同时，提升加载速度。关于屏幕尺寸的参数比较多，具体操作需要视情况详细区分。
+屏幕密度：这个通常不太重要
+网络状态：如果是移动网络，可能就不适合投放视频广告。
+硬件品牌：通常不重要
+时区、时间：通常不重要
+</code></pre>
+<h2 id="服务属性"><a href="#服务属性" class="headerlink" title="服务属性"></a>服务属性</h2><h3 id="应用属性"><a href="#应用属性" class="headerlink" title="应用属性"></a>应用属性</h3><pre><code>应用版本：用户安装的应用版本号
+应用安装属性：也就是应用在安装的时候固定的信息。对于安卓来说，典型的就是渠道，对于H5来说，就是合作方来源
+</code></pre>
+<h3 id="LBS"><a href="#LBS" class="headerlink" title="LBS"></a>LBS</h3><pre><code>地理位置：位置粒度越精确越好。
+</code></pre>
+<h3 id="广告属性"><a href="#广告属性" class="headerlink" title="广告属性"></a>广告属性</h3><p>广告展现的页面、组件位置等等，与具体业务相结合。此类信息用以决定广告的形态，比如同一个应用的不同功能模块甚至不同主题，需要展示不同的广告。</p>
+<h2 id="用户属性"><a href="#用户属性" class="headerlink" title="用户属性"></a>用户属性</h2><h3 id="用户唯一标识"><a href="#用户唯一标识" class="headerlink" title="用户唯一标识"></a>用户唯一标识</h3><pre><code>ID：每个请求都能对应到唯一的ID
+</code></pre>
+<h3 id="用户高级属性"><a href="#用户高级属性" class="headerlink" title="用户高级属性"></a>用户高级属性</h3><p>忽略。只需要知道用户的唯一标识即可，其他的用户信息应该从用户数据库中获取，不应直接来自客户端请求参数。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2019/07/28/computer/2019-07-28-debounce-throttle/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/product/" title="product">
+                        <b>#</b> product
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/product/" title="product">
+                        #product
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2019/09/09/talk/2019-09-09-talk-about-app/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E5%A4%87%E5%B1%9E%E6%80%A7"><span class="toc-text">设备属性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%B1%9E%E6%80%A7"><span class="toc-text">操作系统属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%BF%E4%B8%BB%E5%B9%B3%E5%8F%B0%E5%B1%9E%E6%80%A7"><span class="toc-text">宿主平台属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6%E5%B1%9E%E6%80%A7"><span class="toc-text">硬件属性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E5%B1%9E%E6%80%A7"><span class="toc-text">服务属性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%B1%9E%E6%80%A7"><span class="toc-text">应用属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LBS"><span class="toc-text">LBS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B9%BF%E5%91%8A%E5%B1%9E%E6%80%A7"><span class="toc-text">广告属性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E5%B1%9E%E6%80%A7"><span class="toc-text">用户属性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E5%94%AF%E4%B8%80%E6%A0%87%E8%AF%86"><span class="toc-text">用户唯一标识</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E9%AB%98%E7%BA%A7%E5%B1%9E%E6%80%A7"><span class="toc-text">用户高级属性</span></a></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

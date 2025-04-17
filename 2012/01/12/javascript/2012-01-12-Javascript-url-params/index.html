@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      【Javascript】从URL中提取参数与将对象转换为URL查询参数 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">【Javascript】从URL中提取参数与将对象转换为URL查询参数</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/javascript/" title="javascript">
+                    <b>#</b> javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/javascript/" title="javascript">
+                    #javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>这两种主要是对《Prototype浅析》先前略过的String部分中toQueryParams和Object部分的toQueryString方法的补充</p>
+<h2 id="一、从URL中提取参数"><a href="#一、从URL中提取参数" class="headerlink" title="一、从URL中提取参数"></a>一、从URL中提取参数</h2><p>有下列字符串：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> linkURL = <span class="string">&#x27;http://localhost:8080/String/string_6.html?昵称=小西山子&amp;age=24#id1&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>对于一个真实的URL地址，可以用js来读取location中的相关信息来获得某些信息，下面列举一些：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">location.<span class="property">origin</span> : <span class="attr">http</span>:<span class="comment">//localhost【域】</span></span><br><span class="line">location.<span class="property">pathname</span> : <span class="regexp">/project_js/</span><span class="title class_">Javascript</span>/js_basic/demo/<span class="title class_">String</span>/string_6.<span class="property">html</span>【<span class="variable constant_">URL</span>路径】</span><br><span class="line">location.<span class="property">host</span> : localhost【主机+端口】</span><br><span class="line">location.<span class="property">hostname</span> : localhost【主机名】</span><br><span class="line">location.<span class="property">port</span> :【端口】</span><br><span class="line">location.<span class="property">search</span> : ?name=xesam【查询字符串】</span><br><span class="line">location.<span class="property">hash</span> : #age【锚点】</span><br><span class="line">location.<span class="property">href</span> : <span class="attr">http</span>:<span class="comment">//localhost/project_js/Javascript/js_basic/demo/String/string_6.html?name=xesam#age【完整形式】</span></span><br><span class="line">location.<span class="property">protocol</span> : http【协议】</span><br></pre></td></tr></table></figure>
+<p>其中，与从URL中提取参数主要是用到location.search。不过为了通用，我们不去读取location.search，直接处理字符串。</p>
+<p>提取字符串查询字符串之后，转化为对象的形式。</p>
+<p>先讨论几种查询字符串的情况：</p>
+<ol>
+<li>?昵称&#x3D;小西山子&amp;age&#x3D;24#id1  –&gt;{昵称:’小西山子’,age:’24’}</li>
+<li>?昵称&amp;age&#x3D;24#id1’;  –&gt;{昵称:undefined,age:’24’}</li>
+<li>?&#x3D;小西山子&amp;age&#x3D;24#id1  –&gt;{age:’24’}</li>
+<li>?昵称&#x3D;小西山子&#x3D;又一个&amp;age&#x3D;24&amp;age&#x3D;24#id1   –&gt;{昵称:’小西山子&#x3D;又一个’,age:[‘24’,’24’]}</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">    <span class="keyword">function</span> <span class="title function_">toQueryParams</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="keyword">var</span> search = <span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/^\s+/</span>,<span class="string">&#x27;&#x27;</span>).<span class="title function_">replace</span>(<span class="regexp">/\s+$/</span>,<span class="string">&#x27;&#x27;</span>).<span class="title function_">match</span>(<span class="regexp">/([^?#]*)(#.*)?$/</span>);<span class="comment">//提取location.search中&#x27;?&#x27;后面的部分</span></span><br><span class="line">        <span class="keyword">if</span>(!search)&#123;</span><br><span class="line">            <span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">var</span> searchStr  = search[<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">var</span> searchHash = searchStr.<span class="title function_">split</span>(<span class="string">&#x27;&amp;&#x27;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> ret = &#123;&#125;;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>, len = searchHash.<span class="property">length</span>; i &lt; len; i++)&#123; <span class="comment">//这里可以调用each方法</span></span><br><span class="line">            <span class="keyword">var</span> pair = searchHash[i];</span><br><span class="line">            <span class="keyword">if</span>((pair = pair.<span class="title function_">split</span>(<span class="string">&#x27;=&#x27;</span>))[<span class="number">0</span>])&#123;</span><br><span class="line">                <span class="keyword">var</span> key   = <span class="built_in">decodeURIComponent</span>(pair.<span class="title function_">shift</span>());</span><br><span class="line">                <span class="keyword">var</span> value = pair.<span class="property">length</span> &gt; <span class="number">1</span> ? pair.<span class="title function_">join</span>(<span class="string">&#x27;=&#x27;</span>) : pair[<span class="number">0</span>];</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">if</span>(value != <span class="literal">undefined</span>)&#123;</span><br><span class="line">                    value = <span class="built_in">decodeURIComponent</span>(value);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span>(key <span class="keyword">in</span> ret)&#123;</span><br><span class="line">                    <span class="keyword">if</span>(ret[key].<span class="property">constructor</span> != <span class="title class_">Array</span>)&#123;</span><br><span class="line">                        ret[key] = [ret[key]];</span><br><span class="line">                    &#125;</span><br><span class="line">                    ret[key].<span class="title function_">push</span>(value);</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    ret[key] = value;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">dir</span>(toQueryParams.<span class="title function_">call</span>(linkURL));</span><br><span class="line"><span class="string">``</span><span class="string">``</span></span><br><span class="line"></span><br><span class="line">上面基本就是<span class="title class_">Prototype</span>中toQueryParams的实现，上面有一个步骤是用<span class="string">&#x27;=&#x27;</span>分割参数，然后在value中再拼接。另外可以用substring来实现：</span><br><span class="line"></span><br><span class="line"><span class="string">``</span><span class="string">`javascript</span></span><br><span class="line"><span class="string">    function toQueryParams()&#123;</span></span><br><span class="line"><span class="string">        var search = this.replace(/^\s+/,&#x27;&#x27;).replace(/\s+$/,&#x27;&#x27;).match(/([^?#]*)(#.*)?$/);</span></span><br><span class="line"><span class="string">        if(!search)&#123;</span></span><br><span class="line"><span class="string">            return &#123;&#125;;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">        var searchStr  = search[1];</span></span><br><span class="line"><span class="string">        var searchHash = searchStr.split(&#x27;&amp;&#x27;);</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        var ret = &#123;&#125;;</span></span><br><span class="line"><span class="string">        searchHash.forEach(function(pair)&#123;</span></span><br><span class="line"><span class="string">            var temp = &#x27;&#x27;;</span></span><br><span class="line"><span class="string">            if(temp = (pair.split(&#x27;=&#x27;,1))[0])&#123;</span></span><br><span class="line"><span class="string">                var key   = decodeURIComponent(temp);</span></span><br><span class="line"><span class="string">                var value = pair.substring(key.length + 1);</span></span><br><span class="line"><span class="string">                if(value != undefined)&#123;</span></span><br><span class="line"><span class="string">                    value = decodeURIComponent(value);</span></span><br><span class="line"><span class="string">                &#125;</span></span><br><span class="line"><span class="string">                if(key in ret)&#123;</span></span><br><span class="line"><span class="string">                    if(ret[key].constructor != Array)&#123;</span></span><br><span class="line"><span class="string">                        ret[key] = [ret[key]];</span></span><br><span class="line"><span class="string">                    &#125;</span></span><br><span class="line"><span class="string">                    ret[key].push(value);</span></span><br><span class="line"><span class="string">                &#125;else&#123;</span></span><br><span class="line"><span class="string">                    ret[key] = value;</span></span><br><span class="line"><span class="string">                &#125;</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string">        &#125;);</span></span><br><span class="line"><span class="string">        return ret;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">    console.dir(toQueryParams.call(linkURL));</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="二、对象转换为URL查询参数"><a href="#二、对象转换为URL查询参数" class="headerlink" title="二、对象转换为URL查询参数"></a>二、对象转换为URL查询参数</h2><p>对象转换为URL查询参数就麻烦一点。不过由于是转换成查询参数形式，因此只能处理单层嵌套的对象，子对象就不能处理了。其原理就是toQueryParams的反向操作。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">toQueryPair</span>(<span class="params">key, value</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> value == <span class="string">&#x27;undefined&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> key;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> key + <span class="string">&#x27;=&#x27;</span> + <span class="built_in">encodeURIComponent</span>(value === <span class="literal">null</span> ? <span class="string">&#x27;&#x27;</span> : <span class="title class_">String</span>(value));</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">toQueryString</span>(<span class="params">obj</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> ret = [];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> key <span class="keyword">in</span> obj)&#123;</span><br><span class="line">        key = <span class="built_in">encodeURIComponent</span>(key);</span><br><span class="line">        <span class="keyword">var</span> values = obj[key];</span><br><span class="line">        <span class="keyword">if</span>(values &amp;&amp; values.<span class="property">constructor</span> == <span class="title class_">Array</span>)&#123;<span class="comment">//数组</span></span><br><span class="line">            <span class="keyword">var</span> queryValues = [];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, len = values.<span class="property">length</span>, value; i &lt; len; i++) &#123;</span><br><span class="line">                value = values[i];</span><br><span class="line">                queryValues.<span class="title function_">push</span>(<span class="title function_">toQueryPair</span>(key, value));</span><br><span class="line">            &#125;</span><br><span class="line">            ret = ret.<span class="title function_">concat</span>(queryValues);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123; <span class="comment">//字符串</span></span><br><span class="line">            ret.<span class="title function_">push</span>(<span class="title function_">toQueryPair</span>(key, values));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ret.<span class="title function_">join</span>(<span class="string">&#x27;&amp;&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">toQueryString</span>(&#123;</span><br><span class="line">    name : <span class="string">&#x27;xesam&#x27;</span>,</span><br><span class="line">    age : <span class="number">24</span></span><br><span class="line">&#125;)); <span class="comment">//name=xesam&amp;age=24</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">toQueryString</span>(&#123;</span><br><span class="line">    name : <span class="string">&#x27;xesam&#x27;</span>,</span><br><span class="line">    age : [<span class="number">24</span>,<span class="number">25</span>,<span class="number">26</span>]</span><br><span class="line">&#125;)); <span class="comment">//name=xesam&amp;age=24&amp;age=25&amp;age=26</span></span><br></pre></td></tr></table></figure>
+
+<p>真实源码中用的是inject方法，不过在Enumerable部分，因此上面作了替换。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2012/01/11/javascript/2012-01-11-Javascript-Prototype-String-2/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/javascript/" title="javascript">
+                        <b>#</b> javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/javascript/" title="javascript">
+                        #javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2012/01/13/javascript/2012-02-03-Javascript-Prototype-String-4/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%BB%8EURL%E4%B8%AD%E6%8F%90%E5%8F%96%E5%8F%82%E6%95%B0"><span class="toc-text">一、从URL中提取参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%AF%B9%E8%B1%A1%E8%BD%AC%E6%8D%A2%E4%B8%BAURL%E6%9F%A5%E8%AF%A2%E5%8F%82%E6%95%B0"><span class="toc-text">二、对象转换为URL查询参数</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

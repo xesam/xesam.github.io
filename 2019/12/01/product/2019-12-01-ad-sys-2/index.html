@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      广告投放系统（二） 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">广告投放系统（二）</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/product/" title="product">
+                    <b>#</b> product
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/product/" title="product">
+                    #product
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>自家广告组件的演化历程。</p>
+<p>2017年的时候，我们发布了自家小程序，当时小程序还不支持任何广告变现，所以上线之后一段时间并没有任何广告内容。</p>
+<p>后来，随着小程序商业化的推进，小程序平台推出了原生的平台广告组件，因此我们也第一时间接入了下小程序的平台广告。</p>
+<span id="more"></span>
+
+<h4 id="第一阶段：直接使用平台广告"><a href="#第一阶段：直接使用平台广告" class="headerlink" title="第一阶段：直接使用平台广告"></a>第一阶段：直接使用平台广告</h4><p>由于当时也没有预期，因此这一阶段的接入很简单，就是页面指定的位置放置平台广告组件，比如:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;page&gt;</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">mp-ad</span>&gt;</span><span class="tag">&lt;/<span class="name">mp-ad</span>&gt;</span></span></span><br><span class="line">&lt;/page&gt;</span><br></pre></td></tr></table></figure>
+
+<p>其中 mp-ad 为平台广告组件。</p>
+<p>一段时间之后，有商户找我们合作，希望在我们的应用中进行广告推广，这就意味着在平台广告之外，我们还需要支持自采广告。</p>
+<h4 id="第二阶段：增加自采广告"><a href="#第二阶段：增加自采广告" class="headerlink" title="第二阶段：增加自采广告"></a>第二阶段：增加自采广告</h4><p>展示广告之前，先向后台请求广告对象：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">TYPE_MP</span> = <span class="number">0</span>; <span class="comment">//平台广告</span></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">TYPE_SELF</span> = <span class="number">1</span>; <span class="comment">//自采广告</span></span><br><span class="line"><span class="keyword">const</span> ad = <span class="title function_">fetchAd</span>();</span><br></pre></td></tr></table></figure>
+
+<p>在页面内部进行一个判断：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">page</span>&gt;</span></span><br><span class="line">&#123;&#123; if ad &#125;&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;&#123;&#123;ad.image_url&#125;&#125;&quot;</span> /&gt;</span></span><br><span class="line">&#123;&#123; else &#125;&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="name">mp-ad</span>&gt;</span><span class="tag">&lt;/<span class="name">mp-ad</span>&gt;</span></span><br><span class="line">&#123;&#123; endif &#125;&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">page</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>发现有自采的机会之后，我们希望一个广告位能够同时放多个自采买的广告，于是就需要支持广告轮播。</p>
+<h4 id="第三阶段：支持轮播广告"><a href="#第三阶段：支持轮播广告" class="headerlink" title="第三阶段：支持轮播广告"></a>第三阶段：支持轮播广告</h4><p>这个需求出现之后，我们面临两个问题：</p>
+<ol>
+<li>广告形式可能会更多，页面内的判断会变复杂，于是对广告组件进行封装。</li>
+<li>以前的数据结构设计不合理，现在需要的是一个广告数组，但以前只返回单个广告对象。接口需要变动，而且这个变动还是不兼容的，于是增加字段。</li>
+</ol>
+<p>创建应用内部的广告组件：ad-loader。结构如下（组合模式）：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ad-loader</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">mp-ad</span>&gt;</span><span class="tag">&lt;/<span class="name">mp-ad</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">self-ad</span>&gt;</span><span class="tag">&lt;/<span class="name">self-ad</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">else-ad</span>&gt;</span><span class="tag">&lt;/<span class="name">else-ad</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ad-loader</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>其中，self-ad 为自采广告组件，else-ad 为未来可能引入的其他类型广告组件。</p>
+<p>修改广告接口，返回一个广告列表：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">const</span> &#123;type, ads&#125; = <span class="title function_">fetchAds</span>();</span><br></pre></td></tr></table></figure>
+
+<p>self-ad 组件逻辑：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">view</span>&gt;</span></span><br><span class="line">    &#123;&#123; if ads.length == 1 &#125;&#125;</span><br><span class="line">        <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;&#123;&#123;ads[0]&#125;&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">img</span>&gt;</span></span><br><span class="line">    &#123;&#123; elif ads.length &gt; 1 &#125;&#125;</span><br><span class="line">        <span class="tag">&lt;<span class="name">swiper</span> <span class="attr">src</span>=<span class="string">&quot;&#123;&#123;ads&#125;&#125;&quot;</span> /&gt;</span></span><br><span class="line">    &#123;&#123; endif &#125;&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>ad-loader 组件逻辑：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">view</span>&gt;</span></span><br><span class="line">&#123;&#123; if ads.length &#125;&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="name">self-ad</span> <span class="attr">src</span>=<span class="string">&quot;&#123;&#123;ads&#125;&#125;&quot;</span> /&gt;</span></span><br><span class="line">&#123;&#123; else &#125;&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="name">mp-ad</span>&gt;</span><span class="tag">&lt;/<span class="name">mp-ad</span>&gt;</span></span><br><span class="line">&#123;&#123; endif &#125;&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这么跑了一段时间之后，对比收益发现，原生平台广告的收益较高，因此我们再次修改了策略：先显示平台广告，如果没有平台广告，就显示自采广告。</p>
+<p>于是广告加载逻辑变成：</p>
+<ol>
+<li>页面加载完成之后，放置平台广告组件</li>
+<li>如果平台广告加载失败，则移除平台广告组件，放置自采广告组件</li>
+<li>如果自采广告加载失败，则移除自采广告组件，不显示广告</li>
+</ol>
+<h4 id="第四阶段：优先展示平台广告"><a href="#第四阶段：优先展示平台广告" class="headerlink" title="第四阶段：优先展示平台广告"></a>第四阶段：优先展示平台广告</h4><p>由于 ad-loader 已经隔离了广告逻辑，所以只需要更改 ad-loader 组件即可，无需更改其他内容。</p>
+<p>ad-loader :</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ad-loader</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">mp-ad</span> <span class="attr">loadError</span>=<span class="string">&quot;onLoadError&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">mp-ad</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">swipe-ad</span>&gt;</span><span class="tag">&lt;/<span class="name">swipe-ad</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ad-loader</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>ad-loader.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">showMpAd</span>();</span><br><span class="line">adDom.<span class="title function_">addEventListener</span>(<span class="string">&#x27;onLoadError&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="title function_">hideMpAd</span>();</span><br><span class="line">    <span class="title function_">showSwipeAd</span>();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="第五阶段：修改广告优先级"><a href="#第五阶段：修改广告优先级" class="headerlink" title="第五阶段：修改广告优先级"></a>第五阶段：修改广告优先级</h4><p>这次希望部分指定广告可以在平台广告之前显示，接口又不满足了，需要增加字段。广告逻辑变为：</p>
+<ol>
+<li>页面加载完成之后，判断自采广告优先级</li>
+<li>如果自采广告优先级高，则放置自采广告组件，无视结果</li>
+<li>如果自采广告优先级低，则放置平台广告组件</li>
+<li>如果平台广告加载失败，则移除平台广告组件，放置自采广告组件</li>
+<li>如果自采广告加载失败，则移除自采广告组件，不显示广告</li>
+</ol>
+<p>代码：略</p>
+<h4 id="第六阶段：控制广告的展示与否"><a href="#第六阶段：控制广告的展示与否" class="headerlink" title="第六阶段：控制广告的展示与否"></a>第六阶段：控制广告的展示与否</h4><p>上面所有的逻辑都有一个共同的遗留问题，没法控制广告是否展示。所以增加一个判断：</p>
+<pre><code>如果没有获取到广告对象，则不展示广告（包括平台广告）。
+</code></pre>
+<h4 id="第七阶段：独立控制每一种类型的广告"><a href="#第七阶段：独立控制每一种类型的广告" class="headerlink" title="第七阶段：独立控制每一种类型的广告"></a>第七阶段：独立控制每一种类型的广告</h4><p>其实兜兜转转又回来了，新问题就是现在只想展示平台广告，却没法控制了，着实尴尬。</p>
+<p>最终结果，接口和逻辑设计的时候，一定要保持简单独立，最后的措施还是：</p>
+<ol>
+<li>返回一组广告列表，每个广告对象都带有广告组件的类型。</li>
+<li>依次判断广告对象的展示结果，如果有广告展示成功，则完成广告逻辑。</li>
+</ol>
+<p>讨论：广告类型应该是白名单机制还是黑名单机制？</p>
+<p>白名单，只显示指定类型的广告，任何广告实例只处理自身可以处理的广告类型，如果没有任何广告实例可以处理，那么广告就不应该被显示。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2019/09/09/talk/2019-09-09-talk-about-app/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/product/" title="product">
+                        <b>#</b> product
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/product/" title="product">
+                        #product
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2019/12/02/product/2019-12-02-ue-del/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5%EF%BC%9A%E7%9B%B4%E6%8E%A5%E4%BD%BF%E7%94%A8%E5%B9%B3%E5%8F%B0%E5%B9%BF%E5%91%8A"><span class="toc-text">第一阶段：直接使用平台广告</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5%EF%BC%9A%E5%A2%9E%E5%8A%A0%E8%87%AA%E9%87%87%E5%B9%BF%E5%91%8A"><span class="toc-text">第二阶段：增加自采广告</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5%EF%BC%9A%E6%94%AF%E6%8C%81%E8%BD%AE%E6%92%AD%E5%B9%BF%E5%91%8A"><span class="toc-text">第三阶段：支持轮播广告</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E9%98%B6%E6%AE%B5%EF%BC%9A%E4%BC%98%E5%85%88%E5%B1%95%E7%A4%BA%E5%B9%B3%E5%8F%B0%E5%B9%BF%E5%91%8A"><span class="toc-text">第四阶段：优先展示平台广告</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E9%98%B6%E6%AE%B5%EF%BC%9A%E4%BF%AE%E6%94%B9%E5%B9%BF%E5%91%8A%E4%BC%98%E5%85%88%E7%BA%A7"><span class="toc-text">第五阶段：修改广告优先级</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E5%85%AD%E9%98%B6%E6%AE%B5%EF%BC%9A%E6%8E%A7%E5%88%B6%E5%B9%BF%E5%91%8A%E7%9A%84%E5%B1%95%E7%A4%BA%E4%B8%8E%E5%90%A6"><span class="toc-text">第六阶段：控制广告的展示与否</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%B8%83%E9%98%B6%E6%AE%B5%EF%BC%9A%E7%8B%AC%E7%AB%8B%E6%8E%A7%E5%88%B6%E6%AF%8F%E4%B8%80%E7%A7%8D%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%B9%BF%E5%91%8A"><span class="toc-text">第七阶段：独立控制每一种类型的广告</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

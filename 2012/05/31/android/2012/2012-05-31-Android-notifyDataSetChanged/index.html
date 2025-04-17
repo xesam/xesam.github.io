@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Android 导致notifyDataSetChanged无效的一个错误 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Android 导致notifyDataSetChanged无效的一个错误</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/android/" title="android">
+                    <b>#</b> android
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/android/" title="android">
+                    #android
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>初学Android，发现有时候notifyDataSetChanged不起作用。后来发现是我理解错了。</p>
+<p>一个典型的错误是：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">list1 = <span class="keyword">new</span> <span class="title class_">String</span>[]&#123;<span class="string">&quot;listView1 item&quot;</span>&#125;;</span><br><span class="line">ap1 = <span class="keyword">new</span> <span class="title class_">ArrayAdapter</span>&lt;String&gt;(<span class="built_in">this</span>,android.R.layout.simple_list_item_1,list1);</span><br><span class="line">listView1.setAdapter(ap1);</span><br><span class="line">list1 = <span class="keyword">new</span> <span class="title class_">String</span>[]&#123;<span class="string">&quot;new listView1 item&quot;</span>&#125;;</span><br><span class="line">ap1.notifyDataSetChanged();</span><br></pre></td></tr></table></figure>
+
+<p>我一直以为ap1会监听list1的变化，重新初始化list1，然后执行相应的更新，现在才知道不对，ap1监听的是new String[]{“listView1 item”}的变化。</p>
+<p>换种说法就是ap1本身会保存一个对原始数据源（new String[]{“listView1 item”}）的内部引用inner_list1。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">　　list1 = <span class="keyword">new</span> <span class="title class_">String</span>[]&#123;<span class="string">&quot;new listView1 item&quot;</span>&#125;;</span><br></pre></td></tr></table></figure>
+<p>相当与切断了list1与原始数据源（new String[]{“listView1 item”}）的关系，因此之后调用notifyDataSetChanged并不会起作用，因为list1 和inner_list1已经是存在于堆上的完全不同的两个对象了</p>
+<p>错误回顾：</p>
+<p>前段时间都是使用的Arrayist等等作为原始数据源，一般都是进行add之类的操作，所以list1 和inner_list1和一直都是保持对同以个变量的引用，<br>并没有出什么问题，当然，改为直接赋值还是会出问题。</p>
+<p>看了一下Arrayadapter的源码：</p>
+<p>ArrayAdapter：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">ArrayAdapter</span><span class="params">(Context context, <span class="type">int</span> textViewResourceId, T[] objects)</span> &#123;</span><br><span class="line">    init(context, textViewResourceId, <span class="number">0</span>, Arrays.asList(objects));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Arrays：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; List&lt;T&gt; <span class="title function_">asList</span><span class="params">(T... array)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;T&gt;(array);<span class="comment">//注意这里的ArrayList不是常见的那个ArrayList，而是Arrays的一个内部类。。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以上面的问题可以归结为这么个问题：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line">String[] a = <span class="keyword">new</span> <span class="title class_">String</span>[] &#123;<span class="string">&quot;hello&quot;</span>,<span class="string">&quot;world&quot;</span>&#125;;</span><br><span class="line">String[] b = a;</span><br><span class="line"><span class="type">List</span> <span class="variable">c</span> <span class="operator">=</span> Arrays.asList(a);</span><br><span class="line">a = <span class="keyword">new</span> <span class="title class_">String</span>[] &#123;<span class="string">&quot;hello&quot;</span>,<span class="string">&quot;xesam&quot;</span>&#125;;</span><br><span class="line">System.out.println(c.toString());<span class="comment">//[&quot;hello&quot;,&quot;world&quot;]</span></span><br><span class="line">b[<span class="number">1</span>] = <span class="string">&quot;xesam&quot;</span>;</span><br><span class="line">System.out.println(c.toString());<span class="comment">//[&quot;hello&quot;,&quot;xesam&quot;]</span></span><br><span class="line">````</span><br><span class="line"></span><br><span class="line">下面是一个demo：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">```java</span><br><span class="line"><span class="keyword">package</span> com.xesam.demo.listview;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.app.Activity;</span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"><span class="keyword">import</span> android.widget.ArrayAdapter;</span><br><span class="line"><span class="keyword">import</span> android.widget.Button;</span><br><span class="line"><span class="keyword">import</span> android.widget.ListView;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestDemoActivity</span> <span class="keyword">extends</span> <span class="title class_">Activity</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> Button   button1;</span><br><span class="line">    <span class="keyword">private</span> ListView listView1;</span><br><span class="line">    <span class="keyword">private</span> Button   button2;</span><br><span class="line">    <span class="keyword">private</span> ListView listView2;</span><br><span class="line">    <span class="keyword">private</span> Button   button3;</span><br><span class="line">    <span class="keyword">private</span> ListView listView3;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> String[] list1;</span><br><span class="line">    <span class="keyword">private</span> String[] list2;</span><br><span class="line">    <span class="keyword">private</span> String[] list3;</span><br><span class="line">    <span class="keyword">private</span> String[] temp;</span><br><span class="line">    </span><br><span class="line">    ArrayAdapter&lt;String&gt; ap1;</span><br><span class="line">    ArrayAdapter&lt;String&gt; ap2;</span><br><span class="line">    ArrayAdapter&lt;String&gt; ap3;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(Bundle savedInstanceState)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.main);</span><br><span class="line">        </span><br><span class="line">        button1   = (Button) findViewById(R.id.button1);</span><br><span class="line">        listView1 = (ListView) findViewById(R.id.listview1);</span><br><span class="line">        button2   = (Button) findViewById(R.id.button2);</span><br><span class="line">        listView2 = (ListView) findViewById(R.id.listview2);</span><br><span class="line">        button3   = (Button) findViewById(R.id.button3);</span><br><span class="line">        listView3 = (ListView) findViewById(R.id.listview3);</span><br><span class="line">        </span><br><span class="line">        list1 = <span class="keyword">new</span> <span class="title class_">String</span>[]&#123;<span class="string">&quot;listView1 item&quot;</span>&#125;;</span><br><span class="line">        list2 = <span class="keyword">new</span> <span class="title class_">String</span>[]&#123;<span class="string">&quot;listView2 item&quot;</span>&#125;;</span><br><span class="line">        list3 = <span class="keyword">new</span> <span class="title class_">String</span>[]&#123;<span class="string">&quot;listView3 item&quot;</span>&#125;;</span><br><span class="line">        temp = list3;</span><br><span class="line">        </span><br><span class="line">        ap1 = <span class="keyword">new</span> <span class="title class_">ArrayAdapter</span>&lt;String&gt;(<span class="built_in">this</span>,android.R.layout.simple_list_item_1,list1);</span><br><span class="line">        ap2 = <span class="keyword">new</span> <span class="title class_">ArrayAdapter</span>&lt;String&gt;(<span class="built_in">this</span>,android.R.layout.simple_list_item_1,list2);</span><br><span class="line">        ap3 = <span class="keyword">new</span> <span class="title class_">ArrayAdapter</span>&lt;String&gt;(<span class="built_in">this</span>,android.R.layout.simple_list_item_1,list3);</span><br><span class="line">        </span><br><span class="line">        listView1.setAdapter(ap1);</span><br><span class="line">        listView2.setAdapter(ap2);</span><br><span class="line">        listView3.setAdapter(ap3);</span><br><span class="line">        </span><br><span class="line">        button1.setOnClickListener(<span class="keyword">new</span> <span class="title class_">View</span>.OnClickListener() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onClick</span><span class="params">(View v)</span> &#123;</span><br><span class="line">                list1 = <span class="keyword">new</span> <span class="title class_">String</span>[]&#123;<span class="string">&quot;new listView1 item&quot;</span>&#125;;</span><br><span class="line">                ap1.notifyDataSetChanged();<span class="comment">//无效</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        button2.setOnClickListener(<span class="keyword">new</span> <span class="title class_">View</span>.OnClickListener() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onClick</span><span class="params">(View v)</span> &#123;</span><br><span class="line">                list2[<span class="number">0</span>] = <span class="string">&quot;new listView2 item&quot;</span>;</span><br><span class="line">                ap2.notifyDataSetChanged();<span class="comment">//有效</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        button3.setOnClickListener(<span class="keyword">new</span> <span class="title class_">View</span>.OnClickListener() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onClick</span><span class="params">(View v)</span> &#123;</span><br><span class="line">                temp[<span class="number">0</span>] = <span class="string">&quot;new listView3 item&quot;</span>;</span><br><span class="line">                ap3.notifyDataSetChanged();<span class="comment">//有效</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2012/05/18/javascript/2012-05-18-Javascript-mobile-swipe/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/android/" title="android">
+                        <b>#</b> android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/android/" title="android">
+                        #android
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2012/06/28/javascript/2012-06-28-Javascript-Fixie.js/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

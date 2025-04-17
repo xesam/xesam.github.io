@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      【Javascript】Prototype源码浅析——Object部分(二)之类型检测 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">【Javascript】Prototype源码浅析——Object部分(二)之类型检测</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-04-16 16:32:33
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/javascript/" title="javascript">
+                    <b>#</b> javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/javascript/" title="javascript">
+                    #javascript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>这里我不关心javascript里面各种类型是怎么定义的，唯一要指出的是</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> str_1 = <span class="string">&#x27;xesam&#x27;</span>;</span><br><span class="line"><span class="keyword">var</span> str_2 = <span class="keyword">new</span> <span class="title class_">String</span>(<span class="string">&#x27;xesam&#x27;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(str_1 === str_2);</span><br></pre></td></tr></table></figure>
+
+<p>其中str_1和str_2不是同一个东西，先前看到群里面有个人提到类似的一个问题，所以才想起来的。</p>
+<p>检测一个变量的类型，最常见的就是typeof操作符。typeof的返回值是一个字符串，一般只能返回如下几个结果：</p>
+<pre><code>number,boolean,string,function,object,undefined
+</code></pre>
+<p>但是显然要是我们想区分Date，RegExp这样的具体类，typeof就没有办法了，于是统一归结到object里面。</p>
+<p>先看一下Prototype里面的一些定义：</p>
+<pre><code>  NULL_TYPE = &#39;Null&#39;,
+  UNDEFINED_TYPE = &#39;Undefined&#39;,
+  BOOLEAN_TYPE = &#39;Boolean&#39;,
+  NUMBER_TYPE = &#39;Number&#39;,
+  STRING_TYPE = &#39;String&#39;,
+  OBJECT_TYPE = &#39;Object&#39;,
+  FUNCTION_CLASS = &#39;[object Function]&#39;,
+  BOOLEAN_CLASS = &#39;[object Boolean]&#39;,
+  NUMBER_CLASS = &#39;[object Number]&#39;,
+  STRING_CLASS = &#39;[object String]&#39;,
+  ARRAY_CLASS = &#39;[object Array]&#39;,
+  DATE_CLASS = &#39;[object Date]&#39;,
+  
+</code></pre>
+<p>【这些变量的值是作为规定的结果返回，避免人为错误】</p>
+<p>回到变量检测上，我们看个实例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> array_1 = [<span class="literal">null</span>,<span class="literal">undefined</span>,<span class="number">10</span>,<span class="title class_">NaN</span>,<span class="string">&#x27;10&#x27;</span>,<span class="literal">true</span>,<span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;];</span><br><span class="line"><span class="keyword">var</span> array_2 = [<span class="keyword">new</span> <span class="title class_">Function</span>(),<span class="keyword">new</span> <span class="title class_">String</span>(),<span class="keyword">new</span> <span class="title class_">Number</span>(),<span class="keyword">new</span> <span class="title class_">Boolean</span>(<span class="literal">true</span>),&#123;&#125;,[],<span class="regexp">/x/</span>,<span class="keyword">new</span> <span class="title class_">Error</span>(),<span class="keyword">new</span> <span class="title class_">Date</span>()];</span><br><span class="line"><span class="keyword">var</span> varArray = array_1.<span class="title function_">concat</span>(array_2);</span><br><span class="line">(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i <span class="keyword">in</span> varArray)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> varArray[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<p>下面是结果：</p>
+<pre><code>object
+undefined
+number
+number
+string
+boolean
+function
+function
+object
+object
+object
+object
+object
+object
+object
+object
+</code></pre>
+<p>需要重点注意的几个是：</p>
+<pre><code>null --&gt; object
+NaN --&gt; number
+</code></pre>
+<p>带有new操作符的除了Function之外，全部都是object。</p>
+<p>我们按照Prototype的形式，包装一下这个过程，作为常规的过程，null和undefined这两个特别的我们先处理掉：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="comment">//先定义一下类型的表示字符串</span></span><br><span class="line">        <span class="keyword">var</span> typeMap = &#123;</span><br><span class="line">            <span class="string">&#x27;number&#x27;</span>   : <span class="string">&#x27;Number&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;boolean&#x27;</span>  : <span class="string">&#x27;Boolean&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;string&#x27;</span>   : <span class="string">&#x27;String&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;function&#x27;</span> : <span class="string">&#x27;Function&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;object&#x27;</span>   : <span class="string">&#x27;Object&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;undefined&#x27;</span>: <span class="string">&#x27;Undefined&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;null&#x27;</span>     : <span class="string">&#x27;Null&#x27;</span></span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="keyword">function</span> <span class="title function_">type</span>(<span class="params">obj</span>)&#123;</span><br><span class="line">            <span class="keyword">switch</span>(obj)&#123;                        <span class="comment">//检测null和undefined</span></span><br><span class="line">                <span class="keyword">case</span> <span class="attr">null</span>:&#123;</span><br><span class="line">                    <span class="keyword">return</span> typeMap[<span class="string">&#x27;null&#x27;</span>];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">case</span> <span class="attr">undefined</span>:&#123;</span><br><span class="line">                    <span class="keyword">return</span> typeMap[<span class="string">&#x27;undefined&#x27;</span>];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">var</span> objType = <span class="keyword">typeof</span> obj;</span><br><span class="line">            <span class="keyword">switch</span>(objType)&#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&#x27;number&#x27;</span> : &#123;</span><br><span class="line">                    <span class="keyword">return</span> typeMap[<span class="string">&#x27;number&#x27;</span>];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&#x27;boolean&#x27;</span> : &#123;</span><br><span class="line">                    <span class="keyword">return</span> typeMap[<span class="string">&#x27;boolean&#x27;</span>];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&#x27;string&#x27;</span> : &#123;</span><br><span class="line">                    <span class="keyword">return</span> typeMap[<span class="string">&#x27;string&#x27;</span>];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&#x27;function&#x27;</span> : &#123;</span><br><span class="line">                    <span class="keyword">return</span> typeMap[<span class="string">&#x27;function&#x27;</span>];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&#x27;object&#x27;</span> : &#123;</span><br><span class="line">                    <span class="keyword">return</span> typeMap[<span class="string">&#x27;object&#x27;</span>];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> i <span class="keyword">in</span> varArray)&#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">type</span>(varArray[i]));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)();</span><br></pre></td></tr></table></figure>
+<p>【说明：这里和Prototype里面有个不一致的地方，Prototype里面并没有用typeof来检测函数，我这里用了，注意就行】</p>
+<p>或者上面的例子再简单一点：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">type</span>(<span class="params">obj</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> obj === <span class="literal">null</span> ? <span class="string">&#x27;Null&#x27;</span> :</span><br><span class="line">               obj === <span class="literal">undefined</span> ? <span class="string">&#x27;Undefined&#x27;</span> :</span><br><span class="line">               <span class="keyword">typeof</span> obj === <span class="string">&#x27;number&#x27;</span>   ? <span class="string">&#x27;Number&#x27;</span>:</span><br><span class="line">               <span class="keyword">typeof</span> obj === <span class="string">&#x27;boolean&#x27;</span>  ? <span class="string">&#x27;Boolean&#x27;</span>:</span><br><span class="line">               <span class="keyword">typeof</span> obj === <span class="string">&#x27;string&#x27;</span>   ? <span class="string">&#x27;String&#x27;</span>:</span><br><span class="line">               <span class="keyword">typeof</span> obj === <span class="string">&#x27;function&#x27;</span> ? <span class="string">&#x27;Function&#x27;</span>: <span class="string">&#x27;Object&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i <span class="keyword">in</span> varArray)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">type</span>(varArray[i]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<pre><code>Object
+Undefined
+Number
+Number
+String
+Boolean
+Function
+Function
+Object
+Object
+Object
+Object
+Object
+Object
+Object
+Object
+</code></pre>
+<p>现在我们分离出来了“基本类型”【我这里基本类型是指的typeof可以检测出来的类型，不是指的js的基本类型，大牛不要喷我···】</p>
+<p>接下来就是分离object那个里面的类型了。方法提供两个：</p>
+<ol>
+<li>转化为字符串形式</li>
+<li>检测原型</li>
+</ol>
+<p>第一种方法：</p>
+<p>先将获得对象的字符串表示形式，获得字符串形式的方法有几种：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = <span class="string">&#x27;xesam&#x27;</span>;</span><br><span class="line">obj = <span class="string">&#x27;&#x27;</span>+obj;</span><br><span class="line">obj = <span class="title class_">String</span>(obj);</span><br><span class="line">obj = obj.<span class="title function_">toString</span>();</span><br></pre></td></tr></table></figure>
+<p>对于 alert 和 console 这样的输出方法，输出对象的时候，都调用了对象的toString()方法。按理来说，这样没什么问题，但是Date,RegExp,Array等都是重写了从Object继承过来的toString的方法的，因此到底返回什么就无法预测了。</p>
+<p>所以要调用，必须使用最原始的Object.prototype.toString。</p>
+<p>使用最原始的Object.prototype.toString的局限就是无法判断自定义的类，除非自定义类重写了自己的toString方法，但是重写自定义类的toString方法之后又会引起枚举（in）的问题（Object第一部分提到过），所以这个需要仔细考虑一下。</p>
+<p>具体的实现如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">     <span class="keyword">function</span> <span class="title function_">objectType</span>(<span class="params">obj</span>)&#123;</span><br><span class="line">         obj = <span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(obj);</span><br><span class="line">         <span class="keyword">return</span> obj;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">for</span>(<span class="keyword">var</span> i <span class="keyword">in</span> varArray_2)&#123;</span><br><span class="line">         <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">objectType</span>(varArray_2[i]));</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;)();</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<pre><code>[object Function]
+[object String]
+[object Number]
+[object Boolean]
+[object Object]
+[object Array]
+[object RegExp]
+[object Error]
+[object Date]
+</code></pre>
+<p>第二种方法就是调用instanceof操作符</p>
+<p>比如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>([] <span class="keyword">instanceof</span> <span class="title class_">Array</span>);</span><br></pre></td></tr></table></figure>
+<p>这就是 variable instanceof constructor 的形式。</p>
+<p>或者直接判断constructor。</p>
+<p>具体实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">objectType</span>(<span class="params">obj</span>)&#123;</span><br><span class="line">        obj = obj.<span class="property">constructor</span>;</span><br><span class="line">        <span class="keyword">return</span> obj === <span class="title class_">Array</span>   ? <span class="string">&#x27;[object Array]&#x27;</span>:</span><br><span class="line">               obj === <span class="title class_">Boolean</span> ? <span class="string">&#x27;[object Boolean]&#x27;</span>:</span><br><span class="line">               obj === <span class="title class_">Date</span>    ? <span class="string">&#x27;[object Date]&#x27;</span>:</span><br><span class="line">               obj === <span class="title class_">RegExp</span>  ? <span class="string">&#x27;[object RegExp]&#x27;</span>:</span><br><span class="line">               obj === <span class="title class_">String</span>  ? <span class="string">&#x27;[object String]&#x27;</span>:</span><br><span class="line">               obj === <span class="title class_">Function</span>? <span class="string">&#x27;[object Function]&#x27;</span>:</span><br><span class="line">               obj === <span class="title class_">Error</span>   ? <span class="string">&#x27;[object Error]&#x27;</span>:</span><br><span class="line">               obj === <span class="title class_">Number</span>  ? <span class="string">&#x27;[object Number]&#x27;</span>:<span class="string">&#x27;[object Object]&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i <span class="keyword">in</span> varArray_2)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">objectType</span>(varArray_2[i]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<pre><code>[object Function]
+[object String]
+[object Number]
+[object Boolean]
+[object Object]
+[object Array]
+[object RegExp]
+[object Error]
+[object Date]
+</code></pre>
+<p>这个对于自定义的类，也可以获得相应的结果，只是稍微变通一下代码而已。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-16 16:32:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/javascript/" title="javascript">
+                        <b>#</b> javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/javascript/" title="javascript">
+                        #javascript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2011/12/21/fe/2011-12-21-css-overflow/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>
