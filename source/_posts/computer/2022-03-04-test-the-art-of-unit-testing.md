@@ -5,8 +5,8 @@ date:   2022-03-04 09:00:00 +0800
 categories: computer
 tag: [computer]
 ---
-本文是《The Art of Unit Testing with example in JavaScript, 3rd Edition》一书的读书简记，此书前两版有中文版本：第一版使用 C 语言描述，第二版使用 C# 语言描述。
-第三版暂未出版中文版，使用 Javascript/Typescript 语言描述，使用的主要测试框架的 [Jest](https://jestjs.io/)
+本文是 `《The Art of Unit Testing with example in JavaScript, 3rd Edition》` 一书的读书简记，此书前两版有中文版本：第一版使用 C 语言描述，第二版使用 C# 语言描述。
+第三版暂未出版中文版，使用 `Javascript/Typescript` 语言描述，使用的主要测试框架的 [Jest](https://jestjs.io/)
 <!-- more -->
 
 作者对 Unit of Work 的定义：

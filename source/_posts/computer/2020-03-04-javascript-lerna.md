@@ -1,14 +1,14 @@
 ---
 layout: post
-title:  "lerna 备忘"
-date:   2020-03-04 09:00:00 +0800
+title: "monorepo之lerna"
+date: 2020-03-04 09:00:00 +0800
 categories: computer
 tag: [computer]
 ---
 
-Lerna 是一个多包（参考 monorepo）管理工具。
+`Lerna` 是一个多包（参考 monorepo）管理工具。
 
-Lerna is a fast modern build system for managing and publishing multiple JavaScript/TypeScript packages from the same repository.
+> Lerna is a fast modern build system for managing and publishing multiple JavaScript/TypeScript packages from the same repository.
 
 <!-- more -->
 
@@ -25,7 +25,7 @@ lerna init
     ├── lerna.json
     ├── package.json
     └── packages
-        
+
 lerna.json 里的版本号默认是 0.0.0，可以改成其他的。
 
 ### 创建模块
@@ -46,7 +46,7 @@ lerna create @xesam/spi-3
 ### 为模块增加依赖
 
 ```shell
-lerna create {dependency_name} 
+lerna create {dependency_name}
 ```
 
 比如：

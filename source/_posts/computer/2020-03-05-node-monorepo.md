@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "monorepo的工具使用"
+title: "monorepo之pnpm"
 date: 2021-03-04 09:00:00 +0800
 categories: computer
 tag: [computer]
