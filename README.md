@@ -12,4 +12,5 @@ deploy：
 
 - `pnpm add -D hexo-deployer-git`
 - ref [https://hexo.io/zh-cn/docs/one-command-deployment](https://hexo.io/zh-cn/docs/one-command-deployment)
+- run `hexo generate`
 - run `hexo deploy`
