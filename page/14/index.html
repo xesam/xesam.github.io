@@ -104,144 +104,227 @@
   <div class="post-list">
     <!-- 遍历渲染文章 -->
     
-      <div class="post-item" title="Android SlidingTabs">
-        <div class="time-m-d">2015-03-28</div>
+    <div class="post-item" title="Android 修改菜单">
+      <div class="time-m-d">2015-04-06</div>
+      <div class="post-item__main">
+        <div class="title">
+          <a href="/2015/04/06/android/2015/2015-04-06-Android-menu/">
+             
+            <span>Android 修改菜单</span>
+             
+          </a>
+        </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2015/04/06/android/2015/2015-04-06-Android-menu/">更多 &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="post-item" title="Android SlidingTabs">
+      <div class="time-m-d">2015-03-28</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2015/03/28/android/2015/2015-03-28-Android-SlidingTabs/">
-            
-              
-                <span>Android SlidingTabs</span>
-              
-            
+             
+            <span>Android SlidingTabs</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2015/03/28/android/2015/2015-03-28-Android-SlidingTabs/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="Android Font Basic">
-        <div class="time-m-d">2015-03-12</div>
+    <div class="post-item" title="Android Font Basic">
+      <div class="time-m-d">2015-03-12</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2015/03/12/android/2015/2015-03-12-Android-Font%20Basic/">
-            
-              
-                <span>Android Font Basic</span>
-              
-            
+             
+            <span>Android Font Basic</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2015/03/12/android/2015/2015-03-12-Android-Font%20Basic/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="Javascript TouchSlide">
-        <div class="time-m-d">2015-01-20</div>
+    <div class="post-item" title="Javascript TouchSlide">
+      <div class="time-m-d">2015-01-20</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2015/01/20/javascript/2015-01-20-Javascript-TouchSlide/">
-            
-              
-                <span>Javascript TouchSlide</span>
-              
-            
+             
+            <span>Javascript TouchSlide</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2015/01/20/javascript/2015-01-20-Javascript-TouchSlide/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="产品开发前的准备">
-        <div class="time-m-d">2015-01-02</div>
+    <div class="post-item" title="产品开发前的准备">
+      <div class="time-m-d">2015-01-02</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2015/01/02/product/2015-01-02-prepare-product/">
-            
-              
-                <span>产品开发前的准备</span>
-              
-            
+             
+            <span>产品开发前的准备</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2015/01/02/product/2015-01-02-prepare-product/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="变长参数的坑">
-        <div class="time-m-d">2014-12-19</div>
+    <div class="post-item" title="变长参数的坑">
+      <div class="time-m-d">2014-12-19</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2014/12/19/java/2014-12-19-Java-var-param/">
-            
-              
-                <span>变长参数的坑</span>
-              
-            
+             
+            <span>变长参数的坑</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          <h4 id="VarArgs简述"><a href="#VarArgs简述" class="headerlink" title="VarArgs简述"></a>VarArgs简述</h4><p>只需要明确一点即可，java方法的变长参数只是语法糖，其本质上还是将变长的实际参数 varargs 包装为一个数组。</p>
+<p>所以</p>
+<pre><code>Object[] objs
+</code></pre>
+<p>与</p>
+<pre><code>Object... objs
+</code></pre>
+<p>被看作是相同的签名，在源码级别是不能同时存在的，因此，无法编译通过</p>
+<h4 id="VarArgs包装"><a href="#VarArgs包装" class="headerlink" title="VarArgs包装"></a>VarArgs包装</h4><p>包装方式（注意，下面的代码不是实际的实现，而是一个比喻说明）:</p>
+<ol>
+<li>如果实参是唯一且匹配形参varargs要求的数组（就是实参独占形参varargs），那么可以认为你已经替编译器干了这个活，所以可以看作不包装，直接使用这个数组</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">invoke</span><span class="params">(String...varargs)</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">invoke(<span class="keyword">new</span> <span class="title class_">String</span>[]&#123;<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>&#125;);</span><br><span class="line">那么大致的调用过程如下：</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">invoke</span><span class="params">(String...varargs)</span>&#123;</span><br><span class="line">    innerVarArgs = varargs;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>如果实参是多个单独的变量（就是多个实参分享varargs），那么会将这多个参数包装成一个相应的类型数组</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">invoke</span><span class="params">(String...varargs)</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">invoke(<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>);</span><br><span class="line"></span><br><span class="line">那么大致的调用过程如下：</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">invoke</span><span class="params">(String...varargs)</span>&#123;</span><br><span class="line">    innerVarArgs = <span class="keyword">new</span> <span class="title class_">String</span>[varargs.length];</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>, size = varargs; i &lt; size; i++)&#123;</span><br><span class="line">        innerVarArgs[i] = varargs[i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <div class="post-item__excerpt-more">
+            <a href="/2014/12/19/java/2014-12-19-Java-var-param/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="【Chrome】乱七八糟">
-        <div class="time-m-d">2014-12-19</div>
+    <div class="post-item" title="【Chrome】乱七八糟">
+      <div class="time-m-d">2014-12-19</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2014/12/19/javascript/2014-12-19-Chrome-other/">
-            
-              
-                <span>【Chrome】乱七八糟</span>
-              
-            
+             
+            <span>【Chrome】乱七八糟</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2014/12/19/javascript/2014-12-19-Chrome-other/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="ListPopupWindow">
-        <div class="time-m-d">2014-12-04</div>
+    <div class="post-item" title="ListPopupWindow">
+      <div class="time-m-d">2014-12-04</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2014/12/04/android/2014/2014-12-04-Android-ListPopupWindow/">
-            
-              
-                <span>ListPopupWindow</span>
-              
-            
+             
+            <span>ListPopupWindow</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2014/12/04/android/2014/2014-12-04-Android-ListPopupWindow/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="Java8 Optional">
-        <div class="time-m-d">2014-12-03</div>
+    <div class="post-item" title="Java8 Optional">
+      <div class="time-m-d">2014-12-03</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2014/12/03/java/2014-12-03-Java-Java8-Optional/">
-            
-              
-                <span>Java8 Optional</span>
-              
-            
+             
+            <span>Java8 Optional</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          <p>按照字面意思的理解，应该可选的意思。一开始我还以为是类似python里面的默认参数用法呢，结果语义是指某个值可能有也可能没有（null）。<br>感觉名字取得不是很直观。。我觉得叫Nullable不是更好？</p>
+<p>python： </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">fn</span>(<span class="params">a=<span class="string">&#x27;default_value&#x27;</span></span>):</span><br><span class="line">    <span class="built_in">print</span>(a)</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+          <div class="post-item__excerpt-more">
+            <a href="/2014/12/03/java/2014-12-03-Java-Java8-Optional/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="Android RecyclerView">
-        <div class="time-m-d">2014-12-02</div>
+    <div class="post-item" title="Android RecyclerView">
+      <div class="time-m-d">2014-12-02</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2014/12/02/android/2014/2014-12-02-Android-RecyclerView/">
-            
-              
-                <span>Android RecyclerView</span>
-              
-            
+             
+            <span>Android RecyclerView</span>
+             
           </a>
         </div>
-      </div>
-    
-      <div class="post-item" title="控制台输入小节">
-        <div class="time-m-d">2014-11-19</div>
-        <div class="title">
-          <a href="/2014/11/19/java/2014-11-19-java-console/">
-            
-              
-                <span>控制台输入小节</span>
-              
-            
-          </a>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2014/12/02/android/2014/2014-12-02-Android-RecyclerView/">更多 &rarr;</a>
+          </div>
         </div>
       </div>
+    </div>
     
   </div>
   <nav class="post-navigation">
     
-      <a href="/page/13/"><i class="iconfont icon-angleleft"></i></a>
+    <a href="/page/13/"
+      ><i class="iconfont icon-angleleft"></i
+    ></a>
     
     <span class="page-num">14 / 20</span>
     
-      <a href="/page/15/"><i class="iconfont icon-angleright"></i></a>
+    <a href="/page/15/"
+      ><i class="iconfont icon-angleright"></i
+    ></a>
     
   </nav>
 </div>

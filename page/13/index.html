@@ -104,144 +104,244 @@
   <div class="post-list">
     <!-- 遍历渲染文章 -->
     
-      <div class="post-item" title="如何实现ButterKnife">
-        <div class="time-m-d">2015-06-08</div>
+    <div class="post-item" title="POST简略">
+      <div class="time-m-d">2015-07-14</div>
+      <div class="post-item__main">
+        <div class="title">
+          <a href="/2015/07/14/java/2015-07-14-Java-POST/">
+             
+            <span>POST简略</span>
+             
+          </a>
+        </div>
+        <div class="post-item__excerpt markdown-body">
+          <h2 id="简单描述："><a href="#简单描述：" class="headerlink" title="简单描述："></a>简单描述：</h2><p>post的数据在 request Payload 内， 因此，Request Headers 里面带有一个 boundary 属性，服务器收到 post 请求之后，通过 boundary 将参数从 Payload 中分离出来。</p>
+<p>即</p>
+<pre><code>params = body.split(boundary)
+</code></pre>
+<p>唯一需要注意的是，CRLF（回车换行符）的使用。HTTP协议对CRLF的内容分割要求还是略严的。</p>
+<h2 id="Request-Headers"><a href="#Request-Headers" class="headerlink" title="Request Headers"></a>Request Headers</h2><pre><code>Content-Type:multipart/form-data; boundary=----WebKitFormBoundarydKY7YrWhI3bdiNYz
+</code></pre>
+<h2 id="Request-Payload"><a href="#Request-Payload" class="headerlink" title="Request Payload"></a>Request Payload</h2><pre><code>--&#123;boundary&#125;
+Content-Disposition: form-data; name=&quot;&#123;name1&#125;&quot;
+
+&#123;value1&#125;
+--&#123;boundary&#125;
+Content-Disposition: form-data; name=&quot;&#123;name2&#125;&quot;
+
+&#123;value2&#125;
+--&#123;boundary&#125;
+Content-Disposition: form-data; name=&quot;&#123;file_name1&#125;&quot;; filename=&quot;xxx.png&quot;
+Content-Type: image/png
+
+0x120x12...
+
+--&#123;boundary&#125;--
+</code></pre>
+          <div class="post-item__excerpt-more">
+            <a href="/2015/07/14/java/2015-07-14-Java-POST/">更多 &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="post-item" title="如何实现ButterKnife">
+      <div class="time-m-d">2015-06-08</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2015/06/08/android/2015/2015-06-08-Android-how-to-ButterKnife/">
-            
-              
-                <span>如何实现ButterKnife</span>
-              
-            
+             
+            <span>如何实现ButterKnife</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2015/06/08/android/2015/2015-06-08-Android-how-to-ButterKnife/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="Android Context基础！">
-        <div class="time-m-d">2015-05-17</div>
+    <div class="post-item" title="Android Context基础！">
+      <div class="time-m-d">2015-05-17</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2015/05/17/android/2015/2015-05-17-Android-Context-basic/">
-            
-              
-                <span>Android Context基础！</span>
-              
-            
+             
+            <span>Android Context基础！</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2015/05/17/android/2015/2015-05-17-Android-Context-basic/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="如何判断是某个领域是否值得进入">
-        <div class="time-m-d">2015-05-03</div>
+    <div class="post-item" title="如何判断是某个领域是否值得进入">
+      <div class="time-m-d">2015-05-03</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2015/05/03/talk/2015-05-03-talk-business/">
-            
-              
-                <span>如何判断是某个领域是否值得进入</span>
-              
-            
+             
+            <span>如何判断是某个领域是否值得进入</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          <p>同事教给我的方法，如何判断是某个领域是否值得进入，大致分为三个步骤：</p>
+<ol>
+<li>定义市场</li>
+<li>分析玩家</li>
+<li>评估路径</li>
+</ol>
+          <div class="post-item__excerpt-more">
+            <a href="/2015/05/03/talk/2015-05-03-talk-business/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="Support Annotations">
-        <div class="time-m-d">2015-04-30</div>
+    <div class="post-item" title="Support Annotations">
+      <div class="time-m-d">2015-04-30</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2015/04/30/android/2015/2015-04-30-AndroidSupport-SupportAnnotations/">
-            
-              
-                <span>Support Annotations</span>
-              
-            
+             
+            <span>Support Annotations</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2015/04/30/android/2015/2015-04-30-AndroidSupport-SupportAnnotations/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="让Drawable居中的小控件">
-        <div class="time-m-d">2015-04-27</div>
+    <div class="post-item" title="让Drawable居中的小控件">
+      <div class="time-m-d">2015-04-27</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2015/04/27/android/2015/2015-04-27-Android-Drawable-center/">
-            
-              
-                <span>让Drawable居中的小控件</span>
-              
-            
+             
+            <span>让Drawable居中的小控件</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2015/04/27/android/2015/2015-04-27-Android-Drawable-center/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="如何实现一个简单的事件总线">
-        <div class="time-m-d">2015-04-26</div>
+    <div class="post-item" title="如何实现一个简单的事件总线">
+      <div class="time-m-d">2015-04-26</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2015/04/26/java/2015-04-26-Java-how-to-eventbus/">
-            
-              
-                <span>如何实现一个简单的事件总线</span>
-              
-            
+             
+            <span>如何实现一个简单的事件总线</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          <p><a target="_blank" rel="noopener" href="https://github.com/konmik/MicroBus">MicroBus</a></p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>注册</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Receiver</span> <span class="keyword">implements</span> <span class="title class_">MicroBus</span>.BusEventReceiver &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">onCreate</span><span class="params">()</span> &#123;</span><br><span class="line">        bus.register(<span class="built_in">this</span>, String.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">onDestroy</span><span class="params">()</span> &#123;</span><br><span class="line">        bus.unregister(<span class="built_in">this</span>, String.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onBusEvent</span><span class="params">(Object event)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (event <span class="keyword">instanceof</span> String)</span><br><span class="line">            System.out.println(<span class="string">&quot;Hello, &quot;</span> + event);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行</p>
+<pre><code>bus.post(&quot;World|&quot;);
+</code></pre>
+<p>运行结果</p>
+<pre><code>Hello, World!
+</code></pre>
+          <div class="post-item__excerpt-more">
+            <a href="/2015/04/26/java/2015-04-26-Java-how-to-eventbus/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="Android 组件通信模式">
-        <div class="time-m-d">2015-04-23</div>
+    <div class="post-item" title="Android 组件通信模式">
+      <div class="time-m-d">2015-04-23</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2015/04/23/android/2015/2015-04-23-Android-communication/">
-            
-              
-                <span>Android 组件通信模式</span>
-              
-            
+             
+            <span>Android 组件通信模式</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2015/04/23/android/2015/2015-04-23-Android-communication/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="Android UI组件变量组织">
-        <div class="time-m-d">2015-04-11</div>
+    <div class="post-item" title="Android UI组件变量组织">
+      <div class="time-m-d">2015-04-11</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2015/04/11/android/2015/2015-04-11-Android-UI-vars/">
-            
-              
-                <span>Android UI组件变量组织</span>
-              
-            
+             
+            <span>Android UI组件变量组织</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2015/04/11/android/2015/2015-04-11-Android-UI-vars/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="Android 触屏事件传递简述">
-        <div class="time-m-d">2015-04-07</div>
+    <div class="post-item" title="Android 触屏事件传递简述">
+      <div class="time-m-d">2015-04-07</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2015/04/07/android/2015/2015-04-07-Android-touch/">
-            
-              
-                <span>Android 触屏事件传递简述</span>
-              
-            
+             
+            <span>Android 触屏事件传递简述</span>
+             
           </a>
         </div>
-      </div>
-    
-      <div class="post-item" title="Android 修改菜单">
-        <div class="time-m-d">2015-04-06</div>
-        <div class="title">
-          <a href="/2015/04/06/android/2015/2015-04-06-Android-menu/">
-            
-              
-                <span>Android 修改菜单</span>
-              
-            
-          </a>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2015/04/07/android/2015/2015-04-07-Android-touch/">更多 &rarr;</a>
+          </div>
         </div>
       </div>
+    </div>
     
   </div>
   <nav class="post-navigation">
     
-      <a href="/page/12/"><i class="iconfont icon-angleleft"></i></a>
+    <a href="/page/12/"
+      ><i class="iconfont icon-angleleft"></i
+    ></a>
     
     <span class="page-num">13 / 20</span>
     
-      <a href="/page/14/"><i class="iconfont icon-angleright"></i></a>
+    <a href="/page/14/"
+      ><i class="iconfont icon-angleright"></i
+    ></a>
     
   </nav>
 </div>

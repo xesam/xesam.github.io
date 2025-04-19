@@ -13,7 +13,7 @@
   
   <title>
     
-      lerna 备忘 
+      monorepo之lerna 
       
       
       |
@@ -148,11 +148,11 @@
   <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
   <div class="container post-details" id="post-details">
     <div class="post-content">
-      <div class="post-title">lerna 备忘</div>
+      <div class="post-title">monorepo之lerna</div>
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-          2025-04-16 16:32:33
+          2025-04-19 11:43:07
         </span>
         
               <span class="post-categories">
@@ -179,8 +179,10 @@
           
       </div>
       <div class="markdown-body">
-        <p>Lerna 是一个多包（参考 monorepo）管理工具。</p>
+        <p><code>Lerna</code> 是一个多包（参考 monorepo）管理工具。</p>
+<blockquote>
 <p>Lerna is a fast modern build system for managing and publishing multiple JavaScript&#x2F;TypeScript packages from the same repository.</p>
+</blockquote>
 <span id="more"></span>
 
 <h3 id="初始化项目"><a href="#初始化项目" class="headerlink" title="初始化项目"></a>初始化项目</h3><p>转到目标文件夹：</p>
@@ -190,7 +192,6 @@
 <pre><code>├── lerna.json
 ├── package.json
 └── packages
-    
 </code></pre>
 <p>lerna.json 里的版本号默认是 0.0.0，可以改成其他的。</p>
 <h3 id="创建模块"><a href="#创建模块" class="headerlink" title="创建模块"></a>创建模块</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lerna create &#123;pkg_name&#125; [pkg_path]</span><br></pre></td></tr></table></figure>
@@ -198,7 +199,7 @@
 <p>比如：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">lerna create @xesam/api</span><br><span class="line">lerna create @xesam/spi-1</span><br><span class="line">lerna create @xesam/spi-2</span><br><span class="line">lerna create @xesam/spi-3</span><br></pre></td></tr></table></figure>
 
-<h3 id="为模块增加依赖"><a href="#为模块增加依赖" class="headerlink" title="为模块增加依赖"></a>为模块增加依赖</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lerna create &#123;dependency_name&#125; </span><br></pre></td></tr></table></figure>
+<h3 id="为模块增加依赖"><a href="#为模块增加依赖" class="headerlink" title="为模块增加依赖"></a>为模块增加依赖</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lerna create &#123;dependency_name&#125;</span><br></pre></td></tr></table></figure>
 
 <p>比如：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lerna add axios # 给所有模块增加 axios 依赖</span><br><span class="line">lerna add axios --scope=@xesam/api # 给 @xesam/api 模块增加 axios 依赖</span><br></pre></td></tr></table></figure>
@@ -224,7 +225,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-04-16 16:32:33
+              2025-04-19 11:43:07
             </span>
             
                   <span class="post-categories">

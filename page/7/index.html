@@ -104,144 +104,238 @@
   <div class="post-list">
     <!-- 遍历渲染文章 -->
     
-      <div class="post-item" title="Rx 宝石图图解">
-        <div class="time-m-d">2017-03-05</div>
+    <div class="post-item" title="Rx 宝石图图解">
+      <div class="time-m-d">2017-03-05</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2017/03/05/computer/2017-03-25-rx-marble-diagrams/">
-            
-              
-                <span>Rx 宝石图图解</span>
-              
-            
+             
+            <span>Rx 宝石图图解</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2017/03/05/computer/2017-03-25-rx-marble-diagrams/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="Gson解析复杂数据">
-        <div class="time-m-d">2017-02-17</div>
+    <div class="post-item" title="Gson解析复杂数据">
+      <div class="time-m-d">2017-02-17</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2017/02/17/java/2017-02-17-Java-Gson/">
-            
-              
-                <span>Gson解析复杂数据</span>
-              
-            
+             
+            <span>Gson解析复杂数据</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          <p>本文主要关注所解析的 JSON 对象与已定义的 java 对象结构不匹配的情况，解决方案就是使用 JsonDeserializer 来自定义从 JSON 对象到 Java 对象的映射。</p>
+<h2 id="一个简单的例子"><a href="#一个简单的例子" class="headerlink" title="一个简单的例子"></a>一个简单的例子</h2><p>有如下 JSON 对象，表示一本书的基本信息，本书有两个作者。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&#x27;title&#x27;</span>:    <span class="string">&#x27;Java Puzzlers: Traps, Pitfalls, and Corner Cases&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;isbn-10&#x27;</span>:  <span class="string">&#x27;032133678X&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;isbn-13&#x27;</span>:  <span class="string">&#x27;978-0321336781&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;authors&#x27;</span>:  [<span class="string">&#x27;Joshua Bloch&#x27;</span>, <span class="string">&#x27;Neal Gafter&#x27;</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个 JSON 对象包含 4 个字段，其中有一个是数组，这些字段表征了一本书的基本信息。<br>如果我们直接使用 Gson 来解析：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Book</span> <span class="variable">book</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Gson</span>().fromJson(jsonString, Book.class);</span><br></pre></td></tr></table></figure>
+
+<p>会发现 ‘isbn-10’ 这种字段表示在 Java 中是不合法的，因为 Java 的变量名中是不允许含有 ‘-‘ 符号的。<br>对于这个例子，我们可以使用 Gson 的 @SerializedName 注解来处理，不过注解也仅限于此，遇到后文的场景，注解就无能为力了。<br>这个时候，就是 JsonDeserializer 派上用场的时候。</p>
+          <div class="post-item__excerpt-more">
+            <a href="/2017/02/17/java/2017-02-17-Java-Gson/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="Cupboard非官方翻译">
-        <div class="time-m-d">2017-02-07</div>
+    <div class="post-item" title="Cupboard非官方翻译">
+      <div class="time-m-d">2017-02-07</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2017/02/07/android/2017/2017-02-07-Android-Cupboard/">
-            
-              
-                <span>Cupboard非官方翻译</span>
-              
-            
+             
+            <span>Cupboard非官方翻译</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2017/02/07/android/2017/2017-02-07-Android-Cupboard/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="chrome缓存设置">
-        <div class="time-m-d">2016-12-18</div>
+    <div class="post-item" title="chrome缓存设置">
+      <div class="time-m-d">2016-12-18</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2016/12/18/computer/2016-12-18-http-chrome-cache/">
-            
-              
-                <span>chrome缓存设置</span>
-              
-            
+             
+            <span>chrome缓存设置</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          <p>使用浏览器调试 http 缓存头的时候，有一些需要注意的地方。一个显著的问题是刷新（F5）或者地址栏输入网址方式（Enter）访问页面，所有请求都会自动设置 Cache-Control:max-age&#x3D;0。<br>如果是强制刷新（SHIFT + F5）的方式，所有请求都会自动设置 Cache-Control:no-cache。</p>
+<p>另外，控制台（Network）也有一个 “disable cache” 的选项，需要注意。 </p>
+<p>启用 stale-while-revalidate 扩展，这个需要通过 chrome:&#x2F;&#x2F;flags 设置，将 stale-while-revalidate 设置为 enable。</p>
+<p>如果需要在浏览器里面去掉这个强制设定的“Cache-Control:max-age&#x3D;0”，可以使用 ajax 来发起请求，或者使用页面内链接的方式访问。<br>比如直接设置 a 标签的 href，这个时候浏览器就不会设定 max-age&#x3D;0 了。</p>
+          <div class="post-item__excerpt-more">
+            <a href="/2016/12/18/computer/2016-12-18-http-chrome-cache/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="BIOS与0x7C00">
-        <div class="time-m-d">2016-12-17</div>
+    <div class="post-item" title="BIOS与0x7C00">
+      <div class="time-m-d">2016-12-17</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2016/12/17/computer/2016-12-17-computer-BIOS-0x7C00/">
-            
-              
-                <span>BIOS与0x7C00</span>
-              
-            
+             
+            <span>BIOS与0x7C00</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          <p>你知道 0x7C00，这个在 x86 汇编中的一个神秘数字吗？<br>0x7C00 是一个内存地址，BIOS 就是将 MBR (Master Boot Record, hdd&#x2F;fdd 的第一个 sector) 读入 0x7C00 这个地址，<br>然后进行后续引导的。</p>
+<p>操作系统或是 bootloader 的开发者必须假设他们的汇编代码被加载并从 0x7C00 处开始执行。<br>不过，为什么在 x86 中 BIOS 要将 MBR 加载到 0x7C00 呢？在回答这个问题之前，我们还有几个疑惑：</p>
+<p>第一个疑惑：</p>
+<pre><code>我翻阅了所有的 Intel x86(32bit) 编程手册，都没有找到 0x7C00 这个数字。
+</code></pre>
+<p>没错！0x7C00 不是 x86 CPU 里面的定义，你当然不可能在 cpu 文档里面找得到。那么你就要问了，“那是谁定义了 0x7C00？”</p>
+<p>第二个疑惑：</p>
+<pre><code>0x7C00 的值等于 32KiB - 1024B，这个数字表示什么意思？
+</code></pre>
+<p>不管是谁定义了 0x7C00，他&#x2F;她为何要定义这样一个奇怪的数字？</p>
+          <div class="post-item__excerpt-more">
+            <a href="/2016/12/17/computer/2016-12-17-computer-BIOS-0x7C00/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="传值调用与传引用调用">
-        <div class="time-m-d">2016-10-21</div>
+    <div class="post-item" title="传值调用与传引用调用">
+      <div class="time-m-d">2016-10-21</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2016/10/21/computer/2016-10-21-computer-ref-value/">
-            
-              
-                <span>传值调用与传引用调用</span>
-              
-            
+             
+            <span>传值调用与传引用调用</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          <p>这个问题的关键是明确“传值调用（Call by value）”与“传引用调用（Call by reference）”的定义。</p>
+<p>简单来说：</p>
+<pre><code>“传值调用”是将值（values）作为函数参数传入；
+“传引用调用”是将变量（variables）本身作为函数参数传入；
+</code></pre>
+<p>一个隐喻：</p>
+<pre><code>“传值调用”是我在纸片上写下一些内容并把纸片交给你， 内容可以是一个URL，也可能是一份完整的《战争与和平》副本。
+不管是什么，现在都在我给你的那张纸上，所以它实际上是你的纸。你可以在那张纸上随便涂鸦，也可以通过那张纸找到别的什么东西。
+
+“传引用调用”是当我在我的笔记本上写了一些内容然后把笔记本递给你。
+你可以在我的笔记本上涂鸦（也许我想要你这么做，也许我没料到你会这么做），然后我保留我的笔记本，你的任何涂鸦也一并保留在笔记本里。
+此外，如果你或我写的是有关如何找到其他内容的信息，无论你或我可以去那里，更改这些信息。
+</code></pre>
+          <div class="post-item__excerpt-more">
+            <a href="/2016/10/21/computer/2016-10-21-computer-ref-value/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="Android Splash实践">
-        <div class="time-m-d">2016-09-30</div>
+    <div class="post-item" title="Android Splash实践">
+      <div class="time-m-d">2016-09-30</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2016/09/30/android/2016/2016-09-30-Android-Splash/">
-            
-              
-                <span>Android Splash实践</span>
-              
-            
+             
+            <span>Android Splash实践</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2016/09/30/android/2016/2016-09-30-Android-Splash/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="Android MVP专题">
-        <div class="time-m-d">2016-08-09</div>
+    <div class="post-item" title="Android MVP专题">
+      <div class="time-m-d">2016-08-09</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2016/08/09/android/2016/2016-08-09-Android-MVP/">
-            
-              
-                <span>Android MVP专题</span>
-              
-            
+             
+            <span>Android MVP专题</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2016/08/09/android/2016/2016-08-09-Android-MVP/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="Android 多语言切换">
-        <div class="time-m-d">2016-08-04</div>
+    <div class="post-item" title="Android 多语言切换">
+      <div class="time-m-d">2016-08-04</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2016/08/04/android/2016/2016-08-04-Android-multi-lang/">
-            
-              
-                <span>Android 多语言切换</span>
-              
-            
+             
+            <span>Android 多语言切换</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2016/08/04/android/2016/2016-08-04-Android-multi-lang/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="Android 编写可维护的Android代码">
-        <div class="time-m-d">2016-08-02</div>
+    <div class="post-item" title="Android 编写可维护的Android代码">
+      <div class="time-m-d">2016-08-02</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2016/08/02/android/2016/2016-08-02-Android-code-stye/">
-            
-              
-                <span>Android 编写可维护的Android代码</span>
-              
-            
+             
+            <span>Android 编写可维护的Android代码</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2016/08/02/android/2016/2016-08-02-Android-code-stye/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
   </div>
   <nav class="post-navigation">
     
-      <a href="/page/6/"><i class="iconfont icon-angleleft"></i></a>
+    <a href="/page/6/"
+      ><i class="iconfont icon-angleleft"></i
+    ></a>
     
     <span class="page-num">7 / 20</span>
     
-      <a href="/page/8/"><i class="iconfont icon-angleright"></i></a>
+    <a href="/page/8/"
+      ><i class="iconfont icon-angleright"></i
+    ></a>
     
   </nav>
 </div>

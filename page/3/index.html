@@ -104,144 +104,217 @@
   <div class="post-list">
     <!-- 遍历渲染文章 -->
     
-      <div class="post-item" title="开发模式-框架隔离">
-        <div class="time-m-d">2021-03-04</div>
+    <div class="post-item" title="开发模式-框架隔离">
+      <div class="time-m-d">2021-03-04</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2021/03/04/computer/2021-03-04-dev-pattern-isolation/">
-            
-              
-                <span>开发模式-框架隔离</span>
-              
-            
+             
+            <span>开发模式-框架隔离</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          <p>在做一般的应用产品开发时，通常会基于特定的平台（比如 Android、iOS）、框架（Vue、React）或者技术标准（Servlet）等等。<br>这些开发平台通常经过精心设计，给程序员提供一个受控环境和开发模板，程序员在这个特定的环境中按照开发平台的规范进行开发。</p>
+          <div class="post-item__excerpt-more">
+            <a href="/2021/03/04/computer/2021-03-04-dev-pattern-isolation/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="2022补录">
-        <div class="time-m-d">2021-01-01</div>
+    <div class="post-item" title="2022补录">
+      <div class="time-m-d">2021-01-01</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2021/01/01/introspection/2021-01-01-introspection-1/">
-            
-              
-                <span>2022补录</span>
-              
-            
+             
+            <span>2022补录</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          <p>集错误之大成：前朝的剑斩本朝的官。</p>
+          <div class="post-item__excerpt-more">
+            <a href="/2021/01/01/introspection/2021-01-01-introspection-1/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="小程序复用-函数构造器">
-        <div class="time-m-d">2020-09-17</div>
+    <div class="post-item" title="小程序复用-函数构造器">
+      <div class="time-m-d">2020-09-17</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2020/09/17/fe/2020-09-17-fe-miniapp-reuse-3/">
-            
-              
-                <span>小程序复用-函数构造器</span>
-              
-            
+             
+            <span>小程序复用-函数构造器</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          <p>小程序App、Page 和 Component 是通过函数调用的方式来实现创建的，通过函数参数 option 来定义数据和行为，通过 Behavior 来实现复用。<br>但是在抽象组件的时候，会面临几个问题：</p>
+<ol>
+<li>小程序没有继承体系。</li>
+<li>部分 option 的属性无法通过 Behavior 来组合&#x2F;混入。</li>
+</ol>
+          <div class="post-item__excerpt-more">
+            <a href="/2020/09/17/fe/2020-09-17-fe-miniapp-reuse-3/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="小程序复用">
-        <div class="time-m-d">2020-09-15</div>
+    <div class="post-item" title="小程序复用">
+      <div class="time-m-d">2020-09-15</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2020/09/15/fe/2020-09-15-fe-miniapp-reuse/">
-            
-              
-                <span>小程序复用</span>
-              
-            
+             
+            <span>小程序复用</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          <p>由于小程序没有使用“组件类”的构造方式，无法使用继承，因此，小程序框架提供了“混入”（mixins）方式的复用机制，“混入”主要通过 Behavior 来实现。<br>根据官方的定义：</p>
+<p>每个 behavior 可以包含一组属性、数据、生命周期函数和方法。组件引用它时，它的属性、数据和方法会被合并到组件中，生命周期函数也会在对应时机被调用。每个组件可以引用多个 behavior ，behavior 也可以引用其它 behavior 。</p>
+          <div class="post-item__excerpt-more">
+            <a href="/2020/09/15/fe/2020-09-15-fe-miniapp-reuse/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="小程序复用-Behavior">
-        <div class="time-m-d">2020-09-15</div>
+    <div class="post-item" title="小程序复用-Behavior">
+      <div class="time-m-d">2020-09-15</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2020/09/15/fe/2020-09-16-fe-miniapp-reuse-2/">
-            
-              
-                <span>小程序复用-Behavior</span>
-              
-            
+             
+            <span>小程序复用-Behavior</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          <p>虽然小程序提供了基于 Behavior 的复用机制，但 Behavior 对 Component 和 Page 的支持程度不一样，有必要详细区分一下。</p>
+          <div class="post-item__excerpt-more">
+            <a href="/2020/09/15/fe/2020-09-16-fe-miniapp-reuse-2/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="小程序组件通信">
-        <div class="time-m-d">2020-09-14</div>
+    <div class="post-item" title="小程序组件通信">
+      <div class="time-m-d">2020-09-14</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2020/09/14/fe/2020-09-14-fe-miniapp-event/">
-            
-              
-                <span>小程序组件通信</span>
-              
-            
+             
+            <span>小程序组件通信</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          <p>小程序文档中关于“组件间通信与事件”的部分写得比较简单，在此主要记录官方的几种标准用法，以及一些骚操作。</p>
+          <div class="post-item__excerpt-more">
+            <a href="/2020/09/14/fe/2020-09-14-fe-miniapp-event/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="小程序hook">
-        <div class="time-m-d">2020-09-13</div>
+    <div class="post-item" title="小程序hook">
+      <div class="time-m-d">2020-09-13</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2020/09/13/fe/2020-09-13-fe-miniapp-hook/">
-            
-              
-                <span>小程序hook</span>
-              
-            
+             
+            <span>小程序hook</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          <p>在开发一个客户端应用时，通常都需要按照框架定义的模式来编写代码，最常见的是覆盖框架定义好的生命周期方法。</p>
+<p>以微信小程序为例，当我们定义一个页面的时候，模板代码如下：</p>
+          <div class="post-item__excerpt-more">
+            <a href="/2020/09/13/fe/2020-09-13-fe-miniapp-hook/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="小程序生命周期">
-        <div class="time-m-d">2020-09-12</div>
+    <div class="post-item" title="小程序生命周期">
+      <div class="time-m-d">2020-09-12</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2020/09/12/fe/2020-09-12-fe-miniapp-lifycycle/">
-            
-              
-                <span>小程序生命周期</span>
-              
-            
+             
+            <span>小程序生命周期</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          <p>微信小程序大致可以认为是“微信 - App - Page”这样的三层结构，微信是 App 的宿主，App 是 Page 的宿主，宿主的状态会影响旗下子元素不同生命周期方法的调用。微信自身维护 Android、iOS等操作系统要求的生命周期方法，至于微信怎么定义小程序的生命周期，那全都是微信说了算。</p>
+          <div class="post-item__excerpt-more">
+            <a href="/2020/09/12/fe/2020-09-12-fe-miniapp-lifycycle/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="简单设备资产管理">
-        <div class="time-m-d">2020-04-01</div>
+    <div class="post-item" title="简单设备资产管理">
+      <div class="time-m-d">2020-04-01</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2020/04/01/software/2020-04-01-device-manage/">
-            
-              
-                <span>简单设备资产管理</span>
-              
-            
+             
+            <span>简单设备资产管理</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          <p>先前做了一套外卖系统，涉及到许多小票机的管理，一开始没注意，后来随着设备数量的增加，带来了盘点与跟踪上的管理烦恼。</p>
+          <div class="post-item__excerpt-more">
+            <a href="/2020/04/01/software/2020-04-01-device-manage/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="lerna 备忘">
-        <div class="time-m-d">2020-03-04</div>
+    <div class="post-item" title="monorepo之lerna">
+      <div class="time-m-d">2020-03-04</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2020/03/04/computer/2020-03-04-javascript-lerna/">
-            
-              
-                <span>lerna 备忘</span>
-              
-            
+             
+            <span>monorepo之lerna</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          <p><code>Lerna</code> 是一个多包（参考 monorepo）管理工具。</p>
+<blockquote>
+<p>Lerna is a fast modern build system for managing and publishing multiple JavaScript&#x2F;TypeScript packages from the same repository.</p>
+</blockquote>
+          <div class="post-item__excerpt-more">
+            <a href="/2020/03/04/computer/2020-03-04-javascript-lerna/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
   </div>
   <nav class="post-navigation">
     
-      <a href="/page/2/"><i class="iconfont icon-angleleft"></i></a>
+    <a href="/page/2/"
+      ><i class="iconfont icon-angleleft"></i
+    ></a>
     
     <span class="page-num">3 / 20</span>
     
-      <a href="/page/4/"><i class="iconfont icon-angleright"></i></a>
+    <a href="/page/4/"
+      ><i class="iconfont icon-angleright"></i
+    ></a>
     
   </nav>
 </div>

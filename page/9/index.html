@@ -104,144 +104,222 @@
   <div class="post-list">
     <!-- 遍历渲染文章 -->
     
-      <div class="post-item" title="ThreadLocal设计意图">
-        <div class="time-m-d">2016-05-08</div>
+    <div class="post-item" title="ThreadLocal设计意图">
+      <div class="time-m-d">2016-05-08</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2016/05/08/java/2016-05-08-Java-ThreadLocal/">
-            
-              
-                <span>ThreadLocal设计意图</span>
-              
-            
+             
+            <span>ThreadLocal设计意图</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          <p>核心原理</p>
+<ol>
+<li>ThreadLocal 处理的是线程的专属对象，各个线程的对象都是独立的。</li>
+<li>ThreadLocal 用来辅助平衡效率与资源分配。</li>
+<li>ThreadLocal 不是同步机制，也不解决共享对象的多线程竞态条件问题。</li>
+</ol>
+<h2 id="基本设计"><a href="#基本设计" class="headerlink" title="基本设计"></a>基本设计</h2><p>首先看一个熟悉的场景：排队买票。</p>
+<p>从理论上看，针对“排队买票”这个场景，我们可以有以下几种方案设计：</p>
+<p>第一种. 固定设置一个售票窗口，每新来一个购票者就排在队伍的最后面。如图：</p>
+<p><img src="/image/java_threadlocal_1.png" alt="1"></p>
+<p>第二种. 动态设置售票窗口数量，每新来一个购票者就新开一个窗口来进行接待。如图：</p>
+<p><img src="/image/java_threadlocal_2.png" alt="1"></p>
+<p>第三种. 固定设置 N 个售票窗口，每新来一个购票者就选择一个售票窗口。如图：</p>
+<p><img src="/image/java_threadlocal_3.png" alt="1"></p>
+<p>比较一下上面的三种方案，很明显现实社会中使用的是第三种，那么各自有什么优势与缺点呢？</p>
+          <div class="post-item__excerpt-more">
+            <a href="/2016/05/08/java/2016-05-08-Java-ThreadLocal/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="Android 远程网页访问本地资源">
-        <div class="time-m-d">2016-05-06</div>
+    <div class="post-item" title="Android 远程网页访问本地资源">
+      <div class="time-m-d">2016-05-06</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2016/05/06/android/2016/2016-05-06-Android-web-local/">
-            
-              
-                <span>Android 远程网页访问本地资源</span>
-              
-            
+             
+            <span>Android 远程网页访问本地资源</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2016/05/06/android/2016/2016-05-06-Android-web-local/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="Handler（三）WeakHandler">
-        <div class="time-m-d">2016-04-24</div>
+    <div class="post-item" title="Handler（三）WeakHandler">
+      <div class="time-m-d">2016-04-24</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2016/04/24/android/2016/2016-04-24-Android-Handler-3-WeakHandler/">
-            
-              
-                <span>Handler（三）WeakHandler</span>
-              
-            
+             
+            <span>Handler（三）WeakHandler</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2016/04/24/android/2016/2016-04-24-Android-Handler-3-WeakHandler/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="如何写一个JsBridge">
-        <div class="time-m-d">2016-04-12</div>
+    <div class="post-item" title="如何写一个JsBridge">
+      <div class="time-m-d">2016-04-12</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2016/04/12/android/2016/2016-04-12-Android-how-to-JsBridge/">
-            
-              
-                <span>如何写一个JsBridge</span>
-              
-            
+             
+            <span>如何写一个JsBridge</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2016/04/12/android/2016/2016-04-12-Android-how-to-JsBridge/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="Handler（二）Message面面观">
-        <div class="time-m-d">2016-04-01</div>
+    <div class="post-item" title="Handler（二）Message面面观">
+      <div class="time-m-d">2016-04-01</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2016/04/01/android/2016/2016-04-01-Android-Handler-2-Message/">
-            
-              
-                <span>Handler（二）Message面面观</span>
-              
-            
+             
+            <span>Handler（二）Message面面观</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2016/04/01/android/2016/2016-04-01-Android-Handler-2-Message/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="Handler（一）内存泄漏">
-        <div class="time-m-d">2016-03-27</div>
+    <div class="post-item" title="Handler（一）内存泄漏">
+      <div class="time-m-d">2016-03-27</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2016/03/27/android/2016/2016-03-27-Android-Handler-1/">
-            
-              
-                <span>Handler（一）内存泄漏</span>
-              
-            
+             
+            <span>Handler（一）内存泄漏</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2016/03/27/android/2016/2016-03-27-Android-Handler-1/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="Android 如何快速构建Android Demo">
-        <div class="time-m-d">2016-03-27</div>
+    <div class="post-item" title="Android 如何快速构建Android Demo">
+      <div class="time-m-d">2016-03-27</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2016/03/27/android/2016/2016-03-31-Android-quick-demo/">
-            
-              
-                <span>Android 如何快速构建Android Demo</span>
-              
-            
+             
+            <span>Android 如何快速构建Android Demo</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2016/03/27/android/2016/2016-03-31-Android-quick-demo/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="Volley线程池的问题">
-        <div class="time-m-d">2016-03-24</div>
+    <div class="post-item" title="Volley线程池的问题">
+      <div class="time-m-d">2016-03-24</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2016/03/24/android/2016/2016-03-24-volley-drawback-thread/">
-            
-              
-                <span>Volley线程池的问题</span>
-              
-            
+             
+            <span>Volley线程池的问题</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2016/03/24/android/2016/2016-03-24-volley-drawback-thread/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="最大公因数与最小公倍数">
-        <div class="time-m-d">2016-03-23</div>
+    <div class="post-item" title="最大公因数与最小公倍数">
+      <div class="time-m-d">2016-03-23</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2016/03/23/math/2016-03-23-math-gcd-lcm/">
-            
-              
-                <span>最大公因数与最小公倍数</span>
-              
-            
+             
+            <span>最大公因数与最小公倍数</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2016/03/23/math/2016-03-23-math-gcd-lcm/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
-      <div class="post-item" title="Android 5.0注意事项">
-        <div class="time-m-d">2016-03-21</div>
+    <div class="post-item" title="Android 5.0注意事项">
+      <div class="time-m-d">2016-03-21</div>
+      <div class="post-item__main">
         <div class="title">
           <a href="/2016/03/21/android/2016/2016-03-21-Android-5.0/">
-            
-              
-                <span>Android 5.0注意事项</span>
-              
-            
+             
+            <span>Android 5.0注意事项</span>
+             
           </a>
         </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2016/03/21/android/2016/2016-03-21-Android-5.0/">更多 &rarr;</a>
+          </div>
+        </div>
       </div>
+    </div>
     
   </div>
   <nav class="post-navigation">
     
-      <a href="/page/8/"><i class="iconfont icon-angleleft"></i></a>
+    <a href="/page/8/"
+      ><i class="iconfont icon-angleleft"></i
+    ></a>
     
     <span class="page-num">9 / 20</span>
     
-      <a href="/page/10/"><i class="iconfont icon-angleright"></i></a>
+    <a href="/page/10/"
+      ><i class="iconfont icon-angleright"></i
+    ></a>
     
   </nav>
 </div>
