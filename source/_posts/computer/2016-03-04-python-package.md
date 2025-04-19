@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Python 包小结"
-date:   2016-03-05 09:00:00 +0800
+title:  "Python包管理小结"
+date:   2016-03-04 03:00:00 +0800
 categories: computer
 tag: [computer]
 ---
