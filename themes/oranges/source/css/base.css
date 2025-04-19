@@ -475,6 +475,9 @@ a:hover {
 }
 
 @media (max-width: 768px) {
+  .post-item{
+    display: block;
+  }
   .time-m-d {
     margin-right: 15px;
   }
