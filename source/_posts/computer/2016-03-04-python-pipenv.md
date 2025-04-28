@@ -37,6 +37,8 @@ Pipenv 官网：[https://pipenv.pypa.io/en/latest/](https://pipenv.pypa.io/en/la
     |-- Pipfile # 依赖管理文件
     |-- Pipfile.lock # 依赖锁定文件
 
+使用 `pipenv graph` 可以查看包之间的依赖关系。
+
 ## 相关问题
 
 ### 将虚拟环境建立在项目文件夹中
@@ -50,6 +52,47 @@ Pipenv 官网：[https://pipenv.pypa.io/en/latest/](https://pipenv.pypa.io/en/la
   - 在项目根目录创建一个 `.env` 文件，配置 `PIPENV_VENV_IN_PROJECT=1`，`pipenv` 会在运行命令时自动加载项目根目录下的 `.env` 文件，无需额外配置。
 
 - 方式二：在项目根目录创建一个 `.venv` 文件夹，运行`pipenv shell`或者`pipenv install`，`pipenv`会检测并使用该目录;
+
+可以使用 `pipenv --venv` 查看当前的虚拟环境。
+
+### 依赖的 python 版本与本机的 python 版本不一致
+
+如果出现这种状况，可能会导致问题：
+
+```
+Warning: Python 3.12.0 was not found on your system...
+Neither 'pyenv' nor 'asdf' could be found to install Python.
+You can specify specific versions of Python with:
+```
+
+此时有可以通过 `pipenv --python <python_version>` 指定 python 版本，例如：`pipenv --python 3.9.6`。也可以修改 `Pipfile` 中的 `python_version` 字段，例如： `python_version = "3.9.6"`。还有一种方法就是在本机安装 python 的 `3.12.0` 版本。
+
+都挺麻烦，还是 `conda` 最便捷，建议使用 `conda` 创建对应的 python 版本虚拟环境，然后使用 `pipenv` 进行独立的依赖管理。
+
+### 在开发环境中安装
+
+添加--dev(或者-d)，在开发环境中安装:
+
+```bash
+pipenv install --dev requests
+pipenv install -d requests
+```
+
+### 与 `requirements.txt` 的兼容性
+
+通过 `requirements.txt` 安装依赖：
+
+```bash
+pipenv install -r `requirements.txt`
+```
+
+导出依赖到 `requirements.txt` 文件：
+
+```bash
+pipenv requirements > requirements-pro.txt # 生产环境的依赖导出
+pipenv requirements --dev > `requirements.txt` # 生产环境+开发环境的依赖导出
+pipenv requirements --dev-only > requirements-dev.txt # 开发环境的依赖导出
+```
 
 ## 配合 Docker 部署
 
