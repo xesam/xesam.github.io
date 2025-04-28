@@ -104,6 +104,25 @@
   <div class="post-list">
     <!-- 遍历渲染文章 -->
     
+    <div class="post-item" title="keil基础">
+      <div class="time-m-d">2018-06-01</div>
+      <div class="post-item__main">
+        <div class="title">
+          <a href="/2018/06/01/computer/2018-06-01-keil-1/">
+             
+            <span>keil基础</span>
+             
+          </a>
+        </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2018/06/01/computer/2018-06-01-keil-1/">更多 &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <div class="post-item" title="不吐不快-碎碎念">
       <div class="time-m-d">2018-05-31</div>
       <div class="post-item__main">
@@ -287,28 +306,6 @@
           
           <div class="post-item__excerpt-more">
             <a href="/2017/03/21/android/2017/2017-03-21-android-pool-0/">更多 &rarr;</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="post-item" title="缓存设计（1）">
-      <div class="time-m-d">2017-03-17</div>
-      <div class="post-item__main">
-        <div class="title">
-          <a href="/2017/03/17/java/2017-03-17-cache-1/">
-             
-            <span>缓存设计（1）</span>
-             
-          </a>
-        </div>
-        <div class="post-item__excerpt markdown-body">
-          <p>在程序设计中，设计良好的缓存可以避免无意义的重复计算，节省可观的计算资源，从而提高性能。<br>不过同时，缓存一样要消耗资源，过大的内存一样会造成空间资源的浪费。这些方方面面都是在设计缓存的时候需要考虑的事情。</p>
-<p>本文主要关注如何设计一个良好运行，线程安全的缓存方案。</p>
-<h2 id="简单实现"><a href="#简单实现" class="headerlink" title="简单实现"></a>简单实现</h2><p>一个简单缓存方案的实现如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">IF value <span class="keyword">in</span> cached THEN</span><br><span class="line">  <span class="keyword">return</span> value <span class="keyword">from</span> cache</span><br><span class="line">ELSE</span><br><span class="line">  compute value</span><br><span class="line">  save value <span class="keyword">in</span> cache</span><br><span class="line">  <span class="keyword">return</span> value</span><br><span class="line">END IF</span><br></pre></td></tr></table></figure>
-          <div class="post-item__excerpt-more">
-            <a href="/2017/03/17/java/2017-03-17-cache-1/">更多 &rarr;</a>
           </div>
         </div>
       </div>

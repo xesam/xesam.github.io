@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Function Calling &amp; MCP &amp; A2A 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Function Calling & MCP & A2A</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <!-- <i class="iconfont icon-updatetime mr-10" title="更新时间"></i> -->
+          <!-- 2025-04-28 13:50:33 -->
+          <i class="iconfont icon-updatetime mr-10"></i>
+          2025-04-27 00:00:00
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/computer/" title="computer">
+                    <b>#</b> computer
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/computer/" title="computer">
+                    #computer
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>Function Calling 与 MCP 以及 A2A 之间有什么联系和区别？</p>
+<span id="more"></span>
+
+<ul>
+<li>Function Calling；</li>
+<li>MCP：Modal Conntext Protocol；</li>
+<li>A2A：Agent-to-Agent；</li>
+</ul>
+<p>三者之间没有明显的边界，只是抽象程度存在差异，每一个概念都是通过增加一层抽象，隐藏下层差异和细节，使得上层结构可以更方便的使用大模型。<br>参考类比：</p>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>类比</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Function Calling</td>
+<td>API</td>
+</tr>
+<tr>
+<td>MCP</td>
+<td>SDK</td>
+</tr>
+<tr>
+<td>A2A</td>
+<td>Proxy&#x2F;Service</td>
+</tr>
+</tbody></table>
+<p>只要整个概念的实现还是依赖于大模型的文本输出，那么所做的事就是在<code>文本雕花</code>，始终绕不过<code>解析大模型的输出，根据解析结果，然后进行一些特定操作</code>的流程。<br>即是说：</p>
+<ul>
+<li>某个大模型不支持 <code>Function Calling</code>，开发者也可以自定义文本协议，手动实现<code>Function Calling</code>。</li>
+<li>如果某个大模型不支持 <code>MCP</code>，开发者也可以自定义文本协议，手动实现<code>MCP</code>，而且在实现过程中，大概率会复用<code>Function Calling</code>。</li>
+<li>如果某个大模型不支持 <code>A2A</code>，开发者也可以自定义文本协议，手动实现<code>A2A</code>，而且在实现过程中，大概率会复用<code>Function Calling</code> 和 <code>MCP</code>。</li>
+</ul>
+<p>后续肯定还会有更多的协议出现，但是并没有全新的概念出现，协议的设计和实现方案对从业者对启发和参考作用，比协议所宣传的能力更有价值。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2023/01/02/talk/2023-01-02-talk-you-dont-understand-evolution/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-04-28 13:50:33
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/computer/" title="computer">
+                        <b>#</b> computer
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/computer/" title="computer">
+                        #computer
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>
