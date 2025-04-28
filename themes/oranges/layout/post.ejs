@@ -65,8 +65,10 @@
       <div class="post-title"><%- page.title %></div>
       <div class="post-attach">
         <span class="post-pubtime">
-          <i class="iconfont icon-updatetime mr-10" title="<%= __('updateTime') %>"></i>
-          <%- page.updated.format("YYYY-MM-DD HH:mm:ss") %>
+          <!-- <i class="iconfont icon-updatetime mr-10" title="<%= __('updateTime') %>"></i> -->
+          <!-- <%- page.updated.format("YYYY-MM-DD HH:mm:ss") %> -->
+          <i class="iconfont icon-updatetime mr-10"></i>
+          <%- page.date.format("YYYY-MM-DD HH:mm:ss") %>
         </span>
         <% for(item of theme.navbar) {
           if (item.key === 'tags' && item.enable) {
