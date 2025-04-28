@@ -189,27 +189,19 @@
       </div>
     </div>
     
-    <div class="post-item" title="BIOS与0x7C00">
+    <div class="post-item" title="BIOS与`0x7C00`">
       <div class="time-m-d">2016-12-17</div>
       <div class="post-item__main">
         <div class="title">
           <a href="/2016/12/17/computer/2016-12-17-computer-BIOS-0x7C00/">
              
-            <span>BIOS与0x7C00</span>
+            <span>BIOS与`0x7C00`</span>
              
           </a>
         </div>
         <div class="post-item__excerpt markdown-body">
-          <p>你知道 0x7C00，这个在 x86 汇编中的一个神秘数字吗？<br>0x7C00 是一个内存地址，BIOS 就是将 MBR (Master Boot Record, hdd&#x2F;fdd 的第一个 sector) 读入 0x7C00 这个地址，<br>然后进行后续引导的。</p>
-<p>操作系统或是 bootloader 的开发者必须假设他们的汇编代码被加载并从 0x7C00 处开始执行。<br>不过，为什么在 x86 中 BIOS 要将 MBR 加载到 0x7C00 呢？在回答这个问题之前，我们还有几个疑惑：</p>
-<p>第一个疑惑：</p>
-<pre><code>我翻阅了所有的 Intel x86(32bit) 编程手册，都没有找到 0x7C00 这个数字。
-</code></pre>
-<p>没错！0x7C00 不是 x86 CPU 里面的定义，你当然不可能在 cpu 文档里面找得到。那么你就要问了，“那是谁定义了 0x7C00？”</p>
-<p>第二个疑惑：</p>
-<pre><code>0x7C00 的值等于 32KiB - 1024B，这个数字表示什么意思？
-</code></pre>
-<p>不管是谁定义了 0x7C00，他&#x2F;她为何要定义这样一个奇怪的数字？</p>
+          <p>你知道 <code>0x7C00</code>，这个在 x86 汇编中的一个神秘数字吗？<br><code>0x7C00</code> 是一个内存地址，<code>BIOS</code> 就是将 <code>MBR</code> (Master Boot Record, hdd&#x2F;fdd 的第一个 sector) 读入 <code>0x7C00</code> 这个地址，然后进行后续引导的。</p>
+<p>操作系统或是 <code>bootloader</code> 的开发者必须假设他们的汇编代码被加载并从 <code>0x7C00</code> 处开始执行。<br>不过，为什么在 <code>x86</code> 中 <code>BIOS</code> 要将 <code>MBR</code> 加载到 <code>0x7C00</code> 呢？</p>
           <div class="post-item__excerpt-more">
             <a href="/2016/12/17/computer/2016-12-17-computer-BIOS-0x7C00/">更多 &rarr;</a>
           </div>

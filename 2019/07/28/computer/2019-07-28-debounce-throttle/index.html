@@ -151,8 +151,10 @@
       <div class="post-title">防抖与节流的通俗解释</div>
       <div class="post-attach">
         <span class="post-pubtime">
-          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-          2025-04-16 16:32:33
+          <!-- <i class="iconfont icon-updatetime mr-10" title="更新时间"></i> -->
+          <!-- 2025-04-28 10:00:37 -->
+          <i class="iconfont icon-updatetime mr-10"></i>
+          2019-07-28 08:00:00
         </span>
         
               <span class="post-categories">
@@ -179,24 +181,24 @@
           
       </div>
       <div class="markdown-body">
-        <p><em>防抖</em></p>
-<p>用自动门来类比，我们在通过自动门的时候，当门检测到人通过之后，会先保持开启状态约 15 秒钟，如果在这 15 秒之内，再没有人通过，那么门会自动关上。<br>但是，如果在这 15 秒之内不断有人通过，自动门在确认最后一个人通过 15 秒之后，才会关门。</p>
+        <p><code>自动门</code>与<code>游戏技能CD</code>的类比。</p>
+<span id="more"></span>
+
+<h2 id="防抖"><a href="#防抖" class="headerlink" title="防抖"></a>防抖</h2><p>用自动门来类比，我们在通过自动门的时候，当门检测到人通过之后，会先保持开启状态约 15 秒钟，如果在这 15 秒之内，再没有人通过，那么门会自动关上。<br>但是，如果在这 15 秒之内不断有人通过，自动门在确认最后一个人通过 15 秒之后，才会关门。</p>
 <p>对于自动门来说，不断通过的人就是抖动，所以有 15 秒的时间来进行防抖。</p>
 <p>我们用 lodash 来实现这个机制就是：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="variable constant_">WAIT_TIME</span> = <span class="number">15</span> * <span class="number">1000</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">closed</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;门关了);</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">function  close = _.debounce(closed, COLD_TIME); </span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="variable constant_">WAIT_TIME</span> = <span class="number">15</span> * <span class="number">1000</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">closed</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;门关了);</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">function  close = _.debounce(closed, COLD_TIME);</span></span><br></pre></td></tr></table></figure>
 
-<p><em>节流</em></p>
-<p>玩过 moba 游戏（比如王者荣耀）的都知道，很多英雄的被动都有一个冷却时间，在这个冷却时间内，被动技能只能触发一次。比如项羽的被动：</p>
+<h2 id="节流"><a href="#节流" class="headerlink" title="节流"></a>节流</h2><p>玩过 moba 游戏（比如王者荣耀）的都知道，很多英雄的被动都有一个冷却时间，在这个冷却时间内，被动技能只能触发一次。比如项羽的被动：</p>
 <pre><code>陷阵之志：
 冷却值：120秒
 被动：当生命低于30%，项羽可在6秒内获得30%伤害与40%免伤加成，此效果有120秒CD
 </code></pre>
-<p>意思就是说在项羽在挨揍的时候，从血量掉到30%以下触发被动效果。同时，这一刻开始，往后的 120 秒内都不能再触发被动了，哪怕这120秒内被打死了，都不会获得被动。</p>
+<p>意思就是说在项羽在挨揍的时候，从血量掉到 30%以下触发被动效果。同时，这一刻开始，往后的 120 秒内都不能再触发被动了，哪怕这 120 秒内被打死了，都不会获得被动。</p>
 <p>我们用 lodash 来实现这个机制就是：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="variable constant_">COOL_DOWN</span> = <span class="number">120</span> * <span class="number">1000</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">buff</span> (<span class="params"></span>)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;获得30%伤害与40%免伤加成&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span>  passive = _.<span class="title function_">throttle</span>(buff, <span class="variable constant_">COOL_DOWN</span>); <span class="comment">//被动技能</span></span><br></pre></td></tr></table></figure>
 
-<p><em>总结</em></p>
-<p>所以，从目的来讲，防抖是为了避免用户误操作触发的尴尬，节流是为了限制用户想连续触发的意图。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>所以，从目的来讲，防抖是为了避免用户误操作触发的尴尬，节流是为了限制用户想连续触发的意图。</p>
 
       </div>
       
@@ -212,7 +214,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-04-16 16:32:33
+              2025-04-28 10:00:37
             </span>
             
                   <span class="post-categories">
@@ -250,6 +252,23 @@
       
     </div>
     
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%B2%E6%8A%96"><span class="toc-text">防抖</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8A%82%E6%B5%81"><span class="toc-text">节流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
 
     
       <div class="comments-container">

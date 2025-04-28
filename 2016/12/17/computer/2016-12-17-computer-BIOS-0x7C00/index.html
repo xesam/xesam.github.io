@@ -13,7 +13,7 @@
   
   <title>
     
-      BIOS与0x7C00 
+      BIOS与`0x7C00` 
       
       
       |
@@ -148,11 +148,13 @@
   <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
   <div class="container post-details" id="post-details">
     <div class="post-content">
-      <div class="post-title">BIOS与0x7C00</div>
+      <div class="post-title">BIOS与`0x7C00`</div>
       <div class="post-attach">
         <span class="post-pubtime">
-          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-          2025-04-16 16:32:33
+          <!-- <i class="iconfont icon-updatetime mr-10" title="更新时间"></i> -->
+          <!-- 2025-04-28 10:17:57 -->
+          <i class="iconfont icon-updatetime mr-10"></i>
+          2016-12-17 08:00:00
         </span>
         
               <span class="post-categories">
@@ -179,66 +181,68 @@
           
       </div>
       <div class="markdown-body">
-        <p>你知道 0x7C00，这个在 x86 汇编中的一个神秘数字吗？<br>0x7C00 是一个内存地址，BIOS 就是将 MBR (Master Boot Record, hdd&#x2F;fdd 的第一个 sector) 读入 0x7C00 这个地址，<br>然后进行后续引导的。</p>
-<p>操作系统或是 bootloader 的开发者必须假设他们的汇编代码被加载并从 0x7C00 处开始执行。<br>不过，为什么在 x86 中 BIOS 要将 MBR 加载到 0x7C00 呢？在回答这个问题之前，我们还有几个疑惑：</p>
-<p>第一个疑惑：</p>
-<pre><code>我翻阅了所有的 Intel x86(32bit) 编程手册，都没有找到 0x7C00 这个数字。
-</code></pre>
-<p>没错！0x7C00 不是 x86 CPU 里面的定义，你当然不可能在 cpu 文档里面找得到。那么你就要问了，“那是谁定义了 0x7C00？”</p>
-<p>第二个疑惑：</p>
-<pre><code>0x7C00 的值等于 32KiB - 1024B，这个数字表示什么意思？
-</code></pre>
-<p>不管是谁定义了 0x7C00，他&#x2F;她为何要定义这样一个奇怪的数字？</p>
+        <p>你知道 <code>0x7C00</code>，这个在 x86 汇编中的一个神秘数字吗？<br><code>0x7C00</code> 是一个内存地址，<code>BIOS</code> 就是将 <code>MBR</code> (Master Boot Record, hdd&#x2F;fdd 的第一个 sector) 读入 <code>0x7C00</code> 这个地址，然后进行后续引导的。</p>
+<p>操作系统或是 <code>bootloader</code> 的开发者必须假设他们的汇编代码被加载并从 <code>0x7C00</code> 处开始执行。<br>不过，为什么在 <code>x86</code> 中 <code>BIOS</code> 要将 <code>MBR</code> 加载到 <code>0x7C00</code> 呢？</p>
 <span id="more"></span>
 
-<h2 id="0x7C00-第一次在哪里？"><a href="#0x7C00-第一次在哪里？" class="headerlink" title="0x7C00 第一次在哪里？"></a>0x7C00 第一次在哪里？</h2><p>0x7C00 第一次出现是在 IBM PC 5150 的 BIOS int 19 处理程序（中断类型码为 19 的中断处理程序）中。</p>
-<p>回顾一下 x86 IBM PC 兼容机的历史：<br>IBM PC 5150是 x86（32位）IBM PC&#x2F;AT系列的祖先，这款 PC 于1981年8月发布，使用 intel 8088（16位） 处理器和 16KiB 大小的 RAM，<br>其 BIOS 以及微软 BASIC 均放在 ROM 中。</p>
-<p>上电之后，BIOS 就开始”POST”(Power On Self Test，自检) ，然后触发 int 19 中断，在处理19号中断时，<br>BIOS 检测电脑是否具有软盘、硬盘或是其他固定磁盘，如果发现任何有效的磁盘，BIOS 就把磁盘第一个扇区（512B）的内容加载到内存的 0x7C00 地址处。</p>
-<p>现在知道为何在 x86 文档中找不到 0x7C00 了吧，因为这个数字属于 BIOS 规范。</p>
-<h2 id="0x7C00-的起源"><a href="#0x7C00-的起源" class="headerlink" title="0x7C00 的起源"></a>0x7C00 的起源</h2><p>围绕IBM PC DOS，Microsoft 和 SCP的86-DOS 三者有一个故事，参见：<a target="_blank" rel="noopener" href="http://www.patersontech.com/dos/byte%E2%80%93history.aspx">MS-DOS简史</a>。</p>
-<p>在1979年，Digital Research Inc 还没有为当时的 8086&#x2F;8088 cpu开发 CP&#x2F;M，于是在 1980年，SCP 发布了一个用于 8086&#x2F;8088 cpu 的 CP&#x2F;M 兼容 OS，即 SCP的“86-DOS”。<br>这个 “86-DOS” 成了后来 IBM PC DOS 1.0 的参照系统。</p>
-<p>当时 SCP 出售两种 S-100 总线板，一种是 8086 CPU 板，另一种是 “CPU Monitor” ROM 板。<br>“CPU Monitor” 提供了引导加载程序（bootloader）和调试器（debugger），<br>当时，这个“CPU Monitor”引导加载程序将 MBR 加载到“0x200”，而不是“0x7C00”。</p>
-<p>到了1981年，另一款用于8086&#x2F;8088 的类 CP&#x2F;M 操作系统，IBM PC DOS 发布，不过，与 86-DOS 不同的是， IBM PC DOS 选择将 MBR 加载到“0x7C00”<br>所以，我们说“0x7C00 第一次出现是在 IBM PC 5150 ROM BIOS”，在此之前，SCP 的 CPU Monitor 引导加载程序是加载到 0x200，而不是 0x7C00。</p>
+<p>在回答这个问题之前，我们还有几个疑惑：</p>
+<p>第一个疑惑：</p>
+<blockquote>
+<p>我翻阅了所有的 Intel x86(32bit) 编程手册，都没有找到 <code>0x7C00</code> 这个数字。</p>
+</blockquote>
+<p>没错！<code>0x7C00</code> 不是 <code>x86 CPU</code> 里面的定义，你当然不可能在 <code>CPU</code> 文档里面找得到。那么你就要问了，“那是谁定义了 <code>0x7C00</code>？”</p>
+<p>第二个疑惑：</p>
+<blockquote>
+<p><code>0x7C00</code> 的值等于 32KiB - 1024B，这个数字表示什么意思？</p>
+</blockquote>
+<p>不管是谁定义了 <code>0x7C00</code>，他&#x2F;她为何要定义这样一个奇怪的数字？</p>
+<!-- more -->
+
+<h2 id="0x7C00-第一次在哪里？"><a href="#0x7C00-第一次在哪里？" class="headerlink" title="0x7C00 第一次在哪里？"></a><code>0x7C00</code> 第一次在哪里？</h2><p><code>0x7C00</code> 第一次出现是在 IBM PC 5150 的 BIOS int 19 处理程序（中断类型码为 19 的中断处理程序）中。</p>
+<p>回顾一下 x86 IBM PC 兼容机的历史：</p>
+<blockquote>
+<p>IBM PC 5150 是 x86（32 位）IBM PC&#x2F;AT 系列的祖先，这款 PC 于 1981 年 8 月发布，使用 intel 8088（16 位） 处理器和 16KiB 大小的 RAM，其 BIOS 以及微软 BASIC 均放在 ROM 中。</p>
+</blockquote>
+<blockquote>
+<p>上电之后，BIOS 就开始”POST”(Power On Self Test，自检) ，然后触发 int 19 中断，在处理 19 号中断时，BIOS 检测电脑是否具有软盘、硬盘或是其他固定磁盘，如果发现任何有效的磁盘，BIOS 就把磁盘第一个扇区（512B）的内容加载到内存的 <code>0x7C00</code> 地址处。</p>
+</blockquote>
+<p>现在知道为何在 x86 文档中找不到 <code>0x7C00</code> 了吧，因为这个数字属于 BIOS 规范。</p>
+<h2 id="0x7C00-的起源"><a href="#0x7C00-的起源" class="headerlink" title="0x7C00 的起源"></a><code>0x7C00</code> 的起源</h2><p>围绕 IBM PC DOS，Microsoft 和 SCP 的 86-DOS 三者有一个故事，参见：<a target="_blank" rel="noopener" href="http://www.patersontech.com/dos/byte%E2%80%93history.aspx">MS-DOS 简史</a>。</p>
+<p>在 1979 年，Digital Research Inc 还没有为当时的 8086&#x2F;8088 cpu 开发 CP&#x2F;M，于是在 1980 年，SCP 发布了一个用于 8086&#x2F;8088 cpu 的 CP&#x2F;M 兼容 OS，即 SCP 的“86-DOS”。<br>这个 “86-DOS” 成了后来 IBM PC DOS 1.0 的参照系统。</p>
+<blockquote>
+<p>当时 SCP 出售两种 S-100 总线板，一种是 8086 CPU 板，另一种是 “CPU Monitor” ROM 板。“CPU Monitor” 提供了引导加载程序（bootloader）和调试器（debugger），当时，这个“CPU Monitor”引导加载程序将 MBR 加载到“0x200”，而不是“<code>0x7C00</code>”。</p>
+</blockquote>
+<p>到了 1981 年，另一款用于 8086&#x2F;8088 的类 CP&#x2F;M 操作系统，IBM PC DOS 发布，不过，与 86-DOS 不同的是， IBM PC DOS 选择将 MBR 加载到“<code>0x7C00</code>”<br>所以，我们说“<code>0x7C00</code> 第一次出现是在 IBM PC 5150 ROM BIOS”，在此之前，SCP 的 CPU Monitor 引导加载程序是加载到 0x200，而不是 <code>0x7C00</code>。</p>
 <h2 id="为什么-CPU-Monitor-的-引导加载程序将-MBR-加载到-“0x200”"><a href="#为什么-CPU-Monitor-的-引导加载程序将-MBR-加载到-“0x200”" class="headerlink" title="为什么 CPU Monitor 的 引导加载程序将 MBR 加载到 “0x200” ?"></a>为什么 CPU Monitor 的 引导加载程序将 MBR 加载到 “0x200” ?</h2><p>这种设计基于以下三点考虑：</p>
 <ol>
 <li>8086 的中断向量表占用了 0x0 - 0x3FF</li>
 <li>86-DOS 从 0×400 处被加载；</li>
 <li>86-DOS 不使用 0×200-0x3FF 这段中断向量地址</li>
 </ol>
-<p>这意味着 0×200-0x3FF 这段地址被保留，不论 86-DOS 还是其他应用程序，都不能使用这段地址。<br>因此，Tim Paterson（86-DOS开发者）选择 0×200 作为 MBR 的加载地址。</p>
-<h2 id="谁决定使用-0x7C00？"><a href="#谁决定使用-0x7C00？" class="headerlink" title="谁决定使用 0x7C00？"></a>谁决定使用 0x7C00？</h2><p>魔数 0x7C00 诞生于1981年，是被 IBM PC 5150 BIOS 开发团队(Dr. David Bradley)定义的，<br>而不是英特尔（8086&#x2F;8088 供应商）或微软（操作系统供应商）决定的。后来， “IBM PC&#x2F;AT 兼容机” PC&#x2F;BIOS 供应商也沿用了这个值，保留了 BIOS 和操作系统的向后兼容性。</p>
-<h2 id="“0x7C00-32KiB-1024B”-表示什么意思？"><a href="#“0x7C00-32KiB-1024B”-表示什么意思？" class="headerlink" title="“0x7C00 &#x3D; 32KiB - 1024B” 表示什么意思？"></a>“0x7C00 &#x3D; 32KiB - 1024B” 表示什么意思？</h2><p>IBM PC 5150 最小内存模型只有 16KiB RAM。所以，你可能会问：</p>
-<pre><code>“最小内存模型（16KiB）能从磁盘加载操作系统吗？如果 BIOS 要将 MBR 加载到 32KiB - 1024B 地址，那物理内存显然不够...”
-</code></pre>
-<p>不行，这种情况不在考虑范围内。 IBM PC 5150 ROM BIOS 开发团队成员之一，David Bradley博士说：</p>
-<pre><code>“DOS 1.0需要至少32KiB，所以我们不关心在 16KiB 机器上的引导。
-</code></pre>
-<p>（注：我现在无法确认 DOS 1.0 的最低内存要求到底是 16KiB 还是 32KiB？但是，至少在1981年的早期 BIOS 开发中，他们认为 32KiB 是 DOS 的最低要求）</p>
-<p>BIOS开发团队决定使用地址 0x7C00，是因为：</p>
+<p>这意味着 <code>0×200-0x3FF</code> 这段地址被保留，不论 86-DOS 还是其他应用程序，都不能使用这段地址。<br>因此，Tim Paterson（86-DOS 开发者）选择 <code>0×200</code> 作为 MBR 的加载地址。</p>
+<h2 id="谁决定使用-0x7C00？"><a href="#谁决定使用-0x7C00？" class="headerlink" title="谁决定使用 0x7C00？"></a>谁决定使用 <code>0x7C00</code>？</h2><p>魔数 <code>0x7C00</code> 诞生于 1981 年，是被 IBM PC 5150 BIOS 开发团队(Dr. David Bradley)定义的，<br>而不是英特尔（8086&#x2F;8088 供应商）或微软（操作系统供应商）决定的。后来， “IBM PC&#x2F;AT 兼容机” PC&#x2F;BIOS 供应商也沿用了这个值，保留了 BIOS 和操作系统的向后兼容性。</p>
+<h2 id="“0x7C00-32KiB-1024B”-表示什么意思？"><a href="#“0x7C00-32KiB-1024B”-表示什么意思？" class="headerlink" title="“0x7C00 &#x3D; 32KiB - 1024B” 表示什么意思？"></a>“<code>0x7C00</code> &#x3D; 32KiB - 1024B” 表示什么意思？</h2><p>IBM PC 5150 最小内存模型只有 16KiB RAM。所以，你可能会问：</p>
+<blockquote>
+<p>“最小内存模型（16KiB）能从磁盘加载操作系统吗？如果 BIOS 要将 MBR 加载到 32KiB - 1024B 地址，那物理内存显然不够…”</p>
+</blockquote>
+<p>不行，这种情况不在考虑范围内。 IBM PC 5150 ROM BIOS 开发团队成员之一，David Bradley 博士说：</p>
+<blockquote>
+<p>“DOS 1.0 需要至少 32KiB，所以我们不关心在 16KiB 机器上的引导。</p>
+</blockquote>
+<p>（注：我现在无法确认 DOS 1.0 的最低内存要求到底是 16KiB 还是 32KiB？但是，至少在 1981 年的早期 BIOS 开发中，他们认为 32KiB 是 DOS 的最低要求）</p>
+<p>BIOS 开发团队决定使用地址 <code>0x7C00</code>，是因为：</p>
 <ol>
 <li>他们想在 32KiB 范围内，留出尽可能多的空间让操作系统加载自己。</li>
-<li>8086&#x2F;8088使用 0x0 - 0x3FF 作为中断向量，并且 BIOS 数据区在它之后。</li>
-<li>引导扇区为512字节，引导程序的堆栈&#x2F;数据区需要512字节。</li>
-<li>因此，这 32KiB 中从 0x7C00 开始的最后 1024B 被选中了。</li>
+<li>8086&#x2F;8088 使用 0x0 - 0x3FF 作为中断向量，并且 BIOS 数据区在它之后。</li>
+<li>引导扇区为 512 字节，引导程序的堆栈&#x2F;数据区需要 512 字节。</li>
+<li>因此，这 32KiB 中从 <code>0x7C00</code> 开始的最后 1024B 被选中了。</li>
 </ol>
 <p>一旦操作系统加载和启动完毕后，直到电源复位，引导扇区都不会被使用。因此，操作系统和应用程序可以自由使用 32KiB 的这最后 1024B。</p>
 <p>操作系统加载后，内存分布情况如下：</p>
-<pre><code>+--------------------- 0x0000
-| Interrupts vectors
-+--------------------- 0x4000
-| BIOS data area
-+--------------------- 0x5???
-| OS load area
-+--------------------- 0x7C00
-| Boot sector
-+--------------------- 0x7E00
-| Boot data/stack
-+--------------------- 0x7FFF
-| (not used)
-+--------------------- (...)
-</code></pre>
-<p>这就是 0x7C00 的历史渊源，这个魔数在 PC&#x2F;AT 兼容 BIOS 的 INT 19h 中断处理程序中延续了了近三十年。</p>
-<p><a target="_blank" rel="noopener" href="http://www.glamenv-septzen.net/en/view/6">Why BIOS loads MBR into 0x7C00 in x86</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">+--------------------- 0x0000</span><br><span class="line">| Interrupts vectors</span><br><span class="line">+--------------------- 0x4000</span><br><span class="line">| BIOS data area</span><br><span class="line">+--------------------- 0x5???</span><br><span class="line">| OS load area</span><br><span class="line">+--------------------- `0x7C00`</span><br><span class="line">| Boot sector</span><br><span class="line">+--------------------- 0x7E00</span><br><span class="line">| Boot data/stack</span><br><span class="line">+--------------------- 0x7FFF</span><br><span class="line">| (not used)</span><br><span class="line">+--------------------- (...)</span><br></pre></td></tr></table></figure>
+
+<p>这就是 <code>0x7C00</code> 的历史渊源，这个魔数在 PC&#x2F;AT 兼容 BIOS 的 INT 19h 中断处理程序中延续了了近三十年。</p>
+<p><a target="_blank" rel="noopener" href="http://www.glamenv-septzen.net/en/view/6">Why BIOS loads MBR into <code>0x7C00</code> in x86</a></p>
 
       </div>
       
@@ -254,7 +258,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-04-16 16:32:33
+              2025-04-28 10:17:57
             </span>
             
                   <span class="post-categories">
