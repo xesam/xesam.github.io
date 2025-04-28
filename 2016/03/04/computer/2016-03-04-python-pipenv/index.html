@@ -152,7 +152,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <!-- <i class="iconfont icon-updatetime mr-10" title="更新时间"></i> -->
-          <!-- 2025-04-19 10:44:09 -->
+          <!-- 2025-04-28 10:55:57 -->
           <i class="iconfont icon-updatetime mr-10"></i>
           2016-03-04 12:00:00
         </span>
@@ -207,6 +207,7 @@
 |-- Pipfile # 依赖管理文件
 |-- Pipfile.lock # 依赖锁定文件
 </code></pre>
+<p>使用 <code>pipenv graph</code> 可以查看包之间的依赖关系。</p>
 <h2 id="相关问题"><a href="#相关问题" class="headerlink" title="相关问题"></a>相关问题</h2><h3 id="将虚拟环境建立在项目文件夹中"><a href="#将虚拟环境建立在项目文件夹中" class="headerlink" title="将虚拟环境建立在项目文件夹中"></a>将虚拟环境建立在项目文件夹中</h3><p><code>pipenv</code> 默认将虚拟环境建立在 <code>&lt;user_home&gt;/.virtualenvs/</code> 目录下，但是也可以将虚拟环境建立在项目文件夹中。两类方式：</p>
 <ul>
 <li><p>方式一：设置环境变量：<code>PIPENV_VENV_IN_PROJECT=1</code></p>
@@ -219,6 +220,21 @@
 <li><p>方式二：在项目根目录创建一个 <code>.venv</code> 文件夹，运行<code>pipenv shell</code>或者<code>pipenv install</code>，<code>pipenv</code>会检测并使用该目录;</p>
 </li>
 </ul>
+<p>可以使用 <code>pipenv --venv</code> 查看当前的虚拟环境。</p>
+<h3 id="依赖的-python-版本与本机的-python-版本不一致"><a href="#依赖的-python-版本与本机的-python-版本不一致" class="headerlink" title="依赖的 python 版本与本机的 python 版本不一致"></a>依赖的 python 版本与本机的 python 版本不一致</h3><p>如果出现这种状况，可能会导致问题：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Warning: Python 3.12.0 was not found on your system...</span><br><span class="line">Neither &#x27;pyenv&#x27; nor &#x27;asdf&#x27; could be found to install Python.</span><br><span class="line">You can specify specific versions of Python with:</span><br></pre></td></tr></table></figure>
+
+<p>此时有可以通过 <code>pipenv --python &lt;python_version&gt;</code> 指定 python 版本，例如：<code>pipenv --python 3.9.6</code>。也可以修改 <code>Pipfile</code> 中的 <code>python_version</code> 字段，例如： <code>python_version = &quot;3.9.6&quot;</code>。还有一种方法就是在本机安装 python 的 <code>3.12.0</code> 版本。</p>
+<p>都挺麻烦，还是 <code>conda</code> 最便捷，建议使用 <code>conda</code> 创建对应的 python 版本虚拟环境，然后使用 <code>pipenv</code> 进行独立的依赖管理。</p>
+<h3 id="在开发环境中安装"><a href="#在开发环境中安装" class="headerlink" title="在开发环境中安装"></a>在开发环境中安装</h3><p>添加–dev(或者-d)，在开发环境中安装:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pipenv install --dev requests</span><br><span class="line">pipenv install -d requests</span><br></pre></td></tr></table></figure>
+
+<h3 id="与-requirements-txt-的兼容性"><a href="#与-requirements-txt-的兼容性" class="headerlink" title="与 requirements.txt 的兼容性"></a>与 <code>requirements.txt</code> 的兼容性</h3><p>通过 <code>requirements.txt</code> 安装依赖：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pipenv install -r `requirements.txt`</span><br></pre></td></tr></table></figure>
+
+<p>导出依赖到 <code>requirements.txt</code> 文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pipenv requirements &gt; requirements-pro.txt <span class="comment"># 生产环境的依赖导出</span></span><br><span class="line">pipenv requirements --dev &gt; `requirements.txt` <span class="comment"># 生产环境+开发环境的依赖导出</span></span><br><span class="line">pipenv requirements --dev-only &gt; requirements-dev.txt <span class="comment"># 开发环境的依赖导出</span></span><br></pre></td></tr></table></figure>
+
 <h2 id="配合-Docker-部署"><a href="#配合-Docker-部署" class="headerlink" title="配合 Docker 部署"></a>配合 Docker 部署</h2><p>在使用 <code>pipenv</code> 管理 Python 项目并通过 Docker 部署到生产环境时，需结合 <code>Pipfile</code> 和 <code>Pipfile.lock</code> 的特性确保依赖的一致性，并通过 Docker 的隔离性优化部署流程。以下是详细配置步骤和最佳实践：</p>
 <hr>
 <h3 id="1-基础-Dockerfile-配置"><a href="#1-基础-Dockerfile-配置" class="headerlink" title="1. 基础 Dockerfile 配置"></a><strong>1. 基础 Dockerfile 配置</strong></h3><h4 id="步骤说明"><a href="#步骤说明" class="headerlink" title="步骤说明"></a><strong>步骤说明</strong></h4><ol>
@@ -292,7 +308,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-04-19 10:44:09
+              2025-04-28 10:55:57
             </span>
             
                   <span class="post-categories">
@@ -337,7 +353,7 @@
     <div class="title">目录</div>
     <div class="catalog-content">
       
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="toc-text">基本使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-text">示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98"><span class="toc-text">相关问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83%E5%BB%BA%E7%AB%8B%E5%9C%A8%E9%A1%B9%E7%9B%AE%E6%96%87%E4%BB%B6%E5%A4%B9%E4%B8%AD"><span class="toc-text">将虚拟环境建立在项目文件夹中</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E5%90%88-Docker-%E9%83%A8%E7%BD%B2"><span class="toc-text">配合 Docker 部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9F%BA%E7%A1%80-Dockerfile-%E9%85%8D%E7%BD%AE"><span class="toc-text">1. 基础 Dockerfile 配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4%E8%AF%B4%E6%98%8E"><span class="toc-text">步骤说明</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%BC%98%E5%8C%96%E4%BE%9D%E8%B5%96%E5%AE%89%E8%A3%85"><span class="toc-text">2. 优化依赖安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%93%E5%AD%98%E4%B8%8E%E5%A4%9A%E9%98%B6%E6%AE%B5%E6%9E%84%E5%BB%BA"><span class="toc-text">缓存与多阶段构建</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-text">3. 生产环境注意事项</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96%E5%AE%89%E5%85%A8%E6%80%A7%E4%B8%8E%E4%B8%80%E8%87%B4%E6%80%A7"><span class="toc-text">依赖安全性与一致性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%95%9C%E5%83%8F%E4%BC%98%E5%8C%96"><span class="toc-text">镜像优化</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E7%A4%BA%E4%BE%8B-Dockerfile"><span class="toc-text">4. 示例 Dockerfile</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E9%83%A8%E7%BD%B2%E9%AA%8C%E8%AF%81%E4%B8%8E%E8%B0%83%E8%AF%95"><span class="toc-text">5. 部署验证与调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="toc-text">基本使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-text">示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98"><span class="toc-text">相关问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83%E5%BB%BA%E7%AB%8B%E5%9C%A8%E9%A1%B9%E7%9B%AE%E6%96%87%E4%BB%B6%E5%A4%B9%E4%B8%AD"><span class="toc-text">将虚拟环境建立在项目文件夹中</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96%E7%9A%84-python-%E7%89%88%E6%9C%AC%E4%B8%8E%E6%9C%AC%E6%9C%BA%E7%9A%84-python-%E7%89%88%E6%9C%AC%E4%B8%8D%E4%B8%80%E8%87%B4"><span class="toc-text">依赖的 python 版本与本机的 python 版本不一致</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E4%B8%AD%E5%AE%89%E8%A3%85"><span class="toc-text">在开发环境中安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8E-requirements-txt-%E7%9A%84%E5%85%BC%E5%AE%B9%E6%80%A7"><span class="toc-text">与 requirements.txt 的兼容性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E5%90%88-Docker-%E9%83%A8%E7%BD%B2"><span class="toc-text">配合 Docker 部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9F%BA%E7%A1%80-Dockerfile-%E9%85%8D%E7%BD%AE"><span class="toc-text">1. 基础 Dockerfile 配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4%E8%AF%B4%E6%98%8E"><span class="toc-text">步骤说明</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%BC%98%E5%8C%96%E4%BE%9D%E8%B5%96%E5%AE%89%E8%A3%85"><span class="toc-text">2. 优化依赖安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%93%E5%AD%98%E4%B8%8E%E5%A4%9A%E9%98%B6%E6%AE%B5%E6%9E%84%E5%BB%BA"><span class="toc-text">缓存与多阶段构建</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-text">3. 生产环境注意事项</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96%E5%AE%89%E5%85%A8%E6%80%A7%E4%B8%8E%E4%B8%80%E8%87%B4%E6%80%A7"><span class="toc-text">依赖安全性与一致性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%95%9C%E5%83%8F%E4%BC%98%E5%8C%96"><span class="toc-text">镜像优化</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E7%A4%BA%E4%BE%8B-Dockerfile"><span class="toc-text">4. 示例 Dockerfile</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E9%83%A8%E7%BD%B2%E9%AA%8C%E8%AF%81%E4%B8%8E%E8%B0%83%E8%AF%95"><span class="toc-text">5. 部署验证与调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></li></ol>
       
     </div>
   </div>
