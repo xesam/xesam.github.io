@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="xesam" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Python环境管理-uv 
+      
+      
+      |
+    
+     XiaoPingYuan
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <!-- <a href="/">
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a> -->
+    <div class="nickname"><a href="/">Just Do IT</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Python环境管理-uv</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <!-- <i class="iconfont icon-updatetime mr-10" title="更新时间"></i> -->
+          <!-- 2025-05-15 10:26:05 -->
+          <i class="iconfont icon-updatetime mr-10"></i>
+          2016-03-04 12:01:00
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/computer/" title="computer">
+                    <b>#</b> computer
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/computer/" title="computer">
+                    #computer
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p><code>UV</code> 号称是 超快、超强大的 <code>Python</code> 依赖管理工具，用 <code>Rust</code> 语言开发的，这使得它比传统工具快得多，能让你的 <code>Python</code> 开发体验更加流畅。</p>
+<span id="more"></span>
+
+<p>它可以用来：</p>
+<ul>
+<li>管理 <code>Python</code> 版本（类似 <code>PyEnv</code>）</li>
+<li>创建和管理虚拟环境（类似 <code>VirtualEnv</code> 和 <code>PyEnv</code>）</li>
+<li>管理 <code>Python</code> 依赖（类似 <code>Pip</code> 和 <code>Poetry</code>）</li>
+</ul>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><ol>
+<li>使用 Pip 安装：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install uv</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>使用 Homebrew 安装：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install uv</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>使用 curl ：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://astro.sh/uv/install.sh | sh</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>使用 Cargo ：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo install uv --git https://github.com/astral-sh/uv</span><br></pre></td></tr></table></figure>
+
+<p>验证 UV 是否安装成功：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv --version</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><ul>
+<li><code>uv init</code> —— 初始化一个新的 <code>Python</code> 项目</li>
+<li><code>uv add</code> —— 添加依赖（类似 <code>pip install</code>）</li>
+<li><code>uv remove</code> —— 移除依赖</li>
+<li><code>uv sync</code> —— 同步依赖（类似 <code>poetry install</code>）</li>
+<li><code>uv run</code> —— 运行 <code>Python</code> 文件或命令</li>
+</ul>
+<h3 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv init project0</span><br></pre></td></tr></table></figure>
+
+<p>该命令会在当前目录下创建一个名为 <code>project0</code> 的目录，并初始化一个 <code>Python</code> 项目。目录结构如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">project0/</span><br><span class="line">├── .git/</span><br><span class="line">├── .gitignore</span><br><span class="line">├── .python-version        # Python 版本控制文件</span><br><span class="line">├── pyproject.toml         # 项目的配置文件</span><br><span class="line">├── README.md</span><br><span class="line">├── main.py</span><br><span class="line">└── .venv/                 # 虚拟环境目录</span><br></pre></td></tr></table></figure>
+
+<h3 id="管理依赖"><a href="#管理依赖" class="headerlink" title="管理依赖"></a>管理依赖</h3><h4 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv add fastapi sqlalchemy</span><br></pre></td></tr></table></figure>
+
+<p>UV 会同时安装 <code>FastAPI</code> 和 <code>SQLAlchemy，并自动更新</code> <code>pyproject.toml</code>.</p>
+<h4 id="移除依赖"><a href="#移除依赖" class="headerlink" title="移除依赖"></a>移除依赖</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv remove sqlalchemy</span><br></pre></td></tr></table></figure>
+
+<p>卸载 <code>SQLAlchemy</code> ，还会自动从 <code>pyproject.toml</code> 中移除对应的依赖项。</p>
+<h4 id="同步依赖"><a href="#同步依赖" class="headerlink" title="同步依赖"></a>同步依赖</h4><p>有时候，我们的虚拟环境可能和 pyproject.toml 里的依赖不同步。这时，只需运行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv sync</span><br></pre></td></tr></table></figure>
+
+<p>UV 会自动检查并修复依赖，类似于 <code>poetry install</code>.</p>
+<h4 id="查看依赖树"><a href="#查看依赖树" class="headerlink" title="查看依赖树"></a>查看依赖树</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv tree</span><br></pre></td></tr></table></figure>
+
+<h4 id="运行-Python-代码"><a href="#运行-Python-代码" class="headerlink" title="运行 Python 代码"></a>运行 Python 代码</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv run main.py</span><br></pre></td></tr></table></figure>
+
+<p>这个命令会：</p>
+<ul>
+<li>自动创建虚拟环境（如果尚未创建）</li>
+<li>安装缺失的依赖</li>
+<li>运行脚本</li>
+</ul>
+<h3 id="管理-Python-版本"><a href="#管理-Python-版本" class="headerlink" title="管理 Python 版本"></a>管理 <code>Python</code> 版本</h3><p><code>UV</code> 内置了 <code>Python</code> 版本管理，并且更加智能。</p>
+<p>当你运行 <code>uv init project</code> 时，<code>UV</code> 会：</p>
+<ul>
+<li>自动检测系统上的 Python 版本</li>
+<li>优先选择当前 Python 版本</li>
+<li>如果没有合适的版本，会自动下载</li>
+</ul>
+<p>查看 UV 识别到的 Python 版本：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv python list</span><br></pre></td></tr></table></figure>
+
+<p>如果你想安装某个 Python 版本（比如 3.12.1），可以直接执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv python install 3.12.1</span><br></pre></td></tr></table></figure>
+
+<p>如果我们希望某个项目始终使用特定的 <code>Python</code> 版本（比如 3.12），可以执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv venv --python 3.12</span><br></pre></td></tr></table></figure>
+
+<p><code>UV</code> 会自动创建 基于 <code>Python 3.12</code> 的虚拟环境，并将信息写入 <code>.python-version</code> 文件。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2016/03/04/computer/2016-03-04-python-pipenv/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-05-15 10:26:05
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/computer/" title="computer">
+                        <b>#</b> computer
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/computer/" title="computer">
+                        #computer
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2016/03/04/talk/2016-03-03-talk-digital-currency/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8"><span class="toc-text">使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-text">常用命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="toc-text">创建项目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%A1%E7%90%86%E4%BE%9D%E8%B5%96"><span class="toc-text">管理依赖</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96"><span class="toc-text">安装依赖</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A7%BB%E9%99%A4%E4%BE%9D%E8%B5%96"><span class="toc-text">移除依赖</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E4%BE%9D%E8%B5%96"><span class="toc-text">同步依赖</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E4%BE%9D%E8%B5%96%E6%A0%91"><span class="toc-text">查看依赖树</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C-Python-%E4%BB%A3%E7%A0%81"><span class="toc-text">运行 Python 代码</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%A1%E7%90%86-Python-%E7%89%88%E6%9C%AC"><span class="toc-text">管理 Python 版本</span></a></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/xesam">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:xesam@outlook.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://hexo.io">Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

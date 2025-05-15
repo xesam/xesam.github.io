@@ -152,7 +152,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <!-- <i class="iconfont icon-updatetime mr-10" title="更新时间"></i> -->
-          <!-- 2025-04-28 10:55:57 -->
+          <!-- 2025-05-15 11:02:26 -->
           <i class="iconfont icon-updatetime mr-10"></i>
           2016-03-04 12:00:00
         </span>
@@ -225,8 +225,8 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Warning: Python 3.12.0 was not found on your system...</span><br><span class="line">Neither &#x27;pyenv&#x27; nor &#x27;asdf&#x27; could be found to install Python.</span><br><span class="line">You can specify specific versions of Python with:</span><br></pre></td></tr></table></figure>
 
 <p>此时有可以通过 <code>pipenv --python &lt;python_version&gt;</code> 指定 python 版本，例如：<code>pipenv --python 3.9.6</code>。也可以修改 <code>Pipfile</code> 中的 <code>python_version</code> 字段，例如： <code>python_version = &quot;3.9.6&quot;</code>。还有一种方法就是在本机安装 python 的 <code>3.12.0</code> 版本。</p>
-<p>都挺麻烦，还是 <code>conda</code> 最便捷，建议使用 <code>conda</code> 创建对应的 python 版本虚拟环境，然后使用 <code>pipenv</code> 进行独立的依赖管理。</p>
-<h3 id="在开发环境中安装"><a href="#在开发环境中安装" class="headerlink" title="在开发环境中安装"></a>在开发环境中安装</h3><p>添加–dev(或者-d)，在开发环境中安装:</p>
+<p>都挺麻烦，还是 <code>conda</code> 最便捷，建议使用 <code>conda</code> 创建对应的 <code>python</code> 版本虚拟环境，然后使用 <code>pipenv</code> 进行独立的依赖管理。</p>
+<h3 id="在开发环境中安装"><a href="#在开发环境中安装" class="headerlink" title="在开发环境中安装"></a>在开发环境中安装</h3><p>添加 <code>--dev</code>(或者<code>-d</code>)，在开发环境中安装:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pipenv install --dev requests</span><br><span class="line">pipenv install -d requests</span><br></pre></td></tr></table></figure>
 
 <h3 id="与-requirements-txt-的兼容性"><a href="#与-requirements-txt-的兼容性" class="headerlink" title="与 requirements.txt 的兼容性"></a>与 <code>requirements.txt</code> 的兼容性</h3><p>通过 <code>requirements.txt</code> 安装依赖：</p>
@@ -308,7 +308,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-04-28 10:55:57
+              2025-05-15 11:02:26
             </span>
             
                   <span class="post-categories">
@@ -336,7 +336,7 @@
           </div>
           <div class="post-foot-prev">
             
-              <a href="/2016/03/04/talk/2016-03-03-talk-digital-currency/" target="_self">
+              <a href="/2016/03/04/computer/2016-03-04-python-env-uv/" target="_self">
                 <span>下一页</span>
                 <i class="iconfont icon-chevronright"></i>
               </a>

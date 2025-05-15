@@ -104,6 +104,44 @@
   <div class="post-list">
     <!-- 遍历渲染文章 -->
     
+    <div class="post-item" title="LIstView的HeaderView">
+      <div class="time-m-d">2013-08-20</div>
+      <div class="post-item__main">
+        <div class="title">
+          <a href="/2013/08/20/android/2013/2013-08-20-Android-LIstView-HeaderView/">
+             
+            <span>LIstView的HeaderView</span>
+             
+          </a>
+        </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2013/08/20/android/2013/2013-08-20-Android-LIstView-HeaderView/">更多 &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="post-item" title="EditText--输入法">
+      <div class="time-m-d">2013-08-05</div>
+      <div class="post-item__main">
+        <div class="title">
+          <a href="/2013/08/05/android/2013/2013-08-05-Android-EditText-input/">
+             
+            <span>EditText--输入法</span>
+             
+          </a>
+        </div>
+        <div class="post-item__excerpt markdown-body">
+          
+          <div class="post-item__excerpt-more">
+            <a href="/2013/08/05/android/2013/2013-08-05-Android-EditText-input/">更多 &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <div class="post-item" title="Android 自定义对话框--模拟Dim">
       <div class="time-m-d">2013-07-30</div>
       <div class="post-item__main">
@@ -256,75 +294,6 @@
           
           <div class="post-item__excerpt-more">
             <a href="/2013/03/12/javascript/2013-03-12-Javascript-JSON-format/">更多 &rarr;</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="post-item" title="Android中的shape">
-      <div class="time-m-d">2012-11-26</div>
-      <div class="post-item__main">
-        <div class="title">
-          <a href="/2012/11/26/android/2012/2012-11-26-Android-shape/">
-             
-            <span>Android中的shape</span>
-             
-          </a>
-        </div>
-        <div class="post-item__excerpt markdown-body">
-          
-          <div class="post-item__excerpt-more">
-            <a href="/2012/11/26/android/2012/2012-11-26-Android-shape/">更多 &rarr;</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="post-item" title="批量word和PPT文档转pdf">
-      <div class="time-m-d">2012-11-06</div>
-      <div class="post-item__main">
-        <div class="title">
-          <a href="/2012/11/06/talk/2012-11-06-talk-word-PPTtopdf/">
-             
-            <span>批量word和PPT文档转pdf</span>
-             
-          </a>
-        </div>
-        <div class="post-item__excerpt markdown-body">
-          <p>由于linux上处理word和ppt比较麻烦，而且有文件格式专利的问题，所以以下操作全部在Windows下面进行。</p>
-<p>首先需要安装Microsoft Save as PDF加载项，官方下载地址：<a target="_blank" rel="noopener" href="http://www.microsoft.com/zh-cn/download/details.aspx?id=7">http://www.microsoft.com/zh-cn/download/details.aspx?id=7</a></p>
-<p>安装成功后可以手工将文档另存为pdf。</p>
-<p>需要引用“Win32::OLE”模块</p>
-<pre><code class="language-perl">use Win32::OLE;
-use Win32::OLE::Const &#39;Microsoft Word&#39;;
-use Win32::OLE::Const &#39;Microsoft PowerPoint&#39;;
-</code></pre>
-<p>word转pdf：</p>
-<pre><code class="language-perl">sub word2pdf&#123;
-    my $word_file = $_[0];
-    my $word = CreateObject Win32::OLE &#39;Word.Application&#39; or die $!;
-    $word-&gt;&#123;&#39;Visible&#39;&#125; = 0;
-    my $document = $word-&gt;Documents-&gt;Open($word_file) || die(&quot;Unable to open document &quot;) ; 
-    my $pdffile = $word_file.&quot;.pdf&quot;;
-    $document-&gt;saveas(&#123;FileName=&gt;$pdffile,FileFormat=&gt;wdExportFormatPDF&#125;);
-    $document -&gt; close (&#123;SaveChanges=&gt;wdDoNotSaveChanges&#125;);
-    $word-&gt;quit();
-&#125;
-</code></pre>
-<p>ppt转pdf</p>
-<pre><code class="language-perl">sub ppt2pdf&#123;
-    my $word_file = $_[0];
-    my $word = CreateObject Win32::OLE &#39;PowerPoint.Application&#39; or die $!;
-    $word-&gt;&#123;&#39;Visible&#39;&#125; = 1;
-    my $document = $word-&gt;Presentations-&gt;Open($word_file) || die(&quot;Unable to open document &quot;) ; 
-    my $pdffile = $word_file.&quot;.pdf&quot;;
-    $document-&gt;saveas($pdffile,32);
-    $document -&gt; close (&#123;SaveChanges=&gt;wdDoNotSaveChanges&#125;);
-    $word-&gt;quit();
-&#125;
-</code></pre>
-          <div class="post-item__excerpt-more">
-            <a href="/2012/11/06/talk/2012-11-06-talk-word-PPTtopdf/">更多 &rarr;</a>
           </div>
         </div>
       </div>
