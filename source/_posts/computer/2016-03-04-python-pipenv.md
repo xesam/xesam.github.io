@@ -67,11 +67,11 @@ You can specify specific versions of Python with:
 
 此时有可以通过 `pipenv --python <python_version>` 指定 python 版本，例如：`pipenv --python 3.9.6`。也可以修改 `Pipfile` 中的 `python_version` 字段，例如： `python_version = "3.9.6"`。还有一种方法就是在本机安装 python 的 `3.12.0` 版本。
 
-都挺麻烦，还是 `conda` 最便捷，建议使用 `conda` 创建对应的 python 版本虚拟环境，然后使用 `pipenv` 进行独立的依赖管理。
+都挺麻烦，还是 `conda` 最便捷，建议使用 `conda` 创建对应的 `python` 版本虚拟环境，然后使用 `pipenv` 进行独立的依赖管理。
 
 ### 在开发环境中安装
 
-添加--dev(或者-d)，在开发环境中安装:
+添加 `--dev`(或者`-d`)，在开发环境中安装:
 
 ```bash
 pipenv install --dev requests
