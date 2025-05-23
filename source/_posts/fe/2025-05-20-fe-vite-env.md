@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "react.js + vite的变量管理"
+title: "React.js + vite的变量管理"
 date: 2025-05-20 08:00:00 +0800
 categories: fe
 tag: [fe]
@@ -17,8 +17,8 @@ tag: [fe]
 
 以上的几种方式，都可以将变量注入到项目中，但是注入的方式不同：
 
-- 注入到 `import.meta.env` ；
-- 注入为全局变量 ；
+- 一类是注入到 `import.meta.env` ；
+- 一类是注入为全局变量 ；
 
 ## 1. `.env`文件;
 
@@ -32,7 +32,7 @@ VITE_NAME=".env"
 
 加载完毕后，`import.meta.env` 中的变量如下：
 
-```js
+```javascript
 console.log(import.meta.env.VITE_DEFAULT); // .env
 console.log(import.meta.env.VITE_NAME); // .env
 ```
@@ -65,8 +65,8 @@ console.log(import.meta.env.VITE_NAME); // .env.local
 如果要指定当前的模式（注意[与 `NODE_ENV` 的区别](https://vite.dev/guide/env-and-mode.html#node-env-and-modes)），可以在命令行中指定，例如：
 
 ```bash
-vite --mode development # 加载 .env.development
-vite --mode staging # 加载 .env.staging
+vite --mode development # 默认加载 .env.development
+vite --mode staging # 默认加载 .env.staging
 ```
 
 ## 2. 在`vite.config.js`文件中进行定义
