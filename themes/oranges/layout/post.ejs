@@ -104,6 +104,7 @@
       <div class="markdown-body">
         <%- page.content %>
       </div>
+      <div class="post-copyright">转载请标注原地址：<a href="<%= config.url %><%- url_for(page.path) %>"><%= config.url %><%- url_for(page.path) %></a></div>
       <% if(theme.prevnext.enable) { %>
         <div class="prev-or-next">
           <div class="post-foot-next">
