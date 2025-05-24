@@ -1174,7 +1174,7 @@ a:hover {
   display: none;
 }
 
-@media (max-width: 888px) {
+@media (max-width: 960px) {
   .container {
     width: 90%;
   }
@@ -1236,7 +1236,7 @@ a:hover {
   }
 }
 
-@media (max-width: 1200px) and (min-width: 887px) {
+@media (max-width: 1200px) and (min-width: 959px) {
   .index .post-list,
   .friend-index .friend-list,
   .archives .post-list,
@@ -1414,7 +1414,7 @@ a:hover {
   }
 }
 
-@media (max-width: 1200px) and (min-width: 887px) {
+@media (max-width: 1200px) and (min-width: 959px) {
   .post-navigation {
     padding: 20px 20px;
   }
@@ -1801,6 +1801,31 @@ a:hover {
   white-space: nowrap;
 }
 
+.category-details{
+  .post-item{
+    font-size: 2em;
+  }
+}
+
+.tag-list{
+  .tag-list-item{
+    font-size: 2.4em;
+  }
+}
+
+.tag-details{
+  .post-item{
+    font-size: 2em;
+  }
+}
+
+/* 20250523 start */
+.post-copyright{
+   padding: 1.5em 0;
+   font-size: 1.5em;
+   font-weight: bold;
+}
+/* 20250523 end */
 .footer {
   padding-top: 2em;
   padding-bottom: 2em;

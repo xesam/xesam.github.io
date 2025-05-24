@@ -748,3 +748,11 @@ a:hover {
     font-size: 2em;
   }
 }
+
+/* 20250523 start */
+.post-copyright{
+   padding: 1.5em 0;
+   font-size: 1.5em;
+   font-weight: bold;
+}
+/* 20250523 end */
