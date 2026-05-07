@@ -4,7 +4,7 @@ layout: post
 title:  AI 时代的软件收费模式：从 SaaS 到 Agent Economy
 date:   2026-05-01 13:46:04 +0800
 categories: talk
-tag: \[talk]
+tag: [talk]
 ------------
 
 过去二十年，软件行业的核心商业模式一直很稳定：
