@@ -104,6 +104,74 @@
   <div class="post-list">
     <!-- 遍历渲染文章 -->
     
+    <div class="post-item" title="Edit-TextWatcher">
+      <div class="time-m-d">2018-01-01</div>
+      <div class="post-item__main">
+        <div class="title">
+          <a href="/2018/01/01/android/2018-01-02-android-edit-1/">
+             
+            <span>Edit-TextWatcher</span>
+             
+          </a>
+        </div>
+        <div class="post-item__excerpt markdown-body">
+          <p>Something about EditText’s TextWatcher.</p>
+          <div class="post-item__excerpt-more">
+            <a href="/2018/01/01/android/2018-01-02-android-edit-1/">更多 &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="post-item" title="Regex温故知新1">
+      <div class="time-m-d">2017-05-08</div>
+      <div class="post-item__main">
+        <div class="title">
+          <a href="/2017/05/08/computer/2017-05-08-cs-regex-1/">
+             
+            <span>Regex温故知新1</span>
+             
+          </a>
+        </div>
+        <div class="post-item__excerpt markdown-body">
+          <p>《正则表达式必知必会》——Ben Forta，回顾笔记。</p>
+<p>正则表达式的两种基本用途：搜索和替换。给定一个正则表达式，它要么匹配一些文本（进行一次搜索），要么匹配并替换一些文本（进行一次替换）。</p>
+<p>正则表达式的核心难点：验证某个模式能不能获得预期的匹配结果并不困难，但如何验证它不会匹配到你不想要的东西可就没那么简单了。</p>
+          <div class="post-item__excerpt-more">
+            <a href="/2017/05/08/computer/2017-05-08-cs-regex-1/">更多 &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="post-item" title="Cache-Control扩展">
+      <div class="time-m-d">2017-05-08</div>
+      <div class="post-item__main">
+        <div class="title">
+          <a href="/2017/05/08/computer/2017-05-08-http-cache-control-extensions-for-stale/">
+             
+            <span>Cache-Control扩展</span>
+             
+          </a>
+        </div>
+        <div class="post-item__excerpt markdown-body">
+          <p>rfc5861 定义了两个 Cache-Control 的扩展：</p>
+<ol>
+<li>stale-while-revalidate</li>
+<li>stale-if-error</li>
+</ol>
+<p>这是两个扩展都是用来定义缓存过期（stale）后的处理策略，旨在提高用户体验，不过两者是独立使用，并无关联的。</p>
+<h2 id="stale-while-revalidate"><a href="#stale-while-revalidate" class="headerlink" title="stale-while-revalidate"></a>stale-while-revalidate</h2><p>我们在 http 里已经使用缓存很多年了，不过有个问题很常见：如果缓存过期了会发生什么？<br>如果从缓存中可以立即取得响应，但是从服务器获取响应需要几百毫秒或者更久，那用户会很容易注意到这个细节差异。</p>
+<p>一个理所当然的解决方案是“在缓存过期之前预拉取最新的内容”，这个听上去很合理，不过这引发了另外一个头疼的问题：“如何决定何时预拉取呢？”。如果没有正确实现预拉取策略，那就有可能加重缓存，网络以及后台服务器等等的负载。</p>
+<p>退而求其次，另一个可以采取的方案是，对于那些”稍微“过期的缓存，允许先直接使用，然后在后台静默的更新缓存内容。</p>
+<p><img src="/image/http_cache_stale_1.png" alt="1"></p>
+          <div class="post-item__excerpt-more">
+            <a href="/2017/05/08/computer/2017-05-08-http-cache-control-extensions-for-stale/">更多 &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <div class="post-item" title="aar依赖">
       <div class="time-m-d">2017-05-07</div>
       <div class="post-item__main">
@@ -249,76 +317,6 @@
       </div>
     </div>
     
-    <div class="post-item" title="BIOS与`0x7C00`">
-      <div class="time-m-d">2016-12-17</div>
-      <div class="post-item__main">
-        <div class="title">
-          <a href="/2016/12/17/computer/2016-12-17-computer-BIOS-0x7C00/">
-             
-            <span>BIOS与`0x7C00`</span>
-             
-          </a>
-        </div>
-        <div class="post-item__excerpt markdown-body">
-          <p>你知道 <code>0x7C00</code>，这个在 x86 汇编中的一个神秘数字吗？<br><code>0x7C00</code> 是一个内存地址，<code>BIOS</code> 就是将 <code>MBR</code> (Master Boot Record, hdd&#x2F;fdd 的第一个 sector) 读入 <code>0x7C00</code> 这个地址，然后进行后续引导的。</p>
-<p>操作系统或是 <code>bootloader</code> 的开发者必须假设他们的汇编代码被加载并从 <code>0x7C00</code> 处开始执行。<br>不过，为什么在 <code>x86</code> 中 <code>BIOS</code> 要将 <code>MBR</code> 加载到 <code>0x7C00</code> 呢？</p>
-          <div class="post-item__excerpt-more">
-            <a href="/2016/12/17/computer/2016-12-17-computer-BIOS-0x7C00/">更多 &rarr;</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="post-item" title="传值调用与传引用调用">
-      <div class="time-m-d">2016-10-21</div>
-      <div class="post-item__main">
-        <div class="title">
-          <a href="/2016/10/21/computer/2016-10-21-computer-ref-value/">
-             
-            <span>传值调用与传引用调用</span>
-             
-          </a>
-        </div>
-        <div class="post-item__excerpt markdown-body">
-          <p>这个问题的关键是明确“传值调用（Call by value）”与“传引用调用（Call by reference）”的定义。</p>
-<p>简单来说：</p>
-<pre><code>“传值调用”是将值（values）作为函数参数传入；
-“传引用调用”是将变量（variables）本身作为函数参数传入；
-</code></pre>
-<p>一个隐喻：</p>
-<pre><code>“传值调用”是我在纸片上写下一些内容并把纸片交给你， 内容可以是一个URL，也可能是一份完整的《战争与和平》副本。
-不管是什么，现在都在我给你的那张纸上，所以它实际上是你的纸。你可以在那张纸上随便涂鸦，也可以通过那张纸找到别的什么东西。
-
-“传引用调用”是当我在我的笔记本上写了一些内容然后把笔记本递给你。
-你可以在我的笔记本上涂鸦（也许我想要你这么做，也许我没料到你会这么做），然后我保留我的笔记本，你的任何涂鸦也一并保留在笔记本里。
-此外，如果你或我写的是有关如何找到其他内容的信息，无论你或我可以去那里，更改这些信息。
-</code></pre>
-          <div class="post-item__excerpt-more">
-            <a href="/2016/10/21/computer/2016-10-21-computer-ref-value/">更多 &rarr;</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="post-item" title="Android Splash实践">
-      <div class="time-m-d">2016-09-30</div>
-      <div class="post-item__main">
-        <div class="title">
-          <a href="/2016/09/30/android/2016/2016-09-30-Android-Splash/">
-             
-            <span>Android Splash实践</span>
-             
-          </a>
-        </div>
-        <div class="post-item__excerpt markdown-body">
-          
-          <div class="post-item__excerpt-more">
-            <a href="/2016/09/30/android/2016/2016-09-30-Android-Splash/">更多 &rarr;</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    
   </div>
   <nav class="post-navigation">
     
@@ -362,7 +360,7 @@
     
     <div class="footer-more">
       
-        <a href="https://xesam.github.io/">Copyright © 2025</a>
+        <a href="https://xesam.github.io/">Copyright © 2026</a>
         
     </div>
   
